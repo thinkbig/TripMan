@@ -15,11 +15,11 @@
     #import <Foundation/Foundation.h>
 #endif
 
-#import "DDLogMacros.h"
+#import "DDLog.h"
 #import "CommonInclude.h"
 
 #if RELEASE
-static const DDLogLevel ddLogLevel = LOG_LEVEL_ERROR;
+static const int ddLogLevel = LOG_LEVEL_ERROR;
 #else
-static const DDLogLevel ddLogLevel = LOG_LEVEL_VERBOSE;
+static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 #endif

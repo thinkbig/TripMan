@@ -34,7 +34,7 @@
         
         NSString *logMsg = [[NSString alloc] initWithFormat:format arguments:args];
         DDLogMessage *logMessage = [[DDLogMessage alloc] initWithLogMsg:logMsg
-                                                                  level:(DDLogLevel)level
+                                                                  level:level
                                                                    flag:flag
                                                                 context:context
                                                                    file:file

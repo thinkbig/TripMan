@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
+#import "NSString+MD5.h"
 
 @interface TripManUnitTests : XCTestCase
 
@@ -28,6 +29,9 @@
 - (void)testExample {
     // This is an example of a functional test case.
     XCTAssert(YES, @"Pass");
+    NSString * asdf = @"asdfasdfsd";
+    [asdf MD5];
+    XCTAssert(YES, @"Passed");
 }
 
 - (void)testPerformanceExample {

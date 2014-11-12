@@ -5,4 +5,5 @@ before_install:
     - brew install xctool
 xcode_workspace: TripMan.xcworkspace 
 xcode_scheme: Location
-script: xctool test
+script: xctool OBJROOT="./build" -configuration Coverage -destination platform='iOS Simulator',OS=7.1,name='iPhone 5s' clean test
+
