@@ -20,6 +20,20 @@
                ReferencedContainer = "container:TripMan.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A399C9FF1A12F5EE00665917"
+               BuildableName = "TripManUnitTests.xctest"
+               BlueprintName = "TripManUnitTests"
+               ReferencedContainer = "container:TripMan.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -32,9 +46,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "5C9090AC18B3A66A00510153"
-               BuildableName = "TripManTests.xctest"
-               BlueprintName = "TripManTests"
+               BlueprintIdentifier = "A399C9FF1A12F5EE00665917"
+               BuildableName = "TripManUnitTests.xctest"
+               BlueprintName = "TripManUnitTests"
                ReferencedContainer = "container:TripMan.xcodeproj">
             </BuildableReference>
          </TestableReference>

@@ -15,11 +15,6 @@
 		5C90909C18B3A66A00510153 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C90909B18B3A66A00510153 /* main.m */; };
 		5C9090A018B3A66A00510153 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C90909F18B3A66A00510153 /* AppDelegate.m */; };
 		5C9090A818B3A66A00510153 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5C9090A718B3A66A00510153 /* Images.xcassets */; };
-		5C9090AF18B3A66A00510153 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C9090AE18B3A66A00510153 /* XCTest.framework */; };
-		5C9090B018B3A66A00510153 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C90908F18B3A66A00510153 /* Foundation.framework */; };
-		5C9090B118B3A66A00510153 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C90909318B3A66A00510153 /* UIKit.framework */; };
-		5C9090B918B3A66A00510153 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5C9090B718B3A66A00510153 /* InfoPlist.strings */; };
-		5C9090BB18B3A66A00510153 /* LocationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C9090BA18B3A66A00510153 /* LocationTests.m */; };
 		5C9090CE18B3AB2100510153 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C9090CD18B3AB2100510153 /* CoreLocation.framework */; };
 		A314116C1A0A4CCD0019F557 /* TripMan.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A31411681A0A4CCD0019F557 /* TripMan.xcdatamodeld */; };
 		A314116D1A0A4CCD0019F557 /* TripsCoreDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A314116B1A0A4CCD0019F557 /* TripsCoreDataManager.m */; };
@@ -95,6 +90,7 @@
 		A385C54719F6423300A0F7F6 /* GPSTurningAnalyzer.m in Sources */ = {isa = PBXBuildFile; fileRef = A385C54619F6423300A0F7F6 /* GPSTurningAnalyzer.m */; };
 		A385C54A19F68FA000A0F7F6 /* GPSAcceleratorAnalyzer.m in Sources */ = {isa = PBXBuildFile; fileRef = A385C54919F68FA000A0F7F6 /* GPSAcceleratorAnalyzer.m */; };
 		A399C9FB1A12E0CA00665917 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A399C9FA1A12E0CA00665917 /* Main.storyboard */; };
+		A399CA051A12F5EE00665917 /* TripManUnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A399CA041A12F5EE00665917 /* TripManUnitTests.m */; };
 		A3CD35EC19C6A1A70039F6E1 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3CD35EB19C6A1A70039F6E1 /* CoreMotion.framework */; };
 		A3CD35FD19C6DCC00039F6E1 /* GPSFMDBLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = A3CD35FA19C6DCC00039F6E1 /* GPSFMDBLogger.m */; };
 		A3CD360219C6DCC80039F6E1 /* GPSAnalyzerRealTime.m in Sources */ = {isa = PBXBuildFile; fileRef = A3CD360119C6DCC80039F6E1 /* GPSAnalyzerRealTime.m */; };
@@ -120,12 +116,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		5C9090B218B3A66A00510153 /* PBXContainerItemProxy */ = {
+		A399CA061A12F5EE00665917 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5C90908418B3A66A00510153 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 5C90908B18B3A66A00510153;
-			remoteInfo = Location;
+			remoteInfo = TripMan;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -142,11 +138,7 @@
 		5C90909E18B3A66A00510153 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		5C90909F18B3A66A00510153 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		5C9090A718B3A66A00510153 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		5C9090AD18B3A66A00510153 /* TripManTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TripManTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5C9090AE18B3A66A00510153 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		5C9090B618B3A66A00510153 /* TripManTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TripManTests-Info.plist"; sourceTree = "<group>"; };
-		5C9090B818B3A66A00510153 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		5C9090BA18B3A66A00510153 /* LocationTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LocationTests.m; sourceTree = "<group>"; };
 		5C9090CD18B3AB2100510153 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		93515B6ED517B0A75A7B458C /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		9CF3732F4F7B1B5DC081B37D /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
@@ -341,6 +333,9 @@
 		A385C54819F68FA000A0F7F6 /* GPSAcceleratorAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPSAcceleratorAnalyzer.h; sourceTree = "<group>"; };
 		A385C54919F68FA000A0F7F6 /* GPSAcceleratorAnalyzer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPSAcceleratorAnalyzer.m; sourceTree = "<group>"; };
 		A399C9FA1A12E0CA00665917 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		A399CA001A12F5EE00665917 /* TripManUnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TripManUnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A399CA031A12F5EE00665917 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A399CA041A12F5EE00665917 /* TripManUnitTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TripManUnitTests.m; sourceTree = "<group>"; };
 		A3CD35EB19C6A1A70039F6E1 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		A3CD35F919C6DCC00039F6E1 /* GPSFMDBLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPSFMDBLogger.h; sourceTree = "<group>"; };
 		A3CD35FA19C6DCC00039F6E1 /* GPSFMDBLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPSFMDBLogger.m; sourceTree = "<group>"; };
@@ -415,13 +410,10 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		5C9090AA18B3A66A00510153 /* Frameworks */ = {
+		A399C9FD1A12F5EE00665917 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5C9090AF18B3A66A00510153 /* XCTest.framework in Frameworks */,
-				5C9090B118B3A66A00510153 /* UIKit.framework in Frameworks */,
-				5C9090B018B3A66A00510153 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -432,7 +424,7 @@
 			isa = PBXGroup;
 			children = (
 				5C90909518B3A66A00510153 /* Location */,
-				5C9090B418B3A66A00510153 /* LocationTests */,
+				A399CA011A12F5EE00665917 /* TripManUnitTests */,
 				5C90908E18B3A66A00510153 /* Frameworks */,
 				5C90908D18B3A66A00510153 /* Products */,
 				FDD78C5F4A0A3122679C2EAE /* Pods */,
@@ -443,7 +435,7 @@
 			isa = PBXGroup;
 			children = (
 				5C90908C18B3A66A00510153 /* TripMan.app */,
-				5C9090AD18B3A66A00510153 /* TripManTests.xctest */,
+				A399CA001A12F5EE00665917 /* TripManUnitTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -509,24 +501,6 @@
 				5C90909818B3A66A00510153 /* InfoPlist.strings */,
 				5C90909B18B3A66A00510153 /* main.m */,
 				5C90909D18B3A66A00510153 /* TripMan-Prefix.pch */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		5C9090B418B3A66A00510153 /* LocationTests */ = {
-			isa = PBXGroup;
-			children = (
-				5C9090BA18B3A66A00510153 /* LocationTests.m */,
-				5C9090B518B3A66A00510153 /* Supporting Files */,
-			);
-			path = LocationTests;
-			sourceTree = "<group>";
-		};
-		5C9090B518B3A66A00510153 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				5C9090B618B3A66A00510153 /* TripManTests-Info.plist */,
-				5C9090B718B3A66A00510153 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -1010,6 +984,23 @@
 			path = PICircularProgressView;
 			sourceTree = "<group>";
 		};
+		A399CA011A12F5EE00665917 /* TripManUnitTests */ = {
+			isa = PBXGroup;
+			children = (
+				A399CA041A12F5EE00665917 /* TripManUnitTests.m */,
+				A399CA021A12F5EE00665917 /* Supporting Files */,
+			);
+			path = TripManUnitTests;
+			sourceTree = "<group>";
+		};
+		A399CA021A12F5EE00665917 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				A399CA031A12F5EE00665917 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		A3CD35F819C6DCC00039F6E1 /* GPSLogger */ = {
 			isa = PBXGroup;
 			children = (
@@ -1191,22 +1182,22 @@
 			productReference = 5C90908C18B3A66A00510153 /* TripMan.app */;
 			productType = "com.apple.product-type.application";
 		};
-		5C9090AC18B3A66A00510153 /* TripManTests */ = {
+		A399C9FF1A12F5EE00665917 /* TripManUnitTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5C9090C118B3A66A00510153 /* Build configuration list for PBXNativeTarget "TripManTests" */;
+			buildConfigurationList = A399CA081A12F5EE00665917 /* Build configuration list for PBXNativeTarget "TripManUnitTests" */;
 			buildPhases = (
-				5C9090A918B3A66A00510153 /* Sources */,
-				5C9090AA18B3A66A00510153 /* Frameworks */,
-				5C9090AB18B3A66A00510153 /* Resources */,
+				A399C9FC1A12F5EE00665917 /* Sources */,
+				A399C9FD1A12F5EE00665917 /* Frameworks */,
+				A399C9FE1A12F5EE00665917 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				5C9090B318B3A66A00510153 /* PBXTargetDependency */,
+				A399CA071A12F5EE00665917 /* PBXTargetDependency */,
 			);
-			name = TripManTests;
-			productName = LocationTests;
-			productReference = 5C9090AD18B3A66A00510153 /* TripManTests.xctest */;
+			name = TripManUnitTests;
+			productName = TripManUnitTests;
+			productReference = A399CA001A12F5EE00665917 /* TripManUnitTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -1227,7 +1218,8 @@
 							};
 						};
 					};
-					5C9090AC18B3A66A00510153 = {
+					A399C9FF1A12F5EE00665917 = {
+						CreatedOnToolsVersion = 6.1;
 						TestTargetID = 5C90908B18B3A66A00510153;
 					};
 				};
@@ -1246,7 +1238,7 @@
 			projectRoot = "";
 			targets = (
 				5C90908B18B3A66A00510153 /* TripMan */,
-				5C9090AC18B3A66A00510153 /* TripManTests */,
+				A399C9FF1A12F5EE00665917 /* TripManUnitTests */,
 			);
 		};
 /* End PBXProject section */
@@ -1270,11 +1262,10 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		5C9090AB18B3A66A00510153 /* Resources */ = {
+		A399C9FE1A12F5EE00665917 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5C9090B918B3A66A00510153 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1406,21 +1397,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		5C9090A918B3A66A00510153 /* Sources */ = {
+		A399C9FC1A12F5EE00665917 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5C9090BB18B3A66A00510153 /* LocationTests.m in Sources */,
+				A399CA051A12F5EE00665917 /* TripManUnitTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		5C9090B318B3A66A00510153 /* PBXTargetDependency */ = {
+		A399CA071A12F5EE00665917 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 5C90908B18B3A66A00510153 /* TripMan */;
-			targetProxy = 5C9090B218B3A66A00510153 /* PBXContainerItemProxy */;
+			targetProxy = A399CA061A12F5EE00665917 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1429,14 +1420,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				5C90909918B3A66A00510153 /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		5C9090B718B3A66A00510153 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				5C9090B818B3A66A00510153 /* en */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -1632,43 +1615,47 @@
 			};
 			name = Release;
 		};
-		5C9090C218B3A66A00510153 /* Debug */ = {
+		A399CA091A12F5EE00665917 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Location.app/Location";
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Location/Location-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "LocationTests/TripManTests-Info.plist";
-				PRODUCT_NAME = TripManTests;
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = TripManUnitTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TripMan.app/TripMan";
 			};
 			name = Debug;
 		};
-		5C9090C318B3A66A00510153 /* Release */ = {
+		A399CA0A1A12F5EE00665917 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Location.app/Location";
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Location/Location-Prefix.pch";
-				INFOPLIST_FILE = "LocationTests/TripManTests-Info.plist";
-				PRODUCT_NAME = TripManTests;
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = TripManUnitTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TripMan.app/TripMan";
 			};
 			name = Release;
 		};
@@ -1693,14 +1680,13 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5C9090C118B3A66A00510153 /* Build configuration list for PBXNativeTarget "TripManTests" */ = {
+		A399CA081A12F5EE00665917 /* Build configuration list for PBXNativeTarget "TripManUnitTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				5C9090C218B3A66A00510153 /* Debug */,
-				5C9090C318B3A66A00510153 /* Release */,
+				A399CA091A12F5EE00665917 /* Debug */,
+				A399CA0A1A12F5EE00665917 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
