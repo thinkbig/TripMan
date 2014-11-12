@@ -1,7 +1,4 @@
 language: objective-c
 xcode_workspace: TripMan.xcworkspace 
 xcode_scheme: Location
-before_install:
-    - brew update
-    - brew install xctool
 script: xctool build
