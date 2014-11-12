@@ -6,4 +6,6 @@ before_install:
 xcode_workspace: TripMan.xcworkspace 
 xcode_scheme: Location
 script: xctool OBJROOT="./build" -configuration Coverage -destination platform='iOS Simulator',OS=7.1,name='iPhone 5s' clean test
+after_success:
+    - ./coveralls.rb --extension m --exclude-folder Pods.build
 
