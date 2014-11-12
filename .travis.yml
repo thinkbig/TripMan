@@ -5,7 +5,9 @@ before_install:
     - brew install xctool
 xcode_workspace: TripMan.xcworkspace 
 xcode_scheme: Location
-script: xctool -configuration Coverage -destination platform='iOS Simulator',OS=7.1,name='iPhone 5s' test
+before_script:
+    - sudo easy_install cpp-coveralls
+script: xctool -configuration Coverage clean test
 after_success:
     - ./coveralls.rb --extension m --exclude-folder Demo --exclude-folder Test --exclude-folder Externals --exclude-folder Pods
 
