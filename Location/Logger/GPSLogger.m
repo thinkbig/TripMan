@@ -75,7 +75,7 @@
         DDLogFileManagerDefault * manager = [[DDLogFileManagerDefault alloc] initWithLogsDirectory:[self fileLogRootDirectory]];
         self.fileLogger = [[DDFileLogger alloc] initWithLogFileManager:manager];
         self.fileLogger.maximumFileSize = (1024 * 1024 * 8);// 512
-        self.fileLogger.rollingFrequency = kDDDefaultLogRollingFrequency;
+        self.fileLogger.rollingFrequency = DEFAULT_LOG_ROLLING_FREQUENCY;
         self.fileLogger.logFileManager.maximumNumberOfLogFiles = 60;
         self.fileLogger.logFileManager.logFilesDiskQuota = (1024 * 1024 * 1024);
         

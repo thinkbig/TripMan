@@ -22,14 +22,11 @@ PODS:
     - AFNetworking/NSURLSession
   - CacheKit (0.1.0):
     - FMDB (~> 2.4)
-  - CocoaLumberjack (2.0.0-beta3):
-    - CocoaLumberjack/Default
+  - CocoaLumberjack (1.9.2):
     - CocoaLumberjack/Extensions
-  - CocoaLumberjack/Core (2.0.0-beta3)
-  - CocoaLumberjack/Default (2.0.0-beta3):
+  - CocoaLumberjack/Core (1.9.2)
+  - CocoaLumberjack/Extensions (1.9.2):
     - CocoaLumberjack/Core
-  - CocoaLumberjack/Extensions (2.0.0-beta3):
-    - CocoaLumberjack/Default
   - FMDB (2.4):
     - FMDB/standard
   - FMDB/common (2.4)
@@ -45,7 +42,7 @@ PODS:
 DEPENDENCIES:
   - AFNetworking
   - CacheKit
-  - CocoaLumberjack
+  - CocoaLumberjack (= 1.9.2)
   - FMDB
   - FXKeychain
   - JGProgressHUD
@@ -55,7 +52,7 @@ DEPENDENCIES:
 SPEC CHECKSUMS:
   AFNetworking: 0aabc6fae66d6e5d039eeb21c315843c7aae51ab
   CacheKit: 39500151b4964a37b12d27d53483ee4ca17ef7bf
-  CocoaLumberjack: 55c22a2b8bde7a29c568ab4015b5874216524d70
+  CocoaLumberjack: 205769c032b5fef85b92472046bcc8b7e7c8a817
   FMDB: 0b2fa25e5264ef177973c0cb8c02c711107979aa
   FXKeychain: c97c352f1923809032339514ec4d6b0ed151bc3b
   JGProgressHUD: a7c58f711eec0b67f257a0821c0bac9194c72398

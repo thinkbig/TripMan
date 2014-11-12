@@ -394,7 +394,7 @@
 
 - (void)db_delete
 {
-	if (_maxAge <= 0.0)
+	if (maxAge <= 0.0)
 	{
 		// Deleting old log entries is disabled.
 		// The superclass won't likely call us if this is the case, but we're being cautious.
