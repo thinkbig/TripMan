@@ -1,4 +1,4 @@
 language: objective-c
 xcode_workspace: TripMan.xcworkspace 
 xcode_scheme: Location
-script: xctool build
+script: xctool clean test
