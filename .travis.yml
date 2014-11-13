@@ -7,7 +7,9 @@ xcode_workspace: TripMan.xcworkspace
 xcode_scheme: Location
 before_script:
     - sudo easy_install cpp-coveralls
-script: xctool -configuration Coverage clean test
+script: 
+    - xctool -configuration Coverage clean test
+    - if [[ $TRAVIS_PULL_REQUEST != 'false' ]]; then echo 'This is a pull request, should run ui test'; fi
 after_success:
     - ./coveralls.rb --extension m --exclude-folder Demo --exclude-folder Test --exclude-folder Externals --exclude-folder Pods
 

@@ -150,11 +150,6 @@
     return (toPt.x-fromPt.x)*(toPt.x-fromPt.x) + (toPt.y-fromPt.y)*(toPt.y-fromPt.y);
 }
 
-+ (CGFloat) dist2FromGPSItem:(GPSLogItem*)fromItem toItem:(GPSLogItem*)toItem
-{
-    return [[fromItem location] distanceFromLocation:[toItem location]];
-}
-
 + (CGPoint)item2Point:(GPSLogItem*)item
 {
     return CGPointMake([item.latitude doubleValue]*1000000, [item.longitude doubleValue]*1000000);
@@ -240,8 +235,8 @@
     }
     
     if (maxItem) {
-        CGFloat dist1 = [GPSOffTimeFilter dist2FromGPSItem:firstItem toItem:maxItem];
-        CGFloat dist2 = [GPSOffTimeFilter dist2FromGPSItem:maxItem toItem:secondItem];
+        CGFloat dist1 = [firstItem distanceFrom:maxItem];
+        CGFloat dist2 = [maxItem distanceFrom:secondItem];
         if (dist1 < 100 && dist2 < 100) {
             // if all distance is less than 100m, remove the angle point
             featureIdx = -1;
@@ -358,7 +353,7 @@
     GPSTurningItem * first = [[GPSTurningItem alloc] initWithInstSpeed:[firstItem.speed doubleValue]];
     first.eStat = eTurningStart;
     first.duringAfterTurning = [secondItem.timestamp timeIntervalSinceDate:firstItem.timestamp];
-    first.distAfterTurning = [GPSOffTimeFilter dist2FromGPSItem:firstItem toItem:secondItem];
+    first.distAfterTurning = [firstItem distanceFrom:secondItem];
     [turningArr addObject:first];
     
     for (NSInteger i = 1; i < gpsLogs.count-1; i++)
@@ -369,7 +364,7 @@
         
         GPSTurningItem * turning = [[GPSTurningItem alloc] initWithInstSpeed:[item.speed doubleValue]];
         turning.duringAfterTurning = [nextItem.timestamp timeIntervalSinceDate:item.timestamp];
-        turning.distAfterTurning = [GPSOffTimeFilter dist2FromGPSItem:item toItem:nextItem];
+        turning.distAfterTurning = [item distanceFrom:nextItem];
         turning.angle = [self checkPotinAngle:[GPSOffTimeFilter item2Point:prevItem] antPt:[GPSOffTimeFilter item2Point:item] antPt:[GPSOffTimeFilter item2Point:nextItem]];
         turning.instSpeed = [item.speed doubleValue] < 0 ? 0 : [item.speed doubleValue];
         NSInteger turnDir = [self checkTurningDir:[GPSOffTimeFilter item2Point:prevItem] antPt:[GPSOffTimeFilter item2Point:item] antPt:[GPSOffTimeFilter item2Point:nextItem]];
@@ -390,7 +385,7 @@
         for (NSInteger j = [logIdx[i] integerValue]; j > turnBegin; j--) {
             GPSLogItem * lastItem = (GPSLogItem*)self.smoothData[j];
             CGFloat lastSpeed = [lastItem.speed doubleValue] < 0 ? 0 : [lastItem.speed doubleValue];
-            CGFloat dist = [GPSOffTimeFilter dist2FromGPSItem:item toItem:lastItem];
+            CGFloat dist = [item distanceFrom:lastItem];
             CGFloat during = fabs([item.timestamp timeIntervalSinceDate:lastItem.timestamp]);
             if (during < 10 || dist < 50) {
                 tolSpeed += lastSpeed;
@@ -405,7 +400,7 @@
         for (NSInteger j = [logIdx[i] integerValue]; j <= turnEnd; j++) {
             GPSLogItem * lastItem = (GPSLogItem*)self.smoothData[j];
             CGFloat lastSpeed = [lastItem.speed doubleValue] < 0 ? 0 : [lastItem.speed doubleValue];
-            CGFloat dist = [GPSOffTimeFilter dist2FromGPSItem:item toItem:lastItem];
+            CGFloat dist = [item distanceFrom:lastItem];
             CGFloat during = fabs([item.timestamp timeIntervalSinceDate:lastItem.timestamp]);
             if (during < 5 || dist < 50) {
                 tolSpeed += lastSpeed;

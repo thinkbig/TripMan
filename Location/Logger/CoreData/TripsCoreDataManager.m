@@ -89,21 +89,34 @@
     return [self.parkingDetails copy];
 }
 
-- (ParkingRegion*) addParkingLocation:(CLLocationCoordinate2D)coordinate
+- (ParkingRegion*) addParkingLocation:(CLLocationCoordinate2D)coordinate modifyRegionCenter:(BOOL)ifModify
 {
     if (!CLLocationCoordinate2DIsValid(coordinate)) {
         return nil;
     }
     
+    CLLocation * loc = [[CLLocation alloc] initWithLatitude:coordinate.latitude longitude:coordinate.longitude];
+    ParkingRegionDetail * nearestRegion = nil;
+    CLLocationDistance nearestDist = MAXFLOAT;
     for (ParkingRegionDetail * detail in self.parkingDetails) {
         if ([detail.region containsCoordinate:coordinate]) {
-            CLLocationCoordinate2D newCoor = detail.region.center;
-            newCoor = CLLocationCoordinate2DMake(0.7*newCoor.latitude+0.3*coordinate.latitude, 0.7*newCoor.longitude+0.3*coordinate.longitude);
-            detail.region = [self circularRegionForCenter:newCoor];
-            detail.coreDataItem.center_lat = @(newCoor.latitude);
-            detail.coreDataItem.center_lon = @(newCoor.longitude);
-            return detail.coreDataItem;
+            CLLocation * curLoc = [[CLLocation alloc] initWithLatitude:detail.region.center.latitude longitude:detail.region.center.longitude];
+            CLLocationDistance dist = [curLoc distanceFromLocation:loc];
+            if (dist < nearestDist) {
+                dist = nearestDist;
+                nearestRegion = detail;
+            }
         }
+    }
+    if (nearestRegion) {
+        if (ifModify) {
+            CLLocationCoordinate2D newCoor = nearestRegion.region.center;
+            newCoor = CLLocationCoordinate2DMake(0.7*newCoor.latitude+0.3*coordinate.latitude, 0.7*newCoor.longitude+0.3*coordinate.longitude);
+            nearestRegion.region = [self circularRegionForCenter:newCoor];
+            nearestRegion.coreDataItem.center_lat = @(newCoor.latitude);
+            nearestRegion.coreDataItem.center_lon = @(newCoor.longitude);
+        }
+        return nearestRegion.coreDataItem;
     }
     
     // insert a new record
@@ -150,6 +163,16 @@
 - (TripSummary*) unfinishedTrip
 {
     NSArray * trips = [TripSummary where:@"start_date!=nil AND end_date==nil" inContext:self.tripAnalyzerContent order:@{@"start_date": @"DESC"} limit:@(1)];
+    if (trips.count > 0) {
+        return trips[0];
+    }
+    return nil;
+}
+
+- (TripSummary*) prevTripBy:(TripSummary*)curTrip
+{
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"start_date < %@", curTrip.start_date];
+    NSArray * trips = [TripSummary where:predicate inContext:self.tripAnalyzerContent order:@{@"start_date": @"DESC"} limit:@(1)];
     if (trips.count > 0) {
         return trips[0];
     }
@@ -285,11 +308,11 @@
     }
     
     BOOL isTemp = (nil == tripSum.end_date);
-    ParkingRegion * startRegion = [self addParkingLocation:centerFrom];
+    ParkingRegion * startRegion = [self addParkingLocation:centerFrom modifyRegionCenter:!tripSum.is_analyzed];
     ParkingRegion * endRegion = nil;
     NSArray * groups = nil;
     if (!isTemp) {
-        endRegion = [self addParkingLocation:centerTo];
+        endRegion = [self addParkingLocation:centerTo modifyRegionCenter:!tripSum.is_analyzed];
         groups = [RegionGroup where:@{@"start_region": startRegion, @"end_region": endRegion, @"is_temp": @NO} inContext:self.tripAnalyzerContent limit:@1];
     } else {
         endRegion = [self tempParkingLocation:centerTo];

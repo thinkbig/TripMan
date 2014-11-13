@@ -46,10 +46,10 @@
         self.toDate.text = [sDateFormatter stringFromDate:[NSDate date]];
     }
     
-    self.distLabel.text = [NSString stringWithFormat:@"里程: %@", sum.total_dist];
-    self.speedLabel.text = [NSString stringWithFormat:@"最高速度: %@", sum.max_speed];
-    self.duringLabel.text = [NSString stringWithFormat:@"耗时: %@", sum.total_during];
-    self.jamDuring.text = [NSString stringWithFormat:@"缓行时间: %@", sum.traffic_jam_during];
+    self.distLabel.text = [NSString stringWithFormat:@"里程: %.fkm", [sum.total_dist floatValue]/1000.0f];
+    self.speedLabel.text = [NSString stringWithFormat:@"最高速度: %.fkm/h", [sum.max_speed floatValue]*3.6];
+    self.duringLabel.text = [NSString stringWithFormat:@"耗时: %.1fmin", [sum.total_during floatValue]/60.0];
+    self.jamDuring.text = [NSString stringWithFormat:@"缓行时间: %.1fmin", [sum.traffic_jam_during floatValue]/60.0];
 }
 
 @end

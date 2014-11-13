@@ -33,7 +33,6 @@ typedef NS_ENUM(NSUInteger, eTurningStat) {
 
 @interface GPSOffTimeFilter : NSObject
 
-+ (CGFloat) dist2FromGPSItem:(GPSLogItem*)fromItem toItem:(GPSLogItem*)toItem;
 + (NSArray*) smoothGPSData:(NSArray*)gpsData iteratorCnt:(NSInteger)repeat;
 
 - (void) calGPSDataForTurning:(NSArray*)gpsData smoothFirst:(BOOL)smooth;

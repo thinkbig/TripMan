@@ -84,6 +84,11 @@
     return CLLocationCoordinate2DMake([self.latitude doubleValue], [self.longitude doubleValue]);
 }
 
+- (CLLocationDistance) distanceFrom:(GPSLogItem*)item
+{
+    return [[self location] distanceFromLocation:[item location]];
+}
+
 - (double) safeSpeed
 {
     return [self.speed doubleValue] > 0 ? [self.speed doubleValue] : 0;

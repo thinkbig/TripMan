@@ -41,4 +41,6 @@ typedef NS_ENUM(NSInteger, eGPSEvent) {
 - (id)initWithLogMessage:(DDLogMessage *)logMessage;
 - (id)initWithDBResultSet:(FMResultSet*)resultSet;
 
+- (BOOL) isValidLocation;
+
 @end

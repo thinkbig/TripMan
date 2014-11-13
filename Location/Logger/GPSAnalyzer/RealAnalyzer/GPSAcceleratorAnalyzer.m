@@ -39,7 +39,7 @@
     for (NSInteger i = 0; i < gpsLogs.count; i++)
     {
         GPSLogItem * item = gpsLogs[i];
-        if ([item.horizontalAccuracy doubleValue] > 1000 || [GPSOffTimeFilter dist2FromGPSItem:last toItem:item] < 30 || [last.timestamp timeIntervalSinceDate:item.timestamp] < 10) {
+        if ([item.horizontalAccuracy doubleValue] > 1000 || [last distanceFrom:item] < 30 || [last.timestamp timeIntervalSinceDate:item.timestamp] < 10) {
             continue;
         }
         

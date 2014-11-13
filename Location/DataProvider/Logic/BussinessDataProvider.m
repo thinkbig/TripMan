@@ -81,7 +81,7 @@ static BussinessDataProvider * _sharedProvider = nil;
     }
     [manager commit];
     
-    [[GPSLogger sharedLogger].offTimeAnalyzer tripStartFrom:nil toDate:nil forceAnalyze:YES];
+    [[GPSLogger sharedLogger].offTimeAnalyzer analyzeTripStartFrom:nil toDate:nil];
     [[BussinessDataProvider sharedInstance] updateAllRegionInfo:NO];
 }
 

@@ -41,28 +41,29 @@
 
 // common const define
 
-#define cAvgNoiceSpeed                         3000.0/3.6     //  > 3000 km/h
-#define cAvgDrivingSpeed                       20.0/3.6       //  > 15 km/h
-#define cAvgTrafficJamSpeed                    10.0/3.6        //  < 5 km/h
-#define cAvgRunningSpeed                       8.0/3.6        //  > 10 km/h
-#define cAvgWalkingSpeed                       5.0/3.6        //  < 5 km/h
-#define cAvgStationarySpeed                    2.0/3.6        //  < 2 km/h
+#define cAvgNoiceSpeed                         (3000.0/3.6)     //  > 3000 km/h
+#define cAvgDrivingSpeed                       (20.0/3.6)       //  > 15 km/h
+#define cAvgTrafficJamSpeed                    (10.0/3.6)        //  < 5 km/h
+#define cAvgRunningSpeed                       (8.0/3.6)        //  > 10 km/h
+#define cAvgWalkingSpeed                       (5.0/3.6)        //  < 5 km/h
+#define cAvgStationarySpeed                    (2.0/3.6)        //  < 2 km/h
 
 #define cDirveStartSamplePoint                 3
 #define cDirveEndSamplePoint                   20
-#define cOntOfDateThreshold                    60*30          // if the last gps data is over 30*60s ealier, force end unfinished trip
-#define cCanStopMonitoringThreshold            60*3
+#define cOntOfDateThreshold                    (60*30)          // if the last gps data is over 30*60s ealier, force end unfinished trip
+#define cCanStopMonitoringThreshold            (60*3)
 
-#define cInsDrivingSpeed                       20.0/3.6       //  > 15 km/h
-#define cInsTrafficJamSpeed                    15.0/3.6        //  < 5 km/h
-#define cInsRunningSpeed                       10.0/3.6       //  > 10 km/h
-#define cInsWalkingSpeed                       5.0/3.6        //  < 5 km/h
-#define cInsStationarySpeed                    2/3.6          //  < 2 km/h
+#define cInsDrivingSpeed                       (20.0/3.6)       //  > 15 km/h
+#define cInsTrafficJamSpeed                    (15.0/3.6)        //  < 5 km/h
+#define cInsRunningSpeed                       (10.0/3.6)       //  > 10 km/h
+#define cInsWalkingSpeed                       (5.0/3.6)        //  < 5 km/h
+#define cInsStationarySpeed                    (2/3.6)          //  < 2 km/h
 
 #define cDriveStartThreshold                    10
-#define cMoveStartRecordThreshold               60*5          // must bigger than cDriveStartThreshold
-#define cDriveEndThreshold                      60*10
+#define cMoveStartRecordThreshold               (60*1)          // must bigger than cDriveStartThreshold
+#define cDriveEndThreshold                      (60*2)
 
+#define cStartLocErrorDist                      1500
 #define cReagionRadius                          60
 
 // public define

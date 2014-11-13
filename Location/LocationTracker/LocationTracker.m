@@ -138,8 +138,11 @@
         if (nil == statDate) {
             statDate = [NSDate date];
         }
+        NSNumber * lat = notification.userInfo[@"lat"];
+        NSNumber * lon = notification.userInfo[@"lon"];
+        CLCircularRegion* theRegion = [[CLCircularRegion alloc] initWithCenter:CLLocationCoordinate2DMake([lat doubleValue], [lon doubleValue]) radius:cReagionRadius identifier:@"tripStEd"];
         if ([inTrip boolValue]) {
-            GPSEvent(statDate, eGPSEventDriveStart);
+            GPSEvent5(statDate, eGPSEventDriveStart, theRegion, @"tripStEd", nil);
             // remove all monitor spot
             CLLocationManager * manager = [LocationTracker sharedLocationManager];
             NSSet * regions = manager.monitoredRegions;
@@ -147,9 +150,7 @@
                 [manager stopMonitoringForRegion:region];
             }
         } else {
-            GPSEvent(statDate, eGPSEventDriveEnd);
-            NSNumber * lat = notification.userInfo[@"lat"];
-            NSNumber * lon = notification.userInfo[@"lon"];
+            GPSEvent5(statDate, eGPSEventDriveEnd, theRegion, @"tripStEd", nil);
             if (lat && lon) {
                 CLLocation * stopLoc = [[CLLocation alloc] initWithLatitude:[lat doubleValue] longitude:[lon doubleValue]];
                 [self setParkingLocation:stopLoc];

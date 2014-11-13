@@ -34,5 +34,6 @@
 - (CLLocation*) location;
 - (CLLocationCoordinate2D) locationCoordinate;
 - (double) safeSpeed;
+- (CLLocationDistance) distanceFrom:(GPSLogItem*)item;
 
 @end

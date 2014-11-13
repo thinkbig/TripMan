@@ -143,20 +143,25 @@
         return;
     }
     
-    GPSLogItem * stLogItem = [GPSAnalyzerOffTime modifyStartPoint:item.start_date];
+    GPSLogItem * stLogItem = [GPSAnalyzerOffTime modifyStartPoint:item firstGPSLog:logArr[0]];
     if (stLogItem) {
         // check the modified start point is valid
         GPSLogItem * logItem = logArr[0];
         CLLocation * curLoc = [[CLLocation alloc] initWithLatitude:[logItem.latitude doubleValue] longitude:[logItem.longitude doubleValue]];
         CLLocation * lastLoc = [[CLLocation alloc] initWithLatitude:[stLogItem.latitude doubleValue] longitude:[stLogItem.longitude doubleValue]];
         CLLocationDistance distance = [lastLoc distanceFromLocation:curLoc];
-        if (distance < 1200) {
+        if (distance < cStartLocErrorDist) {
             // the modified start point is valid, add to array
             [rawData addObject:stLogItem];
             // extimate the start time
             stLogItem.timestamp = [logItem.timestamp dateByAddingTimeInterval:-distance/cAvgDrivingSpeed];
             item.start_date = stLogItem.timestamp;
+        } else {
+            stLogItem = 0;
         }
+    }
+    if (nil == stLogItem) {
+        stLogItem = logArr[0];
     }
     
     while (logArr.count > 0) {
@@ -197,7 +202,6 @@
     item.traffic_jam_during = @(oneTripAna.traffic_jam_during);
     item.traffic_avg_speed = @(oneTripAna.traffic_avg_speed);
     item.traffic_jam_cnt = @(oneTripAna.traffic_jam_cnt);
-    item.is_analyzed = @YES;
     
     // update analyze environment info
     EnvInfo * env_info = [manager environmentForTrip:item];
@@ -247,6 +251,9 @@
     // update start and end location region
     [manager startRegionCenter:[stLogItem locationCoordinate] toRegionCenter:[endLogItem locationCoordinate] forTrip:item];
     
+    // MUST after all analyze process, THEN set the analyzed flag
+    item.is_analyzed = @YES;
+    
     [manager commit];
 }
 
@@ -281,20 +288,54 @@
 //    return unfinishedTrip;
 //}
 
-- (NSArray*)tripStartFrom:(NSDate*)fromDate toDate:(NSDate*)toDate forceAnalyze:(BOOL)force
+- (NSArray*)analyzeTripStartFrom:(NSDate*)fromDate toDate:(NSDate*)toDate
 {
-    [self analyzeAllFinishedTrip:force];
+    [self rollOutOfDateTrip];
+    
     NSArray * returnTrips = [[TripsCoreDataManager sharedManager] tripStartFrom:fromDate toDate:toDate];
     for (TripSummary * sum in returnTrips) {
-        if (nil == sum.end_date) {
-            [self analyzeTripForSum:sum];
-        }
+        [self analyzeTripForSum:sum];
     }
     return returnTrips;
 }
 
 
-+ (GPSLogItem*)modifyStartPoint:(NSDate*)origStart
++ (GPSLogItem*)modifyStartPoint:(TripSummary*)sum firstGPSLog:(GPSLogItem*)firstLog
+{
+    GPSEventItem * stRegion = [[GPSLogger sharedLogger].dbLogger selectLatestEventBefore:sum.start_date ofType:eGPSEventDriveEnd];
+    if (nil == stRegion || ![stRegion isValidLocation]) {
+        // if do not have the last end drive point, or do not have the lat lon
+        // try get the last end driving point by trip sum
+        TripSummary * prevTrip = [[TripsCoreDataManager sharedManager] prevTripBy:sum];
+        if (prevTrip) {
+            stRegion = [[GPSEventItem alloc] init];
+            stRegion.timestamp = prevTrip.end_date;
+            stRegion.eventType = @(eGPSEventDriveEnd);
+            stRegion.latitude = prevTrip.region_group.end_region.center_lat;
+            stRegion.longitude = prevTrip.region_group.end_region.center_lon;
+        }
+    }
+    
+    if (stRegion && [stRegion isValidLocation]) {
+        GPSLogItem * tmpItem = [[GPSLogItem alloc] initWithEventItem:stRegion];
+        CLLocationDistance dist = [firstLog distanceFrom:tmpItem];
+        if (dist < cStartLocErrorDist) {
+            return tmpItem;
+        } else {
+            stRegion = nil;
+        }
+    }
+    
+    if (nil == stRegion) {
+        stRegion = [[GPSLogger sharedLogger].dbLogger selectLatestEventBefore:sum.start_date ofType:eGPSEventExitRegion];
+    }
+    if (stRegion) {
+        return [[GPSLogItem alloc] initWithEventItem:stRegion];
+    }
+    return nil;
+}
+
++ (GPSLogItem*)old_modifyStartPoint:(NSDate*)origStart
 {
     GPSEventItem * stRegion = [[GPSLogger sharedLogger].dbLogger selectLatestEventBefore:origStart ofType:eGPSEventExitRegion];
     if (nil == stRegion) {
@@ -305,7 +346,6 @@
     }
     return nil;
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -368,14 +408,14 @@
         return;
     }
     
-    GPSLogItem * stItem = [GPSAnalyzerOffTime modifyStartPoint:item.start_date];
+    GPSLogItem * stItem = [GPSAnalyzerOffTime old_modifyStartPoint:item.start_date];
     if (stItem) {
         // check the modified start point is valid
         GPSLogItem * item = logArr[0];
         CLLocation * curLoc = [[CLLocation alloc] initWithLatitude:[item.latitude doubleValue] longitude:[item.longitude doubleValue]];
         CLLocation * lastLoc = [[CLLocation alloc] initWithLatitude:[stItem.latitude doubleValue] longitude:[stItem.longitude doubleValue]];
         CLLocationDistance distance = [lastLoc distanceFromLocation:curLoc];
-        if (distance < 1200) {
+        if (distance < cStartLocErrorDist) {
             // the modified start point is valid, add to array
             [rawData addObject:stItem];
         }

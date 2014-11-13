@@ -86,7 +86,7 @@
 //    }
 //    [[TripsCoreDataManager sharedManager] commit];
     
-    NSArray * coreSum = [[GPSLogger sharedLogger].offTimeAnalyzer tripStartFrom:nil toDate:nil forceAnalyze:NO];
+    NSArray * coreSum = [[GPSLogger sharedLogger].offTimeAnalyzer analyzeTripStartFrom:nil toDate:nil];
     [[BussinessDataProvider sharedInstance] updateAllRegionInfo:NO];
     self.anaResult = coreSum;
     [self.contentTable reloadData];

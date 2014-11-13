@@ -65,7 +65,7 @@
                 CLLocation * curLoc = [[CLLocation alloc] initWithLatitude:[item.latitude doubleValue] longitude:[item.longitude doubleValue]];
                 CLLocation * lastLoc = [[CLLocation alloc] initWithLatitude:[stItem.latitude doubleValue] longitude:[stItem.longitude doubleValue]];
                 CLLocationDistance distance = [lastLoc distanceFromLocation:curLoc];
-                if (distance < 1200) {
+                if (distance < cStartLocErrorDist) {
                     // the modified start point is valid, add to array
                     [logs addObject:stItem];
                 }
@@ -181,7 +181,7 @@
             
             if (i > 0) {
                 // break or accelerate
-                if ([GPSOffTimeFilter dist2FromGPSItem:last toItem:item] > 30 && [last.timestamp timeIntervalSinceDate:item.timestamp] >= 10 && [item.horizontalAccuracy doubleValue] <= 1000) {
+                if ([last distanceFrom:item] > 30 && [last.timestamp timeIntervalSinceDate:item.timestamp] >= 10 && [item.horizontalAccuracy doubleValue] <= 1000) {
                     GPSLogItem * lastItem = gpsLog[i-1];
                     CGFloat xDif = fabs([item.accelerationX doubleValue]-[lastItem.accelerationX doubleValue]);
                     CGFloat yDif = fabs([item.accelerationY doubleValue]-[lastItem.accelerationY doubleValue]);

@@ -23,6 +23,6 @@
 - (void)rollOutOfDateTrip;
 - (void)analyzeTripForSum:(TripSummary*)tripSum;
 
-- (NSArray*)tripStartFrom:(NSDate*)fromDate toDate:(NSDate*)toDate forceAnalyze:(BOOL)force;
+- (NSArray*)analyzeTripStartFrom:(NSDate*)fromDate toDate:(NSDate*)toDate;
 
 @end

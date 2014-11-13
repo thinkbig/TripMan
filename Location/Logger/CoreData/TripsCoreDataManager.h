@@ -31,6 +31,7 @@
 - (NSArray*) allParkingDetails;
 
 - (TripSummary*) unfinishedTrip;
+- (TripSummary*) prevTripBy:(TripSummary*)curTrip;
 - (NSArray*) allTrips;
 - (NSArray*) unAnalyzedTrips;
 - (NSArray*) tripStartFrom:(NSDate*)fromDate toDate:(NSDate*)toDate;

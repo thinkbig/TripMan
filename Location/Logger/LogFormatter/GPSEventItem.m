@@ -48,4 +48,9 @@
 	return self;
 }
 
+- (BOOL) isValidLocation
+{
+    return ([self.latitude doubleValue] != 0 && [self.longitude doubleValue] != 0);
+}
+
 @end

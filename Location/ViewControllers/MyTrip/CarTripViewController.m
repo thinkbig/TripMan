@@ -73,7 +73,7 @@
     if (nil == dateDay) {
         dateDay = [NSDate date];
     }
-    NSArray * trips = [[GPSLogger sharedLogger].offTimeAnalyzer tripStartFrom:[dateDay dateAtStartOfDay] toDate:[dateDay dateAtEndOfDay] forceAnalyze:NO];
+    NSArray * trips = [[GPSLogger sharedLogger].offTimeAnalyzer analyzeTripStartFrom:[dateDay dateAtStartOfDay] toDate:[dateDay dateAtEndOfDay]];
     
     CGFloat totalDist = 0;
     CGFloat totalDuring = 0;
