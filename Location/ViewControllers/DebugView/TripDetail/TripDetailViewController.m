@@ -49,7 +49,7 @@
 {
     _analyzeSum = analyzeSum;
     if (analyzeSum) {
-        [[GPSLogger sharedLogger].offTimeAnalyzer analyzeTripForSum:analyzeSum];
+        [[GPSLogger sharedLogger].offTimeAnalyzer analyzeTripForSum:analyzeSum withAnalyzer:nil];
     }
 }
 

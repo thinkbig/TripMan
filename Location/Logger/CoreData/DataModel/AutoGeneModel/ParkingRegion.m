@@ -1,12 +1,13 @@
 //
 //  ParkingRegion.m
-//  Location
+//  TripMan
 //
-//  Created by taq on 11/7/14.
+//  Created by taq on 11/14/14.
 //  Copyright (c) 2014 Location. All rights reserved.
 //
 
 #import "ParkingRegion.h"
+#import "RegionGroup.h"
 
 
 @implementation ParkingRegion
@@ -18,12 +19,14 @@
 @dynamic describe;
 @dynamic district;
 @dynamic is_analyzed;
+@dynamic is_temp;
 @dynamic nearby_poi;
 @dynamic province;
 @dynamic rate;
 @dynamic street;
 @dynamic street_num;
 @dynamic user_mark;
-@dynamic is_temp;
+@dynamic group_owner_st;
+@dynamic group_owner_ed;
 
 @end

@@ -110,7 +110,7 @@
         <!--Log File List View Controller-->
         <scene sceneID="Jlj-Ht-7q2">
             <objects>
-                <viewController id="BUC-nw-9sd" customClass="LogFileListViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LogDisplayList" hidesBottomBarWhenPushed="YES" id="BUC-nw-9sd" customClass="LogFileListViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="E9l-cn-85b"/>
                         <viewControllerLayoutGuide type="bottom" id="Uos-vA-JJN"/>
@@ -323,7 +323,7 @@
         <!--Log File Content View Controller-->
         <scene sceneID="DiA-m6-4WA">
             <objects>
-                <viewController id="Ful-FB-kmw" customClass="LogFileContentViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LogDisplayViewId" hidesBottomBarWhenPushed="YES" id="Ful-FB-kmw" customClass="LogFileContentViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="zwa-Np-iPm"/>
                         <viewControllerLayoutGuide type="bottom" id="GCN-sr-02e"/>

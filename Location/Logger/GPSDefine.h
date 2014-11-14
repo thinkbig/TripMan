@@ -60,8 +60,8 @@
 #define cInsStationarySpeed                    (2/3.6)          //  < 2 km/h
 
 #define cDriveStartThreshold                    10
-#define cMoveStartRecordThreshold               (60*1)          // must bigger than cDriveStartThreshold
-#define cDriveEndThreshold                      (60*2)
+#define cMoveStartRecordThreshold               (60*5)          // must bigger than cDriveStartThreshold
+#define cDriveEndThreshold                      (60*10)
 
 #define cStartLocErrorDist                      1500
 #define cReagionRadius                          60

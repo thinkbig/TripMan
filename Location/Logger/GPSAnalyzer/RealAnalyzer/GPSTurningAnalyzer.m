@@ -7,7 +7,6 @@
 //
 
 #import "GPSTurningAnalyzer.h"
-#import "GPSOffTimeFilter.h"
 
 @interface GPSTurningAnalyzer ()
 
@@ -16,8 +15,17 @@
 
 @implementation GPSTurningAnalyzer
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        self.filter = [GPSOffTimeFilter new];
+    }
+    return self;
+}
 
-- (void) updateGPSDataArray:(NSArray*)gpsLogs
+
+- (void) updateGPSDataArray:(NSArray*)gpsLogs shouldSmooth:(BOOL)smooth
 {
     // init
     self.left_turn_cnt = 0;
@@ -34,9 +42,8 @@
         return;
     }
     
-    GPSOffTimeFilter * filter = [GPSOffTimeFilter new];
-    [filter calGPSDataForTurning:gpsLogs smoothFirst:YES];
-    NSArray * turningParam = [filter turningParams];
+    [self.filter calGPSDataForTurning:gpsLogs smoothFirst:smooth];
+    NSArray * turningParam = [self.filter turningParams];
     
     CGFloat tolLeftTurnSpeed = 0;
     CGFloat tolRightTurnSpeed = 0;

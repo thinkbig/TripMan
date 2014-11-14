@@ -10,6 +10,7 @@
 #import "TripTicketView.h"
 #import "MapDisplayViewController.h"
 #import "NSDate+Utilities.h"
+#import "GPSTurningAnalyzer.h"
 
 @interface CarTripViewController ()
 
@@ -73,11 +74,22 @@
     if (nil == dateDay) {
         dateDay = [NSDate date];
     }
-    NSArray * trips = [[GPSLogger sharedLogger].offTimeAnalyzer analyzeTripStartFrom:[dateDay dateAtStartOfDay] toDate:[dateDay dateAtEndOfDay]];
+
+    NSArray * trips = [[TripsCoreDataManager sharedManager] tripStartFrom:[dateDay dateAtStartOfDay] toDate:[dateDay dateAtEndOfDay]];
+    for (TripSummary * sum in trips) {
+        GPSTurningAnalyzer * turnAnalyzer = [GPSTurningAnalyzer new];
+        [[GPSLogger sharedLogger].offTimeAnalyzer analyzeTripForSum:sum withAnalyzer:@{@"TurningAnalyzer":turnAnalyzer}];
+        if (0 == [sum.traffic_light_cnt integerValue]) {
+            [[BussinessDataProvider sharedInstance] updateRoadMarkForTrips:sum ofTurningPoints:[turnAnalyzer.filter featurePoints] success:^(id cnt) {
+                [self.carousel reloadData];
+            } failure:nil];
+        }
+    }
     
     CGFloat totalDist = 0;
     CGFloat totalDuring = 0;
     CGFloat maxSpeed = 0;
+    
     self.tripsToday = [[trips reverseObjectEnumerator] allObjects];
     for (TripSummary * sum in self.tripsToday) {
         [[BussinessDataProvider sharedInstance] updateRegionInfo:sum.region_group.start_region force:NO success:^(id) {

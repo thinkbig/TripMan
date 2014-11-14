@@ -21,7 +21,9 @@
 
 - (void)analyzeAllFinishedTrip:(BOOL)force;
 - (void)rollOutOfDateTrip;
-- (void)analyzeTripForSum:(TripSummary*)tripSum;
+
+// analyzer dict key (TurningAnalyzer, AcceleratorAnalyzer)
+- (void)analyzeTripForSum:(TripSummary*)tripSum withAnalyzer:(NSDictionary*)anaDict;
 
 - (NSArray*)analyzeTripStartFrom:(NSDate*)fromDate toDate:(NSDate*)toDate;
 

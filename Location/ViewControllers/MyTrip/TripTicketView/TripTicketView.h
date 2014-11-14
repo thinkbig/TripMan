@@ -25,7 +25,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *distLabel;
 @property (weak, nonatomic) IBOutlet UILabel *speedLabel;
 @property (weak, nonatomic) IBOutlet UILabel *duringLabel;
-@property (weak, nonatomic) IBOutlet UILabel *jamDuring;
+@property (weak, nonatomic) IBOutlet UILabel *trafficLightLabel;
 
 - (void) updateWithTripSummary:(TripSummary*)sum;
 

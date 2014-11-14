@@ -175,15 +175,23 @@
         }
         
         // end drive
-        NSDate * thresDateEd = [lastItem.timestamp dateByAddingTimeInterval:-cDriveEndThreshold];
-        for (NSInteger i = _endSpeedTraceIdx; i < cnt; i++) {
-            GPSLogItem * item = tmpArr[i];
-            if ([thresDateEd compare:item.timestamp] == NSOrderedDescending) {
-                _endSpeedTrace -= ([item.speed floatValue] < 0 ? 0 : [item.speed floatValue]);
-                _endSpeedTraceCnt--;
-            } else {
-                _endSpeedTraceIdx = i;
-                break;
+        CGFloat speed = [lastItem.speed floatValue] < 0 ? 0 : [lastItem.speed floatValue];
+        if (speed > cInsDrivingSpeed) {
+            // still in drive, reset the end point
+            _endSpeedTrace = speed;
+            _endSpeedTraceCnt = 1;
+            _endSpeedTraceIdx = cnt-1;
+        } else {
+            NSDate * thresDateEd = [lastItem.timestamp dateByAddingTimeInterval:-cDriveEndThreshold];
+            for (NSInteger i = _endSpeedTraceIdx; i < cnt; i++) {
+                GPSLogItem * item = tmpArr[i];
+                if ([thresDateEd compare:item.timestamp] == NSOrderedDescending) {
+                    _endSpeedTrace -= ([item.speed floatValue] < 0 ? 0 : [item.speed floatValue]);
+                    _endSpeedTraceCnt--;
+                } else {
+                    _endSpeedTraceIdx = i;
+                    break;
+                }
             }
         }
     }

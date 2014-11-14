@@ -1,8 +1,8 @@
 //
 //  TripSummary.h
-//  Location
+//  TripMan
 //
-//  Created by taq on 11/8/14.
+//  Created by taq on 11/14/14.
 //  Copyright (c) 2014 Location. All rights reserved.
 //
 
@@ -21,9 +21,10 @@
 @property (nonatomic, retain) NSNumber * total_dist;
 @property (nonatomic, retain) NSNumber * total_during;
 @property (nonatomic, retain) NSNumber * traffic_avg_speed;
+@property (nonatomic, retain) NSNumber * traffic_jam_cnt;
 @property (nonatomic, retain) NSNumber * traffic_jam_dist;
 @property (nonatomic, retain) NSNumber * traffic_jam_during;
-@property (nonatomic, retain) NSNumber * traffic_jam_cnt;
+@property (nonatomic, retain) NSNumber * traffic_light_cnt;
 @property (nonatomic, retain) DrivingInfo *driving_info;
 @property (nonatomic, retain) EnvInfo *environment;
 @property (nonatomic, retain) RegionGroup *region_group;

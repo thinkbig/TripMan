@@ -35,7 +35,7 @@
 */
 
 - (IBAction)showDebug:(id)sender {
-    [self presentViewController:InstFirstVC(@"Debug") animated:YES completion:nil];
+    [self.navigationController pushViewController:InstVC(@"Debug", @"LogDisplayList") animated:YES];
 //    static BOOL isShown = YES;
 //    if (isShown) {
 //        [ROOT_VIEW_CONTROLLER hideTabBar:TSTabShowHideFromBottom animated:YES];

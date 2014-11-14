@@ -42,6 +42,8 @@
         <attribute name="street" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="street_num" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="user_mark" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="group_owner_ed" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="RegionGroup" inverseName="end_region" inverseEntity="RegionGroup" syncable="YES"/>
+        <relationship name="group_owner_st" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="RegionGroup" inverseName="start_region" inverseEntity="RegionGroup" syncable="YES"/>
     </entity>
     <entity name="RegionGroup" representedClassName="RegionGroup" syncable="YES">
         <attribute name="best_dist" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
@@ -53,8 +55,8 @@
         <attribute name="is_analyzed" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="is_temp" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="relative_trips_cnt" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <relationship name="end_region" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="ParkingRegion" syncable="YES"/>
-        <relationship name="start_region" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="ParkingRegion" syncable="YES"/>
+        <relationship name="end_region" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="ParkingRegion" inverseName="group_owner_ed" inverseEntity="ParkingRegion" syncable="YES"/>
+        <relationship name="start_region" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="ParkingRegion" inverseName="group_owner_st" inverseEntity="ParkingRegion" syncable="YES"/>
         <relationship name="trips" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TripSummary" inverseName="region_group" inverseEntity="TripSummary" syncable="YES"/>
     </entity>
     <entity name="TrafficInfo" representedClassName="TrafficInfo" syncable="YES">
@@ -75,12 +77,13 @@
         <attribute name="traffic_jam_cnt" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="traffic_jam_dist" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="traffic_jam_during" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="traffic_light_cnt" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <relationship name="driving_info" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="DrivingInfo" inverseName="trip_owner" inverseEntity="DrivingInfo" syncable="YES"/>
         <relationship name="environment" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EnvInfo" inverseName="trip_owner" inverseEntity="EnvInfo" syncable="YES"/>
         <relationship name="region_group" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="RegionGroup" inverseName="trips" inverseEntity="RegionGroup" syncable="YES"/>
         <relationship name="traffic_jams" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TrafficInfo" syncable="YES"/>
         <relationship name="turning_info" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TurningInfo" inverseName="trip_owner" inverseEntity="TurningInfo" syncable="YES"/>
-        <relationship name="weather" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WeatherInfo" syncable="YES"/>
+        <relationship name="weather" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WeatherInfo" inverseName="trip_owner" inverseEntity="WeatherInfo" syncable="YES"/>
     </entity>
     <entity name="TurningInfo" representedClassName="TurningInfo" syncable="YES">
         <attribute name="is_analyzed" optional="YES" attributeType="Boolean" syncable="YES"/>
@@ -105,15 +108,16 @@
         <attribute name="temperature" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="weather" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="wind" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="trip_owner" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TripSummary" inverseName="weather" inverseEntity="TripSummary" syncable="YES"/>
     </entity>
     <elements>
         <element name="DrivingInfo" positionX="27" positionY="153" width="128" height="238"/>
         <element name="EnvInfo" positionX="-9" positionY="135" width="128" height="193"/>
-        <element name="ParkingRegion" positionX="-63" positionY="-18" width="128" height="253"/>
+        <element name="ParkingRegion" positionX="-63" positionY="-18" width="128" height="283"/>
         <element name="RegionGroup" positionX="-18" positionY="135" width="128" height="223"/>
         <element name="TrafficInfo" positionX="-27" positionY="126" width="128" height="105"/>
-        <element name="TripSummary" positionX="-45" positionY="72" width="128" height="298"/>
+        <element name="TripSummary" positionX="-45" positionY="72" width="128" height="313"/>
         <element name="TurningInfo" positionX="-9" positionY="108" width="128" height="208"/>
-        <element name="WeatherInfo" positionX="9" positionY="144" width="128" height="180"/>
+        <element name="WeatherInfo" positionX="9" positionY="144" width="128" height="193"/>
     </elements>
 </model>

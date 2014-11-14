@@ -323,7 +323,9 @@
     if (groups.count > 0) {
         regionGroup = groups[0];
         regionGroup.start_region = startRegion;
+        [startRegion addGroup_owner_stObject:regionGroup];
         regionGroup.end_region = endRegion;
+        [endRegion addGroup_owner_edObject:regionGroup];
     } else {
         regionGroup = [RegionGroup create:@{@"start_region": startRegion, @"end_region": endRegion, @"is_temp": @(isTemp)} inContext:self.tripAnalyzerContent];
     }

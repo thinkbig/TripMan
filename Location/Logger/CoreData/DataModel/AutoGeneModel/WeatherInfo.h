@@ -1,14 +1,15 @@
 //
 //  WeatherInfo.h
-//  Location
+//  TripMan
 //
-//  Created by taq on 11/7/14.
+//  Created by taq on 11/14/14.
 //  Copyright (c) 2014 Location. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
+@class TripSummary;
 
 @interface WeatherInfo : NSManagedObject
 
@@ -21,5 +22,14 @@
 @property (nonatomic, retain) NSString * temperature;
 @property (nonatomic, retain) NSString * weather;
 @property (nonatomic, retain) NSString * wind;
+@property (nonatomic, retain) NSSet *trip_owner;
+@end
+
+@interface WeatherInfo (CoreDataGeneratedAccessors)
+
+- (void)addTrip_ownerObject:(TripSummary *)value;
+- (void)removeTrip_ownerObject:(TripSummary *)value;
+- (void)addTrip_owner:(NSSet *)values;
+- (void)removeTrip_owner:(NSSet *)values;
 
 @end

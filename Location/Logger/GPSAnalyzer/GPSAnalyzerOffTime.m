@@ -127,9 +127,9 @@
 }
 
 
-- (void)analyzeTripForSum:(TripSummary*)item
+- (void)analyzeTripForSum:(TripSummary*)tripSum withAnalyzer:(NSDictionary*)anaDict
 {
-    if (nil == item) {
+    if (nil == tripSum) {
         return;
     }
     
@@ -137,27 +137,25 @@
     NSMutableArray * rawData = [NSMutableArray array];
     NSInteger offset = 0;
     NSInteger limit = 500;
-    NSArray * logArr = [loggerDB selectLogFrom:item.start_date toDate:item.end_date offset:offset limit:limit];
+    NSArray * logArr = [loggerDB selectLogFrom:tripSum.start_date toDate:tripSum.end_date offset:offset limit:limit];
     if (logArr.count == 0) {
-        NSLog(@"not such trip from %@ to %@", item.start_date, item.end_date);
+        NSLog(@"not such trip from %@ to %@", tripSum.start_date, tripSum.end_date);
         return;
     }
     
-    GPSLogItem * stLogItem = [GPSAnalyzerOffTime modifyStartPoint:item firstGPSLog:logArr[0]];
+    GPSLogItem * stLogItem = [GPSAnalyzerOffTime modifyStartPoint:tripSum firstGPSLog:logArr[0]];
     if (stLogItem) {
         // check the modified start point is valid
         GPSLogItem * logItem = logArr[0];
-        CLLocation * curLoc = [[CLLocation alloc] initWithLatitude:[logItem.latitude doubleValue] longitude:[logItem.longitude doubleValue]];
-        CLLocation * lastLoc = [[CLLocation alloc] initWithLatitude:[stLogItem.latitude doubleValue] longitude:[stLogItem.longitude doubleValue]];
-        CLLocationDistance distance = [lastLoc distanceFromLocation:curLoc];
+        CLLocationDistance distance = [stLogItem distanceFrom:logItem];
         if (distance < cStartLocErrorDist) {
             // the modified start point is valid, add to array
             [rawData addObject:stLogItem];
             // extimate the start time
             stLogItem.timestamp = [logItem.timestamp dateByAddingTimeInterval:-distance/cAvgDrivingSpeed];
-            item.start_date = stLogItem.timestamp;
+            tripSum.start_date = stLogItem.timestamp;
         } else {
-            stLogItem = 0;
+            stLogItem = nil;
         }
     }
     if (nil == stLogItem) {
@@ -167,7 +165,7 @@
     while (logArr.count > 0) {
         [rawData addObjectsFromArray:logArr];
         offset += logArr.count;
-        logArr = [loggerDB selectLogFrom:item.start_date toDate:item.end_date offset:offset limit:limit];
+        logArr = [loggerDB selectLogFrom:tripSum.start_date toDate:tripSum.end_date offset:offset limit:limit];
     }
     
     NSUInteger realEndIdx = rawData.count - 1;
@@ -181,9 +179,9 @@
     
     realEndIdx = MIN(realEndIdx+20, rawData.count - 1);
     GPSLogItem * endLogItem = rawData[realEndIdx];
-    if (realEndIdx != rawData.count - 1 && item.end_date) {
+    if (realEndIdx != rawData.count - 1 && tripSum.end_date) {
         // must be already ended trip, modify it's end timestamp
-        item.end_date = endLogItem.timestamp;
+        tripSum.end_date = endLogItem.timestamp;
     }
     
     TripsCoreDataManager * manager = [TripsCoreDataManager sharedManager];
@@ -194,17 +192,17 @@
     GPSTripSummaryAnalyzer * oneTripAna = [GPSTripSummaryAnalyzer new];
     [oneTripAna updateGPSDataArray:smoothData];
     
-    item.total_dist = @(oneTripAna.total_dist);
-    item.total_during = @(oneTripAna.total_during);
-    item.avg_speed = @(oneTripAna.avg_speed);
-    item.max_speed = @(oneTripAna.max_speed);
-    item.traffic_jam_dist = @(oneTripAna.traffic_jam_dist);
-    item.traffic_jam_during = @(oneTripAna.traffic_jam_during);
-    item.traffic_avg_speed = @(oneTripAna.traffic_avg_speed);
-    item.traffic_jam_cnt = @(oneTripAna.traffic_jam_cnt);
+    tripSum.total_dist = @(oneTripAna.total_dist);
+    tripSum.total_during = @(oneTripAna.total_during);
+    tripSum.avg_speed = @(oneTripAna.avg_speed);
+    tripSum.max_speed = @(oneTripAna.max_speed);
+    tripSum.traffic_jam_dist = @(oneTripAna.traffic_jam_dist);
+    tripSum.traffic_jam_during = @(oneTripAna.traffic_jam_during);
+    tripSum.traffic_avg_speed = @(oneTripAna.traffic_avg_speed);
+    tripSum.traffic_jam_cnt = @(oneTripAna.traffic_jam_cnt);
     
     // update analyze environment info
-    EnvInfo * env_info = [manager environmentForTrip:item];
+    EnvInfo * env_info = [manager environmentForTrip:tripSum];
     env_info.day_dist = @(oneTripAna.day_dist);
     env_info.day_during = @(oneTripAna.day_during);
     env_info.day_avg_speed = @(oneTripAna.day_avg_speed);
@@ -216,9 +214,12 @@
     env_info.is_analyzed = @YES;
     
     // update analyze driving info
-    GPSAcceleratorAnalyzer * acceAnalyzer = [GPSAcceleratorAnalyzer new];
+    GPSAcceleratorAnalyzer * acceAnalyzer = anaDict[@"AcceleratorAnalyzer"];
+    if (nil == acceAnalyzer) {
+        acceAnalyzer = [GPSAcceleratorAnalyzer new];
+    }
     [acceAnalyzer updateGPSDataArray:smoothData];
-    DrivingInfo * drive_info = [manager drivingInfoForTrip:item];
+    DrivingInfo * drive_info = [manager drivingInfoForTrip:tripSum];
     drive_info.breaking_cnt = @(acceAnalyzer.breaking_cnt);
     drive_info.hard_breaking_cnt = @(acceAnalyzer.hard_breaking_cnt);
     drive_info.max_breaking_begin_speed = @(acceAnalyzer.max_breaking_begin_speed);
@@ -233,9 +234,12 @@
     drive_info.is_analyzed = @YES;
     
     // update turning info
-    GPSTurningAnalyzer * turningAnalyzer = [GPSTurningAnalyzer new];
-    [turningAnalyzer updateGPSDataArray:smoothData];
-    TurningInfo * turning_info = [manager turningInfoForTrip:item];
+    GPSTurningAnalyzer * turningAnalyzer = anaDict[@"TurningAnalyzer"];
+    if (nil == turningAnalyzer) {
+        turningAnalyzer = [GPSTurningAnalyzer new];
+    }
+    [turningAnalyzer updateGPSDataArray:smoothData shouldSmooth:NO];
+    TurningInfo * turning_info = [manager turningInfoForTrip:tripSum];
     turning_info.left_turn_cnt = @(turningAnalyzer.left_turn_cnt);
     turning_info.left_turn_avg_speed = @(turningAnalyzer.left_turn_avg_speed);
     turning_info.left_turn_max_speed = @(turningAnalyzer.left_turn_max_speed);
@@ -247,12 +251,11 @@
     turning_info.turn_round_max_speed = @(turningAnalyzer.turn_round_max_speed);
     turning_info.is_analyzed = @YES;
     
-    
     // update start and end location region
-    [manager startRegionCenter:[stLogItem locationCoordinate] toRegionCenter:[endLogItem locationCoordinate] forTrip:item];
+    [manager startRegionCenter:[stLogItem locationCoordinate] toRegionCenter:[endLogItem locationCoordinate] forTrip:tripSum];
     
     // MUST after all analyze process, THEN set the analyzed flag
-    item.is_analyzed = @YES;
+    tripSum.is_analyzed = @YES;
     
     [manager commit];
 }
@@ -265,7 +268,7 @@
     NSArray * trips = force ? [manager allTrips] : [manager unAnalyzedTrips];
     for (TripSummary * item in trips)
     {
-        [self analyzeTripForSum:item];
+        [self analyzeTripForSum:item withAnalyzer:nil];
     }
 }
 - (TripSummary*)analyzeUnFinishedTrip
@@ -273,7 +276,7 @@
     [self rollOutOfDateTrip];
     
     TripSummary * unfinishedTrip = [[TripsCoreDataManager sharedManager] unfinishedTrip];
-    [self analyzeTripForSum:unfinishedTrip];
+    [self analyzeTripForSum:unfinishedTrip withAnalyzer:nil];
     
     return unfinishedTrip;
 }
@@ -294,7 +297,7 @@
     
     NSArray * returnTrips = [[TripsCoreDataManager sharedManager] tripStartFrom:fromDate toDate:toDate];
     for (TripSummary * sum in returnTrips) {
-        [self analyzeTripForSum:sum];
+        [self analyzeTripForSum:sum withAnalyzer:nil];
     }
     return returnTrips;
 }
@@ -490,7 +493,7 @@
     
     // update turning info
     GPSTurningAnalyzer * turningAnalyzer = [GPSTurningAnalyzer new];
-    [turningAnalyzer updateGPSDataArray:smoothData];
+    [turningAnalyzer updateGPSDataArray:smoothData shouldSmooth:NO];
     AnalyzeTurningItem * turnItem = [[AnalyzeTurningItem alloc] initWithTripId:item.db_id];
     turnItem.left_turn_cnt = @(turningAnalyzer.left_turn_cnt);
     turnItem.left_turn_avg_speed = @(turningAnalyzer.left_turn_avg_speed);

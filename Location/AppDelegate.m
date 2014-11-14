@@ -44,7 +44,7 @@
     
     // check if need rebuild db
     static NSString * rebuildKey = @"kLocationForceRebuildKey";
-    NSString * rebuildVal = @"value_000000000000"; // make sure it is different if this version should rebuild db
+    NSString * rebuildVal = @"value_000000000002"; // make sure it is different if this version should rebuild db
     NSString * oldVa = [[NSUserDefaults standardUserDefaults] objectForKey:rebuildKey];
     if (nil == oldVa || ![rebuildVal isEqualToString:oldVa]) {
         [[NSUserDefaults standardUserDefaults] setObject:rebuildVal forKey:rebuildKey];
@@ -157,6 +157,9 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     DDLogWarn(@"@@@@@@@@@@@@@ applicationDidBecomeActive @@@@@@@@@@@@@");
+    
+    [[GPSLogger sharedLogger].offTimeAnalyzer rollOutOfDateTrip];
+    
     [[BussinessDataProvider sharedInstance] updateWeatherToday:nil];
     [[BussinessDataProvider sharedInstance] updateAllRegionInfo:YES];
 }

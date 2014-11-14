@@ -22,6 +22,12 @@ static NSDateFormatter *sDateFormatter = nil;
     return [sDateFormatter stringFromDate:date];
 }
 
+- (NSString *)getPath
+{
+    NSString * format = [super getPath];
+    return [NSString stringWithFormat:format, @"weather"];
+}
+
 - (NSDictionary*)requestParam {
     if (self.city.length > 0) {
         return @{@"location":self.city};
