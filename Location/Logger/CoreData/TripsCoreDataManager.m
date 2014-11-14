@@ -10,8 +10,6 @@
 #import "ParkingRegionDetail.h"
 #import "NSManagedObject+ActiveRecord.h"
 
-#define cParkingRegionRadius        500
-
 @interface TripsCoreDataManager ()
 
 @property (nonatomic, strong) NSManagedObjectContext *          tripAnalyzerContent;

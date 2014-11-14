@@ -75,17 +75,6 @@
 
 - (IBAction)refresh:(id)sender
 {
-    // only transport finished trips
-    
-//    NSArray * finishedTrips = [[GPSLogger sharedLogger].offTimeAnalyzer old_analyzedResultFrom:nil toDate:nil offset:0 limit:0 reverseOrder:YES forceAnalyze:NO];
-//    for (GPSAnalyzeSumItem * item in finishedTrips) {
-//        NSArray * tripExist = [[TripsCoreDataManager sharedManager] tripStartFrom:item.start_date toDate:item.start_date];
-//        if (tripExist.count == 0) {
-//            [[TripsCoreDataManager sharedManager] newTripAt:item.start_date endAt:item.end_date];            
-//        }
-//    }
-//    [[TripsCoreDataManager sharedManager] commit];
-    
     NSArray * coreSum = [[GPSLogger sharedLogger].offTimeAnalyzer analyzeTripStartFrom:nil toDate:nil];
     [[BussinessDataProvider sharedInstance] updateAllRegionInfo:NO];
     self.anaResult = coreSum;

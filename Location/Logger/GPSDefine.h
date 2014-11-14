@@ -63,8 +63,9 @@
 #define cMoveStartRecordThreshold               (60*5)          // must bigger than cDriveStartThreshold
 #define cDriveEndThreshold                      (60*10)
 
-#define cStartLocErrorDist                      1500
+#define cStartLocErrorDist                      2000
 #define cReagionRadius                          60
+#define cParkingRegionRadius                    500
 
 // public define
 
