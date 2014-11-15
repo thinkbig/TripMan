@@ -13,12 +13,10 @@
 
 // from view content
 @property (weak, nonatomic) IBOutlet UILabel *fromPoi;
-@property (weak, nonatomic) IBOutlet UILabel *fromStreet;
 @property (weak, nonatomic) IBOutlet UILabel *fromDate;
 
 // to view content
 @property (weak, nonatomic) IBOutlet UILabel *toPoi;
-@property (weak, nonatomic) IBOutlet UILabel *toStreet;
 @property (weak, nonatomic) IBOutlet UILabel *toDate;
 
 // sum content

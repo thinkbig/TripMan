@@ -73,6 +73,8 @@
 		A34F01971A07259D00F58C17 /* BaiduGeocodingWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = A34F01961A07259D00F58C17 /* BaiduGeocodingWrapper.m */; };
 		A34F019A1A07289C00F58C17 /* CommonWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = A34F01991A07289C00F58C17 /* CommonWrapper.m */; };
 		A377B42F19F5537900DDB5EE /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = A377B42E19F5537900DDB5EE /* NSString+MD5.m */; };
+		A378ABE31A164664006A3B68 /* DVSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = A378ABE21A164664006A3B68 /* DVSwitch.m */; };
+		A378ABE71A16F124006A3B68 /* DRDynamicSlideShow.m in Sources */ = {isa = PBXBuildFile; fileRef = A378ABE61A16F124006A3B68 /* DRDynamicSlideShow.m */; };
 		A37A1C821A0B6C6C00633E25 /* BaiduReverseGeocodingWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = A37A1C811A0B6C6C00633E25 /* BaiduReverseGeocodingWrapper.m */; };
 		A37E03EC1A0D216900B0B0EC /* TSPair.m in Sources */ = {isa = PBXBuildFile; fileRef = A37E03EB1A0D216900B0B0EC /* TSPair.m */; };
 		A37E03EF1A0DE10B00B0B0EC /* TripTicketView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A37E03EE1A0DE10B00B0B0EC /* TripTicketView.xib */; };
@@ -301,6 +303,10 @@
 		A34F019B1A07478600F58C17 /* CommonFacadeDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommonFacadeDefine.h; sourceTree = "<group>"; };
 		A377B42D19F5537900DDB5EE /* NSString+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5.h"; sourceTree = "<group>"; };
 		A377B42E19F5537900DDB5EE /* NSString+MD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MD5.m"; sourceTree = "<group>"; };
+		A378ABE11A164664006A3B68 /* DVSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVSwitch.h; sourceTree = "<group>"; };
+		A378ABE21A164664006A3B68 /* DVSwitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVSwitch.m; sourceTree = "<group>"; };
+		A378ABE51A16F124006A3B68 /* DRDynamicSlideShow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DRDynamicSlideShow.h; sourceTree = "<group>"; };
+		A378ABE61A16F124006A3B68 /* DRDynamicSlideShow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DRDynamicSlideShow.m; sourceTree = "<group>"; };
 		A37A1C801A0B6C6C00633E25 /* BaiduReverseGeocodingWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaiduReverseGeocodingWrapper.h; sourceTree = "<group>"; };
 		A37A1C811A0B6C6C00633E25 /* BaiduReverseGeocodingWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaiduReverseGeocodingWrapper.m; sourceTree = "<group>"; };
 		A37E03EA1A0D216900B0B0EC /* TSPair.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSPair.h; sourceTree = "<group>"; };
@@ -889,6 +895,8 @@
 		A34F01421A06699300F58C17 /* UIControl */ = {
 			isa = PBXGroup;
 			children = (
+				A378ABE41A16F124006A3B68 /* DRDynamicSlideShow */,
+				A378ABE01A164664006A3B68 /* DVSwitch */,
 				A382A4441A124CFF00974E7A /* PICircularProgressView */,
 				A34F01431A06699300F58C17 /* iCarousel */,
 			);
@@ -949,6 +957,24 @@
 				A377B42E19F5537900DDB5EE /* NSString+MD5.m */,
 			);
 			path = NSString;
+			sourceTree = "<group>";
+		};
+		A378ABE01A164664006A3B68 /* DVSwitch */ = {
+			isa = PBXGroup;
+			children = (
+				A378ABE11A164664006A3B68 /* DVSwitch.h */,
+				A378ABE21A164664006A3B68 /* DVSwitch.m */,
+			);
+			path = DVSwitch;
+			sourceTree = "<group>";
+		};
+		A378ABE41A16F124006A3B68 /* DRDynamicSlideShow */ = {
+			isa = PBXGroup;
+			children = (
+				A378ABE51A16F124006A3B68 /* DRDynamicSlideShow.h */,
+				A378ABE61A16F124006A3B68 /* DRDynamicSlideShow.m */,
+			);
+			path = DRDynamicSlideShow;
 			sourceTree = "<group>";
 		};
 		A37E03E91A0D216900B0B0EC /* Basic */ = {
@@ -1337,6 +1363,7 @@
 				A34F01151A03D78900F58C17 /* TripDetailViewController.m in Sources */,
 				A34F00EF1A03C8F800F58C17 /* CarSettingViewController.m in Sources */,
 				A37E03F21A0DE19B00B0B0EC /* TripTicketView.m in Sources */,
+				A378ABE31A164664006A3B68 /* DVSwitch.m in Sources */,
 				A3CD728A19D14430005F84E2 /* GeoTransformer.m in Sources */,
 				5C90909C18B3A66A00510153 /* main.m in Sources */,
 				A3BD72CA1A15CAD80007ECA1 /* WeatherInfo.m in Sources */,
@@ -1382,6 +1409,7 @@
 				A314118A1A0A7C700019F557 /* ParkingRegionDetail.m in Sources */,
 				A3BD72B81A15CAD70007ECA1 /* DrivingInfo.m in Sources */,
 				A314116C1A0A4CCD0019F557 /* TripMan.xcdatamodeld in Sources */,
+				A378ABE71A16F124006A3B68 /* DRDynamicSlideShow.m in Sources */,
 				A314116D1A0A4CCD0019F557 /* TripsCoreDataManager.m in Sources */,
 				A34F01271A04F22400F58C17 /* BaiduWeatherFacade.m in Sources */,
 				A34F01131A03D78900F58C17 /* LogFileListViewController.m in Sources */,

@@ -11,12 +11,14 @@
 #import "MapDisplayViewController.h"
 #import "NSDate+Utilities.h"
 #import "GPSTurningAnalyzer.h"
+#import "DVSwitch.h"
 
 @interface CarTripViewController ()
 
 @property (nonatomic, strong) NSArray *             tripsToday;
 @property (nonatomic, strong) NSDate *              currentDate;
 @property (nonatomic, strong) NSDateFormatter *     dateFormatter;
+@property (nonatomic, strong) DVSwitch *            switcher;
 
 @end
 
@@ -25,29 +27,73 @@
 - (void)internalInit
 {
     self.dateFormatter = [[NSDateFormatter alloc] init];
-    [self.dateFormatter setDateFormat: @"yyyy-MM-dd"];
+    [self.dateFormatter setDateFormat: @"MM.dd"];
     [self.dateFormatter setTimeZone:[NSTimeZone localTimeZone]];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.tripCount.layer.cornerRadius = CGRectGetHeight(self.tripCount.bounds)/2.0f;
+    
+    self.carousel.type = iCarouselTypeTimeMachine;
+    self.carousel.vertical = YES;
+    self.carousel.bounceDistance = 0.4;
+    self.carousel.decelerationRate = 0.7;
+    self.carousel.itemOffset = CGPointMake(0, 15);
+    
+    // init segment view
+    DVSwitch * switcher = [[DVSwitch alloc] initWithStringsArray:@[@"今天", @"本周", @"本月"]];
+    self.switcher = switcher;
+    self.switcher.frame = self.segmentView.bounds;
+    self.switcher.sliderOffset = 2.0;
+    self.switcher.cornerRadius = 14;
+    [self.segmentView addSubview:self.switcher];
+    [self.switcher setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [self.segmentView addConstraints:[NSLayoutConstraint
+                               constraintsWithVisualFormat:@"H:|-0-[switcher]-0-|"
+                               options:NSLayoutFormatDirectionLeadingToTrailing
+                               metrics:nil
+                               views:NSDictionaryOfVariableBindings(switcher)]];
+    [self.segmentView addConstraints:[NSLayoutConstraint
+                               constraintsWithVisualFormat:@"V:|-0-[switcher]-0-|"
+                               options:NSLayoutFormatDirectionLeadingToTrailing
+                               metrics:nil
+                               views:NSDictionaryOfVariableBindings(switcher)]];
+    [self.switcher setPressedHandler:^(NSUInteger index) {
+        
+        NSLog(@"Did press position on first switch at index: %lu", (unsigned long)index);
+        
+    }];
 
     self.currentDate = [NSDate date];
     
     UISwipeGestureRecognizer * swipeLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(showTomorrow)];
     swipeLeft.direction = UISwipeGestureRecognizerDirectionLeft;
-    [self.todayView addGestureRecognizer:swipeLeft];
+    [self.view addGestureRecognizer:swipeLeft];
     
     UISwipeGestureRecognizer * swipeRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(showYestoday)];
     swipeRight.direction = UISwipeGestureRecognizerDirectionRight;
-    [self.todayView addGestureRecognizer:swipeRight];
+    [self.view addGestureRecognizer:swipeRight];
+    
+    self.slideShow.userInteractionEnabled = NO;
+    [self.slideShow setAlpha:0];
+    [self.slideShow setContentSize:CGSizeMake(320, self.slideShow.frame.size.height)];
+    [self.slideShow setDidReachPageBlock:^(NSInteger reachedPage) {
+        NSLog(@"Current Page: %li", reachedPage);
+    }];
+    
+    // Add the animations
+    //[self setupSlideShowSubviewsAndAnimations];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     [self updateTrips:self.currentDate];
+    [UIView animateWithDuration:0.6 delay:0.2 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        [self.slideShow setAlpha:1];
+    } completion:nil];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -88,6 +134,9 @@
     
     CGFloat totalDist = 0;
     CGFloat totalDuring = 0;
+    CGFloat jamDist = 0;
+    CGFloat jamDuring = 0;
+    NSUInteger trafficLightCnt = 0;
     CGFloat maxSpeed = 0;
     
     self.tripsToday = [[trips reverseObjectEnumerator] allObjects];
@@ -100,24 +149,28 @@
         } failure:nil];
         totalDist += [sum.total_dist floatValue];
         totalDuring += [sum.total_during floatValue];
+        jamDist += [sum.traffic_jam_dist floatValue];
+        jamDuring += [sum.traffic_jam_during floatValue];
+        trafficLightCnt += [sum.traffic_light_cnt integerValue];
         maxSpeed = MAX(maxSpeed, [sum.max_speed floatValue]);
     }
     
-    self.carousel.type = iCarouselTypeWheel;
-    self.carousel.bounceDistance = 0.4;
-    self.carousel.decelerationRate = 0.7;
     [self.carousel reloadData];
-    
     [self.carousel scrollToItemAtIndex:0 animated:NO];
     if (self.tripsToday.count > 0) {
         [self.carousel scrollToItemAtIndex:self.tripsToday.count-1 duration:MIN(MAX(self.tripsToday.count/2.0, 0.5), 2.5)];
     }
     self.noResultView.hidden = (self.tripsToday.count > 0);
     
-    self.todayLabel.text = [dateDay isToday] ? @"今日旅程" : [self.dateFormatter stringFromDate:dateDay];
-    self.todayDist.text = [NSString stringWithFormat:@"%.2f km", totalDist/1000.0];
-    self.todayDuring.text = [NSString stringWithFormat:@"%ld min", (long)(totalDuring/60.0)];
-    self.todayMaxSpeed.text = [NSString stringWithFormat:@"%.2f km/h", maxSpeed*3.6];
+    [self.switcher setLabelText:[dateDay isToday] ? @"今天" : [self.dateFormatter stringFromDate:dateDay] forIndex:0];
+    self.todayDist.text = [NSString stringWithFormat:@"%.1fkm", totalDist/1000.0];
+    self.tripCount.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.tripsToday.count];
+    self.todayDuring.text = [NSString stringWithFormat:@"%.fmin", totalDuring/60.0];
+    self.todayMaxSpeed.text = [NSString stringWithFormat:@"%.1fkm/h", maxSpeed*3.6];
+    self.jamDist.text = [NSString stringWithFormat:@"%.1fkm", jamDist/1000.0];
+    self.jamDuring.text = [NSString stringWithFormat:@"%.fmin", jamDuring/60.0];
+    self.trafficLightCnt.text = [NSString stringWithFormat:@"%lu处", (unsigned long)trafficLightCnt];
+    self.trafficLightWaiting.text = @"未知";
 }
 
 /*
@@ -138,15 +191,21 @@
     return self.tripsToday.count;
 }
 
-- (UIView *)carousel:(iCarousel *)carousel viewForItemAtIndex:(NSInteger)index reusingView:(TripTicketView *)view
+- (UIView *)carousel:(iCarousel *)carousel viewForItemAtIndex:(NSInteger)index reusingView:(UIView *)view
 {
-    if (nil == view) {
-        view = [[[NSBundle mainBundle] loadNibNamed:@"TripTicketView" owner:self options:nil] lastObject];
-        view.layer.cornerRadius = 10;
-        view.layer.borderColor = [UIColor darkGrayColor].CGColor;
-        view.layer.borderWidth = 2;
+    TripTicketView * realView = [[view subviews] lastObject];
+    if (nil == realView || ![realView isKindOfClass:[TripTicketView class]]) {
+        realView = [[[NSBundle mainBundle] loadNibNamed:@"TripTicketView" owner:self options:nil] lastObject];
+        realView.layer.cornerRadius = 10;
+        
+        view = [[UIView alloc] initWithFrame:realView.bounds];
+        view.layer.shadowColor = [UIColor blackColor].CGColor;
+        view.layer.shadowOffset = CGSizeMake(0, -4);
+        view.layer.shadowOpacity = 0.6f;
+        view.layer.shadowRadius = 4.0f;
+        [view addSubview:realView];
     }
-    [view updateWithTripSummary:self.tripsToday[index]];
+    [realView updateWithTripSummary:self.tripsToday[index]];
     
     return view;
 }
@@ -169,15 +228,19 @@
         }
         case iCarouselOptionRadius:
         {
-            return value ;
+            return value;
         }
         case iCarouselOptionTilt:
         {
-            return 0.8;
+            return 0.16;
         }
         case iCarouselOptionSpacing:
         {
-            return value * 1.02;
+            return value * 0.3;
+        }
+        case iCarouselOptionFadeMinAlpha:
+        {
+            return value * 0.5;
         }
         default:
         {

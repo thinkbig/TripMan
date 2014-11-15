@@ -34,24 +34,21 @@
         [sDateFormatter setTimeZone:[NSTimeZone localTimeZone]];
     }
     
-    self.fromPoi.text = [self safeText:sum.region_group.start_region.nearby_poi withDefault:@"未知地点"];
-    self.fromStreet.text = [self safeText:sum.region_group.start_region.street withDefault:@"未知街道"];
-    self.fromDate.text = sum.start_date ? [sDateFormatter stringFromDate:sum.start_date] : @"未知时间";
+    self.fromPoi.text = [self safeText:sum.region_group.start_region.nearby_poi withDefault:@"未知"];
+    self.fromDate.text = sum.start_date ? [sDateFormatter stringFromDate:sum.start_date] : @"未知";
     
     if (sum.end_date) {
-        self.toPoi.text = [self safeText:sum.region_group.end_region.nearby_poi withDefault:@"未知地点"];
-        self.toStreet.text = [self safeText:sum.region_group.end_region.street withDefault:@"未知街道"];
+        self.toPoi.text = [self safeText:sum.region_group.end_region.nearby_poi withDefault:@"未知"];
         self.toDate.text = [sDateFormatter stringFromDate:sum.end_date];
     } else {
         self.toPoi.text = @"行驶中";
-        self.toStreet.text = @"......";
         self.toDate.text = [sDateFormatter stringFromDate:[NSDate date]];
     }
     
-    self.distLabel.text = [NSString stringWithFormat:@"里程: %.fkm", [sum.total_dist floatValue]/1000.0f];
-    self.speedLabel.text = [NSString stringWithFormat:@"最高速度: %.fkm/h", [sum.max_speed floatValue]*3.6];
-    self.duringLabel.text = [NSString stringWithFormat:@"耗时: %.1fmin", [sum.total_during floatValue]/60.0];
-    self.trafficLightLabel.text = sum.traffic_light_cnt ? [NSString stringWithFormat:@"红绿灯: %ld处", (long)[sum.traffic_light_cnt integerValue]] : @"红绿灯: 未知";
+    self.distLabel.text = [NSString stringWithFormat:@"%.1fkm", [sum.total_dist floatValue]/1000.0f];
+    self.speedLabel.text = [NSString stringWithFormat:@"%.1fkm/h", [sum.max_speed floatValue]*3.6];
+    self.duringLabel.text = [NSString stringWithFormat:@"%.fmin", [sum.total_during floatValue]/60.0];
+    self.trafficLightLabel.text = sum.traffic_light_cnt ? [NSString stringWithFormat:@"%ld处", (long)[sum.traffic_light_cnt integerValue]] : @"未知";
 }
 
 @end
