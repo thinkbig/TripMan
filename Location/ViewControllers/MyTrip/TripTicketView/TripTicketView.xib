@@ -15,20 +15,20 @@
                     <rect key="frame" x="15" y="18" width="120" height="65"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2XK-Ib-iPR" userLabel="from poi">
-                            <rect key="frame" x="0.0" y="0.0" width="120" height="21"/>
+                            <rect key="frame" x="0.0" y="0.0" width="120" height="22"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="7" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4ac-FF-3JM" userLabel="from date">
-                            <rect key="frame" x="0.0" y="21" width="120" height="23.5"/>
-                            <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="出发" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="7" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fMF-5h-3Wr" userLabel="start label">
-                            <rect key="frame" x="0.0" y="45" width="120" height="20"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <rect key="frame" x="0.0" y="22" width="120" height="16"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="7" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4ac-FF-3JM" userLabel="from date">
+                            <rect key="frame" x="0.0" y="38" width="120" height="27.5"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                             <nil key="highlightedColor"/>
                         </label>
@@ -39,20 +39,20 @@
                     <rect key="frame" x="166" y="18" width="120" height="65"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UYs-Ii-LKN" userLabel="to poi">
-                            <rect key="frame" x="0.0" y="0.0" width="120" height="21"/>
+                            <rect key="frame" x="0.0" y="0.0" width="120" height="22"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="到达" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9MA-9o-TIG" userLabel="to street">
-                            <rect key="frame" x="0.0" y="45" width="120" height="20"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <rect key="frame" x="0.0" y="22" width="120" height="16"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8ff-wf-LNB" userLabel="to date">
-                            <rect key="frame" x="0.0" y="21" width="120" height="24"/>
-                            <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                            <rect key="frame" x="0.0" y="38" width="120" height="28"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                             <nil key="highlightedColor"/>
                         </label>
@@ -142,9 +142,11 @@
                 <outlet property="duringLabel" destination="KhS-3j-jdO" id="RBc-Re-bBn"/>
                 <outlet property="fromDate" destination="4ac-FF-3JM" id="26r-CS-EwM"/>
                 <outlet property="fromPoi" destination="2XK-Ib-iPR" id="N1A-C7-JWk"/>
+                <outlet property="fromStreet" destination="fMF-5h-3Wr" id="PsV-ce-Ohf"/>
                 <outlet property="speedLabel" destination="r81-oT-yIF" id="5Fb-HI-tRf"/>
                 <outlet property="toDate" destination="8ff-wf-LNB" id="2rH-xa-tHq"/>
                 <outlet property="toPoi" destination="UYs-Ii-LKN" id="a6Z-cP-ZKE"/>
+                <outlet property="toStreet" destination="9MA-9o-TIG" id="P3f-ak-20U"/>
                 <outlet property="trafficLightLabel" destination="4Ao-fk-Vii" id="ljn-kp-L1U"/>
             </connections>
             <point key="canvasLocation" x="402" y="198.5"/>

@@ -85,12 +85,14 @@
     
     // Add the animations
     //[self setupSlideShowSubviewsAndAnimations];
+    
+    
+    [self updateTrips:self.currentDate];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self updateTrips:self.currentDate];
     [UIView animateWithDuration:0.6 delay:0.2 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         [self.slideShow setAlpha:1];
     } completion:nil];
@@ -170,7 +172,7 @@
     self.jamDist.text = [NSString stringWithFormat:@"%.1fkm", jamDist/1000.0];
     self.jamDuring.text = [NSString stringWithFormat:@"%.fmin", jamDuring/60.0];
     self.trafficLightCnt.text = [NSString stringWithFormat:@"%lu处", (unsigned long)trafficLightCnt];
-    self.trafficLightWaiting.text = @"未知";
+    self.trafficLightWaiting.text = @"计算中";
 }
 
 /*
