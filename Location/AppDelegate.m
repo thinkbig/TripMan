@@ -46,7 +46,7 @@
     static NSString * rebuildKey = @"kLocationForceRebuildKey";
     NSString * rebuildVal = @"value_000000000004"; // make sure it is different if this version should rebuild db
     NSString * oldVa = [[NSUserDefaults standardUserDefaults] objectForKey:rebuildKey];
-    //if (nil == oldVa || ![rebuildVal isEqualToString:oldVa])
+    if (nil == oldVa || ![rebuildVal isEqualToString:oldVa])
     {
         [[NSUserDefaults standardUserDefaults] setObject:rebuildVal forKey:rebuildKey];
         [[NSUserDefaults standardUserDefaults] synchronize];
