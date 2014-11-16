@@ -22,7 +22,13 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.topNMostUsedTrips = [[TripsCoreDataManager sharedManager] mostUsefulTripsLimit:3];
+    CLLocation * curLoc = [BussinessDataProvider lastGoodLocation];
+    if (curLoc) {
+        ParkingRegionDetail * parkingDetail = [[TripsCoreDataManager sharedManager] parkingDetailForCoordinate:curLoc.coordinate];
+        self.topNMostUsedTrips = [[TripsCoreDataManager sharedManager] tripsWithStartRegion:parkingDetail.coreDataItem tripLimit:3];
+    }
+
+    //self.topNMostUsedTrips = [[TripsCoreDataManager sharedManager] mostUsefulTripsLimit:3];
     [self.suggestCollectionView reloadData];
 }
 

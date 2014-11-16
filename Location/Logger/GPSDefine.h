@@ -66,6 +66,7 @@
 #define cStartLocErrorDist                      2000
 #define cReagionRadius                          60
 #define cParkingRegionRadius                    500
+#define cTrafficLightRegionRadius               100
 
 // public define
 

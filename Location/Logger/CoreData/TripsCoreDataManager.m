@@ -7,7 +7,6 @@
 //
 
 #import "TripsCoreDataManager.h"
-#import "ParkingRegionDetail.h"
 #import "NSManagedObject+ActiveRecord.h"
 
 @interface TripsCoreDataManager ()
@@ -87,7 +86,7 @@
     return [self.parkingDetails copy];
 }
 
-- (ParkingRegion*) addParkingLocation:(CLLocationCoordinate2D)coordinate modifyRegionCenter:(BOOL)ifModify
+- (ParkingRegionDetail*) parkingDetailForCoordinate:(CLLocationCoordinate2D)coordinate
 {
     if (!CLLocationCoordinate2DIsValid(coordinate)) {
         return nil;
@@ -106,15 +105,21 @@
             }
         }
     }
-    if (nearestRegion) {
+    return nearestRegion;
+}
+
+- (ParkingRegion*) addParkingLocation:(CLLocationCoordinate2D)coordinate modifyRegionCenter:(BOOL)ifModify
+{
+    ParkingRegionDetail * existDetail = [self parkingDetailForCoordinate:coordinate];
+    if (existDetail) {
         if (ifModify) {
-            CLLocationCoordinate2D newCoor = nearestRegion.region.center;
+            CLLocationCoordinate2D newCoor = existDetail.region.center;
             newCoor = CLLocationCoordinate2DMake(0.7*newCoor.latitude+0.3*coordinate.latitude, 0.7*newCoor.longitude+0.3*coordinate.longitude);
-            nearestRegion.region = [self circularRegionForCenter:newCoor];
-            nearestRegion.coreDataItem.center_lat = @(newCoor.latitude);
-            nearestRegion.coreDataItem.center_lon = @(newCoor.longitude);
+            existDetail.region = [self circularRegionForCenter:newCoor];
+            existDetail.coreDataItem.center_lat = @(newCoor.latitude);
+            existDetail.coreDataItem.center_lon = @(newCoor.longitude);
         }
-        return nearestRegion.coreDataItem;
+        return existDetail.coreDataItem;
     }
     
     // insert a new record
@@ -226,6 +231,34 @@
     return bestTrips;
 }
 
+- (NSArray*) tripsWithStartRegion:(ParkingRegion*)region tripLimit:(NSInteger)limit
+{
+    NSArray * allGroups = [region.group_owner_st allObjects];
+    NSArray * sortArr = [allGroups sortedArrayWithOptions:NSSortStable usingComparator:^NSComparisonResult(RegionGroup * obj1, RegionGroup * obj2) {
+        if (obj1.trips.count < obj2.trips.count) return NSOrderedDescending;
+        else return NSOrderedAscending;
+    }];
+    
+    NSMutableArray * bestTrips = [NSMutableArray array];
+    [sortArr enumerateObjectsUsingBlock:^(RegionGroup * group, NSUInteger idx, BOOL *stop) {
+        if (limit > 0 && idx >= limit) {
+            *stop = YES;
+        } else {
+            CGFloat minDuring = MAXFLOAT;
+            TripSummary * bestTrip = nil;
+            for (TripSummary * sum in group.trips) {
+                if (sum.end_date && minDuring > [sum.total_during floatValue]) {
+                    minDuring = [sum.total_during floatValue];
+                    bestTrip = sum;
+                }
+            }
+            if (bestTrip) {
+                [bestTrips addObject:bestTrip];
+            }
+        }
+    }];
+    return bestTrips;
+}
 
 
 - (TripSummary*) newTripAt:(NSDate*)beginDate

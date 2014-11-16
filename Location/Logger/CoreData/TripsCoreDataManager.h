@@ -14,8 +14,8 @@
 #import "EnvInfo.h"
 #import "TrafficJam.h"
 #import "TurningInfo.h"
-#import "ParkingRegion.h"
 #import "RegionGroup.h"
+#import "ParkingRegionDetail.h"
 
 @interface TripsCoreDataManager : CoreDataManager
 
@@ -35,8 +35,9 @@
 - (NSArray*) allTrips;
 - (NSArray*) unAnalyzedTrips;
 - (NSArray*) tripStartFrom:(NSDate*)fromDate toDate:(NSDate*)toDate;
-
+- (ParkingRegionDetail*) parkingDetailForCoordinate:(CLLocationCoordinate2D)coordinate;
 - (NSArray*) mostUsefulTripsLimit:(NSUInteger)limit;
+- (NSArray*) tripsWithStartRegion:(ParkingRegion*)region tripLimit:(NSInteger)limit;
 
 
 // analyze info generate api

@@ -98,10 +98,7 @@ static BussinessDataProvider * _sharedProvider = nil;
     }
     
     if (nil == loc) {
-        NSDictionary * lastGoodGPS = [[NSUserDefaults standardUserDefaults] objectForKey:kLastestGoodGPSData];
-        if (lastGoodGPS) {
-            loc = [[CLLocation alloc] initWithLatitude:[lastGoodGPS[@"lat"] doubleValue] longitude:[lastGoodGPS[@"lon"] doubleValue]];
-        }
+        loc = [BussinessDataProvider lastGoodLocation];
     }
     
     if (loc && CLLocationCoordinate2DIsValid(loc.coordinate))
@@ -261,7 +258,7 @@ static BussinessDataProvider * _sharedProvider = nil;
                     CLLocationCoordinate2D baiduCoor = [GeoTransformer earth2Baidu:earthCoor];
                     CLLocation * jamEndLoc = [[CLLocation alloc] initWithLatitude:baiduCoor.latitude longitude:baiduCoor.longitude];
                     for (CLLocation * lightLoc in lightLocArr) {
-                        if ([jamEndLoc distanceFromLocation:lightLoc] < 100) {
+                        if ([jamEndLoc distanceFromLocation:lightLoc] < cTrafficLightRegionRadius) {
                             jam.near_traffic_light = @YES;
                             jamInTrafficLight++;
                             break;
@@ -295,6 +292,15 @@ static BussinessDataProvider * _sharedProvider = nil;
 //            success(@(model.trafficLight.count));
 //        }
 //    } failure:nil];
+}
+
++ (CLLocation *)lastGoodLocation
+{
+    NSDictionary * lastGoodGPS = [[NSUserDefaults standardUserDefaults] objectForKey:kLastestGoodGPSData];
+    if (lastGoodGPS) {
+        return [[CLLocation alloc] initWithLatitude:[lastGoodGPS[@"lat"] doubleValue] longitude:[lastGoodGPS[@"lon"] doubleValue]];
+    }
+    return nil;
 }
 
 @end

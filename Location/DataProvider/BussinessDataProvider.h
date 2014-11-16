@@ -25,4 +25,6 @@
 
 - (void) updateRoadMarkForTrips:(TripSummary*)sum ofTurningPoints:(NSArray*)ptArr success:(successFacadeBlock)success failure:(failureFacadeBlock)failure;
 
++ (CLLocation*) lastGoodLocation;
+
 @end

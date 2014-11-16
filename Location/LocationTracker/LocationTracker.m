@@ -452,9 +452,9 @@
     
     [self realStop];
     
-    NSDictionary * lastGoodGPS = [[NSUserDefaults standardUserDefaults] objectForKey:kLastestGoodGPSData];
+    CLLocation * lastGoodGPS = [BussinessDataProvider lastGoodLocation];
     if (lastGoodGPS) {
-        [self setStillLocation:[[CLLocation alloc] initWithLatitude:[lastGoodGPS[@"lat"] doubleValue] longitude:[lastGoodGPS[@"lon"] doubleValue]] force:YES];
+        [self setStillLocation:lastGoodGPS force:YES];
     }
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
