@@ -68,31 +68,34 @@
         NSLog(@"Did press position on first switch at index: %lu", (unsigned long)index);
         
     }];
-
-    UISwipeGestureRecognizer * swipeLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(showTomorrow)];
-    swipeLeft.direction = UISwipeGestureRecognizerDirectionLeft;
-    [self.view addGestureRecognizer:swipeLeft];
-    
-    UISwipeGestureRecognizer * swipeRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(showYestoday)];
-    swipeRight.direction = UISwipeGestureRecognizerDirectionRight;
-    [self.view addGestureRecognizer:swipeRight];
-    
-    __block CarTripViewController * nonRetainSelf = self;
-    [self.slideShow setAlpha:0];
-    [self.slideShow setContentSize:CGSizeMake(640, self.slideShow.frame.size.height)];
-    [self.slideShow setDidReachPageBlock:^(NSUInteger fromPage, NSUInteger toPage) {
-        if (fromPage - 1 == toPage) {
-            [nonRetainSelf showYestoday];
-        } else if (fromPage + 1 == toPage) {
-            [nonRetainSelf showTomorrow];
-        }
-    }];
     
     self.currentDate = [NSDate date];
     self.tripsToday = [self fetchTripsForDate:self.currentDate];
     self.tripsYestoday = [self fetchTripsForDate:[self.currentDate dateBySubtractingDays:1]];
     
     [self reloadContent];
+    
+    __block CarTripViewController * nonRetainSelf = self;
+    [self.slideShow setAlpha:0];
+    [self.slideShow setContentSize:CGSizeMake(640, self.slideShow.frame.size.height)];
+    
+    [self.slideShow setDidReachPageBlock:^(NSInteger fromPage, NSInteger toPage) {
+        if (fromPage - 1 == toPage) {
+            [nonRetainSelf showYestoday];
+        } else if (fromPage + 1 == toPage) {
+            [nonRetainSelf showTomorrow];
+        } else {
+            // rebuild with currentDate
+            self.tripsToday = [self fetchTripsForDate:self.currentDate];
+            self.tripsYestoday = [self fetchTripsForDate:[self.currentDate dateBySubtractingDays:1]];
+            if (![self.currentDate isToday]) {
+                self.tripsTomorrow = [self fetchTripsForDate:[self.currentDate dateByAddingDays:1]];
+            } else {
+                self.tripsTomorrow = nil;
+            }
+            [self reloadContent];
+        }
+    }];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -151,9 +154,19 @@
         } failure:nil];
         
         // update traffic light cnt
-        if (0 == [sum.traffic_light_cnt integerValue]) {
+        if (0 == [sum.traffic_light_tol_cnt integerValue]) {
             [[BussinessDataProvider sharedInstance] updateRoadMarkForTrips:sum ofTurningPoints:[turnAnalyzer.filter featurePoints] success:^(id cnt) {
                 [self.carousel reloadData];
+                NSArray * allTripView = [self.slideShow allPages];
+                [allTripView enumerateObjectsUsingBlock:^(TripTodayView * oneSlide, NSUInteger idx, BOOL *stop) {
+                    if (0 == idx) {
+                        [oneSlide updateWithTripsToday:self.tripsYestoday];
+                    } else if (1 == idx) {
+                        [oneSlide updateWithTripsToday:self.tripsToday];
+                    } else if (2 == idx) {
+                        [oneSlide updateWithTripsToday:self.tripsTomorrow];
+                    }
+                }];
             } failure:nil];
         }
     }

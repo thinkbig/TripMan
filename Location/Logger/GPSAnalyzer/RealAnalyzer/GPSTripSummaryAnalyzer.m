@@ -8,12 +8,15 @@
 
 #import <CoreLocation/CoreLocation.h>
 #import "GPSTripSummaryAnalyzer.h"
+#import "TrafficJam.h"
+#import "TSPair.h"
 
 @interface GPSTripSummaryAnalyzer ()
 
 @property (nonatomic, strong) GPSLogItem *          lastItem;
 @property (nonatomic, strong) CLLocation *          lastLoc;
 @property (nonatomic, strong) NSMutableArray *      lastTrafficJam;
+@property (nonatomic, strong) NSMutableArray *      traffic_jams;
 
 @end
 
@@ -31,6 +34,7 @@
 
 - (void) updateGPSDataArray:(NSArray*)gpsLogs
 {
+    self.traffic_jams = [NSMutableArray array];
     self.lastTrafficJam = [NSMutableArray array];
     self.lastItem = nil;
     self.lastLoc = nil;
@@ -113,6 +117,11 @@
     self.lastLoc = curLoc;
 }
 
+- (NSArray*) getTrafficJams
+{
+    return [self.traffic_jams copy];
+}
+
 #pragma mark - private method
 
 - (void) appendVerifiedTrafficJamItem
@@ -120,33 +129,50 @@
     NSArray * oldJamData = [self.lastTrafficJam copy];
     [self.lastTrafficJam removeAllObjects];
     
-    CLLocation * lastJamLoc = nil;
-    GPSLogItem * lastJamItem = nil;
-    for (GPSLogItem * item in oldJamData)
-    {
-        if (nil == lastJamItem) {
-            lastJamItem = item;
-            lastJamLoc = [[CLLocation alloc] initWithLatitude:[item.latitude doubleValue] longitude:[item.longitude doubleValue]];
-        } else {
-            CLLocation * curLoc = [[CLLocation alloc] initWithLatitude:[item.latitude doubleValue] longitude:[item.longitude doubleValue]];
-            NSTimeInterval during = [item.timestamp timeIntervalSinceDate:lastJamItem.timestamp];
-            CLLocationDistance distance = [lastJamLoc distanceFromLocation:curLoc];
-
-            lastJamItem = item;
-            lastJamLoc = curLoc;
-            
-            if (during < 0 || (during > 0 && distance/during > cAvgNoiceSpeed)) {
-                // regard as noise
-                continue;
-            }
-            _traffic_jam_dist += distance;
-            _traffic_jam_during += during;
-        }
+    if (oldJamData.count < 5) {
+        return;
     }
     
-    if (oldJamData.count > 5) {
+    GPSLogItem * firstItem = oldJamData[0];
+    GPSLogItem * lastItem = [oldJamData lastObject];
+    
+    CGFloat jamDist = [lastItem distanceFrom:firstItem];
+    CGFloat jamDuring = [lastItem.timestamp timeIntervalSinceDate:firstItem.timestamp];
+    
+    if (jamDuring > 5) {
         self.traffic_jam_cnt++;
+        _traffic_jam_dist += jamDist;
+        _traffic_jam_during += jamDuring;
+        [self.traffic_jams addObject:TSPairMake(firstItem, lastItem, nil)];
     }
+    
+//    CLLocation * lastJamLoc = nil;
+//    GPSLogItem * lastJamItem = nil;
+//    for (GPSLogItem * item in oldJamData)
+//    {
+//        if (nil == lastJamItem) {
+//            lastJamItem = item;
+//            lastJamLoc = [[CLLocation alloc] initWithLatitude:[item.latitude doubleValue] longitude:[item.longitude doubleValue]];
+//        } else {
+//            CLLocation * curLoc = [[CLLocation alloc] initWithLatitude:[item.latitude doubleValue] longitude:[item.longitude doubleValue]];
+//            NSTimeInterval during = [item.timestamp timeIntervalSinceDate:lastJamItem.timestamp];
+//            CLLocationDistance distance = [lastJamLoc distanceFromLocation:curLoc];
+//
+//            lastJamItem = item;
+//            lastJamLoc = curLoc;
+//            
+//            if (during < 0 || (during > 0 && distance/during > cAvgNoiceSpeed)) {
+//                // regard as noise
+//                continue;
+//            }
+//            _traffic_jam_dist += distance;
+//            _traffic_jam_during += during;
+//        }
+//    }
+//    
+//    if (oldJamData.count > 5) {
+//        self.traffic_jam_cnt++;
+//    }
 }
 
 @end

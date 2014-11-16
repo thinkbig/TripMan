@@ -7,6 +7,7 @@
 //
 
 #import "TripTodayView.h"
+#import "TripSummary.h"
 
 @implementation TripTodayView
 
@@ -29,16 +30,22 @@
     CGFloat totalDuring = 0;
     CGFloat jamDist = 0;
     CGFloat jamDuring = 0;
-    NSUInteger trafficLightCnt = 0;
     CGFloat maxSpeed = 0;
+    NSUInteger jamInTrafficLight = 0;
+    CGFloat trafficLightWaiting = 0;
     
     for (TripSummary * sum in trips) {
         totalDist += [sum.total_dist floatValue];
         totalDuring += [sum.total_during floatValue];
         jamDist += [sum.traffic_jam_dist floatValue];
         jamDuring += [sum.traffic_jam_during floatValue];
-        trafficLightCnt += [sum.traffic_light_cnt integerValue];
         maxSpeed = MAX(maxSpeed, [sum.max_speed floatValue]);
+        jamInTrafficLight += [sum.traffic_light_jam_cnt integerValue];
+        for (TrafficJam * jam in sum.traffic_jams) {
+            if ([jam.near_traffic_light boolValue]) {
+                trafficLightWaiting += [jam.traffic_jam_during doubleValue];
+            }
+        }
     }
     
     self.todayDist.text = [NSString stringWithFormat:@"%.1fkm", totalDist/1000.0];
@@ -47,8 +54,8 @@
     self.todayMaxSpeed.text = [NSString stringWithFormat:@"%.1fkm/h", maxSpeed*3.6];
     self.jamDist.text = [NSString stringWithFormat:@"%.1fkm", jamDist/1000.0];
     self.jamDuring.text = [NSString stringWithFormat:@"%.fmin", jamDuring/60.0];
-    self.trafficLightCnt.text = [NSString stringWithFormat:@"%lu处", (unsigned long)trafficLightCnt];
-    self.trafficLightWaiting.text = @"计算中";
+    self.trafficLightCnt.text = [NSString stringWithFormat:@"%lu处", (unsigned long)jamInTrafficLight];
+    self.trafficLightWaiting.text = [NSString stringWithFormat:@"%.1fmin", trafficLightWaiting/60.0];
 }
 
 @end

@@ -215,8 +215,10 @@ static BussinessDataProvider * _sharedProvider = nil;
         return;
     }
     
+    NSMutableArray * trafficLights = [NSMutableArray arrayWithCapacity:16];
     __block NSInteger trafficLightCnt = 0;
     __block NSError *error;
+    dispatch_queue_t concurrent_queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_group_t downloadGroup = dispatch_group_create();
     dispatch_apply(ptArr.count-1, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(size_t i) {
         GPSLogItem * first = ptArr[i];
@@ -229,6 +231,9 @@ static BussinessDataProvider * _sharedProvider = nil;
         dispatch_group_enter(downloadGroup);
         [facade requestWithSuccess:^(BaiduMarkModel * model) {
             if (model.trafficLight.count > 0) {
+                dispatch_barrier_async(concurrent_queue, ^{
+                    [trafficLights addObjectsFromArray:model.trafficLight];
+                });
                 trafficLightCnt += model.trafficLight.count-1;
             }
             dispatch_group_leave(downloadGroup);
@@ -241,7 +246,31 @@ static BussinessDataProvider * _sharedProvider = nil;
     dispatch_group_notify(downloadGroup, dispatch_get_main_queue(), ^{
         if (trafficLightCnt > 0 || nil == error) {
             if (sum) {
-                sum.traffic_light_cnt = @(trafficLightCnt);
+                sum.traffic_light_tol_cnt = @(trafficLightCnt);
+                
+                NSMutableSet * lightSet = [NSMutableSet setWithArray:trafficLights];
+                NSMutableArray * lightLocArr = [NSMutableArray arrayWithCapacity:lightSet.count];
+                for (BaiduMarkItemModel * item in lightSet) {
+                    [lightLocArr addObject:[item clLocation]];
+                }
+                
+                NSUInteger jamInTrafficLight = 0;
+                for (TrafficJam * jam in sum.traffic_jams) {
+                    jam.near_traffic_light = @NO;
+                    CLLocationCoordinate2D earthCoor = CLLocationCoordinate2DMake([jam.end_lat doubleValue], [jam.end_lon doubleValue]);
+                    CLLocationCoordinate2D baiduCoor = [GeoTransformer earth2Baidu:earthCoor];
+                    CLLocation * jamEndLoc = [[CLLocation alloc] initWithLatitude:baiduCoor.latitude longitude:baiduCoor.longitude];
+                    for (CLLocation * lightLoc in lightLocArr) {
+                        if ([jamEndLoc distanceFromLocation:lightLoc] < 100) {
+                            jam.near_traffic_light = @YES;
+                            jamInTrafficLight++;
+                            break;
+                        }
+                    }
+                    jam.is_analyzed = @YES;
+                }
+                sum.traffic_light_jam_cnt = @(jamInTrafficLight);
+                
                 [[TripsCoreDataManager sharedManager] commit];
             }
             if (success) {

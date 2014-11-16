@@ -19,9 +19,10 @@
 #import "DrivingInfo.h"
 #import "WeatherInfo.h"
 #import "EnvInfo.h"
-#import "TrafficInfo.h"
+#import "TrafficJam.h"
 #import "TurningInfo.h"
 #import "ParkingRegion.h"
+#import "TSPair.h"
 
 @implementation GPSAnalyzerOffTime
 
@@ -181,6 +182,35 @@
     tripSum.traffic_jam_during = @(oneTripAna.traffic_jam_during);
     tripSum.traffic_avg_speed = @(oneTripAna.traffic_avg_speed);
     tripSum.traffic_jam_cnt = @(oneTripAna.traffic_jam_cnt);
+    
+    NSArray * oldJams = [tripSum.traffic_jams allObjects];
+    NSArray * jamArr = [oneTripAna getTrafficJams];
+    [jamArr enumerateObjectsUsingBlock:^(TSPair * pair, NSUInteger idx, BOOL *stop) {
+        TrafficJam * jam = nil;
+        if (idx < oldJams.count) {
+            jam = oldJams[idx];
+        } else {
+            jam = [manager allocTrafficInfoForTrip:tripSum];
+        }
+        
+        GPSLogItem * startLog = pair.first;
+        GPSLogItem * endLog = pair.second;
+        jam.start_date = startLog.timestamp;
+        jam.start_lat = startLog.latitude;
+        jam.start_lon = startLog.longitude;
+        jam.end_date = endLog.timestamp;
+        jam.end_lat = endLog.latitude;
+        jam.end_lon = endLog.longitude;
+        jam.traffic_jam_dist = @([endLog distanceFrom:startLog]);
+        jam.traffic_jam_during = @([jam.end_date timeIntervalSinceDate:jam.start_date]);
+        if ([jam.traffic_jam_during doubleValue] > 0) {
+            jam.traffic_avg_speed = @([jam.traffic_jam_dist doubleValue]/[jam.traffic_jam_during doubleValue]);
+        }
+    }];
+    for (NSInteger i = jamArr.count; i < oldJams.count; i++) {
+        TrafficJam * removeJam = oldJams[i];
+        [tripSum removeTraffic_jamsObject:removeJam];
+    }
     
     // update analyze environment info
     EnvInfo * env_info = [manager environmentForTrip:tripSum];

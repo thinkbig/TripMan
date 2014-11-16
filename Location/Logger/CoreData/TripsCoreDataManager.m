@@ -278,9 +278,17 @@
     return info;
 }
 
-- (TrafficInfo*) trafficInfoForTrip:(TripSummary*)tripSum
+- (TrafficJam*) allocTrafficInfoForTrip:(TripSummary*)tripSum
 {
-    return nil;
+    if (nil == tripSum) {
+        return nil;
+    }
+    
+    TrafficJam * jam = [TrafficJam createInContext:self.tripAnalyzerContent];
+    jam.trip_owner = tripSum;
+    [tripSum addTraffic_jamsObject:jam];
+    
+    return jam;
 }
 
 - (TurningInfo*) turningInfoForTrip:(TripSummary*)tripSum

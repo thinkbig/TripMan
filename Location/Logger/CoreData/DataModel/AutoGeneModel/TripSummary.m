@@ -2,7 +2,7 @@
 //  TripSummary.m
 //  TripMan
 //
-//  Created by taq on 11/14/14.
+//  Created by taq on 11/16/14.
 //  Copyright (c) 2014 Location. All rights reserved.
 //
 
@@ -10,8 +10,7 @@
 #import "DrivingInfo.h"
 #import "EnvInfo.h"
 #import "RegionGroup.h"
-#import "ParkingRegion.h"
-#import "TrafficInfo.h"
+#import "TrafficJam.h"
 #import "TurningInfo.h"
 #import "WeatherInfo.h"
 
@@ -29,7 +28,8 @@
 @dynamic traffic_jam_cnt;
 @dynamic traffic_jam_dist;
 @dynamic traffic_jam_during;
-@dynamic traffic_light_cnt;
+@dynamic traffic_light_tol_cnt;
+@dynamic traffic_light_jam_cnt;
 @dynamic driving_info;
 @dynamic environment;
 @dynamic region_group;

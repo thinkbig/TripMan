@@ -2,14 +2,14 @@
 //  TripSummary.h
 //  TripMan
 //
-//  Created by taq on 11/14/14.
+//  Created by taq on 11/16/14.
 //  Copyright (c) 2014 Location. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class DrivingInfo, EnvInfo, RegionGroup, TrafficInfo, TurningInfo, WeatherInfo;
+@class DrivingInfo, EnvInfo, RegionGroup, TrafficJam, TurningInfo, WeatherInfo;
 
 @interface TripSummary : NSManagedObject
 
@@ -24,7 +24,8 @@
 @property (nonatomic, retain) NSNumber * traffic_jam_cnt;
 @property (nonatomic, retain) NSNumber * traffic_jam_dist;
 @property (nonatomic, retain) NSNumber * traffic_jam_during;
-@property (nonatomic, retain) NSNumber * traffic_light_cnt;
+@property (nonatomic, retain) NSNumber * traffic_light_tol_cnt;
+@property (nonatomic, retain) NSNumber * traffic_light_jam_cnt;
 @property (nonatomic, retain) DrivingInfo *driving_info;
 @property (nonatomic, retain) EnvInfo *environment;
 @property (nonatomic, retain) RegionGroup *region_group;
@@ -35,8 +36,8 @@
 
 @interface TripSummary (CoreDataGeneratedAccessors)
 
-- (void)addTraffic_jamsObject:(TrafficInfo *)value;
-- (void)removeTraffic_jamsObject:(TrafficInfo *)value;
+- (void)addTraffic_jamsObject:(TrafficJam *)value;
+- (void)removeTraffic_jamsObject:(TrafficJam *)value;
 - (void)addTraffic_jams:(NSSet *)values;
 - (void)removeTraffic_jams:(NSSet *)values;
 

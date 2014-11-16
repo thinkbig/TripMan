@@ -274,7 +274,14 @@ typedef NS_ENUM(NSUInteger, DRDynamicSlideShowAnimationValueType) {
 {
     if (pageIdx < self.numberOfPages) {
         [self setContentOffset:CGPointMake(pageIdx * self.frame.size.width, self.contentOffset.y)];
+        currentPage = pageIdx;
+        lastPage = pageIdx;
     }
+}
+
+- (NSArray*)allPages
+{
+    return [self.pages copy];
 }
 
 #pragma mark Setter Overrides

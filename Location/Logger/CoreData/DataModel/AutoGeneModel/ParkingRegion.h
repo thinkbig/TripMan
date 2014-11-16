@@ -2,7 +2,7 @@
 //  ParkingRegion.h
 //  TripMan
 //
-//  Created by taq on 11/14/14.
+//  Created by taq on 11/16/14.
 //  Copyright (c) 2014 Location. All rights reserved.
 //
 
@@ -27,20 +27,20 @@
 @property (nonatomic, retain) NSString * street;
 @property (nonatomic, retain) NSString * street_num;
 @property (nonatomic, retain) NSString * user_mark;
-@property (nonatomic, retain) NSSet *group_owner_st;
 @property (nonatomic, retain) NSSet *group_owner_ed;
+@property (nonatomic, retain) NSSet *group_owner_st;
 @end
 
 @interface ParkingRegion (CoreDataGeneratedAccessors)
-
-- (void)addGroup_owner_stObject:(RegionGroup *)value;
-- (void)removeGroup_owner_stObject:(RegionGroup *)value;
-- (void)addGroup_owner_st:(NSSet *)values;
-- (void)removeGroup_owner_st:(NSSet *)values;
 
 - (void)addGroup_owner_edObject:(RegionGroup *)value;
 - (void)removeGroup_owner_edObject:(RegionGroup *)value;
 - (void)addGroup_owner_ed:(NSSet *)values;
 - (void)removeGroup_owner_ed:(NSSet *)values;
+
+- (void)addGroup_owner_stObject:(RegionGroup *)value;
+- (void)removeGroup_owner_stObject:(RegionGroup *)value;
+- (void)addGroup_owner_st:(NSSet *)values;
+- (void)removeGroup_owner_st:(NSSet *)values;
 
 @end

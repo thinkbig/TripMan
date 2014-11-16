@@ -50,7 +50,7 @@
     self.distLabel.text = [NSString stringWithFormat:@"%.1fkm", [sum.total_dist floatValue]/1000.0f];
     self.speedLabel.text = [NSString stringWithFormat:@"%.1fkm/h", [sum.max_speed floatValue]*3.6];
     self.duringLabel.text = [NSString stringWithFormat:@"%.fmin", [sum.total_during floatValue]/60.0];
-    self.trafficLightLabel.text = sum.traffic_light_cnt ? [NSString stringWithFormat:@"%ld处", (long)[sum.traffic_light_cnt integerValue]] : @"未知";
+    self.trafficLightLabel.text = sum.traffic_light_jam_cnt ? [NSString stringWithFormat:@"%@处", sum.traffic_light_jam_cnt] : @"未知";
 }
 
 @end

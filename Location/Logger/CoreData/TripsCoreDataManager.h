@@ -12,7 +12,7 @@
 #import "DrivingInfo.h"
 #import "WeatherInfo.h"
 #import "EnvInfo.h"
-#import "TrafficInfo.h"
+#import "TrafficJam.h"
 #import "TurningInfo.h"
 #import "ParkingRegion.h"
 #import "RegionGroup.h"
@@ -47,7 +47,7 @@
 - (DrivingInfo*) drivingInfoForTrip:(TripSummary*)tripSum;
 - (EnvInfo*) environmentForTrip:(TripSummary*)tripSum;
 - (TurningInfo*) turningInfoForTrip:(TripSummary*)tripSum;
-- (TrafficInfo*) trafficInfoForTrip:(TripSummary*)tripSum;
+- (TrafficJam*) allocTrafficInfoForTrip:(TripSummary*)tripSum;
 
 - (RegionGroup*) startRegionCenter:(CLLocationCoordinate2D)centerFrom toRegionCenter:(CLLocationCoordinate2D)centerTo forTrip:(TripSummary*)tripSum;
 - (WeatherInfo*) weatherInfoForTrip:(TripSummary*)tripSum;

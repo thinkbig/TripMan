@@ -29,6 +29,8 @@
 @property (nonatomic, strong) NSNumber<Optional> * type;
 @property (nonatomic, strong) BaiduMarkLocationModel<Optional> * location;
 
+- (CLLocation*) clLocation;
+
 @end
 
 ////////////////////////////////////////////////////////////////////////////////////////////

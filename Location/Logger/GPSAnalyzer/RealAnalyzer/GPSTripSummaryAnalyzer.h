@@ -33,4 +33,6 @@
 
 - (void) updateGPSDataArray:(NSArray*)gpsLogs;
 
+- (NSArray*) getTrafficJams;
+
 @end
