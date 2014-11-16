@@ -20,17 +20,4 @@
 
 @property (weak, nonatomic) IBOutlet DRDynamicSlideShow *slideShow;
 
-@property (weak, nonatomic) IBOutlet UIView *todayView;
-
-@property (weak, nonatomic) IBOutlet UILabel *todayDist;
-@property (weak, nonatomic) IBOutlet UILabel *tripCount;
-
-@property (weak, nonatomic) IBOutlet UILabel *todayDuring;
-@property (weak, nonatomic) IBOutlet UILabel *todayMaxSpeed;
-
-@property (weak, nonatomic) IBOutlet UILabel *jamDist;
-@property (weak, nonatomic) IBOutlet UILabel *jamDuring;
-@property (weak, nonatomic) IBOutlet UILabel *trafficLightCnt;
-@property (weak, nonatomic) IBOutlet UILabel *trafficLightWaiting;
-
 @end

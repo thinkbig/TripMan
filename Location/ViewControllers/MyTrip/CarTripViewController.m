@@ -8,6 +8,7 @@
 
 #import "CarTripViewController.h"
 #import "TripTicketView.h"
+#import "TripTodayView.h"
 #import "MapDisplayViewController.h"
 #import "NSDate+Utilities.h"
 #import "GPSTurningAnalyzer.h"
@@ -15,7 +16,10 @@
 
 @interface CarTripViewController ()
 
+@property (nonatomic, strong) NSArray *             tripsYestoday;
 @property (nonatomic, strong) NSArray *             tripsToday;
+@property (nonatomic, strong) NSArray *             tripsTomorrow;
+
 @property (nonatomic, strong) NSDate *              currentDate;
 @property (nonatomic, strong) NSDateFormatter *     dateFormatter;
 @property (nonatomic, strong) DVSwitch *            switcher;
@@ -34,7 +38,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.tripCount.layer.cornerRadius = CGRectGetHeight(self.tripCount.bounds)/2.0f;
     
     self.carousel.type = iCarouselTypeTimeMachine;
     self.carousel.vertical = YES;
@@ -66,8 +69,6 @@
         
     }];
 
-    self.currentDate = [NSDate date];
-    
     UISwipeGestureRecognizer * swipeLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(showTomorrow)];
     swipeLeft.direction = UISwipeGestureRecognizerDirectionLeft;
     [self.view addGestureRecognizer:swipeLeft];
@@ -76,18 +77,22 @@
     swipeRight.direction = UISwipeGestureRecognizerDirectionRight;
     [self.view addGestureRecognizer:swipeRight];
     
-    self.slideShow.userInteractionEnabled = NO;
+    __block CarTripViewController * nonRetainSelf = self;
     [self.slideShow setAlpha:0];
-    [self.slideShow setContentSize:CGSizeMake(320, self.slideShow.frame.size.height)];
-    [self.slideShow setDidReachPageBlock:^(NSInteger reachedPage) {
-        NSLog(@"Current Page: %li", reachedPage);
+    [self.slideShow setContentSize:CGSizeMake(640, self.slideShow.frame.size.height)];
+    [self.slideShow setDidReachPageBlock:^(NSUInteger fromPage, NSUInteger toPage) {
+        if (fromPage - 1 == toPage) {
+            [nonRetainSelf showYestoday];
+        } else if (fromPage + 1 == toPage) {
+            [nonRetainSelf showTomorrow];
+        }
     }];
     
-    // Add the animations
-    //[self setupSlideShowSubviewsAndAnimations];
+    self.currentDate = [NSDate date];
+    self.tripsToday = [self fetchTripsForDate:self.currentDate];
+    self.tripsYestoday = [self fetchTripsForDate:[self.currentDate dateBySubtractingDays:1]];
     
-    
-    [self updateTrips:self.currentDate];
+    [self reloadContent];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -107,72 +112,93 @@
 {
     if (self.currentDate && ![self.currentDate isToday] && [self.currentDate compare:[NSDate date]] == NSOrderedAscending) {
         self.currentDate = [self.currentDate dateByAddingDays:1];
-        [self updateTrips:self.currentDate];
+        self.tripsYestoday = self.tripsToday;
+        self.tripsToday = self.tripsTomorrow;
+        self.tripsTomorrow = [self fetchTripsForDate:[self.currentDate dateByAddingDays:1]];
+        
+        [self reloadContent];
     }
 }
 
 - (void)showYestoday
 {
-    self.currentDate = [self.currentDate dateByAddingDays:-1];
-    [self updateTrips:self.currentDate];
+    self.currentDate = [self.currentDate dateBySubtractingDays:1];
+    self.tripsTomorrow = self.tripsToday;
+    self.tripsToday = self.tripsYestoday;
+    self.tripsYestoday = [self fetchTripsForDate:[self.currentDate dateBySubtractingDays:1]];
+    
+    [self reloadContent];
 }
 
-- (void)updateTrips:(NSDate*)dateDay
+- (NSArray*)fetchTripsForDate:(NSDate*)dateDay
 {
     if (nil == dateDay) {
-        dateDay = [NSDate date];
+        dateDay = self.currentDate;
     }
 
     NSArray * trips = [[TripsCoreDataManager sharedManager] tripStartFrom:[dateDay dateAtStartOfDay] toDate:[dateDay dateAtEndOfDay]];
-    for (TripSummary * sum in trips) {
+    for (TripSummary * sum in trips)
+    {
         GPSTurningAnalyzer * turnAnalyzer = [GPSTurningAnalyzer new];
         [[GPSLogger sharedLogger].offTimeAnalyzer analyzeTripForSum:sum withAnalyzer:@{@"TurningAnalyzer":turnAnalyzer}];
-        if (0 == [sum.traffic_light_cnt integerValue]) {
-            [[BussinessDataProvider sharedInstance] updateRoadMarkForTrips:sum ofTurningPoints:[turnAnalyzer.filter featurePoints] success:^(id cnt) {
-                [self.carousel reloadData];
-            } failure:nil];
-        }
-    }
-    
-    CGFloat totalDist = 0;
-    CGFloat totalDuring = 0;
-    CGFloat jamDist = 0;
-    CGFloat jamDuring = 0;
-    NSUInteger trafficLightCnt = 0;
-    CGFloat maxSpeed = 0;
-    
-    self.tripsToday = [[trips reverseObjectEnumerator] allObjects];
-    for (TripSummary * sum in self.tripsToday) {
+        
+        // update region info
         [[BussinessDataProvider sharedInstance] updateRegionInfo:sum.region_group.start_region force:NO success:^(id) {
             [self.carousel reloadData];
         } failure:nil];
         [[BussinessDataProvider sharedInstance] updateRegionInfo:sum.region_group.end_region force:NO success:^(id) {
             [self.carousel reloadData];
         } failure:nil];
-        totalDist += [sum.total_dist floatValue];
-        totalDuring += [sum.total_during floatValue];
-        jamDist += [sum.traffic_jam_dist floatValue];
-        jamDuring += [sum.traffic_jam_during floatValue];
-        trafficLightCnt += [sum.traffic_light_cnt integerValue];
-        maxSpeed = MAX(maxSpeed, [sum.max_speed floatValue]);
+        
+        // update traffic light cnt
+        if (0 == [sum.traffic_light_cnt integerValue]) {
+            [[BussinessDataProvider sharedInstance] updateRoadMarkForTrips:sum ofTurningPoints:[turnAnalyzer.filter featurePoints] success:^(id cnt) {
+                [self.carousel reloadData];
+            } failure:nil];
+        }
     }
-    
+    return [[trips reverseObjectEnumerator] allObjects];
+}
+
+- (void)reloadContent
+{
     [self.carousel reloadData];
     [self.carousel scrollToItemAtIndex:0 animated:NO];
     if (self.tripsToday.count > 0) {
         [self.carousel scrollToItemAtIndex:self.tripsToday.count-1 duration:MIN(MAX(self.tripsToday.count/2.0, 0.5), 2.5)];
     }
     self.noResultView.hidden = (self.tripsToday.count > 0);
+    [self.switcher setLabelText:[self.currentDate isToday] ? @"今天" : [self.dateFormatter stringFromDate:self.currentDate] forIndex:0];
     
-    [self.switcher setLabelText:[dateDay isToday] ? @"今天" : [self.dateFormatter stringFromDate:dateDay] forIndex:0];
-    self.todayDist.text = [NSString stringWithFormat:@"%.1fkm", totalDist/1000.0];
-    self.tripCount.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.tripsToday.count];
-    self.todayDuring.text = [NSString stringWithFormat:@"%.fmin", totalDuring/60.0];
-    self.todayMaxSpeed.text = [NSString stringWithFormat:@"%.1fkm/h", maxSpeed*3.6];
-    self.jamDist.text = [NSString stringWithFormat:@"%.1fkm", jamDist/1000.0];
-    self.jamDuring.text = [NSString stringWithFormat:@"%.fmin", jamDuring/60.0];
-    self.trafficLightCnt.text = [NSString stringWithFormat:@"%lu处", (unsigned long)trafficLightCnt];
-    self.trafficLightWaiting.text = @"计算中";
+    [self.slideShow resetAllPage];
+    
+    [self addSlideShow:self.tripsYestoday];
+    [self addSlideShow:self.tripsToday];
+    if (![self.currentDate isToday]) {
+        [self addSlideShow:self.tripsTomorrow];
+    }
+
+    [self.slideShow showPageAtIdx:1];
+}
+
+- (void)addSlideShow:(NSArray*)tripsArray
+{
+    TripTodayView * todaySlide = [[[NSBundle mainBundle] loadNibNamed:@"TripTodayView" owner:self options:nil] lastObject];
+    todaySlide.backgroundColor = [UIColor clearColor];
+    [todaySlide updateWithTripsToday:tripsArray];
+    [self.slideShow addPage:todaySlide];
+    
+    NSUInteger pageIdx = [self.slideShow numberOfPages]-1;
+    
+    // enter animation
+    [self.slideShow addAnimation:[DRDynamicSlideShowAnimation animationForSubview:todaySlide.firstView page:pageIdx keyPath:@"center" toValue:[NSValue valueWithCGPoint:CGPointMake(todaySlide.firstView.center.x+self.slideShow.frame.size.width, todaySlide.firstView.center.y-self.slideShow.frame.size.height)] delay:0]];
+    
+    [self.slideShow addAnimation:[DRDynamicSlideShowAnimation animationForSubview:todaySlide.thirdView page:pageIdx keyPath:@"center" toValue:[NSValue valueWithCGPoint:CGPointMake(todaySlide.thirdView.center.x+self.slideShow.frame.size.width, todaySlide.secondView.center.y+self.slideShow.frame.size.height)] delay:0]];
+    
+    // exit animation
+    [self.slideShow addAnimation:[DRDynamicSlideShowAnimation animationForSubview:todaySlide.firstView page:pageIdx-1 keyPath:@"transform" fromValue:[NSValue valueWithCGAffineTransform:CGAffineTransformMakeRotation(-0.9)] toValue:[NSValue valueWithCGAffineTransform:CGAffineTransformMakeRotation(0)] delay:0]];
+    [self.slideShow addAnimation:[DRDynamicSlideShowAnimation animationForSubview:todaySlide.secondView page:pageIdx-1 keyPath:@"transform" fromValue:[NSValue valueWithCGAffineTransform:CGAffineTransformMakeRotation(-0.9)] toValue:[NSValue valueWithCGAffineTransform:CGAffineTransformMakeRotation(0)] delay:0]];
+    [self.slideShow addAnimation:[DRDynamicSlideShowAnimation animationForSubview:todaySlide.thirdView page:pageIdx-1 keyPath:@"transform" fromValue:[NSValue valueWithCGAffineTransform:CGAffineTransformMakeRotation(-0.9)] toValue:[NSValue valueWithCGAffineTransform:CGAffineTransformMakeRotation(0)] delay:0]];
 }
 
 /*

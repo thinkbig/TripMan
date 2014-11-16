@@ -27,21 +27,22 @@
 @interface DRDynamicSlideShow : UIScrollView <UIScrollViewDelegate> {
     NSMutableArray * animations;
     NSArray * currentAnimations;
+    NSInteger lastPage;
     NSInteger currentPage;
     UITapGestureRecognizer * tapGestureRecognizer;
 }
 
 @property (readonly, nonatomic) NSInteger numberOfPages;
 @property (nonatomic) BOOL scrollsPageOnTap;
-@property (strong, nonatomic) void (^didReachPageBlock)(NSInteger page);
+@property (strong, nonatomic) void (^didReachPageBlock)(NSUInteger FromPage, NSUInteger endPage);
 @property (strong, nonatomic) void (^didScrollBlock)(CGPoint contentOffset);
 
 - (void)addAnimation:(DRDynamicSlideShowAnimation *)animation;
-- (void)addSubview:(UIView *)subview onPage:(NSInteger)page;
+- (void)replacePageview:(UIView *)pageView onPage:(NSInteger)pageIdx;
+- (void)addPage:(UIView*)pageView;
+- (void)resetAllPage;
 
-// @property (nonatomic) DRDynamicSlideShowDirection direction;
-// - (id)initWithOrientation:(DRDynamicSlideShowDirection)direction;
+- (void)showPageAtIdx:(NSUInteger)pageIdx;
 
-// ;)
 
 @end

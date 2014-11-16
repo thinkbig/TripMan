@@ -75,6 +75,8 @@
 		A377B42F19F5537900DDB5EE /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = A377B42E19F5537900DDB5EE /* NSString+MD5.m */; };
 		A378ABE31A164664006A3B68 /* DVSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = A378ABE21A164664006A3B68 /* DVSwitch.m */; };
 		A378ABE71A16F124006A3B68 /* DRDynamicSlideShow.m in Sources */ = {isa = PBXBuildFile; fileRef = A378ABE61A16F124006A3B68 /* DRDynamicSlideShow.m */; };
+		A378ABEA1A17A7AA006A3B68 /* TripTodayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A378ABE91A17A7AA006A3B68 /* TripTodayView.xib */; };
+		A378ABED1A17A7C2006A3B68 /* TripTodayView.m in Sources */ = {isa = PBXBuildFile; fileRef = A378ABEC1A17A7C2006A3B68 /* TripTodayView.m */; };
 		A37A1C821A0B6C6C00633E25 /* BaiduReverseGeocodingWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = A37A1C811A0B6C6C00633E25 /* BaiduReverseGeocodingWrapper.m */; };
 		A37E03EC1A0D216900B0B0EC /* TSPair.m in Sources */ = {isa = PBXBuildFile; fileRef = A37E03EB1A0D216900B0B0EC /* TSPair.m */; };
 		A37E03EF1A0DE10B00B0B0EC /* TripTicketView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A37E03EE1A0DE10B00B0B0EC /* TripTicketView.xib */; };
@@ -307,6 +309,9 @@
 		A378ABE21A164664006A3B68 /* DVSwitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVSwitch.m; sourceTree = "<group>"; };
 		A378ABE51A16F124006A3B68 /* DRDynamicSlideShow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DRDynamicSlideShow.h; sourceTree = "<group>"; };
 		A378ABE61A16F124006A3B68 /* DRDynamicSlideShow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DRDynamicSlideShow.m; sourceTree = "<group>"; };
+		A378ABE91A17A7AA006A3B68 /* TripTodayView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TripTodayView.xib; sourceTree = "<group>"; };
+		A378ABEB1A17A7C2006A3B68 /* TripTodayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TripTodayView.h; sourceTree = "<group>"; };
+		A378ABEC1A17A7C2006A3B68 /* TripTodayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripTodayView.m; sourceTree = "<group>"; };
 		A37A1C801A0B6C6C00633E25 /* BaiduReverseGeocodingWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaiduReverseGeocodingWrapper.h; sourceTree = "<group>"; };
 		A37A1C811A0B6C6C00633E25 /* BaiduReverseGeocodingWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaiduReverseGeocodingWrapper.m; sourceTree = "<group>"; };
 		A37E03EA1A0D216900B0B0EC /* TSPair.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSPair.h; sourceTree = "<group>"; };
@@ -977,6 +982,16 @@
 			path = DRDynamicSlideShow;
 			sourceTree = "<group>";
 		};
+		A378ABE81A17A745006A3B68 /* TodayView */ = {
+			isa = PBXGroup;
+			children = (
+				A378ABEB1A17A7C2006A3B68 /* TripTodayView.h */,
+				A378ABEC1A17A7C2006A3B68 /* TripTodayView.m */,
+				A378ABE91A17A7AA006A3B68 /* TripTodayView.xib */,
+			);
+			path = TodayView;
+			sourceTree = "<group>";
+		};
 		A37E03E91A0D216900B0B0EC /* Basic */ = {
 			isa = PBXGroup;
 			children = (
@@ -1158,6 +1173,7 @@
 		A3FDD1721A028879007B3C65 /* MyTrip */ = {
 			isa = PBXGroup;
 			children = (
+				A378ABE81A17A745006A3B68 /* TodayView */,
 				A37E03ED1A0DE0B800B0B0EC /* TripTicketView */,
 				A34F00FD1A03D0BD00F58C17 /* CarTrip.storyboard */,
 				A34F00EA1A03C8E900F58C17 /* CarTripViewController.h */,
@@ -1276,6 +1292,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A34F01101A03D78900F58C17 /* Debug.storyboard in Resources */,
+				A378ABEA1A17A7AA006A3B68 /* TripTodayView.xib in Resources */,
 				A3147A6A1A0920E4001CCE09 /* mapapi.bundle in Resources */,
 				A34F01001A03D0CB00F58C17 /* CarSetting.storyboard in Resources */,
 				5C9090A818B3A66A00510153 /* Images.xcassets in Resources */,
@@ -1418,6 +1435,7 @@
 				5C9090A018B3A66A00510153 /* AppDelegate.m in Sources */,
 				A3CD361A19CAB0AD0039F6E1 /* LocationTracker.m in Sources */,
 				A34F01461A06699300F58C17 /* iCarousel.m in Sources */,
+				A378ABED1A17A7C2006A3B68 /* TripTodayView.m in Sources */,
 				A3BD72C41A15CAD80007ECA1 /* TrafficInfo.m in Sources */,
 				A3BD72C11A15CAD70007ECA1 /* RegionGroup.m in Sources */,
 				A377B42F19F5537900DDB5EE /* NSString+MD5.m in Sources */,

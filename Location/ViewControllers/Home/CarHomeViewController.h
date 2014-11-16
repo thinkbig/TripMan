@@ -10,4 +10,7 @@
 
 @interface CarHomeViewController : GViewController
 
+@property (weak, nonatomic) IBOutlet UILabel *suggestDest;
+@property (weak, nonatomic) IBOutlet UILabel *suggestDistFrom;
+
 @end

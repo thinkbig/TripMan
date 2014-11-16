@@ -21,7 +21,7 @@ typedef NS_ENUM(NSUInteger, DRDynamicSlideShowAnimationValueType) {
 
 @interface DRDynamicSlideShow ()
 
-@property (readwrite, nonatomic) NSInteger numberOfPages;
+@property (strong, nonatomic) NSMutableArray *           pages;
 
 @end
 
@@ -200,6 +200,8 @@ typedef NS_ENUM(NSUInteger, DRDynamicSlideShowAnimationValueType) {
 
 - (void)configure
 {
+    lastPage = -1;
+    self.pages = [NSMutableArray arrayWithCapacity:4];
     animations = [NSMutableArray new];
     tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(scrollToNextPage)];
     [self addGestureRecognizer:tapGestureRecognizer];
@@ -227,20 +229,52 @@ typedef NS_ENUM(NSUInteger, DRDynamicSlideShowAnimationValueType) {
     [animations addObject:animation];
 }
 
-- (void)addSubview:(UIView *)view {
-    [super addSubview:view];
-    
-    if (view.frame.origin.x >= self.contentSize.width) {
-        NSInteger numberOfPages = floorf(view.frame.origin.x/self.frame.size.width)+1;
-        
-        [self setNumberOfPages:numberOfPages];
-        [self setContentSize:CGSizeMake(self.frame.size.width*self.numberOfPages, self.contentSize.height)];
+- (NSInteger)numberOfPages {
+    return self.pages.count;
+}
+
+- (void)addPage:(UIView*)pageView
+{
+    if (pageView) {
+        NSUInteger pageIdx = [self.pages count];
+        [pageView setFrame:CGRectMake(pageView.frame.origin.x+self.frame.size.width*pageIdx, pageView.frame.origin.y, pageView.frame.size.width, pageView.frame.size.height)];
+        [self.pages addObject:pageView];
+        [self addSubview:pageView];
+        [self setContentSize:CGSizeMake(self.frame.size.width*MAX(1, self.numberOfPages), self.contentSize.height)];
     }
 }
 
-- (void)addSubview:(UIView *)view onPage:(NSInteger)page {
-    [view setFrame:CGRectMake(view.frame.origin.x+self.frame.size.width*page, view.frame.origin.y, view.frame.size.width, view.frame.size.height)];
-    [self addSubview:view];
+- (void)replacePageview:(UIView *)pageView onPage:(NSInteger)pageIdx
+{
+    if (pageView && pageIdx < self.numberOfPages) {
+        [pageView setFrame:CGRectMake(pageView.frame.origin.x+self.frame.size.width*pageIdx, pageView.frame.origin.y, pageView.frame.size.width, pageView.frame.size.height)];
+        UIView * oldView = self.pages[pageIdx];
+        if (oldView) {
+            [oldView removeFromSuperview];
+        }
+        [self.pages replaceObjectAtIndex:pageIdx withObject:pageView];
+        [self addSubview:pageView];
+        [self setContentSize:CGSizeMake(self.frame.size.width*MAX(1, self.numberOfPages), self.contentSize.height)];
+        
+        NSArray * oldAnimation = [self animationsForPage:pageIdx];
+        [animations removeObjectsInArray:oldAnimation];
+    }
+}
+
+- (void)resetAllPage
+{
+    for (UIView * view in self.pages) {
+        [view removeFromSuperview];
+    }
+    [self.pages removeAllObjects];
+    [animations removeAllObjects];
+}
+
+- (void)showPageAtIdx:(NSUInteger)pageIdx
+{
+    if (pageIdx < self.numberOfPages) {
+        [self setContentOffset:CGPointMake(pageIdx * self.frame.size.width, self.contentOffset.y)];
+    }
 }
 
 #pragma mark Setter Overrides
@@ -254,13 +288,15 @@ typedef NS_ENUM(NSUInteger, DRDynamicSlideShowAnimationValueType) {
 
 - (NSInteger)currentPage {
     NSInteger page = floor(self.contentOffset.x / self.frame.size.width);
-    
     return page;
+}
+
+- (NSInteger)lastPage {
+    return lastPage >= 0 ? lastPage : [self currentPage];
 }
 
 - (void)resetCurrentAnimations {
     NSInteger page = [self currentPage];
-    
     currentAnimations = [self animationsForPage:page];
 }
 
@@ -287,13 +323,25 @@ typedef NS_ENUM(NSUInteger, DRDynamicSlideShowAnimationValueType) {
         [self performCurrentAnimationsWithPercentage:(currentPage < page ? 1 : 0)];
         currentPage = page;
         [self resetCurrentAnimations];
-        if (self.didReachPageBlock) self.didReachPageBlock(page);
     }
     
     CGFloat horizontalScroll = self.contentOffset.x-self.frame.size.width*currentPage;
     CGFloat percentage = horizontalScroll/self.frame.size.width;
-    
     [self performCurrentAnimationsWithPercentage:percentage];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    if (!decelerate) {
+        if (self.didReachPageBlock) self.didReachPageBlock([self lastPage], [self currentPage]);
+        lastPage = [self currentPage];
+    }
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    if (self.didReachPageBlock) self.didReachPageBlock([self lastPage], [self currentPage]);
+    lastPage = [self currentPage];
 }
 
 - (void)performCurrentAnimationsWithPercentage:(CGFloat)percentage {

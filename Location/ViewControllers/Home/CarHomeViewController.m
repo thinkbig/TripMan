@@ -17,6 +17,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:@"1234567890-1234567890-1234567890"];
+    [str addAttribute:NSBackgroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(0,7)];
+    [str addAttribute:NSForegroundColorAttributeName value:[UIColor yellowColor] range:NSMakeRange(7,12)];
+    [str addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-Bold" size:20.0] range:NSMakeRange(12, 20)];
+    self.suggestDistFrom.attributedText = str;
+                                      
 }
 
 - (void)didReceiveMemoryWarning {
