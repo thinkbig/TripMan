@@ -30,9 +30,9 @@
 {
     NSDateFormatter * formatter = [[BussinessDataProvider sharedInstance] dateFormatterForFormatStr:@"HH:mm"];
     
-    self.fromLabel.text = [self safeText:sum.region_group.start_region.nearby_poi withDefault:@"未知地点"];
+    self.toStreet.text = [self safeText:sum.region_group.end_region.street withDefault:@"未知地点"];
     self.toLabel.text = [self safeText:sum.region_group.end_region.nearby_poi withDefault:@"未知地点"];
-    self.suggestLabel.text = [NSString stringWithFormat:@"建议出发: %@ (%d分钟)", [formatter stringFromDate:sum.start_date], (int)[sum.total_during floatValue]/60];
+    self.suggestLabel.text = [NSString stringWithFormat:@"%@ 建议出行", [formatter stringFromDate:sum.start_date]];
     
     self.jamCntLabel.text = [NSString stringWithFormat:@"%d个堵点", [sum.traffic_jam_cnt intValue]];
     self.jamDuringLabel.text = [NSString stringWithFormat:@"%d分钟", [sum.traffic_jam_during intValue]/60];

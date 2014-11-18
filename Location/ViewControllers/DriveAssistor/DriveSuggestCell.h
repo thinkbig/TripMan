@@ -10,7 +10,7 @@
 
 @interface DriveSuggestCell : UICollectionViewCell
 
-@property (weak, nonatomic) IBOutlet UILabel *fromLabel;
+@property (weak, nonatomic) IBOutlet UILabel *toStreet;
 @property (weak, nonatomic) IBOutlet UILabel *toLabel;
 @property (weak, nonatomic) IBOutlet UILabel *suggestLabel;
 

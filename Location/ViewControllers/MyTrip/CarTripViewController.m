@@ -84,7 +84,7 @@
             [nonRetainSelf showYestoday];
         } else if (fromPage + 1 == toPage) {
             [nonRetainSelf showTomorrow];
-        } else {
+        } else if (fromPage != toPage) {
             // rebuild with currentDate
             self.tripsToday = [self fetchTripsForDate:self.currentDate];
             self.tripsYestoday = [self fetchTripsForDate:[self.currentDate dateBySubtractingDays:1]];

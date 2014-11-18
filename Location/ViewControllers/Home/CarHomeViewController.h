@@ -21,6 +21,12 @@
 @property (weak, nonatomic) IBOutlet UIView *suggestView;
 @property (weak, nonatomic) IBOutlet UILabel *suggestLabel;
 
+@property (weak, nonatomic) IBOutlet UIView *statusView;
+@property (weak, nonatomic) IBOutlet UIView *statusColorView;
+@property (weak, nonatomic) IBOutlet UILabel *statusLabel;
+
+
+@property (weak, nonatomic) IBOutlet UILabel *todayTripSum;
 
 @property (weak, nonatomic) IBOutlet PICircularProgressView *carHealthProgress;
 @property (weak, nonatomic) IBOutlet UILabel *carHeathLabel;
