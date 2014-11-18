@@ -11,10 +11,12 @@
 @interface PICircularProgressView : UIView
 
 @property (nonatomic) double progress;
+@property (nonatomic) double startAngle;        // By Degree 90
 
 // Should be BOOLs, but iOS doesn't allow BOOL as UI_APPEARANCE_SELECTOR
 @property (nonatomic) NSInteger showText UI_APPEARANCE_SELECTOR;
 @property (nonatomic) NSInteger roundedHead UI_APPEARANCE_SELECTOR;
+@property (nonatomic) NSInteger roundedTail UI_APPEARANCE_SELECTOR;
 @property (nonatomic) NSInteger showShadow UI_APPEARANCE_SELECTOR;
 
 @property (nonatomic) CGFloat thicknessRatio UI_APPEARANCE_SELECTOR;

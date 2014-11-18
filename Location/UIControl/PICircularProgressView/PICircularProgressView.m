@@ -16,18 +16,20 @@
     {
         id appearance = [self appearance];
         
+        [appearance setStartAngle:90];
         [appearance setShowText:YES];
         [appearance setRoundedHead:YES];
+        [appearance setRoundedTail:NO];
         [appearance setShowShadow:YES];
         
-        [appearance setThicknessRatio:0.37f];
+        [appearance setThicknessRatio:0.12f];
         
         [appearance setInnerBackgroundColor:nil];
         [appearance setOuterBackgroundColor:nil];
         
-        [appearance setTextColor:[UIColor blackColor]];
+        [appearance setTextColor:[UIColor whiteColor]];
         [appearance setFont:[UIFont systemFontOfSize:10]];
-        [appearance setProgressFillColor:nil];
+        [appearance setProgressFillColor:UIColorFromRGB(0x81d13a)];
         
         [appearance setProgressTopGradientColor:[UIColor colorWithRed:15.0/255.0 green:97.0/255.0 blue:189.0/255.0 alpha:1.0]];
         [appearance setProgressBottomGradientColor:[UIColor colorWithRed:114.0/255.0 green:174.0/255.0 blue:235.0/255.0 alpha:1.0]];
@@ -37,18 +39,13 @@
     }
 }
 
-- (id)init
-{
-    self = [super initWithFrame:CGRectMake(0.0f, 0.0f, 44.0f, 44.0f)];
-    return self;
-}
 
 #pragma mark - Drawing
 
 - (void)drawRect:(CGRect)rect
 {
     // Calculate position of the circle
-    CGFloat progressAngle = _progress * 360.0 - 90;
+    CGFloat progressAngle = _progress * 360.0 + _startAngle;
     CGPoint center = CGPointMake(rect.size.width / 2.0f, rect.size.height / 2.0f);
     CGFloat radius = MIN(rect.size.width, rect.size.height) / 2.0f;
     
@@ -89,12 +86,12 @@
                                                               radius:radius
                                                           startAngle:0.0
                                                             endAngle:2*M_PI
-                                                           clockwise:NO];
+                                                           clockwise:YES];
         [outerCircle addArcWithCenter:center
                                radius:radius - circleWidth
                            startAngle:2*M_PI
                              endAngle:0.0
-                            clockwise:YES];
+                            clockwise:NO];
         
         [_outerBackgroundColor setFill];
         
@@ -106,10 +103,10 @@
         // Draw shadows
         CGFloat locations[5] = { 0.0f, 0.33f, 0.66f, 1.0f };
         NSArray *gradientColors = @[
-                                    (id)[[UIColor colorWithWhite:0.3 alpha:0.5] CGColor],
-                                    (id)[[UIColor colorWithWhite:0.9 alpha:0.0] CGColor],
-                                    (id)[[UIColor colorWithWhite:0.9 alpha:0.0] CGColor],
-                                    (id)[[UIColor colorWithWhite:0.3 alpha:0.5] CGColor],
+                                    (id)[[UIColor colorWithWhite:0.4 alpha:0.5] CGColor],
+                                    (id)[[UIColor colorWithWhite:0.7 alpha:0.1] CGColor],
+                                    (id)[[UIColor colorWithWhite:0.7 alpha:0.1] CGColor],
+                                    (id)[[UIColor colorWithWhite:0.4 alpha:0.5] CGColor],
                                     ];
         
         CGColorSpaceRef rgb = CGColorSpaceCreateDeviceRGB();
@@ -159,7 +156,7 @@
     
     [path appendPath:[UIBezierPath bezierPathWithArcCenter:center
                                                     radius:radius
-                                                startAngle:DEGREES_TO_RADIANS(-90)
+                                                startAngle:DEGREES_TO_RADIANS(_startAngle)
                                                   endAngle:DEGREES_TO_RADIANS(progressAngle)
                                                  clockwise:YES]];
     
@@ -172,26 +169,26 @@
         [path addArcWithCenter:point
                         radius:circleWidth/2
                     startAngle:DEGREES_TO_RADIANS(progressAngle)
-                      endAngle:DEGREES_TO_RADIANS(270.0 + progressAngle - 90.0)
+                      endAngle:DEGREES_TO_RADIANS(270.0 + progressAngle + _startAngle)
                      clockwise:YES];
     }
     
     [path addArcWithCenter:center
                     radius:radius-circleWidth
                 startAngle:DEGREES_TO_RADIANS(progressAngle)
-                  endAngle:DEGREES_TO_RADIANS(-90)
+                  endAngle:DEGREES_TO_RADIANS(_startAngle)
                  clockwise:NO];
     
-    if (_roundedHead)
+    if (_roundedTail)
     {
         CGPoint point;
-        point.x = (cos(DEGREES_TO_RADIANS(-90)) * (radius - circleWidth/2)) + center.x;
-        point.y = (sin(DEGREES_TO_RADIANS(-90)) * (radius - circleWidth/2)) + center.y;
+        point.x = (cos(DEGREES_TO_RADIANS(_startAngle)) * (radius - circleWidth/2)) + center.x;
+        point.y = (sin(DEGREES_TO_RADIANS(_startAngle)) * (radius - circleWidth/2)) + center.y;
         
         [path addArcWithCenter:point
                         radius:circleWidth/2
-                    startAngle:DEGREES_TO_RADIANS(90)
-                      endAngle:DEGREES_TO_RADIANS(-90)
+                    startAngle:DEGREES_TO_RADIANS(-_startAngle)
+                      endAngle:DEGREES_TO_RADIANS(_startAngle)
                      clockwise:NO];
     }
     
@@ -246,6 +243,13 @@
 - (void)setRoundedHead:(NSInteger)roundedHead
 {
     _roundedHead = roundedHead;
+    
+    [self setNeedsDisplay];
+}
+
+- (void)setRoundedTail:(NSInteger)roundedTail
+{
+    _roundedTail = roundedTail;
     
     [self setNeedsDisplay];
 }

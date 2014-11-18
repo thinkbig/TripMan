@@ -27,24 +27,19 @@
 
 - (void) updateWithTripSummary:(TripSummary*)sum
 {
-    static NSDateFormatter *sDateFormatter = nil;
-    if (nil == sDateFormatter) {
-        sDateFormatter = [[NSDateFormatter alloc] init];
-        [sDateFormatter setDateFormat: @"HH:mm"];
-        [sDateFormatter setTimeZone:[NSTimeZone localTimeZone]];
-    }
+    NSDateFormatter * formatter = [[BussinessDataProvider sharedInstance] dateFormatterForFormatStr:@"HH:mm"];
     
     self.fromPoi.text = [self safeText:sum.region_group.start_region.nearby_poi withDefault:@"未知"];
     self.fromStreet.text = [self safeText:sum.region_group.start_region.street withDefault:@"未知街道"];
-    self.fromDate.text = sum.start_date ? [sDateFormatter stringFromDate:sum.start_date] : @"未知";
+    self.fromDate.text = sum.start_date ? [formatter stringFromDate:sum.start_date] : @"未知";
     
     if (sum.end_date) {
         self.toPoi.text = [self safeText:sum.region_group.end_region.nearby_poi withDefault:@"未知"];
         self.toStreet.text = [self safeText:sum.region_group.end_region.street withDefault:@"未知街道"];
-        self.toDate.text = [sDateFormatter stringFromDate:sum.end_date];
+        self.toDate.text = [formatter stringFromDate:sum.end_date];
     } else {
         self.toPoi.text = @"行驶中";
-        self.toDate.text = [sDateFormatter stringFromDate:[NSDate date]];
+        self.toDate.text = [formatter stringFromDate:[NSDate date]];
     }
     
     self.distLabel.text = [NSString stringWithFormat:@"%.1fkm", [sum.total_dist floatValue]/1000.0f];

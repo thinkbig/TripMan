@@ -27,4 +27,6 @@
 
 + (CLLocation*) lastGoodLocation;
 
+- (NSDateFormatter*) dateFormatterForFormatStr:(NSString*)format;
+
 @end

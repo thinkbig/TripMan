@@ -25,6 +25,7 @@
 }
 
 @property (nonatomic, strong) NSDictionary *                        latestCityDate;
+@property (nonatomic, strong) NSMutableDictionary *                 dateFormaterDict;
 
 @end
 
@@ -301,6 +302,25 @@ static BussinessDataProvider * _sharedProvider = nil;
         return [[CLLocation alloc] initWithLatitude:[lastGoodGPS[@"lat"] doubleValue] longitude:[lastGoodGPS[@"lon"] doubleValue]];
     }
     return nil;
+}
+
+- (NSDateFormatter*) dateFormatterForFormatStr:(NSString*)format
+{
+    if (format.length == 0) {
+        return nil;
+    }
+    if (nil == self.dateFormaterDict) {
+        self.dateFormaterDict = [NSMutableDictionary dictionary];
+    }
+    NSDateFormatter * formater = self.dateFormaterDict[format];
+    if (nil == formater) {
+        formater = [[NSDateFormatter alloc] init];
+        [formater setDateFormat:format];
+        [formater setTimeZone:[NSTimeZone localTimeZone]];
+        
+        self.dateFormaterDict[format] = formater;
+    }
+    return formater;
 }
 
 @end
