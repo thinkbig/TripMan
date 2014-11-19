@@ -70,6 +70,9 @@
     if (self.night_during > 0) {
         self.night_avg_speed = _night_dist/_night_during;
     }
+    
+    [self filterJamData];
+    [self analyzeTrafficSum];
 }
 
 - (void) appendData:(GPSLogItem*)item
@@ -109,7 +112,7 @@
     
     if (curSpeed > cAvgTrafficJamSpeed) {
         [self appendVerifiedTrafficJamItem];
-    } else {
+    } else if ([item.speed floatValue] >= 0) {
         [_lastTrafficJam addObject:item];
     }
     
@@ -124,55 +127,68 @@
 
 #pragma mark - private method
 
+- (void) filterJamData
+{
+    if (self.traffic_jams.count == 0) {
+        return;
+    }
+    
+    NSArray * rawJams = [self.traffic_jams copy];
+    NSMutableArray * filteredJams = [NSMutableArray array];
+    TSPair * lastPair = rawJams[0];
+    for (NSInteger i = 1; i < rawJams.count; i++) {
+        TSPair * curPair = rawJams[i];
+        GPSLogItem * oneItem = lastPair.second;
+        GPSLogItem * anotherItem = curPair.first;
+        
+        CGFloat jamDist = [anotherItem distanceFrom:oneItem];
+        CGFloat jamDuring = [anotherItem.timestamp timeIntervalSinceDate:oneItem.timestamp];
+        
+        if (jamDist < 100 || jamDuring < 10) {
+            lastPair.second = curPair.second;
+        } else {
+            GPSLogItem * jamStart = lastPair.first;
+            GPSLogItem * jamEnd = curPair.second;
+            CGFloat thisDuring = [jamEnd.timestamp timeIntervalSinceDate:jamStart.timestamp];
+            if (thisDuring >= 5) {
+                [filteredJams addObject:lastPair];
+            }
+            lastPair = curPair;
+        }
+    }
+    [filteredJams addObject:lastPair];
+    self.traffic_jams = filteredJams;
+}
+
+- (void) analyzeTrafficSum
+{
+    _traffic_jam_dist = 0;
+    _traffic_jam_during = 0;
+    NSArray * rawJams = [self.traffic_jams copy];
+    for (TSPair * pair in rawJams) {
+        GPSLogItem * oneItem = pair.first;
+        GPSLogItem * anotherItem = pair.second;
+        
+        CGFloat jamDist = [anotherItem distanceFrom:oneItem];
+        CGFloat jamDuring = [anotherItem.timestamp timeIntervalSinceDate:oneItem.timestamp];
+        
+        _traffic_jam_dist += jamDist;
+        _traffic_jam_during += jamDuring;
+    }
+}
+
 - (void) appendVerifiedTrafficJamItem
 {
     NSArray * oldJamData = [self.lastTrafficJam copy];
     [self.lastTrafficJam removeAllObjects];
     
-    if (oldJamData.count < 5) {
+    if (oldJamData.count < 2) {
         return;
     }
     
     GPSLogItem * firstItem = oldJamData[0];
     GPSLogItem * lastItem = [oldJamData lastObject];
-    
-    CGFloat jamDist = [lastItem distanceFrom:firstItem];
-    CGFloat jamDuring = [lastItem.timestamp timeIntervalSinceDate:firstItem.timestamp];
-    
-    if (jamDuring > 5) {
-        self.traffic_jam_cnt++;
-        _traffic_jam_dist += jamDist;
-        _traffic_jam_during += jamDuring;
-        [self.traffic_jams addObject:TSPairMake(firstItem, lastItem, nil)];
-    }
-    
-//    CLLocation * lastJamLoc = nil;
-//    GPSLogItem * lastJamItem = nil;
-//    for (GPSLogItem * item in oldJamData)
-//    {
-//        if (nil == lastJamItem) {
-//            lastJamItem = item;
-//            lastJamLoc = [[CLLocation alloc] initWithLatitude:[item.latitude doubleValue] longitude:[item.longitude doubleValue]];
-//        } else {
-//            CLLocation * curLoc = [[CLLocation alloc] initWithLatitude:[item.latitude doubleValue] longitude:[item.longitude doubleValue]];
-//            NSTimeInterval during = [item.timestamp timeIntervalSinceDate:lastJamItem.timestamp];
-//            CLLocationDistance distance = [lastJamLoc distanceFromLocation:curLoc];
-//
-//            lastJamItem = item;
-//            lastJamLoc = curLoc;
-//            
-//            if (during < 0 || (during > 0 && distance/during > cAvgNoiceSpeed)) {
-//                // regard as noise
-//                continue;
-//            }
-//            _traffic_jam_dist += distance;
-//            _traffic_jam_during += during;
-//        }
-//    }
-//    
-//    if (oldJamData.count > 5) {
-//        self.traffic_jam_cnt++;
-//    }
+    [self.traffic_jams addObject:TSPairMake(firstItem, lastItem, nil)];
 }
 
 @end

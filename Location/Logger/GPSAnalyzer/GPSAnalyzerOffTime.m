@@ -181,7 +181,6 @@
     tripSum.traffic_jam_dist = @(oneTripAna.traffic_jam_dist);
     tripSum.traffic_jam_during = @(oneTripAna.traffic_jam_during);
     tripSum.traffic_avg_speed = @(oneTripAna.traffic_avg_speed);
-    tripSum.traffic_jam_cnt = @(oneTripAna.traffic_jam_cnt);
     
     NSArray * oldJams = [tripSum.traffic_jams allObjects];
     NSArray * jamArr = [oneTripAna getTrafficJams];
@@ -211,6 +210,7 @@
         TrafficJam * removeJam = oldJams[i];
         [tripSum removeTraffic_jamsObject:removeJam];
     }
+    tripSum.traffic_jam_cnt = @(jamArr.count);
     
     // update analyze environment info
     EnvInfo * env_info = [manager environmentForTrip:tripSum];

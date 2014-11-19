@@ -41,6 +41,7 @@
 		A320D00E19BEA1A800F4038A /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A320D00D19BEA1A800F4038A /* Accounts.framework */; };
 		A320D01019BEA1B800F4038A /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A320D00F19BEA1B800F4038A /* Social.framework */; };
 		A320D01219BEAE8A00F4038A /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A320D01119BEAE8A00F4038A /* Bolts.framework */; };
+		A3317FFB1A1C57E200EA23CA /* GPSTrafficAnalyzer.m in Sources */ = {isa = PBXBuildFile; fileRef = A3317FFA1A1C57E200EA23CA /* GPSTrafficAnalyzer.m */; };
 		A340E8F419EEC7610014C14B /* GPSEndTraceAnalyzer.m in Sources */ = {isa = PBXBuildFile; fileRef = A340E8F319EEC7610014C14B /* GPSEndTraceAnalyzer.m */; };
 		A342849B19C42081002DB0FD /* GPSLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = A342849A19C42081002DB0FD /* GPSLogger.m */; };
 		A34284A019C6770A002DB0FD /* GPSFileLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = A342849F19C6770A002DB0FD /* GPSFileLogFormatter.m */; };
@@ -242,6 +243,8 @@
 		A320D00D19BEA1A800F4038A /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		A320D00F19BEA1B800F4038A /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		A320D01119BEAE8A00F4038A /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
+		A3317FF91A1C57E200EA23CA /* GPSTrafficAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPSTrafficAnalyzer.h; sourceTree = "<group>"; };
+		A3317FFA1A1C57E200EA23CA /* GPSTrafficAnalyzer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPSTrafficAnalyzer.m; sourceTree = "<group>"; };
 		A340E8F219EEC7610014C14B /* GPSEndTraceAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPSEndTraceAnalyzer.h; sourceTree = "<group>"; };
 		A340E8F319EEC7610014C14B /* GPSEndTraceAnalyzer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPSEndTraceAnalyzer.m; sourceTree = "<group>"; };
 		A342849919C42081002DB0FD /* GPSLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPSLogger.h; sourceTree = "<group>"; };
@@ -1063,6 +1066,8 @@
 				A3CD360119C6DCC80039F6E1 /* GPSAnalyzerRealTime.m */,
 				A3CD360C19C9767F0039F6E1 /* GPSAnalyzerOffTime.h */,
 				A3CD360D19C9767F0039F6E1 /* GPSAnalyzerOffTime.m */,
+				A3317FF91A1C57E200EA23CA /* GPSTrafficAnalyzer.h */,
+				A3317FFA1A1C57E200EA23CA /* GPSTrafficAnalyzer.m */,
 			);
 			path = GPSAnalyzer;
 			sourceTree = "<group>";
@@ -1428,6 +1433,7 @@
 				A314118A1A0A7C700019F557 /* ParkingRegionDetail.m in Sources */,
 				A378AC2C1A18BECE006A3B68 /* TripSummary.m in Sources */,
 				A314116C1A0A4CCD0019F557 /* TripMan.xcdatamodeld in Sources */,
+				A3317FFB1A1C57E200EA23CA /* GPSTrafficAnalyzer.m in Sources */,
 				A378ABE71A16F124006A3B68 /* DRDynamicSlideShow.m in Sources */,
 				A314116D1A0A4CCD0019F557 /* TripsCoreDataManager.m in Sources */,
 				A34F01271A04F22400F58C17 /* BaiduWeatherFacade.m in Sources */,

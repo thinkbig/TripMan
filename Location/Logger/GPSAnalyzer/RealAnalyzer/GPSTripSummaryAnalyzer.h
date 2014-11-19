@@ -19,7 +19,6 @@
 @property (nonatomic) CGFloat          traffic_jam_dist;
 @property (nonatomic) CGFloat          traffic_jam_during;
 @property (nonatomic) CGFloat          traffic_avg_speed;
-@property (nonatomic) CGFloat          traffic_jam_cnt;
 
 @property (nonatomic) CGFloat          day_dist;
 @property (nonatomic) CGFloat          day_during;

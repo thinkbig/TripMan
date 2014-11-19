@@ -7,6 +7,7 @@
 //
 
 #import "DriveSuggestCell.h"
+#import "GPSTrafficAnalyzer.h"
 
 @implementation DriveSuggestCell
 
@@ -34,8 +35,9 @@
     self.toLabel.text = [self safeText:sum.region_group.end_region.nearby_poi withDefault:@"未知地点"];
     self.suggestLabel.text = [NSString stringWithFormat:@"%@ 建议出行", [formatter stringFromDate:sum.start_date]];
     
-    self.jamCntLabel.text = [NSString stringWithFormat:@"%d个堵点", [sum.traffic_jam_cnt intValue]];
-    self.jamDuringLabel.text = [NSString stringWithFormat:@"%d分钟", [sum.traffic_jam_during intValue]/60];
+    NSArray * heavyTraffic = [GPSTrafficAnalyzer trafficJamsInTrip:sum withThreshold:cHeavyTrafficJamThreshold];
+    self.jamCntLabel.text = [NSString stringWithFormat:@"%lu处拥堵", (unsigned long)heavyTraffic.count];
+    self.jamDuringLabel.text = [NSString stringWithFormat:@"%d分钟", [sum.total_during intValue]/60];
 }
 
 @end

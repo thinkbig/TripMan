@@ -165,7 +165,7 @@
                 pointsToUse[realCnt++] = marsCoords;
             } else if (isJam && curSpeed > cAvgTrafficJamSpeed) {
                 MKPolyline *lineOne = [MKPolyline polylineWithCoordinates:pointsToUse count:realCnt];
-                lineOne.title = @"jamLine";
+                lineOne.title = @"allLine";
                 [self.mapView addOverlay:lineOne];
                 realCnt = 0;
                 pointsToUse[realCnt++] = marsCoords;
@@ -239,6 +239,36 @@
         region.span.longitudeDelta = maxLon - minLon + 0.018;
         [self.mapView setRegion:region animated:YES];
     }
+    
+    NSInteger heavyJam = 0;
+    NSArray * jamArr =  [self.tripSum.traffic_jams allObjects];
+    for (TrafficJam * jamPair in jamArr)
+    {
+        CLLocationCoordinate2D pointsToUse[2];
+        
+        CLLocationCoordinate2D coords;
+        coords.latitude = [jamPair.start_lat doubleValue];
+        coords.longitude = [jamPair.start_lon doubleValue];
+        CLLocationCoordinate2D marsCoords = [GeoTransformer earth2Mars:coords];
+        pointsToUse[0] = marsCoords;
+        
+        coords.latitude = [jamPair.end_lat doubleValue];
+        coords.longitude = [jamPair.end_lon doubleValue];
+        marsCoords = [GeoTransformer earth2Mars:coords];
+        pointsToUse[1] = marsCoords;
+        
+        MKPolyline *lineOne = [MKPolyline polylineWithCoordinates:pointsToUse count:2];
+        lineOne.title = @"jamLine";
+
+        if (jamPair.end_date && jamPair.start_date && [jamPair.end_date timeIntervalSinceDate:jamPair.start_date] > cHeavyTrafficJamThreshold) {
+            lineOne.title = @"heavyJamLine";
+            heavyJam++;
+        }
+        
+        [self.mapView addOverlay:lineOne];
+    }
+    
+    NSLog(@"traffic light = %@, total jam = %@, light jam = %@, heavy jam = %ld", _tripSum.traffic_light_tol_cnt, _tripSum.traffic_jam_cnt, _tripSum.traffic_light_jam_cnt, (long)heavyJam);
 }
 
 /*
@@ -261,7 +291,9 @@
         MKPolylineRenderer * lineRender=[[MKPolylineRenderer alloc] initWithOverlay:overlay] ;
         if ([line.title isEqualToString:@"allLine"]) {
             lineRender.strokeColor = [UIColor colorWithRed:69.0f/255.0f green:212.0f/255.0f blue:255.0f/255.0f alpha:0.9];
-        } else {
+        } else if ([line.title isEqualToString:@"jamLine"]) {
+            lineRender.strokeColor = [UIColor colorWithRed:168.0f/255.0f green:12.0f/255.0f blue:155.0f/255.0f alpha:0.9];
+        } else if ([line.title isEqualToString:@"heavyJamLine"]) {
             lineRender.strokeColor = [UIColor colorWithRed:255.0f/255.0f green:12.0f/255.0f blue:55.0f/255.0f alpha:0.9];
         }
         lineRender.lineWidth = 4.0;

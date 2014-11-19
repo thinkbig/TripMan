@@ -8,6 +8,7 @@
 
 #import "CarHomeViewController.h"
 #import "NSDate+Utilities.h"
+#import "GPSTrafficAnalyzer.h"
 
 @interface CarHomeViewController ()
 
@@ -72,7 +73,8 @@
     
     // most trip info
     self.duringLabel.text = [NSString stringWithFormat:@"%.f", [_mostTrip.total_during floatValue]/60.0];
-    self.jamLabel.text = [NSString stringWithFormat:@"%@", _mostTrip.traffic_jam_cnt];
+    NSArray * heavyTraffic = [GPSTrafficAnalyzer trafficJamsInTrip:_mostTrip withThreshold:cHeavyTrafficJamThreshold];
+    self.jamLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)heavyTraffic.count];
     
     NSDateFormatter * formatter = [[BussinessDataProvider sharedInstance] dateFormatterForFormatStr:@"HH:mm"];
     self.suggestLabel.text = [formatter stringFromDate:_mostTrip.start_date];
