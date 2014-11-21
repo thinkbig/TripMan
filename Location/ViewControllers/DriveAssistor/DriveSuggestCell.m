@@ -11,15 +11,9 @@
 
 @implementation DriveSuggestCell
 
-- (id)initWithCoder:(NSCoder *)aDecoder
+- (void)awakeFromNib
 {
-    self = [super initWithCoder:aDecoder];
-    if (self) {
-        self.layer.cornerRadius = 10;
-        self.layer.borderColor = [UIColor darkGrayColor].CGColor;
-        self.layer.borderWidth = 2;
-    }
-    return self;
+    self.layer.cornerRadius = 10;
 }
 
 - (NSString*) safeText:(NSString*)str withDefault:(NSString*)defaultStr
@@ -38,6 +32,23 @@
     NSArray * heavyTraffic = [GPSTrafficAnalyzer trafficJamsInTrip:sum withThreshold:cHeavyTrafficJamThreshold];
     self.jamCntLabel.text = [NSString stringWithFormat:@"%lu处拥堵", (unsigned long)heavyTraffic.count];
     self.jamDuringLabel.text = [NSString stringWithFormat:@"%d分钟", [sum.total_during intValue]/60];
+}
+
+@end
+
+/////////////////////////////////////////////////////////////////////////////////
+
+@implementation DriveSuggestPOICell
+
+@end
+
+/////////////////////////////////////////////////////////////////////////////////
+
+@implementation SearchPOIHeader
+
+- (void)awakeFromNib
+{
+    self.backgroundMask.layer.cornerRadius = 8;
 }
 
 @end

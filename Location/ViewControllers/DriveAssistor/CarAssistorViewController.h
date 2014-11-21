@@ -8,8 +8,10 @@
 
 #import "GViewController.h"
 
-@interface CarAssistorViewController : GViewController
+@interface CarAssistorViewController : GViewController <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UISearchDisplayDelegate>
 
 @property (weak, nonatomic) IBOutlet UICollectionView *suggestCollectionView;
+
+@property (strong, nonatomic) UISearchBar *searchBar;
 
 @end

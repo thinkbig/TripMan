@@ -9,10 +9,14 @@
 #import "CarAssistorViewController.h"
 #import "DriveSuggestCell.h"
 #import "MapDisplayViewController.h"
+#import "SuggestDetailViewController.h"
+#import "ZBNSearchDisplayController.h"
 
-@interface CarAssistorViewController ()
+@interface CarAssistorViewController () {
+    ZBNSearchDisplayController *       searchDisplayController;
+}
 
-@property (nonatomic, strong) NSArray *         topNMostUsedTrips;
+@property (nonatomic, strong) NSArray *                         topNMostUsedTrips;
 
 @end
 
@@ -21,6 +25,17 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    self.edgesForExtendedLayout = UIRectEdgeNone;
+    
+    _searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, 220, 44)];
+    _searchBar.translucent = YES;
+    _searchBar.placeholder = @"输入要去的地名";
+    _searchBar.barTintColor = [UIColor clearColor];
+    _searchBar.backgroundColor = [UIColor clearColor];
+    [_searchBar setSearchBarStyle:UISearchBarStyleMinimal];
+    
+    searchDisplayController = [[ZBNSearchDisplayController alloc] initWithSearchBar:_searchBar contentsController:self];
     
     CLLocation * curLoc = [BussinessDataProvider lastGoodLocation];
     if (curLoc) {
@@ -37,6 +52,24 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [self.navigationController setNavigationBarHidden:YES animated:animated];
+    [super viewWillAppear:animated];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [self.navigationController setNavigationBarHidden:NO animated:animated];
+    [super viewWillDisappear:animated];
+}
+
+- (void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller {
+    self.navigationController.navigationBar.translucent = YES;
+}
+
+- (void)searchDisplayControllerDidEndSearch:(UISearchDisplayController *)controller {
+    self.navigationController.navigationBar.translucent = NO;
+}
+
 /*
 #pragma mark - Navigation
 
@@ -50,12 +83,14 @@
 #pragma mark - UICollectionViewDataSource
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
-    return 1;
+    return 2;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     if (0 == section) {
         return self.topNMostUsedTrips.count;
+    } else if (1 == section) {
+        return 5;
     }
     return 0;
 }
@@ -63,37 +98,85 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     UICollectionViewCell* cell = nil;
-    if (0 == indexPath.section) {
+    if (0 == indexPath.section)
+    {
         DriveSuggestCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"suggestUsefulCell" forIndexPath:indexPath];
         [realCell updateWithTripSummary:self.topNMostUsedTrips[indexPath.row]];
         cell = realCell;
+    }
+    else
+    {
+        if (0 == indexPath.row) {
+            UICollectionViewCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"SuggestPOIFirst" forIndexPath:indexPath];
+            
+            cell = realCell;
+        } else {
+            UICollectionViewCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"SuggestPOICell" forIndexPath:indexPath];
+            
+            cell = realCell;
+        }
     }
 
     return cell;
 }
 
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
+{
+    UICollectionReusableView* reusableView = nil;
+    if (kind == UICollectionElementKindSectionHeader) {
+        SearchPOIHeader* header = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"SuggestPOIHeader" forIndexPath:indexPath];
+        _searchBar.center = CGPointMake(header.backgroundMask.bounds.size.width/2.0, header.backgroundMask.bounds.size.height/2.0);
+        [header.backgroundMask addSubview:_searchBar];
+        reusableView = header;
+    }
+    
+    return reusableView;
+}
+
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     if (0 == indexPath.section) {
         return CGSizeMake(300.f, 80.f);
+    } else if (1 == indexPath.section) {
+        if (0 == indexPath.row) {
+            return CGSizeMake(320, 40);
+        } else {
+            return CGSizeMake(320, 70);
+        }
     }
     return CGSizeZero;
 }
 
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section{
-    return 10.f;
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
+{
+    if (0 == section) {
+        return 10.f;
+    }
+    return 1.0f;
 }
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
     return UIEdgeInsetsMake(10.f, 0, 0, 0);
 }
 
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section;
+{
+    if (0 == section) {
+        return CGSizeMake(320, 90);
+    }
+    return CGSizeZero;
+}
+
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if (0 == indexPath.section) {
-        MapDisplayViewController * mapVC = [[UIStoryboard storyboardWithName:@"Debug" bundle:nil] instantiateViewControllerWithIdentifier:@"MapDisplayView"];
-        mapVC.tripSum = self.topNMostUsedTrips[indexPath.row];
-        [self presentViewController:mapVC animated:YES completion:nil];
+        SuggestDetailViewController * suggestDetail = [self.storyboard instantiateViewControllerWithIdentifier:@"SuggestDetailID"];
+        suggestDetail.tripSum = self.topNMostUsedTrips[indexPath.row];
+        [self.navigationController pushViewController:suggestDetail animated:YES];
+        
+//        MapDisplayViewController * mapVC = [[UIStoryboard storyboardWithName:@"Debug" bundle:nil] instantiateViewControllerWithIdentifier:@"MapDisplayView"];
+//        mapVC.tripSum = self.topNMostUsedTrips[indexPath.row];
+//        [self presentViewController:mapVC animated:YES completion:nil];
     }
 }
 @end

@@ -20,3 +20,22 @@
 - (void) updateWithTripSummary:(TripSummary*)sum;
 
 @end
+
+
+/////////////////////////////////////////////////////////////////////////////////
+
+@interface DriveSuggestPOICell : UICollectionViewCell
+
+@property (weak, nonatomic) IBOutlet UILabel *destPOILabel;
+@property (weak, nonatomic) IBOutlet UILabel *destStreetLabel;
+@property (weak, nonatomic) IBOutlet UILabel *estimateDuringLabel;
+
+@end
+
+/////////////////////////////////////////////////////////////////////////////////
+
+@interface SearchPOIHeader : UICollectionReusableView
+
+@property (weak, nonatomic) IBOutlet UIView *backgroundMask;
+
+@end
