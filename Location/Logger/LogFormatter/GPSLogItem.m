@@ -74,6 +74,18 @@
 	return self;
 }
 
+- (id)initWithParkingRegion:(ParkingRegion*)region
+{
+    if ((self = [super init]))
+    {
+        self.latitude = region.center_lat;
+        self.longitude = region.center_lon;
+        
+        self.isValid = YES;
+    }
+    return self;
+}
+
 - (CLLocation*) location
 {
     return [[CLLocation alloc] initWithCoordinate:[self locationCoordinate] altitude:[self.altitude doubleValue] horizontalAccuracy:[self.horizontalAccuracy doubleValue] verticalAccuracy:[self.verticalAccuracy doubleValue] course:[self.course doubleValue] speed:[self.speed doubleValue] timestamp:self.timestamp];

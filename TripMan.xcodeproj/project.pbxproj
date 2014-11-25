@@ -46,6 +46,7 @@
 		A331F5BF1A1CCA1E001F4DE3 /* SuggestDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A331F5BE1A1CCA1E001F4DE3 /* SuggestDetailViewController.m */; };
 		A331F5C71A1D700A001F4DE3 /* SuggestOverLayerCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A331F5C61A1D700A001F4DE3 /* SuggestOverLayerCollectionViewController.m */; };
 		A33544111A1F1C3C0023815B /* ZBNSearchDisplayController.m in Sources */ = {isa = PBXBuildFile; fileRef = A33544101A1F1C3C0023815B /* ZBNSearchDisplayController.m */; };
+		A33544141A23759F0023815B /* SuggestDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A33544131A23759F0023815B /* SuggestDetailCell.m */; };
 		A340E8F419EEC7610014C14B /* GPSEndTraceAnalyzer.m in Sources */ = {isa = PBXBuildFile; fileRef = A340E8F319EEC7610014C14B /* GPSEndTraceAnalyzer.m */; };
 		A342849B19C42081002DB0FD /* GPSLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = A342849A19C42081002DB0FD /* GPSLogger.m */; };
 		A34284A019C6770A002DB0FD /* GPSFileLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = A342849F19C6770A002DB0FD /* GPSFileLogFormatter.m */; };
@@ -257,6 +258,8 @@
 		A331F5C61A1D700A001F4DE3 /* SuggestOverLayerCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SuggestOverLayerCollectionViewController.m; sourceTree = "<group>"; };
 		A335440F1A1F1C3C0023815B /* ZBNSearchDisplayController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBNSearchDisplayController.h; sourceTree = "<group>"; };
 		A33544101A1F1C3C0023815B /* ZBNSearchDisplayController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZBNSearchDisplayController.m; sourceTree = "<group>"; };
+		A33544121A23759F0023815B /* SuggestDetailCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SuggestDetailCell.h; sourceTree = "<group>"; };
+		A33544131A23759F0023815B /* SuggestDetailCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SuggestDetailCell.m; sourceTree = "<group>"; };
 		A340E8F219EEC7610014C14B /* GPSEndTraceAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPSEndTraceAnalyzer.h; sourceTree = "<group>"; };
 		A340E8F319EEC7610014C14B /* GPSEndTraceAnalyzer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPSEndTraceAnalyzer.m; sourceTree = "<group>"; };
 		A342849919C42081002DB0FD /* GPSLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPSLogger.h; sourceTree = "<group>"; };
@@ -739,11 +742,12 @@
 		A331F5BC1A1CCA07001F4DE3 /* DriveSuggestDetail */ = {
 			isa = PBXGroup;
 			children = (
-				A34972391A1E363800D5C239 /* Cells */,
 				A331F5BD1A1CCA1E001F4DE3 /* SuggestDetailViewController.h */,
 				A331F5BE1A1CCA1E001F4DE3 /* SuggestDetailViewController.m */,
 				A331F5C51A1D700A001F4DE3 /* SuggestOverLayerCollectionViewController.h */,
 				A331F5C61A1D700A001F4DE3 /* SuggestOverLayerCollectionViewController.m */,
+				A33544121A23759F0023815B /* SuggestDetailCell.h */,
+				A33544131A23759F0023815B /* SuggestDetailCell.m */,
 			);
 			path = DriveSuggestDetail;
 			sourceTree = "<group>";
@@ -775,13 +779,6 @@
 				A342849F19C6770A002DB0FD /* GPSFileLogFormatter.m */,
 			);
 			path = LogFormatter;
-			sourceTree = "<group>";
-		};
-		A34972391A1E363800D5C239 /* Cells */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Cells;
 			sourceTree = "<group>";
 		};
 		A34F00E21A03C31E00F58C17 /* Public */ = {
@@ -1457,6 +1454,7 @@
 				A3FDD15E1A027F64007B3C65 /* TSTabBarItem.m in Sources */,
 				A3EF5A361A0F553100B38232 /* DriveSuggestCell.m in Sources */,
 				A331F5BF1A1CCA1E001F4DE3 /* SuggestDetailViewController.m in Sources */,
+				A33544141A23759F0023815B /* SuggestDetailCell.m in Sources */,
 				A34F00EC1A03C8E900F58C17 /* CarTripViewController.m in Sources */,
 				A3171A901A090666003EA8CE /* NSDictionary+QueryString.m in Sources */,
 				A37A1C821A0B6C6C00633E25 /* BaiduReverseGeocodingWrapper.m in Sources */,

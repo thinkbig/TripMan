@@ -47,6 +47,12 @@
 
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self reloadContent];
+}
+
 - (void) reloadContent
 {
     CLLocation * curLoc = [BussinessDataProvider lastGoodLocation];

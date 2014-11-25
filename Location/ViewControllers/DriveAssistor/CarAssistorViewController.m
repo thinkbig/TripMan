@@ -37,13 +37,17 @@
     
     searchDisplayController = [[ZBNSearchDisplayController alloc] initWithSearchBar:_searchBar contentsController:self];
     
+    [self reloadContent];
+}
+
+- (void)reloadContent
+{
     CLLocation * curLoc = [BussinessDataProvider lastGoodLocation];
     if (curLoc) {
         ParkingRegionDetail * parkingDetail = [[TripsCoreDataManager sharedManager] parkingDetailForCoordinate:curLoc.coordinate];
         self.topNMostUsedTrips = [[TripsCoreDataManager sharedManager] tripsWithStartRegion:parkingDetail.coreDataItem tripLimit:3];
     }
-
-    //self.topNMostUsedTrips = [[TripsCoreDataManager sharedManager] mostUsefulTripsLimit:3];
+    
     [self.suggestCollectionView reloadData];
 }
 
@@ -55,6 +59,9 @@
 - (void)viewWillAppear:(BOOL)animated {
     [self.navigationController setNavigationBarHidden:YES animated:animated];
     [super viewWillAppear:animated];
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
+    
+    [self reloadContent];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {

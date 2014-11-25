@@ -297,7 +297,8 @@
     [self rollOutOfDateTrip];
     
     NSArray * returnTrips = [[TripsCoreDataManager sharedManager] tripStartFrom:fromDate toDate:toDate];
-    for (TripSummary * sum in returnTrips) {
+    NSEnumerator * enumerator = [returnTrips reverseObjectEnumerator];
+    for (TripSummary * sum in enumerator) {
         [self analyzeTripForSum:sum withAnalyzer:nil];
     }
     return returnTrips;
@@ -323,7 +324,8 @@
     if (stRegion && [stRegion isValidLocation]) {
         GPSLogItem * tmpItem = [[GPSLogItem alloc] initWithEventItem:stRegion];
         CLLocationDistance dist = [firstLog distanceFrom:tmpItem];
-        if (dist < cStartLocErrorDist) {
+        NSTimeInterval during = [firstLog.timestamp timeIntervalSinceDate:stRegion.timestamp];
+        if (dist < cStartLocErrorDist || during < 60*60*2) {
             return tmpItem;
         } else {
             stRegion = nil;

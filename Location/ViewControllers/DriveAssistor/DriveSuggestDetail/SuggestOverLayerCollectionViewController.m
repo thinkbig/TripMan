@@ -7,6 +7,7 @@
 //
 
 #import "SuggestOverLayerCollectionViewController.h"
+#import "SuggestDetailCell.h"
 
 @interface SuggestOverLayerCollectionViewController ()
 
@@ -83,7 +84,12 @@
 {
     UICollectionReusableView* reusableView = nil;
     if (kind == UICollectionElementKindSectionHeader) {
-        UICollectionReusableView* header = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"SuggestHeader" forIndexPath:indexPath];
+        SuggestDetailHeader* header = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"SuggestHeader" forIndexPath:indexPath];
+        header.destLabel.text = self.tripSum.region_group.end_region.nearby_poi;
+        header.totalDistLabel.text = [NSString stringWithFormat:@"%.1f",[self.tripSum.total_dist floatValue]/1000.0];
+        header.estimateDuringLabel.text = [NSString stringWithFormat:@"%.f",[self.tripSum.total_during floatValue]/60.0];
+        NSDateFormatter * formatter = [[BussinessDataProvider sharedInstance] dateFormatterForFormatStr:@"HH:mm"];
+        header.endDateLabel.text = [formatter stringFromDate:self.tripSum.end_date];
         reusableView = header;
     } else if (kind == UICollectionElementKindSectionFooter) {
         UICollectionReusableView* footer = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"SuggestFooter" forIndexPath:indexPath];

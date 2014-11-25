@@ -362,7 +362,10 @@
 		[database beginTransaction];
 	}
     
-    for (id logEntry in pendingLogEntries)
+    NSArray * tmpArr = [pendingLogEntries copy];
+    [pendingLogEntries removeAllObjects];
+    
+    for (id logEntry in tmpArr)
     {
         if ([logEntry isKindOfClass:[GPSLogItem class]]) {
             GPSLogItem * gpsItem = (GPSLogItem*)logEntry;
@@ -377,10 +380,8 @@
             [database executeUpdate:cmd, eventItem.timestamp, eventItem.eventType, eventItem.latitude, eventItem.longitude, eventItem.radius, eventItem.identifier, eventItem.groupName, eventItem.message];
         }
     }
-	
-	[pendingLogEntries removeAllObjects];
-	
-	if (saveOnlyTransaction)
+
+    if (saveOnlyTransaction)
 	{
 		[database commit];
 		

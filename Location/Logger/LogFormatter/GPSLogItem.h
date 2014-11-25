@@ -10,6 +10,7 @@
 #import <CoreLocation/CoreLocation.h>
 #import "FMDB.h"
 #import "GPSEventItem.h"
+#import "ParkingRegion.h"
 
 @interface GPSLogItem : NSObject
 
@@ -30,6 +31,7 @@
 - (id)initWithLogMessage:(DDLogMessage *)logMessage;
 - (id)initWithDBResultSet:(FMResultSet*)resultSet;
 - (id)initWithEventItem:(GPSEventItem*)event;
+- (id)initWithParkingRegion:(ParkingRegion*)region;
 
 - (CLLocation*) location;
 - (CLLocationCoordinate2D) locationCoordinate;

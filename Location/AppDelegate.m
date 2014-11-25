@@ -36,6 +36,12 @@
         [application registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
     }
     
+    [[UINavigationBar appearance] setBarTintColor:UIColorFromRGB(0x0C2160)];
+    [[UINavigationBar appearance] setTranslucent:NO];
+    [[UINavigationBar appearance] setTitleTextAttributes:@{
+                                                           NSForegroundColorAttributeName: [UIColor whiteColor],
+                                                           NSFontAttributeName: [UIFont boldSystemFontOfSize:20],
+                                                           }];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
     self.baiduMapManager = [[BMKMapManager alloc] init];
@@ -46,7 +52,7 @@
     
     // check if need rebuild db
     static NSString * rebuildKey = @"kLocationForceRebuildKey";
-    NSString * rebuildVal = @"value_000000000001"; // make sure it is different if this version should rebuild db
+    NSString * rebuildVal = @"value_000000000006"; // make sure it is different if this version should rebuild db
     NSString * oldVa = [[NSUserDefaults standardUserDefaults] objectForKey:rebuildKey];
     if (nil == oldVa || ![rebuildVal isEqualToString:oldVa])
     {

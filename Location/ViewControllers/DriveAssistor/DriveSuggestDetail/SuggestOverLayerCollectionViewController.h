@@ -12,4 +12,6 @@
 
 @property (strong, nonatomic) IBOutlet UICollectionView *collectionView;
 
+@property (nonatomic, strong) TripSummary *     tripSum;
+
 @end

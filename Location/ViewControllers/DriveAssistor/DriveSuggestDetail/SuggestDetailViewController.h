@@ -10,7 +10,7 @@
 #import <MapKit/MapKit.h>
 #import "A3ParallaxScrollView.h"
 
-@interface SuggestDetailViewController : GViewController
+@interface SuggestDetailViewController : GViewController <MKMapViewDelegate>
 
 @property (weak, nonatomic) IBOutlet A3ParallaxScrollView *rootScrollView;
 
