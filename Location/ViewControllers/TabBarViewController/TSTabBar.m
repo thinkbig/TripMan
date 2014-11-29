@@ -67,11 +67,13 @@
     [itemModels enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         TSTabBarItemModel * model = (TSTabBarItemModel*)obj;
         TSTabBarItem* button = [[TSTabBarItem alloc] initWithFrame:CGRectMake(idx * buttonSize.width + offset, 0, buttonSize.width, buttonSize.height)];
-        [button setTitle:model.itemTitle forState:UIControlStateNormal];
-        button.imageEdgeInsets = UIEdgeInsetsMake(5.0, 5.0, 20.0, 5.0);
-        button.titleEdgeInsets = UIEdgeInsetsMake(30.0, 2.0, 5.0, 2.0);
-        button.titleLabel.font = [UIFont boldSystemFontOfSize:16];
-        [button setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+        if (model.itemTitle) {
+            [button setTitle:model.itemTitle forState:UIControlStateNormal];
+            button.imageEdgeInsets = UIEdgeInsetsMake(5.0, 5.0, 20.0, 5.0);
+            button.titleEdgeInsets = UIEdgeInsetsMake(30.0, 2.0, 5.0, 2.0);
+            button.titleLabel.font = [UIFont boldSystemFontOfSize:16];
+            [button setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+        }
         button.itemModel = model;
         [button addActionCompletionBlock:^(id sender) {
             if (self.delegate && [self.delegate respondsToSelector:@selector(tabBar:clickItemAtIndex:currentIndex:)]) {

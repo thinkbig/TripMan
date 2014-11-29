@@ -23,9 +23,9 @@
     UIViewController* healthVC = InstFirstVC(@"CarHealth");
     UIViewController* settingVC = InstFirstVC(@"CarSetting");
     
-    NSArray * itemIcons = @[@"navicon_activity_normal", @"navicon_connection_normal", @"navicon_find_normal", @"navicon_me_normal", @"navicon_me_normal"];
-    NSArray * highlightIcons = @[@"navicon_activity_active", @"navicon_connection_active", @"navicon_find_active", @"navicon_me_active", @"navicon_me_active"];
-    NSArray * itemTitles = @[@"首页", @"旅程", @"问路", @"健康", @"设置"];
+    NSArray * itemIcons = @[@"tab01", @"tab02", @"tab03", @"tab04", @"tab05"];
+    NSArray * highlightIcons = @[@"tab01_active", @"tab02_active", @"tab03_active", @"tab04_active", @"tab05_active"];
+    //NSArray * itemTitles = @[@"首页", @"旅程", @"问路", @"健康", @"设置"];
     
     NSMutableArray * itemModels = [NSMutableArray array];
     [itemIcons enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
@@ -33,7 +33,7 @@
         model.itemIndex = idx;
         model.itemImage = [UIImage imageNamed:obj];
         model.itemSelectedImage = [UIImage imageNamed:highlightIcons[idx]];
-        model.itemTitle = itemTitles[idx];
+        //model.itemTitle = itemTitles[idx];
         [itemModels addObject:model];
     }];
     
@@ -45,7 +45,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    self.tabBar.backgroundColor = UIColorFromRGB(0x1b1f26);
     [self setSelectedIndex:0 animed:YES];
+    
 }
 
 - (void)didReceiveMemoryWarning {

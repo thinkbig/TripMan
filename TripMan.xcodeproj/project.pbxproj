@@ -26,6 +26,8 @@
 		A3171A8A1A0905C4003EA8CE /* TSCache.m in Sources */ = {isa = PBXBuildFile; fileRef = A3171A891A0905C4003EA8CE /* TSCache.m */; };
 		A3171A901A090666003EA8CE /* NSDictionary+QueryString.m in Sources */ = {isa = PBXBuildFile; fileRef = A3171A8D1A090666003EA8CE /* NSDictionary+QueryString.m */; };
 		A3171A911A090666003EA8CE /* NSString+URLEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = A3171A8F1A090666003EA8CE /* NSString+URLEncoding.m */; };
+		A318CEE71A26067900320E8F /* TicketDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A318CEE61A26067900320E8F /* TicketDetailCell.m */; };
+		A318CEEB1A2618DE00320E8F /* NSAttributedString+Style.m in Sources */ = {isa = PBXBuildFile; fileRef = A318CEEA1A2618DE00320E8F /* NSAttributedString+Style.m */; };
 		A31FCA6319D94B9600A3BB4C /* GPSOffTimeFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = A31FCA6219D94B9600A3BB4C /* GPSOffTimeFilter.m */; };
 		A31FCA6F19E6711300A3BB4C /* GPSEventItem.m in Sources */ = {isa = PBXBuildFile; fileRef = A31FCA6E19E6711300A3BB4C /* GPSEventItem.m */; };
 		A31FCA8C19EBC1D400A3BB4C /* DDLog+CustomTime.m in Sources */ = {isa = PBXBuildFile; fileRef = A31FCA8B19EBC1D400A3BB4C /* DDLog+CustomTime.m */; };
@@ -41,6 +43,8 @@
 		A320D00E19BEA1A800F4038A /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A320D00D19BEA1A800F4038A /* Accounts.framework */; };
 		A320D01019BEA1B800F4038A /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A320D00F19BEA1B800F4038A /* Social.framework */; };
 		A320D01219BEAE8A00F4038A /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A320D01119BEAE8A00F4038A /* Bolts.framework */; };
+		A32CF4001A24C380008EA051 /* XYPieChart.m in Sources */ = {isa = PBXBuildFile; fileRef = A32CF3FF1A24C380008EA051 /* XYPieChart.m */; };
+		A32CF4041A24C4C0008EA051 /* TicketDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A32CF4031A24C4C0008EA051 /* TicketDetailViewController.m */; };
 		A3317FFB1A1C57E200EA23CA /* GPSTrafficAnalyzer.m in Sources */ = {isa = PBXBuildFile; fileRef = A3317FFA1A1C57E200EA23CA /* GPSTrafficAnalyzer.m */; };
 		A331F5BB1A1CC5DB001F4DE3 /* A3ParallaxScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = A331F5BA1A1CC5DB001F4DE3 /* A3ParallaxScrollView.m */; };
 		A331F5BF1A1CCA1E001F4DE3 /* SuggestDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A331F5BE1A1CCA1E001F4DE3 /* SuggestDetailViewController.m */; };
@@ -229,6 +233,10 @@
 		A3171A8D1A090666003EA8CE /* NSDictionary+QueryString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+QueryString.m"; sourceTree = "<group>"; };
 		A3171A8E1A090666003EA8CE /* NSString+URLEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+URLEncoding.h"; sourceTree = "<group>"; };
 		A3171A8F1A090666003EA8CE /* NSString+URLEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+URLEncoding.m"; sourceTree = "<group>"; };
+		A318CEE51A26067900320E8F /* TicketDetailCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TicketDetailCell.h; sourceTree = "<group>"; };
+		A318CEE61A26067900320E8F /* TicketDetailCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TicketDetailCell.m; sourceTree = "<group>"; };
+		A318CEE91A2618DE00320E8F /* NSAttributedString+Style.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSAttributedString+Style.h"; sourceTree = "<group>"; };
+		A318CEEA1A2618DE00320E8F /* NSAttributedString+Style.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSAttributedString+Style.m"; sourceTree = "<group>"; };
 		A31FCA6119D94B9600A3BB4C /* GPSOffTimeFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPSOffTimeFilter.h; sourceTree = "<group>"; };
 		A31FCA6219D94B9600A3BB4C /* GPSOffTimeFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPSOffTimeFilter.m; sourceTree = "<group>"; };
 		A31FCA6D19E6711300A3BB4C /* GPSEventItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPSEventItem.h; sourceTree = "<group>"; };
@@ -248,6 +256,10 @@
 		A320D00D19BEA1A800F4038A /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		A320D00F19BEA1B800F4038A /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		A320D01119BEAE8A00F4038A /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
+		A32CF3FE1A24C380008EA051 /* XYPieChart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XYPieChart.h; sourceTree = "<group>"; };
+		A32CF3FF1A24C380008EA051 /* XYPieChart.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XYPieChart.m; sourceTree = "<group>"; };
+		A32CF4021A24C4C0008EA051 /* TicketDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TicketDetailViewController.h; sourceTree = "<group>"; };
+		A32CF4031A24C4C0008EA051 /* TicketDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TicketDetailViewController.m; sourceTree = "<group>"; };
 		A3317FF91A1C57E200EA23CA /* GPSTrafficAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPSTrafficAnalyzer.h; sourceTree = "<group>"; };
 		A3317FFA1A1C57E200EA23CA /* GPSTrafficAnalyzer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPSTrafficAnalyzer.m; sourceTree = "<group>"; };
 		A331F5B91A1CC5DB001F4DE3 /* A3ParallaxScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = A3ParallaxScrollView.h; sourceTree = "<group>"; };
@@ -712,6 +724,15 @@
 			path = Encoding;
 			sourceTree = "<group>";
 		};
+		A318CEE81A2617EA00320E8F /* ViewStyle */ = {
+			isa = PBXGroup;
+			children = (
+				A318CEE91A2618DE00320E8F /* NSAttributedString+Style.h */,
+				A318CEEA1A2618DE00320E8F /* NSAttributedString+Style.m */,
+			);
+			path = ViewStyle;
+			sourceTree = "<group>";
+		};
 		A31FCA6019D9402200A3BB4C /* GPSFilter */ = {
 			isa = PBXGroup;
 			children = (
@@ -728,6 +749,26 @@
 				A31FCA8B19EBC1D400A3BB4C /* DDLog+CustomTime.m */,
 			);
 			path = Helper;
+			sourceTree = "<group>";
+		};
+		A32CF3FD1A24C380008EA051 /* XYPieChart */ = {
+			isa = PBXGroup;
+			children = (
+				A32CF3FE1A24C380008EA051 /* XYPieChart.h */,
+				A32CF3FF1A24C380008EA051 /* XYPieChart.m */,
+			);
+			path = XYPieChart;
+			sourceTree = "<group>";
+		};
+		A32CF4011A24C4A0008EA051 /* TicketDetail */ = {
+			isa = PBXGroup;
+			children = (
+				A318CEE51A26067900320E8F /* TicketDetailCell.h */,
+				A318CEE61A26067900320E8F /* TicketDetailCell.m */,
+				A32CF4021A24C4C0008EA051 /* TicketDetailViewController.h */,
+				A32CF4031A24C4C0008EA051 /* TicketDetailViewController.m */,
+			);
+			path = TicketDetail;
 			sourceTree = "<group>";
 		};
 		A331F5B81A1CC5DB001F4DE3 /* A3ParallaxScrollView */ = {
@@ -943,6 +984,7 @@
 		A34F01421A06699300F58C17 /* UIControl */ = {
 			isa = PBXGroup;
 			children = (
+				A32CF3FD1A24C380008EA051 /* XYPieChart */,
 				A331F5B81A1CC5DB001F4DE3 /* A3ParallaxScrollView */,
 				A378ABE41A16F124006A3B68 /* DRDynamicSlideShow */,
 				A378ABE01A164664006A3B68 /* DVSwitch */,
@@ -992,6 +1034,7 @@
 		A377B42B19F5532400DDB5EE /* Category */ = {
 			isa = PBXGroup;
 			children = (
+				A318CEE81A2617EA00320E8F /* ViewStyle */,
 				A314A6E11A0BBD9A00C12040 /* NSDate */,
 				A3171A8B1A090666003EA8CE /* Encoding */,
 				A377B42C19F5532400DDB5EE /* NSString */,
@@ -1219,6 +1262,7 @@
 		A3FDD1721A028879007B3C65 /* MyTrip */ = {
 			isa = PBXGroup;
 			children = (
+				A32CF4011A24C4A0008EA051 /* TicketDetail */,
 				A378ABE81A17A745006A3B68 /* TodayView */,
 				A37E03ED1A0DE0B800B0B0EC /* TripTicketView */,
 				A34F00FD1A03D0BD00F58C17 /* CarTrip.storyboard */,
@@ -1420,6 +1464,7 @@
 				A3CD360E19C9767F0039F6E1 /* GPSAnalyzerOffTime.m in Sources */,
 				A3FDD17A1A028A6B007B3C65 /* GViewController.m in Sources */,
 				A34F01141A03D78900F58C17 /* MapDisplayViewController.m in Sources */,
+				A32CF4001A24C380008EA051 /* XYPieChart.m in Sources */,
 				A385C54719F6423300A0F7F6 /* GPSTurningAnalyzer.m in Sources */,
 				A34F01371A051EBD00F58C17 /* AFNetworkActivityLogger.m in Sources */,
 				A34F01151A03D78900F58C17 /* TripDetailViewController.m in Sources */,
@@ -1475,13 +1520,16 @@
 				A31FCA6319D94B9600A3BB4C /* GPSOffTimeFilter.m in Sources */,
 				A3FDD16A1A028037007B3C65 /* CustomBadge.m in Sources */,
 				A378AC321A18BECE006A3B68 /* EnvInfo.m in Sources */,
+				A318CEE71A26067900320E8F /* TicketDetailCell.m in Sources */,
 				A314118A1A0A7C700019F557 /* ParkingRegionDetail.m in Sources */,
 				A378AC2C1A18BECE006A3B68 /* TripSummary.m in Sources */,
+				A32CF4041A24C4C0008EA051 /* TicketDetailViewController.m in Sources */,
 				A314116C1A0A4CCD0019F557 /* TripMan.xcdatamodeld in Sources */,
 				A33544111A1F1C3C0023815B /* ZBNSearchDisplayController.m in Sources */,
 				A3317FFB1A1C57E200EA23CA /* GPSTrafficAnalyzer.m in Sources */,
 				A378ABE71A16F124006A3B68 /* DRDynamicSlideShow.m in Sources */,
 				A314116D1A0A4CCD0019F557 /* TripsCoreDataManager.m in Sources */,
+				A318CEEB1A2618DE00320E8F /* NSAttributedString+Style.m in Sources */,
 				A34F01271A04F22400F58C17 /* BaiduWeatherFacade.m in Sources */,
 				A34F01131A03D78900F58C17 /* LogFileListViewController.m in Sources */,
 				A34284A019C6770A002DB0FD /* GPSFileLogFormatter.m in Sources */,

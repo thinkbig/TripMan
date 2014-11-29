@@ -13,6 +13,7 @@
 #import "NSDate+Utilities.h"
 #import "GPSTurningAnalyzer.h"
 #import "DVSwitch.h"
+#import "TicketDetailViewController.h"
 
 @interface CarTripViewController ()
 
@@ -104,6 +105,17 @@
     [UIView animateWithDuration:0.6 delay:0.2 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         [self.slideShow setAlpha:1];
     } completion:nil];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [self.navigationController setNavigationBarHidden:YES animated:animated];
+    [super viewWillAppear:animated];
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [self.navigationController setNavigationBarHidden:NO animated:animated];
+    [super viewWillDisappear:animated];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -292,9 +304,13 @@
 
 - (void)carousel:(iCarousel *)carousel didSelectItemAtIndex:(NSInteger)index
 {
-    MapDisplayViewController * mapVC = [[UIStoryboard storyboardWithName:@"Debug" bundle:nil] instantiateViewControllerWithIdentifier:@"MapDisplayView"];
-    mapVC.tripSum = self.tripsToday[index];
-    [self presentViewController:mapVC animated:YES completion:nil];
+    TicketDetailViewController * detailVC = [self.storyboard instantiateViewControllerWithIdentifier:@"TicketDetailId"];
+    detailVC.tripSum = self.tripsToday[index];
+    [self.navigationController pushViewController:detailVC animated:YES];
+    
+//    MapDisplayViewController * mapVC = [[UIStoryboard storyboardWithName:@"Debug" bundle:nil] instantiateViewControllerWithIdentifier:@"MapDisplayView"];
+//    mapVC.tripSum = self.tripsToday[index];
+//    [self presentViewController:mapVC animated:YES completion:nil];
 }
 
 @end

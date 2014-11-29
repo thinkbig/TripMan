@@ -83,7 +83,7 @@
     self.jamLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)heavyTraffic.count];
     
     NSDateFormatter * formatter = [[BussinessDataProvider sharedInstance] dateFormatterForFormatStr:@"HH:mm"];
-    self.suggestLabel.text = [formatter stringFromDate:_mostTrip.start_date];
+    self.suggestLabel.text = _mostTrip.start_date ? [formatter stringFromDate:_mostTrip.start_date] : @"00:00";
     
     // update today trip summary
     NSDate * dateDay = [NSDate date];
