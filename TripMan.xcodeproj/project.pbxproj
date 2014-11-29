@@ -87,14 +87,6 @@
 		A378ABE71A16F124006A3B68 /* DRDynamicSlideShow.m in Sources */ = {isa = PBXBuildFile; fileRef = A378ABE61A16F124006A3B68 /* DRDynamicSlideShow.m */; };
 		A378ABEA1A17A7AA006A3B68 /* TripTodayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A378ABE91A17A7AA006A3B68 /* TripTodayView.xib */; };
 		A378ABED1A17A7C2006A3B68 /* TripTodayView.m in Sources */ = {isa = PBXBuildFile; fileRef = A378ABEC1A17A7C2006A3B68 /* TripTodayView.m */; };
-		A378AC231A18BECD006A3B68 /* RegionGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = A378AC221A18BECD006A3B68 /* RegionGroup.m */; };
-		A378AC261A18BECE006A3B68 /* ParkingRegion.m in Sources */ = {isa = PBXBuildFile; fileRef = A378AC251A18BECE006A3B68 /* ParkingRegion.m */; };
-		A378AC291A18BECE006A3B68 /* TurningInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A378AC281A18BECE006A3B68 /* TurningInfo.m */; };
-		A378AC2C1A18BECE006A3B68 /* TripSummary.m in Sources */ = {isa = PBXBuildFile; fileRef = A378AC2B1A18BECE006A3B68 /* TripSummary.m */; };
-		A378AC2F1A18BECE006A3B68 /* TrafficJam.m in Sources */ = {isa = PBXBuildFile; fileRef = A378AC2E1A18BECE006A3B68 /* TrafficJam.m */; };
-		A378AC321A18BECE006A3B68 /* EnvInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A378AC311A18BECE006A3B68 /* EnvInfo.m */; };
-		A378AC351A18BECE006A3B68 /* WeatherInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A378AC341A18BECE006A3B68 /* WeatherInfo.m */; };
-		A378AC381A18BECE006A3B68 /* DrivingInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A378AC371A18BECE006A3B68 /* DrivingInfo.m */; };
 		A37A1C821A0B6C6C00633E25 /* BaiduReverseGeocodingWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = A37A1C811A0B6C6C00633E25 /* BaiduReverseGeocodingWrapper.m */; };
 		A37E03EC1A0D216900B0B0EC /* TSPair.m in Sources */ = {isa = PBXBuildFile; fileRef = A37E03EB1A0D216900B0B0EC /* TSPair.m */; };
 		A37E03EF1A0DE10B00B0B0EC /* TripTicketView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A37E03EE1A0DE10B00B0B0EC /* TripTicketView.xib */; };
@@ -107,6 +99,14 @@
 		A3BD72AC1A14F2B00007ECA1 /* BaiduRoadMarkFacade.m in Sources */ = {isa = PBXBuildFile; fileRef = A3BD72AB1A14F2B00007ECA1 /* BaiduRoadMarkFacade.m */; };
 		A3BD72AF1A15A9950007ECA1 /* BaiduMarkModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A3BD72AE1A15A9950007ECA1 /* BaiduMarkModel.m */; };
 		A3BD72B21A15BC2E0007ECA1 /* BussinessDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = A3BD72B11A15BC2E0007ECA1 /* BussinessDataProvider.m */; };
+		A3C9FACC1A29F61800A4A7C0 /* WeatherInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A3C9FACB1A29F61800A4A7C0 /* WeatherInfo.m */; };
+		A3C9FACF1A29F61900A4A7C0 /* TurningInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A3C9FACE1A29F61900A4A7C0 /* TurningInfo.m */; };
+		A3C9FAD21A29F61900A4A7C0 /* DrivingInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A3C9FAD11A29F61900A4A7C0 /* DrivingInfo.m */; };
+		A3C9FAD51A29F61900A4A7C0 /* ParkingRegion.m in Sources */ = {isa = PBXBuildFile; fileRef = A3C9FAD41A29F61900A4A7C0 /* ParkingRegion.m */; };
+		A3C9FAD81A29F61900A4A7C0 /* TripSummary.m in Sources */ = {isa = PBXBuildFile; fileRef = A3C9FAD71A29F61900A4A7C0 /* TripSummary.m */; };
+		A3C9FADB1A29F61900A4A7C0 /* EnvInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A3C9FADA1A29F61900A4A7C0 /* EnvInfo.m */; };
+		A3C9FADE1A29F61900A4A7C0 /* TrafficJam.m in Sources */ = {isa = PBXBuildFile; fileRef = A3C9FADD1A29F61900A4A7C0 /* TrafficJam.m */; };
+		A3C9FAE11A29F61900A4A7C0 /* RegionGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = A3C9FAE01A29F61900A4A7C0 /* RegionGroup.m */; };
 		A3CD35EC19C6A1A70039F6E1 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3CD35EB19C6A1A70039F6E1 /* CoreMotion.framework */; };
 		A3CD35FD19C6DCC00039F6E1 /* GPSFMDBLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = A3CD35FA19C6DCC00039F6E1 /* GPSFMDBLogger.m */; };
 		A3CD360219C6DCC80039F6E1 /* GPSAnalyzerRealTime.m in Sources */ = {isa = PBXBuildFile; fileRef = A3CD360119C6DCC80039F6E1 /* GPSAnalyzerRealTime.m */; };
@@ -342,22 +342,6 @@
 		A378ABE91A17A7AA006A3B68 /* TripTodayView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TripTodayView.xib; sourceTree = "<group>"; };
 		A378ABEB1A17A7C2006A3B68 /* TripTodayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TripTodayView.h; sourceTree = "<group>"; };
 		A378ABEC1A17A7C2006A3B68 /* TripTodayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripTodayView.m; sourceTree = "<group>"; };
-		A378AC211A18BECD006A3B68 /* RegionGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegionGroup.h; sourceTree = "<group>"; };
-		A378AC221A18BECD006A3B68 /* RegionGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegionGroup.m; sourceTree = "<group>"; };
-		A378AC241A18BECE006A3B68 /* ParkingRegion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParkingRegion.h; sourceTree = "<group>"; };
-		A378AC251A18BECE006A3B68 /* ParkingRegion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParkingRegion.m; sourceTree = "<group>"; };
-		A378AC271A18BECE006A3B68 /* TurningInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TurningInfo.h; sourceTree = "<group>"; };
-		A378AC281A18BECE006A3B68 /* TurningInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TurningInfo.m; sourceTree = "<group>"; };
-		A378AC2A1A18BECE006A3B68 /* TripSummary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TripSummary.h; sourceTree = "<group>"; };
-		A378AC2B1A18BECE006A3B68 /* TripSummary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripSummary.m; sourceTree = "<group>"; };
-		A378AC2D1A18BECE006A3B68 /* TrafficJam.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrafficJam.h; sourceTree = "<group>"; };
-		A378AC2E1A18BECE006A3B68 /* TrafficJam.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrafficJam.m; sourceTree = "<group>"; };
-		A378AC301A18BECE006A3B68 /* EnvInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EnvInfo.h; sourceTree = "<group>"; };
-		A378AC311A18BECE006A3B68 /* EnvInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EnvInfo.m; sourceTree = "<group>"; };
-		A378AC331A18BECE006A3B68 /* WeatherInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeatherInfo.h; sourceTree = "<group>"; };
-		A378AC341A18BECE006A3B68 /* WeatherInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeatherInfo.m; sourceTree = "<group>"; };
-		A378AC361A18BECE006A3B68 /* DrivingInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DrivingInfo.h; sourceTree = "<group>"; };
-		A378AC371A18BECE006A3B68 /* DrivingInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DrivingInfo.m; sourceTree = "<group>"; };
 		A37A1C801A0B6C6C00633E25 /* BaiduReverseGeocodingWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaiduReverseGeocodingWrapper.h; sourceTree = "<group>"; };
 		A37A1C811A0B6C6C00633E25 /* BaiduReverseGeocodingWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaiduReverseGeocodingWrapper.m; sourceTree = "<group>"; };
 		A37E03EA1A0D216900B0B0EC /* TSPair.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSPair.h; sourceTree = "<group>"; };
@@ -381,6 +365,22 @@
 		A3BD72AE1A15A9950007ECA1 /* BaiduMarkModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaiduMarkModel.m; sourceTree = "<group>"; };
 		A3BD72B01A15BC2E0007ECA1 /* BussinessDataProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BussinessDataProvider.h; sourceTree = "<group>"; };
 		A3BD72B11A15BC2E0007ECA1 /* BussinessDataProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BussinessDataProvider.m; sourceTree = "<group>"; };
+		A3C9FACA1A29F61800A4A7C0 /* WeatherInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeatherInfo.h; sourceTree = "<group>"; };
+		A3C9FACB1A29F61800A4A7C0 /* WeatherInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeatherInfo.m; sourceTree = "<group>"; };
+		A3C9FACD1A29F61900A4A7C0 /* TurningInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TurningInfo.h; sourceTree = "<group>"; };
+		A3C9FACE1A29F61900A4A7C0 /* TurningInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TurningInfo.m; sourceTree = "<group>"; };
+		A3C9FAD01A29F61900A4A7C0 /* DrivingInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DrivingInfo.h; sourceTree = "<group>"; };
+		A3C9FAD11A29F61900A4A7C0 /* DrivingInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DrivingInfo.m; sourceTree = "<group>"; };
+		A3C9FAD31A29F61900A4A7C0 /* ParkingRegion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParkingRegion.h; sourceTree = "<group>"; };
+		A3C9FAD41A29F61900A4A7C0 /* ParkingRegion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParkingRegion.m; sourceTree = "<group>"; };
+		A3C9FAD61A29F61900A4A7C0 /* TripSummary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TripSummary.h; sourceTree = "<group>"; };
+		A3C9FAD71A29F61900A4A7C0 /* TripSummary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripSummary.m; sourceTree = "<group>"; };
+		A3C9FAD91A29F61900A4A7C0 /* EnvInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EnvInfo.h; sourceTree = "<group>"; };
+		A3C9FADA1A29F61900A4A7C0 /* EnvInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EnvInfo.m; sourceTree = "<group>"; };
+		A3C9FADC1A29F61900A4A7C0 /* TrafficJam.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrafficJam.h; sourceTree = "<group>"; };
+		A3C9FADD1A29F61900A4A7C0 /* TrafficJam.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrafficJam.m; sourceTree = "<group>"; };
+		A3C9FADF1A29F61900A4A7C0 /* RegionGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegionGroup.h; sourceTree = "<group>"; };
+		A3C9FAE01A29F61900A4A7C0 /* RegionGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegionGroup.m; sourceTree = "<group>"; };
 		A3CD35EB19C6A1A70039F6E1 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		A3CD35F919C6DCC00039F6E1 /* GPSFMDBLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPSFMDBLogger.h; sourceTree = "<group>"; };
 		A3CD35FA19C6DCC00039F6E1 /* GPSFMDBLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPSFMDBLogger.m; sourceTree = "<group>"; };
@@ -572,22 +572,22 @@
 		A31411721A0A7BAE0019F557 /* AutoGeneModel */ = {
 			isa = PBXGroup;
 			children = (
-				A378AC361A18BECE006A3B68 /* DrivingInfo.h */,
-				A378AC371A18BECE006A3B68 /* DrivingInfo.m */,
-				A378AC331A18BECE006A3B68 /* WeatherInfo.h */,
-				A378AC341A18BECE006A3B68 /* WeatherInfo.m */,
-				A378AC301A18BECE006A3B68 /* EnvInfo.h */,
-				A378AC311A18BECE006A3B68 /* EnvInfo.m */,
-				A378AC2D1A18BECE006A3B68 /* TrafficJam.h */,
-				A378AC2E1A18BECE006A3B68 /* TrafficJam.m */,
-				A378AC2A1A18BECE006A3B68 /* TripSummary.h */,
-				A378AC2B1A18BECE006A3B68 /* TripSummary.m */,
-				A378AC271A18BECE006A3B68 /* TurningInfo.h */,
-				A378AC281A18BECE006A3B68 /* TurningInfo.m */,
-				A378AC241A18BECE006A3B68 /* ParkingRegion.h */,
-				A378AC251A18BECE006A3B68 /* ParkingRegion.m */,
-				A378AC211A18BECD006A3B68 /* RegionGroup.h */,
-				A378AC221A18BECD006A3B68 /* RegionGroup.m */,
+				A3C9FADF1A29F61900A4A7C0 /* RegionGroup.h */,
+				A3C9FAE01A29F61900A4A7C0 /* RegionGroup.m */,
+				A3C9FADC1A29F61900A4A7C0 /* TrafficJam.h */,
+				A3C9FADD1A29F61900A4A7C0 /* TrafficJam.m */,
+				A3C9FAD91A29F61900A4A7C0 /* EnvInfo.h */,
+				A3C9FADA1A29F61900A4A7C0 /* EnvInfo.m */,
+				A3C9FAD61A29F61900A4A7C0 /* TripSummary.h */,
+				A3C9FAD71A29F61900A4A7C0 /* TripSummary.m */,
+				A3C9FAD31A29F61900A4A7C0 /* ParkingRegion.h */,
+				A3C9FAD41A29F61900A4A7C0 /* ParkingRegion.m */,
+				A3C9FAD01A29F61900A4A7C0 /* DrivingInfo.h */,
+				A3C9FAD11A29F61900A4A7C0 /* DrivingInfo.m */,
+				A3C9FACD1A29F61900A4A7C0 /* TurningInfo.h */,
+				A3C9FACE1A29F61900A4A7C0 /* TurningInfo.m */,
+				A3C9FACA1A29F61800A4A7C0 /* WeatherInfo.h */,
+				A3C9FACB1A29F61800A4A7C0 /* WeatherInfo.m */,
 			);
 			path = AutoGeneModel;
 			sourceTree = "<group>";
@@ -1471,19 +1471,15 @@
 				A331F5BB1A1CC5DB001F4DE3 /* A3ParallaxScrollView.m in Sources */,
 				A34F00EF1A03C8F800F58C17 /* CarSettingViewController.m in Sources */,
 				A37E03F21A0DE19B00B0B0EC /* TripTicketView.m in Sources */,
-				A378AC231A18BECD006A3B68 /* RegionGroup.m in Sources */,
 				A378ABE31A164664006A3B68 /* DVSwitch.m in Sources */,
-				A378AC291A18BECE006A3B68 /* TurningInfo.m in Sources */,
 				A3CD728A19D14430005F84E2 /* GeoTransformer.m in Sources */,
 				5C90909C18B3A66A00510153 /* main.m in Sources */,
-				A378AC351A18BECE006A3B68 /* WeatherInfo.m in Sources */,
 				A34F011D1A04A7EF00F58C17 /* TSHttpClient.m in Sources */,
-				A378AC261A18BECE006A3B68 /* ParkingRegion.m in Sources */,
 				A3FDD15F1A027F64007B3C65 /* TSTabBarView.m in Sources */,
 				A3FDD15D1A027F64007B3C65 /* TSTabBar.m in Sources */,
-				A378AC2F1A18BECE006A3B68 /* TrafficJam.m in Sources */,
 				A34F01111A03D78900F58C17 /* LocationViewController.m in Sources */,
 				A3CD360519C6DE610039F6E1 /* GPSLogItem.m in Sources */,
+				A3C9FAD21A29F61900A4A7C0 /* DrivingInfo.m in Sources */,
 				A385C54A19F68FA000A0F7F6 /* GPSAcceleratorAnalyzer.m in Sources */,
 				A3CD361919CAB0AD0039F6E1 /* BackgroundTaskManager.m in Sources */,
 				A3BD72AC1A14F2B00007ECA1 /* BaiduRoadMarkFacade.m in Sources */,
@@ -1501,28 +1497,30 @@
 				A331F5BF1A1CCA1E001F4DE3 /* SuggestDetailViewController.m in Sources */,
 				A33544141A23759F0023815B /* SuggestDetailCell.m in Sources */,
 				A34F00EC1A03C8E900F58C17 /* CarTripViewController.m in Sources */,
+				A3C9FADB1A29F61900A4A7C0 /* EnvInfo.m in Sources */,
 				A3171A901A090666003EA8CE /* NSDictionary+QueryString.m in Sources */,
 				A37A1C821A0B6C6C00633E25 /* BaiduReverseGeocodingWrapper.m in Sources */,
+				A3C9FACF1A29F61900A4A7C0 /* TurningInfo.m in Sources */,
 				A3CD360219C6DCC80039F6E1 /* GPSAnalyzerRealTime.m in Sources */,
+				A3C9FADE1A29F61900A4A7C0 /* TrafficJam.m in Sources */,
 				A34F019A1A07289C00F58C17 /* CommonWrapper.m in Sources */,
 				A314A6E41A0BBD9A00C12040 /* NSDate+Utilities.m in Sources */,
 				A34F01931A071F3200F58C17 /* BaiduPOISearchWrapper.m in Sources */,
 				A31FCA6F19E6711300A3BB4C /* GPSEventItem.m in Sources */,
 				A3171A911A090666003EA8CE /* NSString+URLEncoding.m in Sources */,
-				A378AC381A18BECE006A3B68 /* DrivingInfo.m in Sources */,
 				A382A4471A124CFF00974E7A /* PICircularProgressView.m in Sources */,
 				A34F013C1A052A6B00F58C17 /* BaiduWeatherModel.m in Sources */,
 				A34F00E91A03C8D500F58C17 /* CarHomeViewController.m in Sources */,
 				A31FCA8C19EBC1D400A3BB4C /* DDLog+CustomTime.m in Sources */,
+				A3C9FAD51A29F61900A4A7C0 /* ParkingRegion.m in Sources */,
 				A3CD35FD19C6DCC00039F6E1 /* GPSFMDBLogger.m in Sources */,
 				A3FDD16B1A028037007B3C65 /* IconTitleBtn.m in Sources */,
 				A34F01191A04A56F00F58C17 /* CommonFacade.m in Sources */,
 				A31FCA6319D94B9600A3BB4C /* GPSOffTimeFilter.m in Sources */,
 				A3FDD16A1A028037007B3C65 /* CustomBadge.m in Sources */,
-				A378AC321A18BECE006A3B68 /* EnvInfo.m in Sources */,
 				A318CEE71A26067900320E8F /* TicketDetailCell.m in Sources */,
 				A314118A1A0A7C700019F557 /* ParkingRegionDetail.m in Sources */,
-				A378AC2C1A18BECE006A3B68 /* TripSummary.m in Sources */,
+				A3C9FAE11A29F61900A4A7C0 /* RegionGroup.m in Sources */,
 				A32CF4041A24C4C0008EA051 /* TicketDetailViewController.m in Sources */,
 				A314116C1A0A4CCD0019F557 /* TripMan.xcdatamodeld in Sources */,
 				A33544111A1F1C3C0023815B /* ZBNSearchDisplayController.m in Sources */,
@@ -1540,6 +1538,8 @@
 				A378ABED1A17A7C2006A3B68 /* TripTodayView.m in Sources */,
 				A377B42F19F5537900DDB5EE /* NSString+MD5.m in Sources */,
 				A342AD441A0C6CF000C92849 /* DataDebugPrinter.m in Sources */,
+				A3C9FAD81A29F61900A4A7C0 /* TripSummary.m in Sources */,
+				A3C9FACC1A29F61800A4A7C0 /* WeatherInfo.m in Sources */,
 				A34F00E61A03C8BE00F58C17 /* CarHealthViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -175,6 +175,8 @@
         _traffic_jam_dist += jamDist;
         _traffic_jam_during += jamDuring;
     }
+    
+    _traffic_avg_speed = (_traffic_jam_during > 0) ? (_traffic_jam_dist/_traffic_jam_during) : 0;
 }
 
 - (void) appendVerifiedTrafficJamItem

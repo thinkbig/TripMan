@@ -2,7 +2,7 @@
 //  RegionGroup.h
 //  TripMan
 //
-//  Created by taq on 11/16/14.
+//  Created by taq on 11/29/14.
 //  Copyright (c) 2014 Location. All rights reserved.
 //
 
@@ -22,6 +22,8 @@
 @property (nonatomic, retain) NSNumber * is_analyzed;
 @property (nonatomic, retain) NSNumber * is_temp;
 @property (nonatomic, retain) NSNumber * relative_trips_cnt;
+@property (nonatomic, retain) NSString * addi_info;
+@property (nonatomic, retain) NSData * addi_data;
 @property (nonatomic, retain) ParkingRegion *end_region;
 @property (nonatomic, retain) ParkingRegion *start_region;
 @property (nonatomic, retain) NSSet *trips;

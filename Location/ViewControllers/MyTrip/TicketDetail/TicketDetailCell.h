@@ -11,8 +11,6 @@
 
 @interface TicketDetailCell : UICollectionViewCell <XYPieChartDataSource>
 
-@property (nonatomic, strong) NSArray *             chartArr;
-
 @property (weak, nonatomic) IBOutlet XYPieChart *   pieChart;
 @property (weak, nonatomic) IBOutlet UIView *       chartCenter;
 
@@ -20,6 +18,13 @@
 @property (weak, nonatomic) IBOutlet UILabel *tolDuring;
 @property (weak, nonatomic) IBOutlet UILabel *avgSpeed;
 @property (weak, nonatomic) IBOutlet UILabel *maxSpeed;
+
+@property (nonatomic, strong) NSArray *             chartArr;
+
+- (void) setTolDistStr:(NSString*)dist;
+- (void) setTolDuringStr:(NSString*)during;
+- (void) setAvgSpeedStr:(NSString*)speed;
+- (void) setMaxSpeedStr:(NSString*)speed;
 
 @end
 
@@ -31,5 +36,10 @@
 @property (weak, nonatomic) IBOutlet UILabel *jamAvgSpeed;
 @property (weak, nonatomic) IBOutlet UILabel *jamDuring;
 @property (weak, nonatomic) IBOutlet UILabel *jamCount;
+
+- (void) setJamDistStr:(NSString*)dist;
+- (void) setJamAvgSpeedStr:(NSString*)speed;
+- (void) setJamDuringStr:(NSString*)during;
+- (void) setJamCountStr:(NSString*)count;
 
 @end

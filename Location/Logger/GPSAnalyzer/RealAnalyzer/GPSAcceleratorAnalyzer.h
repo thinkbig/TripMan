@@ -24,6 +24,11 @@
 @property (nonatomic) CGFloat          shortest_60;                // shortest during for speed from stationary to 60 km/h
 @property (nonatomic) CGFloat          shortest_80;                // shortest during for speed from stationary to 80 km/h
 
+@property (nonatomic) CGFloat          during_0_30;                 // drive during of speed range
+@property (nonatomic) CGFloat          during_30_60;
+@property (nonatomic) CGFloat          during_60_100;
+@property (nonatomic) CGFloat          during_100_NA;
+
 - (void) updateGPSDataArray:(NSArray*)gpsLogs;
 
 @end

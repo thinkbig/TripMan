@@ -2,7 +2,7 @@
 //  RegionGroup.m
 //  TripMan
 //
-//  Created by taq on 11/16/14.
+//  Created by taq on 11/29/14.
 //  Copyright (c) 2014 Location. All rights reserved.
 //
 
@@ -22,6 +22,8 @@
 @dynamic is_analyzed;
 @dynamic is_temp;
 @dynamic relative_trips_cnt;
+@dynamic addi_info;
+@dynamic addi_data;
 @dynamic end_region;
 @dynamic start_region;
 @dynamic trips;

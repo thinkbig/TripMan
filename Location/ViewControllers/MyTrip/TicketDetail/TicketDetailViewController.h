@@ -7,6 +7,7 @@
 //
 
 #import "GViewController.h"
+#import "TripSummary.h"
 
 @interface TicketDetailViewController : GViewController
 

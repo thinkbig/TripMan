@@ -242,6 +242,10 @@
     drive_info.shortest_40 = @(acceAnalyzer.shortest_40);
     drive_info.shortest_60 = @(acceAnalyzer.shortest_60);
     drive_info.shortest_80 = @(acceAnalyzer.shortest_80);
+    drive_info.during_0_30 = @(acceAnalyzer.during_0_30);
+    drive_info.during_30_60 = @(acceAnalyzer.during_30_60);
+    drive_info.during_60_100 = @(acceAnalyzer.during_60_100);
+    drive_info.during_100_NA = @(acceAnalyzer.during_100_NA);
     drive_info.is_analyzed = @YES;
     
     // update turning info

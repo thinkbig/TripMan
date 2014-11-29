@@ -8,6 +8,7 @@
 
 #import "TicketDetailViewController.h"
 #import "TicketDetailCell.h"
+#import "DrivingInfo.h"
 
 @interface TicketDetailViewController ()
 
@@ -16,6 +17,12 @@
 @end
 
 @implementation TicketDetailViewController
+
+- (void)awakeFromNib {
+    if (nil == self.speedSegs) {
+        self.speedSegs = @[@100, @0, @0, @0];
+    }
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -30,13 +37,15 @@
 - (void)setTripSum:(TripSummary *)tripSum
 {
     _tripSum = tripSum;
-//    GPSFMDBLogger * loggerDB = [GPSLogger sharedLogger].dbLogger;
-//    NSArray * logArr = [loggerDB selectLogFrom:tripSum.start_date toDate:tripSum.end_date offset:0 limit:0];
-//    
-//    CGFloat during_0_30 = 0;
-//    CGFloat during_30_60 = 0;
-//    CGFloat during_60_100 = 0;
-//    CGFloat during_100_NA = 0;
+    
+    DrivingInfo * info = tripSum.driving_info;
+    CGFloat allDuring = [info.during_0_30 floatValue] + [info.during_30_60 floatValue] + [info.during_60_100 floatValue] + [info.during_100_NA floatValue];
+    if (allDuring == 0) {
+        self.speedSegs = @[@100, @0, @0, @0];
+    } else {
+        allDuring /= 100.0;
+        self.speedSegs = @[@([info.during_0_30 floatValue]/allDuring), @([info.during_30_60 floatValue]/allDuring), @([info.during_60_100 floatValue]/allDuring), @([info.during_100_NA floatValue]/allDuring)];
+    }
 }
 
 /*
@@ -66,12 +75,29 @@
     
     if (0 == indexPath.row) {
         TicketDetailCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"DetailSummaryCell" forIndexPath:indexPath];
-        [realCell setChartArr:nil];
+        realCell.chartArr = self.speedSegs;
+        CGFloat dist = [_tripSum.total_dist floatValue]/1000.0;
+        if (dist >= 10) {
+            [realCell setTolDistStr:[NSString stringWithFormat:@"%.f", dist]];
+        } else {
+            [realCell setTolDistStr:[NSString stringWithFormat:@"%.1f", dist]];
+        }
+        [realCell setTolDuringStr:[NSString stringWithFormat:@"%.f", [_tripSum.total_during floatValue]/60.0]];
+        [realCell setAvgSpeedStr:[NSString stringWithFormat:@"%.1f", [_tripSum.avg_speed floatValue]*3.6]];
+        [realCell setMaxSpeedStr:[NSString stringWithFormat:@"%.1f", [_tripSum.max_speed floatValue]*3.6]];
         
         cell = realCell;
     } else if (1 == indexPath.row) {
         TicketJamDetailCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"JamDetailCell" forIndexPath:indexPath];
-        
+        CGFloat dist = [_tripSum.traffic_jam_dist floatValue]/1000.0;
+        if (dist >= 10) {
+            [realCell setJamDistStr:[NSString stringWithFormat:@"%.f", dist]];
+        } else {
+            [realCell setJamDistStr:[NSString stringWithFormat:@"%.1f", dist]];
+        }
+        [realCell setJamDuringStr:[NSString stringWithFormat:@"%.f", [_tripSum.traffic_jam_during floatValue]/60.0]];
+        [realCell setJamAvgSpeedStr:[NSString stringWithFormat:@"%.1f", [_tripSum.traffic_avg_speed floatValue]*3.6]];
+        [realCell setJamCountStr:[NSString stringWithFormat:@"%ld", (long)[_tripSum.traffic_jam_cnt integerValue]]];
         cell = realCell;
     }
     

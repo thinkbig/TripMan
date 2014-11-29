@@ -19,12 +19,7 @@
 
 - (void)awakeFromNib
 {
-    self.colorArr = @[[UIColor cyanColor], [UIColor greenColor], [UIColor orangeColor], [UIColor redColor]];
-    
-    self.tolDist.attributedText = [NSAttributedString stringWithNumber:@"0" font:[UIFont boldSystemFontOfSize:50] color:UIColorFromRGB(0x82d13a) andUnit:@"min" font:[UIFont boldSystemFontOfSize:12] color:UIColorFromRGB(0x82d13a)];
-    self.tolDuring.attributedText = [NSAttributedString stringWithNumber:@"0" font:[UIFont boldSystemFontOfSize:24] color:[UIColor whiteColor] andUnit:@"min" font:[UIFont boldSystemFontOfSize:12] color:UIColorFromRGB(0xbbbbbb)];
-    self.avgSpeed.attributedText = [NSAttributedString stringWithNumber:@"0" font:[UIFont boldSystemFontOfSize:24] color:[UIColor whiteColor] andUnit:@"km/h" font:[UIFont boldSystemFontOfSize:12] color:UIColorFromRGB(0xbbbbbb)];
-    self.maxSpeed.attributedText = [NSAttributedString stringWithNumber:@"0" font:[UIFont boldSystemFontOfSize:24] color:[UIColor whiteColor] andUnit:@"km/h" font:[UIFont boldSystemFontOfSize:12] color:UIColorFromRGB(0xbbbbbb)];
+    self.colorArr = @[[UIColor redColor], [UIColor orangeColor], [UIColor greenColor], [UIColor cyanColor]];
     
     self.chartCenter.layer.cornerRadius = CGRectGetHeight(self.chartCenter.bounds)/2.0;
     CGFloat height = CGRectGetHeight(self.pieChart.bounds);
@@ -41,11 +36,30 @@
     [self.pieChart setUserInteractionEnabled:NO];
 }
 
+- (void) setTolDistStr:(NSString*)dist
+{
+    self.tolDist.attributedText = [NSAttributedString stringWithNumber:dist font:[UIFont boldSystemFontOfSize:50] color:UIColorFromRGB(0x82d13a) andUnit:@"km" font:[UIFont boldSystemFontOfSize:12] color:UIColorFromRGB(0x82d13a)];
+}
+
+- (void) setTolDuringStr:(NSString*)during
+{
+    self.tolDuring.attributedText = [NSAttributedString stringWithNumber:during font:[UIFont boldSystemFontOfSize:24] color:[UIColor whiteColor] andUnit:@"min" font:[UIFont boldSystemFontOfSize:12] color:UIColorFromRGB(0xbbbbbb)];
+}
+
+- (void) setAvgSpeedStr:(NSString*)speed
+{
+    self.avgSpeed.attributedText = [NSAttributedString stringWithNumber:speed font:[UIFont boldSystemFontOfSize:24] color:[UIColor whiteColor] andUnit:@"km/h" font:[UIFont boldSystemFontOfSize:12] color:UIColorFromRGB(0xbbbbbb)];
+}
+
+- (void) setMaxSpeedStr:(NSString*)speed
+{
+    self.maxSpeed.attributedText = [NSAttributedString stringWithNumber:speed font:[UIFont boldSystemFontOfSize:24] color:[UIColor whiteColor] andUnit:@"km/h" font:[UIFont boldSystemFontOfSize:12] color:UIColorFromRGB(0xbbbbbb)];
+}
+
 - (void)setChartArr:(NSArray *)chartArr
 {
-    _chartArr = @[@10, @40, @20, @30];
+    _chartArr = chartArr;
     [self.pieChart reloadData];
-    
 }
 
 #pragma mark - XYPieChartDataSource
@@ -62,7 +76,7 @@
 
 - (UIColor *)pieChart:(XYPieChart *)pieChart colorForSliceAtIndex:(NSUInteger)index
 {
-    return self.colorArr[index];
+    return self.colorArr[index % self.colorArr.count];
 }
 
 @end
@@ -77,7 +91,7 @@
     self.jamDist.attributedText = [NSAttributedString stringWithNumber:dist font:[UIFont boldSystemFontOfSize:30] color:UIColorFromRGB(0x82d13a) andUnit:@"km" font:[UIFont boldSystemFontOfSize:12] color:UIColorFromRGB(0x82d13a)];
 }
 
-- (void) setAvgSpeedStr:(NSString*)speed
+- (void) setJamAvgSpeedStr:(NSString*)speed
 {
     self.jamAvgSpeed.attributedText = [NSAttributedString stringWithNumber:speed font:[UIFont boldSystemFontOfSize:18] color:[UIColor whiteColor] andUnit:@"km/h" font:[UIFont boldSystemFontOfSize:11] color:UIColorFromRGB(0xbbbbbb)];
 }

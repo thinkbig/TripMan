@@ -2,7 +2,7 @@
 //  EnvInfo.h
 //  TripMan
 //
-//  Created by taq on 11/16/14.
+//  Created by taq on 11/29/14.
 //  Copyright (c) 2014 Location. All rights reserved.
 //
 
@@ -22,6 +22,8 @@
 @property (nonatomic, retain) NSNumber * night_dist;
 @property (nonatomic, retain) NSNumber * night_during;
 @property (nonatomic, retain) NSNumber * night_max_speed;
+@property (nonatomic, retain) NSString * addi_info;
+@property (nonatomic, retain) NSData * addi_data;
 @property (nonatomic, retain) TripSummary *trip_owner;
 
 @end
