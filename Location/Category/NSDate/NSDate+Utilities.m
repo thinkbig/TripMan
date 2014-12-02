@@ -15,7 +15,7 @@
 #import "NSDate+Utilities.h"
 
 // Thanks, AshFurrow
-static const unsigned componentFlags = (NSYearCalendarUnit| NSMonthCalendarUnit | NSDayCalendarUnit | NSWeekCalendarUnit |  NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit | NSWeekdayCalendarUnit | NSWeekdayOrdinalCalendarUnit);
+static const unsigned componentFlags = (NSYearCalendarUnit| NSMonthCalendarUnit | NSDayCalendarUnit |  NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit | NSWeekdayCalendarUnit | NSWeekdayOrdinalCalendarUnit | NSWeekOfMonthCalendarUnit | NSCalendarUnitWeekOfYear);
 
 @implementation NSDate (Utilities)
 
@@ -177,7 +177,7 @@ static const unsigned componentFlags = (NSYearCalendarUnit| NSMonthCalendarUnit 
 	NSDateComponents *components2 = [[NSDate currentCalendar] components:componentFlags fromDate:aDate];
 	
 	// Must be same week. 12/31 and 1/1 will both be week "1" if they are in the same week
-	if (components1.week != components2.week) return NO;
+	if (components1.weekOfYear != components2.weekOfYear) return NO;
 	
 	// Must have a time interval under 1 week. Thanks @aclark
 	return (abs([self timeIntervalSinceDate:aDate]) < D_WEEK);
@@ -388,6 +388,51 @@ static const unsigned componentFlags = (NSYearCalendarUnit| NSMonthCalendarUnit 
 	return [[NSDate currentCalendar] dateFromComponents:components];
 }
 
+- (NSDate *) dateAtStartOfWeek
+{
+    NSDate *startOfTheWeek;
+    NSTimeInterval interval;
+    [[NSCalendar currentCalendar] rangeOfUnit:NSWeekCalendarUnit startDate:&startOfTheWeek interval:&interval forDate:self];
+    //startOfWeek holds now the first day of the week, according to locale (monday vs. sunday)
+    
+    return startOfTheWeek;
+}
+
+- (NSDate *) dateAtEndOfWeek
+{
+    NSDate *startOfTheWeek;
+    NSDate *endOfWeek;
+    NSTimeInterval interval;
+    [[NSCalendar currentCalendar] rangeOfUnit:NSWeekCalendarUnit startDate:&startOfTheWeek interval:&interval forDate:self];
+    //startOfWeek holds now the first day of the week, according to locale (monday vs. sunday)
+    
+    endOfWeek = [startOfTheWeek dateByAddingTimeInterval:interval-1];
+    
+    return endOfWeek;
+}
+
+- (NSDate *) dateAtStartOfMonth
+{
+    NSDateComponents *components = [[NSDate currentCalendar] components:componentFlags fromDate:self];
+    components.day = 0;
+    components.hour = 0;
+    components.minute = 0;
+    components.second = 0;
+    return [[NSDate currentCalendar] dateFromComponents:components];
+}
+
+- (NSDate *) dateAtEndOfMonth
+{
+    NSRange daysRange = [[NSDate currentCalendar] rangeOfUnit:NSDayCalendarUnit inUnit:NSMonthCalendarUnit forDate:self];
+    NSDateComponents *components = [[NSDate currentCalendar] components:componentFlags fromDate:self];
+    components.day = daysRange.length-1;
+    components.hour = 23;
+    components.minute = 59;
+    components.second = 59;
+    return [[NSDate currentCalendar] dateFromComponents:components];
+}
+
+
 #pragma mark - Retrieving Intervals
 
 - (NSInteger) minutesAfterDate: (NSDate *) aDate
@@ -475,10 +520,16 @@ static const unsigned componentFlags = (NSYearCalendarUnit| NSMonthCalendarUnit 
 	return components.month;
 }
 
-- (NSInteger) week
+- (NSInteger) weekOfMonth
 {
 	NSDateComponents *components = [[NSDate currentCalendar] components:componentFlags fromDate:self];
-	return components.week;
+	return components.weekOfMonth;
+}
+
+- (NSInteger) weekOfYear
+{
+    NSDateComponents *components = [[NSDate currentCalendar] components:componentFlags fromDate:self];
+    return components.weekOfYear;
 }
 
 - (NSInteger) weekday

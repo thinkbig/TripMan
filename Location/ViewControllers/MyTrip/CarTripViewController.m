@@ -14,16 +14,31 @@
 #import "GPSTurningAnalyzer.h"
 #import "DVSwitch.h"
 #import "TicketDetailViewController.h"
+#import "CarTripCell.h"
+
+typedef NS_ENUM(NSUInteger, eTripRange) {
+    eTripRangeDay = 0,
+    eTripRangeWeek,
+    eTripRangeMonth
+};
 
 @interface CarTripViewController ()
 
 @property (nonatomic, strong) NSArray *             tripsYestoday;
 @property (nonatomic, strong) NSArray *             tripsToday;
 @property (nonatomic, strong) NSArray *             tripsTomorrow;
-
 @property (nonatomic, strong) NSDate *              currentDate;
+
+@property (nonatomic, strong) NSArray *             tripsLastWeek;
+@property (nonatomic, strong) NSArray *             tripsThisWeek;
+@property (nonatomic, strong) NSArray *             tripsNextWeek;
+@property (nonatomic, strong) NSDate *              currentWeekDate;
+@property (nonatomic, strong) NSMutableDictionary * tripsDayWithinCurrentWeek;
+
 @property (nonatomic, strong) NSDateFormatter *     dateFormatter;
+@property (nonatomic, strong) NSDateFormatter *     dateFormatterMonth;
 @property (nonatomic, strong) DVSwitch *            switcher;
+@property (nonatomic) NSUInteger                    currentIdx;
 
 @end
 
@@ -34,69 +49,86 @@
     self.dateFormatter = [[NSDateFormatter alloc] init];
     [self.dateFormatter setDateFormat: @"MM.dd"];
     [self.dateFormatter setTimeZone:[NSTimeZone localTimeZone]];
+    
+    self.dateFormatterMonth = [[NSDateFormatter alloc] init];
+    [self.dateFormatterMonth setDateFormat: @"MM"];
+    [self.dateFormatterMonth setTimeZone:[NSTimeZone localTimeZone]];
 }
+
+- (NSDate *)currentWeekDate {
+    if (nil == _currentWeekDate) {
+        _currentWeekDate = [NSDate date];
+    }
+    return _currentWeekDate;
+}
+
+- (NSDate *)currentDate {
+    if (nil == _currentDate) {
+        _currentDate = [NSDate date];
+    }
+    return _currentDate;
+}
+
+//- (NSMutableDictionary *)tripsDayWithinCurrentWeek
+//{
+//    
+//}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.carousel.type = iCarouselTypeTimeMachine;
-    self.carousel.vertical = YES;
-    self.carousel.bounceDistance = 0.4;
-    self.carousel.decelerationRate = 0.7;
-    self.carousel.itemOffset = CGPointMake(0, 15);
+    __block CarTripViewController * weekSelf = self;
     
     // init segment view
-    DVSwitch * switcher = [[DVSwitch alloc] initWithStringsArray:@[@"今天", @"本周", @"本月"]];
-    self.switcher = switcher;
-    self.switcher.frame = self.segmentView.bounds;
+    self.switcher = [[DVSwitch alloc] initWithStringsArray:@[@"今天", @"本周", @"本月"]];
     self.switcher.sliderOffset = 2.0;
     self.switcher.cornerRadius = 14;
-    [self.segmentView addSubview:self.switcher];
-    [self.switcher setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [self.segmentView addConstraints:[NSLayoutConstraint
-                               constraintsWithVisualFormat:@"H:|-0-[switcher]-0-|"
-                               options:NSLayoutFormatDirectionLeadingToTrailing
-                               metrics:nil
-                               views:NSDictionaryOfVariableBindings(switcher)]];
-    [self.segmentView addConstraints:[NSLayoutConstraint
-                               constraintsWithVisualFormat:@"V:|-0-[switcher]-0-|"
-                               options:NSLayoutFormatDirectionLeadingToTrailing
-                               metrics:nil
-                               views:NSDictionaryOfVariableBindings(switcher)]];
     [self.switcher setPressedHandler:^(NSUInteger index) {
-        
         NSLog(@"Did press position on first switch at index: %lu", (unsigned long)index);
-        
+        weekSelf.currentIdx = index;
     }];
     
-    self.currentDate = [NSDate date];
-    self.tripsToday = [self fetchTripsForDate:self.currentDate];
-    self.tripsYestoday = [self fetchTripsForDate:[self.currentDate dateBySubtractingDays:1]];
-    
-    [self reloadContent];
-    
+    if (nil == self.slideShow) {
+        self.slideShow = [[DRDynamicSlideShow alloc] initWithFrame:CGRectMake(0, 0, 320, 210)];
+        [self.slideShow setAlpha:0];
+        [self.slideShow setContentSize:CGSizeMake(640, self.slideShow.frame.size.height)];
+    }
     __block CarTripViewController * nonRetainSelf = self;
-    [self.slideShow setAlpha:0];
-    [self.slideShow setContentSize:CGSizeMake(640, self.slideShow.frame.size.height)];
-    
     [self.slideShow setDidReachPageBlock:^(NSInteger fromPage, NSInteger toPage) {
-        if (fromPage - 1 == toPage) {
-            [nonRetainSelf showYestoday];
-        } else if (fromPage + 1 == toPage) {
-            [nonRetainSelf showTomorrow];
-        } else if (fromPage != toPage) {
-            // rebuild with currentDate
-            self.tripsToday = [self fetchTripsForDate:self.currentDate];
-            self.tripsYestoday = [self fetchTripsForDate:[self.currentDate dateBySubtractingDays:1]];
-            if (![self.currentDate isToday]) {
-                self.tripsTomorrow = [self fetchTripsForDate:[self.currentDate dateByAddingDays:1]];
-            } else {
-                self.tripsTomorrow = nil;
+        if (1 == nonRetainSelf.currentIdx) {
+            if (fromPage - 1 == toPage) {
+                [nonRetainSelf showLastWeek];
+            } else if (fromPage + 1 == toPage) {
+                [nonRetainSelf showNextWeek];
+            } else if (fromPage != toPage) {
+                // rebuild with currentDate
+                [nonRetainSelf rebuildContent];
             }
-            [self reloadContent];
+        } else {
+            if (fromPage - 1 == toPage) {
+                [nonRetainSelf showYestoday];
+            } else if (fromPage + 1 == toPage) {
+                [nonRetainSelf showTomorrow];
+            } else if (fromPage != toPage) {
+                // rebuild with currentDate
+                [nonRetainSelf rebuildContent];
+            }
         }
     }];
+    
+    if (nil == self.carousel) {
+        self.carousel = [[iCarousel alloc] initWithFrame:CGRectMake(0, 0, 320, 240)];
+        self.carousel.dataSource = self;
+        self.carousel.delegate = self;
+        self.carousel.type = iCarouselTypeTimeMachine;
+        self.carousel.vertical = YES;
+        self.carousel.bounceDistance = 0.4;
+        self.carousel.decelerationRate = 0.7;
+        self.carousel.itemOffset = CGPointMake(0, 15);
+    }
+    
+    [self rebuildContent];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -123,15 +155,23 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)setCurrentIdx:(NSUInteger)currentIdx
+{
+    if (currentIdx != _currentIdx) {
+        _currentIdx = currentIdx;
+        [self rebuildContent];
+    }
+}
+
 - (void)showTomorrow
 {
     if (self.currentDate && ![self.currentDate isToday] && [self.currentDate compare:[NSDate date]] == NSOrderedAscending) {
         self.currentDate = [self.currentDate dateByAddingDays:1];
         self.tripsYestoday = self.tripsToday;
         self.tripsToday = self.tripsTomorrow;
-        self.tripsTomorrow = [self fetchTripsForDate:[self.currentDate dateByAddingDays:1]];
+        self.tripsTomorrow = [self fetchTripsForDate:[self.currentDate dateByAddingDays:1] withRange:eTripRangeDay];
         
-        [self reloadContent];
+        [self reloadContentOfDay];
     }
 }
 
@@ -140,18 +180,49 @@
     self.currentDate = [self.currentDate dateBySubtractingDays:1];
     self.tripsTomorrow = self.tripsToday;
     self.tripsToday = self.tripsYestoday;
-    self.tripsYestoday = [self fetchTripsForDate:[self.currentDate dateBySubtractingDays:1]];
+    self.tripsYestoday = [self fetchTripsForDate:[self.currentDate dateBySubtractingDays:1] withRange:eTripRangeDay];
     
-    [self reloadContent];
+    [self reloadContentOfDay];
 }
 
-- (NSArray*)fetchTripsForDate:(NSDate*)dateDay
+- (void)showNextWeek
+{
+    if (self.currentWeekDate && ![self.currentWeekDate isThisWeek] && [self.currentWeekDate compare:[NSDate date]] == NSOrderedAscending) {
+        self.currentWeekDate = [self.currentWeekDate dateByAddingDays:7];
+        self.tripsLastWeek = self.tripsThisWeek;
+        self.tripsThisWeek = self.tripsNextWeek;
+        self.tripsNextWeek = [self fetchTripsForDate:[self.currentWeekDate dateByAddingDays:7] withRange:eTripRangeWeek];
+        
+        [self reloadContentOfWeek];
+    }
+}
+
+- (void)showLastWeek
+{
+    self.currentWeekDate = [self.currentWeekDate dateBySubtractingDays:7];
+    self.tripsNextWeek = self.tripsThisWeek;
+    self.tripsThisWeek = self.tripsLastWeek;
+    self.tripsLastWeek = [self fetchTripsForDate:[self.currentWeekDate dateBySubtractingDays:7] withRange:eTripRangeWeek];
+    
+    [self reloadContentOfWeek];
+}
+
+- (NSArray*)fetchTripsForDate:(NSDate*)dateDay withRange:(eTripRange)range
 {
     if (nil == dateDay) {
-        dateDay = self.currentDate;
+        if (eTripRangeWeek == range) {
+            dateDay = self.currentWeekDate;
+        } else {
+            dateDay = self.currentDate;
+        }
     }
 
-    NSArray * trips = [[TripsCoreDataManager sharedManager] tripStartFrom:[dateDay dateAtStartOfDay] toDate:[dateDay dateAtEndOfDay]];
+    NSArray * trips = nil;
+    if (eTripRangeWeek == range) {
+        trips = [[TripsCoreDataManager sharedManager] tripStartFrom:[dateDay dateAtStartOfWeek] toDate:[dateDay dateAtEndOfWeek]];
+    } else {
+        trips = [[TripsCoreDataManager sharedManager] tripStartFrom:[dateDay dateAtStartOfDay] toDate:[dateDay dateAtEndOfDay]];
+    }
     for (TripSummary * sum in trips)
     {
         GPSTurningAnalyzer * turnAnalyzer = [GPSTurningAnalyzer new];
@@ -169,30 +240,61 @@
         if (0 == [sum.traffic_light_tol_cnt integerValue]) {
             [[BussinessDataProvider sharedInstance] updateRoadMarkForTrips:sum ofTurningPoints:[turnAnalyzer.filter featurePoints] success:^(id cnt) {
                 [self.carousel reloadData];
-                NSArray * allTripView = [self.slideShow allPages];
-                [allTripView enumerateObjectsUsingBlock:^(TripTodayView * oneSlide, NSUInteger idx, BOOL *stop) {
-                    if (0 == idx) {
-                        [oneSlide updateWithTripsToday:self.tripsYestoday];
-                    } else if (1 == idx) {
-                        [oneSlide updateWithTripsToday:self.tripsToday];
-                    } else if (2 == idx) {
-                        [oneSlide updateWithTripsToday:self.tripsTomorrow];
-                    }
-                }];
+                [self.slideShow reloadInputViews];
+//                NSArray * allTripView = [self.slideShow allPages];
+//                [allTripView enumerateObjectsUsingBlock:^(TripTodayView * oneSlide, NSUInteger idx, BOOL *stop) {
+//                    if (0 == idx) {
+//                        [oneSlide updateWithTripsToday:self.tripsYestoday];
+//                    } else if (1 == idx) {
+//                        [oneSlide updateWithTripsToday:self.tripsToday];
+//                    } else if (2 == idx) {
+//                        [oneSlide updateWithTripsToday:self.tripsTomorrow];
+//                    }
+//                }];
             } failure:nil];
         }
     }
     return [[trips reverseObjectEnumerator] allObjects];
 }
 
-- (void)reloadContent
+- (void)rebuildContent
+{
+    [self.detailCollection reloadData];
+    
+    if (0 == _currentIdx)
+    {
+        self.tripsToday = [self fetchTripsForDate:self.currentDate withRange:eTripRangeDay];
+        self.tripsYestoday = [self fetchTripsForDate:[self.currentDate dateBySubtractingDays:1] withRange:eTripRangeDay];
+        if (![self.currentDate isToday]) {
+            self.tripsTomorrow = [self fetchTripsForDate:[self.currentDate dateByAddingDays:1] withRange:eTripRangeDay];
+        } else {
+            self.tripsTomorrow = nil;
+        }
+        
+        [self reloadContentOfDay];
+    }
+    else if (1 == _currentIdx)
+    {
+        self.tripsThisWeek = [self fetchTripsForDate:self.currentWeekDate withRange:eTripRangeWeek];
+        self.tripsLastWeek = [self fetchTripsForDate:[self.currentWeekDate dateBySubtractingDays:7] withRange:eTripRangeWeek];
+        if (![self.currentDate isThisWeek]) {
+            self.tripsNextWeek = [self fetchTripsForDate:[self.currentWeekDate dateByAddingDays:7] withRange:eTripRangeWeek];
+        } else {
+            self.tripsNextWeek = nil;
+        }
+        
+        [self reloadContentOfWeek];
+    }
+}
+
+- (void)reloadContentOfDay
 {
     [self.carousel reloadData];
     [self.carousel scrollToItemAtIndex:0 animated:NO];
     if (self.tripsToday.count > 0) {
         [self.carousel scrollToItemAtIndex:self.tripsToday.count-1 duration:MIN(MAX(self.tripsToday.count/2.0, 0.5), 2.5)];
     }
-    self.noResultView.hidden = (self.tripsToday.count > 0);
+    
     [self.switcher setLabelText:[self.currentDate isToday] ? @"今天" : [self.dateFormatter stringFromDate:self.currentDate] forIndex:0];
     
     [self.slideShow resetAllPage];
@@ -204,6 +306,25 @@
     }
 
     [self.slideShow showPageAtIdx:1];
+    
+    [self.detailCollection reloadInputViews];
+}
+
+- (void)reloadContentOfWeek
+{
+    [self.slideShow resetAllPage];
+    
+    [self addSlideShow:self.tripsLastWeek];
+    [self addSlideShow:self.tripsThisWeek];
+    if (![self.currentWeekDate isThisWeek]) {
+        [self addSlideShow:self.tripsNextWeek];
+    }
+    
+    [self.slideShow showPageAtIdx:1];
+    
+    [self.switcher setLabelText:[self.currentWeekDate isThisWeek] ? @"本周" : [NSString stringWithFormat:@"第%ld周", (long)[self.currentWeekDate weekOfYear]] forIndex:1];
+    
+    [self.detailCollection reloadInputViews];
 }
 
 - (void)addSlideShow:(NSArray*)tripsArray
@@ -311,6 +432,119 @@
 //    MapDisplayViewController * mapVC = [[UIStoryboard storyboardWithName:@"Debug" bundle:nil] instantiateViewControllerWithIdentifier:@"MapDisplayView"];
 //    mapVC.tripSum = self.tripsToday[index];
 //    [self presentViewController:mapVC animated:YES completion:nil];
+}
+
+
+#pragma mark <UICollectionViewDataSource>
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
+    return 1;
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
+    if (0 == _currentIdx) {
+        return 2;
+    } else if (1 == _currentIdx) {
+        return 2;
+    }
+    return 0;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    UICollectionViewCell *cell = nil;
+    
+    if (0 == _currentIdx)
+    {
+        if (0 == indexPath.row) {
+            CarTripSliderCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"SliderCellId" forIndexPath:indexPath];
+            [realCell setSliderView:self.slideShow];
+            
+            cell = realCell;
+        } else if (1 == indexPath.row) {
+            CarTripCarouselCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"iCarouselId" forIndexPath:indexPath];
+            [realCell setCarouselView:self.carousel];
+            [realCell showNoResult:(0 == self.tripsToday.count)];
+            
+            cell = realCell;
+        }
+    }
+    else if (1 == _currentIdx)
+    {
+        if (0 == indexPath.row) {
+            CarTripSliderCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"SliderCellId" forIndexPath:indexPath];
+            [realCell setSliderView:self.slideShow];
+            
+            cell = realCell;
+        } else if (1 == indexPath.row) {
+            WeekSumCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"weekSumCellId" forIndexPath:indexPath];
+            realCell.distBarView.waitToUpdate = YES;
+//            graph5.waitToUpdate = YES;
+//            graph5.detailView = (UIView <MPDetailView> *)[self customDetailView];
+//            [graph5 setAlgorithm:^CGFloat(CGFloat x) {
+//                return tan(x);
+//            } numberOfPoints:8];
+//            graph5.graphColor = [UIColor colorWithRed:0.120 green:0.806 blue:0.157 alpha:1.000];
+//            
+//            coorX.coorStrArray = @[@"a", @"b", @"c", @"d", @"e", @"f", @"g", @"h"];
+//            graph5.coorDelegate = coorX;
+            
+            cell = realCell;
+        }
+    }
+    
+    return cell;
+}
+
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
+{
+    UICollectionReusableView* reusableView = nil;
+    if (kind == UICollectionElementKindSectionHeader) {
+        CarTripHeader* header = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"CarTripHeaderId" forIndexPath:indexPath];
+        [header addSegmentView:self.switcher];
+        reusableView = header;
+    }
+    
+    return reusableView;
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+    if (0 == _currentIdx) {
+        if (0 == indexPath.row) {
+            return CGSizeMake(320.f, 210.f);
+        } else if(1 == indexPath.row) {
+            return CGSizeMake(320.f, 240.f);
+        }
+    } else if (1 == _currentIdx) {
+        if (0 == indexPath.row) {
+            return CGSizeMake(320.f, 210.f);
+        } else if(1 == indexPath.row) {
+            return CGSizeMake(320.f, 260.f);
+        }
+    }
+    return CGSizeZero;
+}
+
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
+{
+    if (0 == section) {
+        return 10.f;
+    }
+    return 1.0f;
+}
+
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
+{
+    return UIEdgeInsetsMake(0.f, 0, 0, 0);
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section;
+{
+    if (0 == section) {
+        return CGSizeMake(320, 70);
+    }
+    return CGSizeZero;
 }
 
 @end

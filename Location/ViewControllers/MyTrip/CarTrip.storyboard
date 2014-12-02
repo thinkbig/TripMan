@@ -36,75 +36,147 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="main_bg" translatesAutoresizingMaskIntoConstraints="NO" id="RLb-ld-Rts">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="main_bg" translatesAutoresizingMaskIntoConstraints="NO" id="RLb-ld-Rts">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                             </imageView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dp0-F5-4Gk" userLabel="sengment view">
-                                <rect key="frame" x="30" y="36" width="260" height="30"/>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="WZJ-Pf-ADp">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="MkD-X2-ZJo"/>
-                                </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b2b-g8-aSn" customClass="DRDynamicSlideShow">
-                                <rect key="frame" x="0.0" y="80" width="320" height="220"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="220" id="RHD-tf-9f5"/>
-                                </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sKU-rD-l1t" customClass="iCarousel">
-                                <rect key="frame" x="0.0" y="300" width="320" height="268"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Njr-Qm-tjz">
+                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="headerReferenceSize" width="320" height="70"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="SliderCellId" id="0eP-DV-2rZ" userLabel="Slide Show" customClass="CarTripSliderCell">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="220"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <size key="customSize" width="320" height="220"/>
+                                    </collectionViewCell>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="iCarouselId" id="U5q-BG-M9A" userLabel="Carousel" customClass="CarTripCarouselCell">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="240"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="当天没有开车" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zbz-m7-53e">
+                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="240"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <size key="customSize" width="320" height="240"/>
+                                        <connections>
+                                            <outlet property="noResultLabel" destination="zbz-m7-53e" id="wNL-TK-MAv"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="weekSumCellId" id="0Ri-WX-wsa" customClass="WeekSumCell">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="260"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="T4H-9t-pE2" userLabel="X Coor Bar" customClass="CoorViewX">
+                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="48"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="48" id="SvU-Z0-YwR"/>
+                                                    </constraints>
+                                                </view>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="obt-WF-xPn" userLabel="Dist Bar View" customClass="MPBarsGraphView">
+                                                    <rect key="frame" x="0.0" y="48" width="320" height="130"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="130" id="wuY-i0-6wi"/>
+                                                    </constraints>
+                                                </view>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jnt-4W-5ph" userLabel="During Bar View" customClass="MPBarsGraphView">
+                                                    <rect key="frame" x="0.0" y="178" width="320" height="82"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <constraints>
+                                            <constraint firstItem="obt-WF-xPn" firstAttribute="leading" secondItem="0Ri-WX-wsa" secondAttribute="leading" id="KQu-JF-U8m"/>
+                                            <constraint firstItem="obt-WF-xPn" firstAttribute="top" secondItem="T4H-9t-pE2" secondAttribute="bottom" id="L3V-TO-W3g"/>
+                                            <constraint firstItem="T4H-9t-pE2" firstAttribute="leading" secondItem="0Ri-WX-wsa" secondAttribute="leading" id="N4p-RA-Y8y"/>
+                                            <constraint firstItem="Jnt-4W-5ph" firstAttribute="top" secondItem="obt-WF-xPn" secondAttribute="bottom" id="OpO-5y-bsf"/>
+                                            <constraint firstItem="Jnt-4W-5ph" firstAttribute="trailing" secondItem="obt-WF-xPn" secondAttribute="trailing" id="fIX-lQ-IyY"/>
+                                            <constraint firstItem="T4H-9t-pE2" firstAttribute="top" secondItem="0Ri-WX-wsa" secondAttribute="top" id="iCF-pt-KWf"/>
+                                            <constraint firstAttribute="bottom" secondItem="Jnt-4W-5ph" secondAttribute="bottom" id="n1a-uQ-u5e"/>
+                                            <constraint firstAttribute="trailing" secondItem="obt-WF-xPn" secondAttribute="trailing" id="v3j-YY-nAy"/>
+                                            <constraint firstAttribute="trailing" secondItem="T4H-9t-pE2" secondAttribute="trailing" id="vRY-Ip-EWR"/>
+                                            <constraint firstItem="Jnt-4W-5ph" firstAttribute="leading" secondItem="obt-WF-xPn" secondAttribute="leading" id="yaP-WH-XL6"/>
+                                        </constraints>
+                                        <size key="customSize" width="320" height="260"/>
+                                        <connections>
+                                            <outlet property="distBarView" destination="obt-WF-xPn" id="4Cy-As-Mqx"/>
+                                            <outlet property="duringBarView" destination="Jnt-4W-5ph" id="hhF-iT-rvU"/>
+                                            <outlet property="xCoorBarView" destination="T4H-9t-pE2" id="W3A-qq-pzO"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                </cells>
+                                <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CarTripHeaderId" id="VZl-ds-pBM" userLabel="Trip Header" customClass="CarTripHeader">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="70"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <subviews>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eBM-1c-Chf" userLabel="segment view">
+                                            <rect key="frame" x="30" y="36" width="260" height="30"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="30" id="8us-gG-8mu"/>
+                                                <constraint firstAttribute="width" constant="260" id="jAY-Rc-afd"/>
+                                            </constraints>
+                                        </view>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="centerX" secondItem="eBM-1c-Chf" secondAttribute="centerX" id="n7x-YK-jf9"/>
+                                        <constraint firstItem="eBM-1c-Chf" firstAttribute="top" secondItem="VZl-ds-pBM" secondAttribute="topMargin" constant="28" id="o9P-bh-s9F"/>
+                                    </constraints>
+                                    <connections>
+                                        <outlet property="segmentContainer" destination="eBM-1c-Chf" id="OgG-BR-4qP"/>
+                                    </connections>
+                                </collectionReusableView>
                                 <connections>
-                                    <outlet property="dataSource" destination="arC-vo-gfz" id="obe-NA-Mh1"/>
-                                    <outlet property="delegate" destination="arC-vo-gfz" id="Rrb-Nr-K6g"/>
+                                    <outlet property="dataSource" destination="arC-vo-gfz" id="Sv9-qH-ARo"/>
+                                    <outlet property="delegate" destination="arC-vo-gfz" id="t1r-lR-OLr"/>
                                 </connections>
-                            </view>
-                            <view hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cSm-Oh-6my" userLabel="No result View">
-                                <rect key="frame" x="0.0" y="300" width="320" height="268"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="该天没有开车" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KuY-GD-70v">
-                                        <rect key="frame" x="83" y="75" width="155" height="69"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="22"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                            </view>
+                            </collectionView>
                         </subviews>
                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="b2b-g8-aSn" firstAttribute="leading" secondItem="b5E-r6-4ec" secondAttribute="leadingMargin" constant="-16" id="3OU-RZ-IdW"/>
-                            <constraint firstItem="WaX-vD-iG4" firstAttribute="top" secondItem="cSm-Oh-6my" secondAttribute="bottom" id="3z0-fW-rDf"/>
-                            <constraint firstItem="Dp0-F5-4Gk" firstAttribute="leading" secondItem="b5E-r6-4ec" secondAttribute="leadingMargin" constant="14" id="4jf-Me-Nid"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="sKU-rD-l1t" secondAttribute="trailing" constant="-16" id="4vM-4a-f3S"/>
-                            <constraint firstItem="b2b-g8-aSn" firstAttribute="top" secondItem="Dp0-F5-4Gk" secondAttribute="bottom" constant="14" id="6Eq-o6-jwd"/>
-                            <constraint firstItem="cSm-Oh-6my" firstAttribute="leading" secondItem="b5E-r6-4ec" secondAttribute="leadingMargin" constant="-16" id="7Hr-5P-1xi"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="Dp0-F5-4Gk" secondAttribute="trailing" constant="14" id="ANM-i3-uPm"/>
-                            <constraint firstItem="WaX-vD-iG4" firstAttribute="top" secondItem="sKU-rD-l1t" secondAttribute="bottom" id="GIa-X6-sGe"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="b2b-g8-aSn" secondAttribute="trailing" constant="-16" id="GYA-8s-xoZ"/>
-                            <constraint firstItem="Dp0-F5-4Gk" firstAttribute="top" secondItem="tpN-0c-p3Q" secondAttribute="bottom" constant="16" id="nXT-xD-0BV"/>
-                            <constraint firstItem="sKU-rD-l1t" firstAttribute="top" secondItem="b2b-g8-aSn" secondAttribute="bottom" id="pwF-mr-2N5"/>
-                            <constraint firstItem="cSm-Oh-6my" firstAttribute="top" secondItem="b2b-g8-aSn" secondAttribute="bottom" id="qwH-h6-4yB"/>
-                            <constraint firstItem="sKU-rD-l1t" firstAttribute="leading" secondItem="b5E-r6-4ec" secondAttribute="leadingMargin" constant="-16" id="yPC-eE-5i2"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="cSm-Oh-6my" secondAttribute="trailing" constant="-16" id="zwd-jP-bQh"/>
+                            <constraint firstItem="RLb-ld-Rts" firstAttribute="leading" secondItem="b5E-r6-4ec" secondAttribute="leading" id="05v-fi-Rsh"/>
+                            <constraint firstItem="WZJ-Pf-ADp" firstAttribute="top" secondItem="b5E-r6-4ec" secondAttribute="top" id="2cE-Ym-WMr"/>
+                            <constraint firstItem="RLb-ld-Rts" firstAttribute="bottom" secondItem="WaX-vD-iG4" secondAttribute="top" id="H0Q-Zp-LTh"/>
+                            <constraint firstItem="RLb-ld-Rts" firstAttribute="trailing" secondItem="WZJ-Pf-ADp" secondAttribute="trailing" id="WAp-r3-461"/>
+                            <constraint firstItem="RLb-ld-Rts" firstAttribute="leading" secondItem="WZJ-Pf-ADp" secondAttribute="leading" id="YHz-ox-say"/>
+                            <constraint firstItem="RLb-ld-Rts" firstAttribute="top" secondItem="WZJ-Pf-ADp" secondAttribute="top" id="ehc-qO-zSs"/>
+                            <constraint firstItem="WZJ-Pf-ADp" firstAttribute="bottom" secondItem="WaX-vD-iG4" secondAttribute="top" id="kwp-6M-Xhs"/>
+                            <constraint firstAttribute="trailing" secondItem="RLb-ld-Rts" secondAttribute="trailing" id="uXI-0p-bPs"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="bLW-nT-Imz"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <connections>
-                        <outlet property="carousel" destination="sKU-rD-l1t" id="FE4-rY-ScO"/>
-                        <outlet property="noResultView" destination="cSm-Oh-6my" id="V0I-V2-KtA"/>
-                        <outlet property="segmentView" destination="Dp0-F5-4Gk" id="7wU-S0-7W5"/>
-                        <outlet property="slideShow" destination="b2b-g8-aSn" id="GAd-LA-t72"/>
+                        <outlet property="detailCollection" destination="WZJ-Pf-ADp" id="W0u-Gn-01T"/>
                         <segue destination="Xiq-El-4It" kind="push" id="YXG-Qt-Gdk"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dcb-5K-UD5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="303" y="159"/>
+            <point key="canvasLocation" x="303" y="204"/>
         </scene>
         <!--TicketDetail-->
         <scene sceneID="Wvl-jE-NV7">

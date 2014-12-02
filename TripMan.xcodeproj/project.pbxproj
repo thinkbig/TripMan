@@ -45,6 +45,7 @@
 		A320D01219BEAE8A00F4038A /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A320D01119BEAE8A00F4038A /* Bolts.framework */; };
 		A32CF4001A24C380008EA051 /* XYPieChart.m in Sources */ = {isa = PBXBuildFile; fileRef = A32CF3FF1A24C380008EA051 /* XYPieChart.m */; };
 		A32CF4041A24C4C0008EA051 /* TicketDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A32CF4031A24C4C0008EA051 /* TicketDetailViewController.m */; };
+		A32CF8A81A2BF97E006932F7 /* CarTripCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A32CF8A71A2BF97E006932F7 /* CarTripCell.m */; };
 		A3317FFB1A1C57E200EA23CA /* GPSTrafficAnalyzer.m in Sources */ = {isa = PBXBuildFile; fileRef = A3317FFA1A1C57E200EA23CA /* GPSTrafficAnalyzer.m */; };
 		A331F5BB1A1CC5DB001F4DE3 /* A3ParallaxScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = A331F5BA1A1CC5DB001F4DE3 /* A3ParallaxScrollView.m */; };
 		A331F5BF1A1CCA1E001F4DE3 /* SuggestDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A331F5BE1A1CCA1E001F4DE3 /* SuggestDetailViewController.m */; };
@@ -118,6 +119,13 @@
 		A3CD728719D138F0005F84E2 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3CD728619D138F0005F84E2 /* MapKit.framework */; };
 		A3CD728A19D14430005F84E2 /* GeoTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = A3CD728919D14430005F84E2 /* GeoTransformer.m */; };
 		A3CD728E19D17128005F84E2 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3CD728D19D17128005F84E2 /* Crashlytics.framework */; };
+		A3D0B4B81A2C64A80030B19E /* _MPWButton.m in Sources */ = {isa = PBXBuildFile; fileRef = A3D0B4AA1A2C64A80030B19E /* _MPWButton.m */; };
+		A3D0B4B91A2C64A80030B19E /* CoorViewX.m in Sources */ = {isa = PBXBuildFile; fileRef = A3D0B4AD1A2C64A80030B19E /* CoorViewX.m */; };
+		A3D0B4BA1A2C64A80030B19E /* MPBarsGraphView.m in Sources */ = {isa = PBXBuildFile; fileRef = A3D0B4AF1A2C64A80030B19E /* MPBarsGraphView.m */; };
+		A3D0B4BB1A2C64A80030B19E /* MPGraphView.m in Sources */ = {isa = PBXBuildFile; fileRef = A3D0B4B11A2C64A80030B19E /* MPGraphView.m */; };
+		A3D0B4BC1A2C64A80030B19E /* MPPlot.m in Sources */ = {isa = PBXBuildFile; fileRef = A3D0B4B31A2C64A80030B19E /* MPPlot.m */; };
+		A3D0B4BD1A2C64A80030B19E /* UIBezierPath+curved.m in Sources */ = {isa = PBXBuildFile; fileRef = A3D0B4B51A2C64A80030B19E /* UIBezierPath+curved.m */; };
+		A3D0B4BE1A2C64A80030B19E /* UIView+Frame.m in Sources */ = {isa = PBXBuildFile; fileRef = A3D0B4B71A2C64A80030B19E /* UIView+Frame.m */; };
 		A3EF5A361A0F553100B38232 /* DriveSuggestCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A3EF5A351A0F553100B38232 /* DriveSuggestCell.m */; };
 		A3FDD15D1A027F64007B3C65 /* TSTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = A3FDD1551A027F64007B3C65 /* TSTabBar.m */; };
 		A3FDD15E1A027F64007B3C65 /* TSTabBarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = A3FDD1581A027F64007B3C65 /* TSTabBarItem.m */; };
@@ -260,6 +268,8 @@
 		A32CF3FF1A24C380008EA051 /* XYPieChart.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XYPieChart.m; sourceTree = "<group>"; };
 		A32CF4021A24C4C0008EA051 /* TicketDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TicketDetailViewController.h; sourceTree = "<group>"; };
 		A32CF4031A24C4C0008EA051 /* TicketDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TicketDetailViewController.m; sourceTree = "<group>"; };
+		A32CF8A61A2BF97E006932F7 /* CarTripCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CarTripCell.h; sourceTree = "<group>"; };
+		A32CF8A71A2BF97E006932F7 /* CarTripCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CarTripCell.m; sourceTree = "<group>"; };
 		A3317FF91A1C57E200EA23CA /* GPSTrafficAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPSTrafficAnalyzer.h; sourceTree = "<group>"; };
 		A3317FFA1A1C57E200EA23CA /* GPSTrafficAnalyzer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPSTrafficAnalyzer.m; sourceTree = "<group>"; };
 		A331F5B91A1CC5DB001F4DE3 /* A3ParallaxScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = A3ParallaxScrollView.h; sourceTree = "<group>"; };
@@ -400,6 +410,21 @@
 		A3CD728819D14430005F84E2 /* GeoTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeoTransformer.h; sourceTree = "<group>"; };
 		A3CD728919D14430005F84E2 /* GeoTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeoTransformer.m; sourceTree = "<group>"; };
 		A3CD728D19D17128005F84E2 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
+		A3D0B4A91A2C64A80030B19E /* _MPWButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _MPWButton.h; sourceTree = "<group>"; };
+		A3D0B4AA1A2C64A80030B19E /* _MPWButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _MPWButton.m; sourceTree = "<group>"; };
+		A3D0B4AB1A2C64A80030B19E /* CoorPlotProtocal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoorPlotProtocal.h; sourceTree = "<group>"; };
+		A3D0B4AC1A2C64A80030B19E /* CoorViewX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoorViewX.h; sourceTree = "<group>"; };
+		A3D0B4AD1A2C64A80030B19E /* CoorViewX.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoorViewX.m; sourceTree = "<group>"; };
+		A3D0B4AE1A2C64A80030B19E /* MPBarsGraphView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPBarsGraphView.h; sourceTree = "<group>"; };
+		A3D0B4AF1A2C64A80030B19E /* MPBarsGraphView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPBarsGraphView.m; sourceTree = "<group>"; };
+		A3D0B4B01A2C64A80030B19E /* MPGraphView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPGraphView.h; sourceTree = "<group>"; };
+		A3D0B4B11A2C64A80030B19E /* MPGraphView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPGraphView.m; sourceTree = "<group>"; };
+		A3D0B4B21A2C64A80030B19E /* MPPlot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPPlot.h; sourceTree = "<group>"; };
+		A3D0B4B31A2C64A80030B19E /* MPPlot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPPlot.m; sourceTree = "<group>"; };
+		A3D0B4B41A2C64A80030B19E /* UIBezierPath+curved.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+curved.h"; sourceTree = "<group>"; };
+		A3D0B4B51A2C64A80030B19E /* UIBezierPath+curved.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+curved.m"; sourceTree = "<group>"; };
+		A3D0B4B61A2C64A80030B19E /* UIView+Frame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Frame.h"; sourceTree = "<group>"; };
+		A3D0B4B71A2C64A80030B19E /* UIView+Frame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Frame.m"; sourceTree = "<group>"; };
 		A3EF5A341A0F553100B38232 /* DriveSuggestCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DriveSuggestCell.h; sourceTree = "<group>"; };
 		A3EF5A351A0F553100B38232 /* DriveSuggestCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DriveSuggestCell.m; sourceTree = "<group>"; };
 		A3FDD1541A027F64007B3C65 /* TSTabBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSTabBar.h; sourceTree = "<group>"; };
@@ -984,6 +1009,7 @@
 		A34F01421A06699300F58C17 /* UIControl */ = {
 			isa = PBXGroup;
 			children = (
+				A3D0B4A81A2C64A80030B19E /* MPPlot */,
 				A32CF3FD1A24C380008EA051 /* XYPieChart */,
 				A331F5B81A1CC5DB001F4DE3 /* A3ParallaxScrollView */,
 				A378ABE41A16F124006A3B68 /* DRDynamicSlideShow */,
@@ -1201,6 +1227,28 @@
 			path = ViewControllers;
 			sourceTree = "<group>";
 		};
+		A3D0B4A81A2C64A80030B19E /* MPPlot */ = {
+			isa = PBXGroup;
+			children = (
+				A3D0B4A91A2C64A80030B19E /* _MPWButton.h */,
+				A3D0B4AA1A2C64A80030B19E /* _MPWButton.m */,
+				A3D0B4AB1A2C64A80030B19E /* CoorPlotProtocal.h */,
+				A3D0B4AC1A2C64A80030B19E /* CoorViewX.h */,
+				A3D0B4AD1A2C64A80030B19E /* CoorViewX.m */,
+				A3D0B4AE1A2C64A80030B19E /* MPBarsGraphView.h */,
+				A3D0B4AF1A2C64A80030B19E /* MPBarsGraphView.m */,
+				A3D0B4B01A2C64A80030B19E /* MPGraphView.h */,
+				A3D0B4B11A2C64A80030B19E /* MPGraphView.m */,
+				A3D0B4B21A2C64A80030B19E /* MPPlot.h */,
+				A3D0B4B31A2C64A80030B19E /* MPPlot.m */,
+				A3D0B4B41A2C64A80030B19E /* UIBezierPath+curved.h */,
+				A3D0B4B51A2C64A80030B19E /* UIBezierPath+curved.m */,
+				A3D0B4B61A2C64A80030B19E /* UIView+Frame.h */,
+				A3D0B4B71A2C64A80030B19E /* UIView+Frame.m */,
+			);
+			path = MPPlot;
+			sourceTree = "<group>";
+		};
 		A3FDD1531A027F64007B3C65 /* TabBarViewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -1268,6 +1316,8 @@
 				A34F00FD1A03D0BD00F58C17 /* CarTrip.storyboard */,
 				A34F00EA1A03C8E900F58C17 /* CarTripViewController.h */,
 				A34F00EB1A03C8E900F58C17 /* CarTripViewController.m */,
+				A32CF8A61A2BF97E006932F7 /* CarTripCell.h */,
+				A32CF8A71A2BF97E006932F7 /* CarTripCell.m */,
 			);
 			path = MyTrip;
 			sourceTree = "<group>";
@@ -1468,6 +1518,7 @@
 				A385C54719F6423300A0F7F6 /* GPSTurningAnalyzer.m in Sources */,
 				A34F01371A051EBD00F58C17 /* AFNetworkActivityLogger.m in Sources */,
 				A34F01151A03D78900F58C17 /* TripDetailViewController.m in Sources */,
+				A3D0B4BB1A2C64A80030B19E /* MPGraphView.m in Sources */,
 				A331F5BB1A1CC5DB001F4DE3 /* A3ParallaxScrollView.m in Sources */,
 				A34F00EF1A03C8F800F58C17 /* CarSettingViewController.m in Sources */,
 				A37E03F21A0DE19B00B0B0EC /* TripTicketView.m in Sources */,
@@ -1475,6 +1526,7 @@
 				A3CD728A19D14430005F84E2 /* GeoTransformer.m in Sources */,
 				5C90909C18B3A66A00510153 /* main.m in Sources */,
 				A34F011D1A04A7EF00F58C17 /* TSHttpClient.m in Sources */,
+				A3D0B4B81A2C64A80030B19E /* _MPWButton.m in Sources */,
 				A3FDD15F1A027F64007B3C65 /* TSTabBarView.m in Sources */,
 				A3FDD15D1A027F64007B3C65 /* TSTabBar.m in Sources */,
 				A34F01111A03D78900F58C17 /* LocationViewController.m in Sources */,
@@ -1483,6 +1535,7 @@
 				A385C54A19F68FA000A0F7F6 /* GPSAcceleratorAnalyzer.m in Sources */,
 				A3CD361919CAB0AD0039F6E1 /* BackgroundTaskManager.m in Sources */,
 				A3BD72AC1A14F2B00007ECA1 /* BaiduRoadMarkFacade.m in Sources */,
+				A32CF8A81A2BF97E006932F7 /* CarTripCell.m in Sources */,
 				A34F00F31A03CB8C00F58C17 /* CarAssistorViewController.m in Sources */,
 				A3BD72B21A15BC2E0007ECA1 /* BussinessDataProvider.m in Sources */,
 				A3171A8A1A0905C4003EA8CE /* TSCache.m in Sources */,
@@ -1495,7 +1548,9 @@
 				A3FDD15E1A027F64007B3C65 /* TSTabBarItem.m in Sources */,
 				A3EF5A361A0F553100B38232 /* DriveSuggestCell.m in Sources */,
 				A331F5BF1A1CCA1E001F4DE3 /* SuggestDetailViewController.m in Sources */,
+				A3D0B4BC1A2C64A80030B19E /* MPPlot.m in Sources */,
 				A33544141A23759F0023815B /* SuggestDetailCell.m in Sources */,
+				A3D0B4BD1A2C64A80030B19E /* UIBezierPath+curved.m in Sources */,
 				A34F00EC1A03C8E900F58C17 /* CarTripViewController.m in Sources */,
 				A3C9FADB1A29F61900A4A7C0 /* EnvInfo.m in Sources */,
 				A3171A901A090666003EA8CE /* NSDictionary+QueryString.m in Sources */,
@@ -1514,14 +1569,17 @@
 				A31FCA8C19EBC1D400A3BB4C /* DDLog+CustomTime.m in Sources */,
 				A3C9FAD51A29F61900A4A7C0 /* ParkingRegion.m in Sources */,
 				A3CD35FD19C6DCC00039F6E1 /* GPSFMDBLogger.m in Sources */,
+				A3D0B4BE1A2C64A80030B19E /* UIView+Frame.m in Sources */,
 				A3FDD16B1A028037007B3C65 /* IconTitleBtn.m in Sources */,
 				A34F01191A04A56F00F58C17 /* CommonFacade.m in Sources */,
 				A31FCA6319D94B9600A3BB4C /* GPSOffTimeFilter.m in Sources */,
 				A3FDD16A1A028037007B3C65 /* CustomBadge.m in Sources */,
+				A3D0B4BA1A2C64A80030B19E /* MPBarsGraphView.m in Sources */,
 				A318CEE71A26067900320E8F /* TicketDetailCell.m in Sources */,
 				A314118A1A0A7C700019F557 /* ParkingRegionDetail.m in Sources */,
 				A3C9FAE11A29F61900A4A7C0 /* RegionGroup.m in Sources */,
 				A32CF4041A24C4C0008EA051 /* TicketDetailViewController.m in Sources */,
+				A3D0B4B91A2C64A80030B19E /* CoorViewX.m in Sources */,
 				A314116C1A0A4CCD0019F557 /* TripMan.xcdatamodeld in Sources */,
 				A33544111A1F1C3C0023815B /* ZBNSearchDisplayController.m in Sources */,
 				A3317FFB1A1C57E200EA23CA /* GPSTrafficAnalyzer.m in Sources */,

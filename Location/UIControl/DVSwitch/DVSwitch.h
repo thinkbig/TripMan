@@ -35,4 +35,6 @@
 
 - (void)setLabelText:(NSString*)str forIndex:(NSInteger)index;
 
+- (NSUInteger) currentIdx;
+
 @end

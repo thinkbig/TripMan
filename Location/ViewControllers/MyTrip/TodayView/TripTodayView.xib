@@ -8,7 +8,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="Q8N-VF-YAJ" customClass="TripTodayView">
-            <rect key="frame" x="0.0" y="0.0" width="320" height="220"/>
+            <rect key="frame" x="0.0" y="0.0" width="320" height="210"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PfR-yc-c8o" userLabel="View One">

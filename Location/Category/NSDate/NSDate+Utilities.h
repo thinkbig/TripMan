@@ -85,6 +85,10 @@
 // Date extremes
 - (NSDate *) dateAtStartOfDay;
 - (NSDate *) dateAtEndOfDay;
+- (NSDate *) dateAtStartOfWeek;
+- (NSDate *) dateAtEndOfWeek;
+- (NSDate *) dateAtStartOfMonth;
+- (NSDate *) dateAtEndOfMonth;
 
 // Retrieving intervals
 - (NSInteger) minutesAfterDate: (NSDate *) aDate;
@@ -102,7 +106,8 @@
 @property (readonly) NSInteger seconds;
 @property (readonly) NSInteger day;
 @property (readonly) NSInteger month;
-@property (readonly) NSInteger week;
+@property (readonly) NSInteger weekOfMonth;
+@property (readonly) NSInteger weekOfYear;
 @property (readonly) NSInteger weekday;
 @property (readonly) NSInteger nthWeekday; // e.g. 2nd Tuesday of the month == 2
 @property (readonly) NSInteger year;
