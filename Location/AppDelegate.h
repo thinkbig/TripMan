@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "LocationTracker.h"
 #import "AFNetworkActivityLogger.h"
+#import "BMKGeneralDelegate.h"
+#import "BMKMapManager.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, BMKGeneralDelegate> {
     
@@ -20,6 +22,7 @@
 @property LocationTracker * locationTracker;
 @property (strong, nonatomic) AFNetworkActivityLogger *afNetworkLogger;
 @property (strong, nonatomic) BMKMapManager *  baiduMapManager;
+@property (nonatomic) BOOL  isUpdating;
 
 -(void) setupLogger;
 

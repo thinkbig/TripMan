@@ -15,6 +15,7 @@
 #import "ErrorDefine.h"
 #import "BussinessDataProvider.h"
 #import "CacheKit.h"
+#import "GToolUtil.h"
 #import "BMapKit.h"
 
 #endif

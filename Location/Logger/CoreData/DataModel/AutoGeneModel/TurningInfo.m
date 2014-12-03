@@ -2,7 +2,7 @@
 //  TurningInfo.m
 //  TripMan
 //
-//  Created by taq on 11/29/14.
+//  Created by taq on 12/2/14.
 //  Copyright (c) 2014 Location. All rights reserved.
 //
 
@@ -12,6 +12,8 @@
 
 @implementation TurningInfo
 
+@dynamic addi_data;
+@dynamic addi_info;
 @dynamic is_analyzed;
 @dynamic left_turn_avg_speed;
 @dynamic left_turn_cnt;
@@ -22,8 +24,6 @@
 @dynamic turn_round_avg_speed;
 @dynamic turn_round_cnt;
 @dynamic turn_round_max_speed;
-@dynamic addi_data;
-@dynamic addi_info;
 @dynamic trip_owner;
 
 @end

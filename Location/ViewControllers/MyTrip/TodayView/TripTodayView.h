@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "DaySummary.h"
+#import "WeekSummary.h"
 
 @interface TripTodayView : UIView
 
@@ -24,6 +26,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *trafficLightCnt;
 @property (weak, nonatomic) IBOutlet UILabel *trafficLightWaiting;
 
-- (void) updateWithTripsToday:(NSArray*)trips;
+@property (nonatomic, strong) DaySummary *        daySum;
+@property (nonatomic, strong) WeekSummary *       weekSum;
+
+- (void) update;
 
 @end

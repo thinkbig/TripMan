@@ -14,6 +14,10 @@
 
 }
 
-@property (nonatomic, readwrite) CGFloat topCornerRadius;
+@property (nonatomic, readwrite) CGFloat        topCornerRadius;
+@property (nonatomic, readwrite) BOOL           upSideDown;
+@property (nonatomic, readwrite) CGFloat        bounceHeight;
+@property (nonatomic, readwrite) CGFloat        minHeight;
+@property (nonatomic, readwrite) BOOL           showBottomLine;
 
 @end

@@ -10,6 +10,7 @@
 #import "GPSTripSummaryAnalyzer.h"
 #import "GPSFMDBLogger.h"
 #import "TripSummary.h"
+#import "WeekSummary.h"
 
 @interface GPSAnalyzerOffTime : NSObject
 
@@ -21,6 +22,9 @@
 // analyzer dict key (TurningAnalyzer, AcceleratorAnalyzer)
 - (void)analyzeTripForSum:(TripSummary*)tripSum withAnalyzer:(NSDictionary*)anaDict;
 
-- (NSArray*)analyzeTripStartFrom:(NSDate*)fromDate toDate:(NSDate*)toDate;
+- (NSArray*)analyzeTripStartFrom:(NSDate*)fromDate toDate:(NSDate*)toDate shouldUpdateGlobalInfo:(BOOL)update;
+
+- (void)analyzeDaySum:(DaySummary*)daySum;
+- (void)analyzeWeekSum:(WeekSummary*)weekSum;
 
 @end

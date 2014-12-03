@@ -2,7 +2,7 @@
 //  DrivingInfo.m
 //  TripMan
 //
-//  Created by taq on 11/29/14.
+//  Created by taq on 12/2/14.
 //  Copyright (c) 2014 Location. All rights reserved.
 //
 
@@ -13,7 +13,13 @@
 @implementation DrivingInfo
 
 @dynamic acce_cnt;
+@dynamic addi_data;
+@dynamic addi_info;
 @dynamic breaking_cnt;
+@dynamic during_0_30;
+@dynamic during_30_60;
+@dynamic during_60_100;
+@dynamic during_100_NA;
 @dynamic hard_acce_cnt;
 @dynamic hard_breaking_cnt;
 @dynamic is_analyzed;
@@ -24,12 +30,6 @@
 @dynamic shortest_40;
 @dynamic shortest_60;
 @dynamic shortest_80;
-@dynamic addi_info;
-@dynamic addi_data;
-@dynamic during_0_30;
-@dynamic during_30_60;
-@dynamic during_60_100;
-@dynamic during_100_NA;
 @dynamic trip_owner;
 
 @end

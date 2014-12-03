@@ -15,6 +15,7 @@
 #import "TSPair.h"
 #import "BaiduRoadMarkFacade.h"
 
+
 #define kLastestCityAndDate         @"kLastestCityAndDate"
 
 @interface BussinessDataProvider () {
@@ -52,39 +53,51 @@ static BussinessDataProvider * _sharedProvider = nil;
 
 - (void) reCreateCoreDataDb
 {
-    TripsCoreDataManager * manager = [TripsCoreDataManager sharedManager];
+    [[GToolUtil sharedInstance] showPieHUDWithText:@"升级中..." andProgress:0];
     
-    NSArray * tripEvents = [[GPSLogger sharedLogger].dbLogger allTripsEvent];
-    NSMutableArray * finishedTrips = [NSMutableArray arrayWithCapacity:tripEvents.count/2];
-    TSPair * curPair = nil;
-    for (GPSEventItem * item in tripEvents) {
-        if (eGPSEventDriveStart == [item.eventType integerValue]) {
-            if (curPair) {
-                curPair.second = item.timestamp;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        TripsCoreDataManager * manager = [TripsCoreDataManager sharedManager];
+        
+        NSArray * tripEvents = [[GPSLogger sharedLogger].dbLogger allTripsEvent];
+        NSMutableArray * finishedTrips = [NSMutableArray arrayWithCapacity:tripEvents.count/2];
+        TSPair * curPair = nil;
+        for (GPSEventItem * item in tripEvents) {
+            if (eGPSEventDriveStart == [item.eventType integerValue]) {
+                if (curPair) {
+                    curPair.second = item.timestamp;
+                    [finishedTrips addObject:curPair];
+                }
+                curPair = TSPairMake(item.timestamp, nil, nil);
+            } else if (eGPSEventDriveEnd == [item.eventType integerValue]) {
+                if (curPair) {
+                    curPair.second = item.timestamp;
+                }
+            }
+            if (curPair.first && curPair.second) {
                 [finishedTrips addObject:curPair];
-            }
-            curPair = TSPairMake(item.timestamp, nil, nil);
-        } else if (eGPSEventDriveEnd == [item.eventType integerValue]) {
-            if (curPair) {
-                curPair.second = item.timestamp;
+                curPair = nil;
             }
         }
-        if (curPair.first && curPair.second) {
-            [finishedTrips addObject:curPair];
-            curPair = nil;
+        
+        for (TSPair * timePair in finishedTrips) {
+            NSArray * tripExist = [manager tripStartFrom:timePair.first toDate:timePair.first];
+            if (tripExist.count == 0) {
+                [manager newTripAt:timePair.first endAt:timePair.second];
+            }
         }
-    }
-    
-    for (TSPair * timePair in finishedTrips) {
-        NSArray * tripExist = [manager tripStartFrom:timePair.first toDate:timePair.first];
-        if (tripExist.count == 0) {
-            [manager newTripAt:timePair.first endAt:timePair.second];
-        }
-    }
-    [manager commit];
-    
-    [[GPSLogger sharedLogger].offTimeAnalyzer analyzeTripStartFrom:nil toDate:nil];
-    [[BussinessDataProvider sharedInstance] updateAllRegionInfo:NO];
+        [manager commit];
+        
+        [[GToolUtil sharedInstance] showPieHUDWithText:@"升级中..." andProgress:5];
+        
+        [[GPSLogger sharedLogger].offTimeAnalyzer analyzeTripStartFrom:nil toDate:nil shouldUpdateGlobalInfo:YES];
+        [[BussinessDataProvider sharedInstance] updateAllRegionInfo:YES];
+        
+        [self updateWeatherToday:nil];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:kNotifyUpgradeComplete object:nil];
+        
+        [[GToolUtil sharedInstance] showPieHUDWithText:@"升级完成" andProgress:100];
+    });
 }
 
 - (void) updateWeatherToday:(CLLocation*)loc
@@ -218,7 +231,8 @@ static BussinessDataProvider * _sharedProvider = nil;
     __block NSError *error;
     dispatch_queue_t concurrent_queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_group_t downloadGroup = dispatch_group_create();
-    dispatch_apply(ptArr.count-1, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(size_t i) {
+    
+    for (int i = 0; i < ptArr.count-1; i++) {
         GPSLogItem * first = ptArr[i];
         GPSLogItem * second = ptArr[i+1];
         
@@ -228,18 +242,16 @@ static BussinessDataProvider * _sharedProvider = nil;
         
         dispatch_group_enter(downloadGroup);
         [facade requestWithSuccess:^(BaiduMarkModel * model) {
-            if (model.trafficLight.count > 0) {
-                dispatch_barrier_async(concurrent_queue, ^{
-                    [trafficLights addObjectsFromArray:model.trafficLight];
-                });
+            dispatch_barrier_async(concurrent_queue, ^{
+                [trafficLights addObjectsFromArray:model.trafficLight];
                 trafficLightCnt += model.trafficLight.count-1;
-            }
-            dispatch_group_leave(downloadGroup);
+                dispatch_group_leave(downloadGroup);
+            });
         } failure:^(NSError * err) {
             error = err;
             dispatch_group_leave(downloadGroup);
         }];
-    });
+    }
     
     dispatch_group_notify(downloadGroup, dispatch_get_main_queue(), ^{
         if (trafficLightCnt > 0 || nil == error) {

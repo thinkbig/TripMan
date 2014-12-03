@@ -180,8 +180,15 @@
 
 - (void)displayPoint:(UIButton *)button
 {
+    NSInteger idx = button.tag;
     if (self.coorDelegate) {
-        [self.coorDelegate willLayoutIndex:button.tag];
+        [self.coorDelegate willLayoutIndex:idx];
+    }
+    UILabel * detailLable = self.detailLabels[idx];
+    if (detailLable) {
+        detailLable.alpha = 0;
+        detailLable.center = CGPointMake(button.center.x, button.center.y - 8);
+        [self addSubview:detailLable];
     }
     [UIView animateWithDuration:.2 animations:^{
         button.transform = CGAffineTransformMakeScale(1, 1);
@@ -189,6 +196,7 @@
         if (self.coorDelegate) {
             [self.coorDelegate didLayoutIndex:button.tag ofTopPoint:button.center];
         }
+        detailLable.alpha = 1;
     }];
 }
 

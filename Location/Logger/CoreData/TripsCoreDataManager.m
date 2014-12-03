@@ -8,6 +8,7 @@
 
 #import "TripsCoreDataManager.h"
 #import "NSManagedObject+ActiveRecord.h"
+#import "NSDate+Utilities.h"
 
 @interface TripsCoreDataManager ()
 
@@ -260,6 +261,57 @@
     return bestTrips;
 }
 
+- (void) setNeedAnalyzeForDay:(NSDate*)dateDay
+{
+    if (nil == dateDay) {
+        dateDay = [NSDate date];
+    }
+    NSDate * dayBegin = [dateDay dateAtStartOfDay];
+    
+    NSArray * daySums = [DaySummary where:@{@"date_day": dayBegin} inContext:self.tripAnalyzerContent];
+    if (daySums.count > 0) {
+        DaySummary * daySum = daySums[0];
+        daySum.is_analyzed = @NO;
+    }
+    
+    NSArray * weekSums = [WeekSummary where:@{@"date_week": dayBegin} inContext:self.tripAnalyzerContent];
+    if (weekSums.count > 0) {
+        WeekSummary * weekSum = weekSums[0];
+        weekSum.is_analyzed = @NO;
+    }
+    
+    [self commit];
+}
+
+- (DaySummary*) daySummaryByDay:(NSDate*)dateDay
+{
+    if (nil == dateDay) {
+        dateDay = [NSDate date];
+    }
+    NSDate * dayBegin = [dateDay dateAtStartOfDay];
+    DaySummary * daySum = nil;
+    NSArray * daySums = [DaySummary where:@{@"date_day": dayBegin} inContext:self.tripAnalyzerContent];
+    if (daySums.count > 0) {
+        daySum = daySums[0];
+    }
+    return daySum;
+}
+
+- (WeekSummary*) weekSummaryByDay:(NSDate*)dateDay
+{
+    if (nil == dateDay) {
+        dateDay = [NSDate date];
+    }
+    NSDate * dayBegin = [dateDay dateAtStartOfWeek];
+    WeekSummary * weekSum = nil;
+    NSArray * weekSums = [WeekSummary where:@{@"date_week": dayBegin} inContext:self.tripAnalyzerContent];
+    if (weekSums.count > 0) {
+        weekSum = weekSums[0];
+    }
+
+    return weekSum;
+}
+
 
 - (TripSummary*) newTripAt:(NSDate*)beginDate
 {
@@ -276,7 +328,47 @@
         newTrip.end_date = endDate;
     }
     
+    DaySummary * daySum = [self daySumForTrip:newTrip];
+    [self weekSumForDay:daySum];
+    
     return newTrip;
+}
+
+
+- (DaySummary*) daySumForTrip:(TripSummary*)tripSum
+{
+    if (nil == tripSum) {
+        return nil;
+    }
+    if (tripSum.day_summary) {
+        return tripSum.day_summary;
+    }
+    
+    NSDate * dayBegin = [tripSum.start_date dateAtStartOfDay];
+    DaySummary * daySum = [DaySummary findOrCreate:@{@"date_day": dayBegin} inContext:self.tripAnalyzerContent];
+    daySum.is_analyzed = @NO;
+    [daySum addAll_tripsObject:tripSum];
+    tripSum.day_summary = daySum;
+    
+    return daySum;
+}
+
+- (WeekSummary*) weekSumForDay:(DaySummary*)daySum
+{
+    if (nil == daySum) {
+        return nil;
+    }
+    if (daySum.week_summary) {
+        return daySum.week_summary;
+    }
+    
+    NSDate * dayBegin = [daySum.date_day dateAtStartOfWeek];
+    WeekSummary * weekSum = [WeekSummary findOrCreate:@{@"date_week": dayBegin} inContext:self.tripAnalyzerContent];
+    weekSum.is_analyzed = @NO;
+    [weekSum addAll_daysObject:daySum];
+    daySum.week_summary = weekSum;
+    
+    return weekSum;
 }
 
 - (DrivingInfo*) drivingInfoForTrip:(TripSummary*)tripSum

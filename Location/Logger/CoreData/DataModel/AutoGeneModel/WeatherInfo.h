@@ -2,7 +2,7 @@
 //  WeatherInfo.h
 //  TripMan
 //
-//  Created by taq on 11/29/14.
+//  Created by taq on 12/2/14.
 //  Copyright (c) 2014 Location. All rights reserved.
 //
 
@@ -13,6 +13,8 @@
 
 @interface WeatherInfo : NSManagedObject
 
+@property (nonatomic, retain) NSData * addi_data;
+@property (nonatomic, retain) NSString * addi_info;
 @property (nonatomic, retain) NSString * city;
 @property (nonatomic, retain) NSDate * date_day;
 @property (nonatomic, retain) NSNumber * hour_period;
@@ -22,8 +24,6 @@
 @property (nonatomic, retain) NSString * temperature;
 @property (nonatomic, retain) NSString * weather;
 @property (nonatomic, retain) NSString * wind;
-@property (nonatomic, retain) NSData * addi_data;
-@property (nonatomic, retain) NSString * addi_info;
 @property (nonatomic, retain) NSSet *trip_owner;
 @end
 

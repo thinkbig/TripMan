@@ -2,7 +2,7 @@
 //  ParkingRegion.h
 //  TripMan
 //
-//  Created by taq on 11/29/14.
+//  Created by taq on 12/2/14.
 //  Copyright (c) 2014 Location. All rights reserved.
 //
 
@@ -13,11 +13,12 @@
 
 @interface ParkingRegion : NSManagedObject
 
+@property (nonatomic, retain) NSData * addi_data;
+@property (nonatomic, retain) NSString * addi_info;
 @property (nonatomic, retain) NSString * address;
 @property (nonatomic, retain) NSNumber * center_lat;
 @property (nonatomic, retain) NSNumber * center_lon;
 @property (nonatomic, retain) NSString * city;
-@property (nonatomic, retain) NSString * addi_info;
 @property (nonatomic, retain) NSString * district;
 @property (nonatomic, retain) NSNumber * is_analyzed;
 @property (nonatomic, retain) NSNumber * is_temp;
@@ -27,7 +28,6 @@
 @property (nonatomic, retain) NSString * street;
 @property (nonatomic, retain) NSString * street_num;
 @property (nonatomic, retain) NSString * user_mark;
-@property (nonatomic, retain) NSData * addi_data;
 @property (nonatomic, retain) NSSet *group_owner_ed;
 @property (nonatomic, retain) NSSet *group_owner_st;
 @end

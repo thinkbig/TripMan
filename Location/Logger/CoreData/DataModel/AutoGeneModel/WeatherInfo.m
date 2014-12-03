@@ -2,7 +2,7 @@
 //  WeatherInfo.m
 //  TripMan
 //
-//  Created by taq on 11/29/14.
+//  Created by taq on 12/2/14.
 //  Copyright (c) 2014 Location. All rights reserved.
 //
 
@@ -12,6 +12,8 @@
 
 @implementation WeatherInfo
 
+@dynamic addi_data;
+@dynamic addi_info;
 @dynamic city;
 @dynamic date_day;
 @dynamic hour_period;
@@ -21,8 +23,6 @@
 @dynamic temperature;
 @dynamic weather;
 @dynamic wind;
-@dynamic addi_data;
-@dynamic addi_info;
 @dynamic trip_owner;
 
 @end

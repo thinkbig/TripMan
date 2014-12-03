@@ -14,6 +14,8 @@
 #import "GPSTurningAnalyzer.h"
 #import "DVSwitch.h"
 #import "TicketDetailViewController.h"
+#import "DaySummary.h"
+#import "WeekSummary.h"
 #import "CarTripCell.h"
 
 typedef NS_ENUM(NSUInteger, eTripRange) {
@@ -24,14 +26,14 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
 
 @interface CarTripViewController ()
 
-@property (nonatomic, strong) NSArray *             tripsYestoday;
-@property (nonatomic, strong) NSArray *             tripsToday;
-@property (nonatomic, strong) NSArray *             tripsTomorrow;
+@property (nonatomic, strong) DaySummary *          sumYestoday;
+@property (nonatomic, strong) DaySummary *          sumToday;
+@property (nonatomic, strong) DaySummary *          sumTomorrow;
 @property (nonatomic, strong) NSDate *              currentDate;
 
-@property (nonatomic, strong) NSArray *             tripsLastWeek;
-@property (nonatomic, strong) NSArray *             tripsThisWeek;
-@property (nonatomic, strong) NSArray *             tripsNextWeek;
+@property (nonatomic, strong) WeekSummary *         sumLastWeek;
+@property (nonatomic, strong) WeekSummary *         sumThisWeek;
+@property (nonatomic, strong) WeekSummary *         sumNextWeek;
 @property (nonatomic, strong) NSDate *              currentWeekDate;
 @property (nonatomic, strong) NSMutableDictionary * tripsDayWithinCurrentWeek;
 
@@ -167,9 +169,9 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
 {
     if (self.currentDate && ![self.currentDate isToday] && [self.currentDate compare:[NSDate date]] == NSOrderedAscending) {
         self.currentDate = [self.currentDate dateByAddingDays:1];
-        self.tripsYestoday = self.tripsToday;
-        self.tripsToday = self.tripsTomorrow;
-        self.tripsTomorrow = [self fetchTripsForDate:[self.currentDate dateByAddingDays:1] withRange:eTripRangeDay];
+        self.sumYestoday = self.sumToday;
+        self.sumToday = self.sumTomorrow;
+        self.sumTomorrow = [self fetchDayTripForDate:[self.currentDate dateByAddingDays:1]];
         
         [self reloadContentOfDay];
     }
@@ -178,9 +180,9 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
 - (void)showYestoday
 {
     self.currentDate = [self.currentDate dateBySubtractingDays:1];
-    self.tripsTomorrow = self.tripsToday;
-    self.tripsToday = self.tripsYestoday;
-    self.tripsYestoday = [self fetchTripsForDate:[self.currentDate dateBySubtractingDays:1] withRange:eTripRangeDay];
+    self.sumTomorrow = self.sumToday;
+    self.sumToday = self.sumYestoday;
+    self.sumYestoday = [self fetchDayTripForDate:[self.currentDate dateBySubtractingDays:1]];
     
     [self reloadContentOfDay];
 }
@@ -189,9 +191,9 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
 {
     if (self.currentWeekDate && ![self.currentWeekDate isThisWeek] && [self.currentWeekDate compare:[NSDate date]] == NSOrderedAscending) {
         self.currentWeekDate = [self.currentWeekDate dateByAddingDays:7];
-        self.tripsLastWeek = self.tripsThisWeek;
-        self.tripsThisWeek = self.tripsNextWeek;
-        self.tripsNextWeek = [self fetchTripsForDate:[self.currentWeekDate dateByAddingDays:7] withRange:eTripRangeWeek];
+        self.sumLastWeek = self.sumThisWeek;
+        self.sumThisWeek = self.sumNextWeek;
+        self.sumNextWeek = [self fetchWeekTripForDate:[self.currentWeekDate dateByAddingDays:7]];
         
         [self reloadContentOfWeek];
     }
@@ -200,34 +202,17 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
 - (void)showLastWeek
 {
     self.currentWeekDate = [self.currentWeekDate dateBySubtractingDays:7];
-    self.tripsNextWeek = self.tripsThisWeek;
-    self.tripsThisWeek = self.tripsLastWeek;
-    self.tripsLastWeek = [self fetchTripsForDate:[self.currentWeekDate dateBySubtractingDays:7] withRange:eTripRangeWeek];
+    self.sumNextWeek = self.sumThisWeek;
+    self.sumThisWeek = self.sumLastWeek;
+    self.sumLastWeek = [self fetchWeekTripForDate:[self.currentWeekDate dateBySubtractingDays:7]];
     
     [self reloadContentOfWeek];
 }
 
-- (NSArray*)fetchTripsForDate:(NSDate*)dateDay withRange:(eTripRange)range
+- (void)updateDaySumInfo:(DaySummary*)daySum
 {
-    if (nil == dateDay) {
-        if (eTripRangeWeek == range) {
-            dateDay = self.currentWeekDate;
-        } else {
-            dateDay = self.currentDate;
-        }
-    }
-
-    NSArray * trips = nil;
-    if (eTripRangeWeek == range) {
-        trips = [[TripsCoreDataManager sharedManager] tripStartFrom:[dateDay dateAtStartOfWeek] toDate:[dateDay dateAtEndOfWeek]];
-    } else {
-        trips = [[TripsCoreDataManager sharedManager] tripStartFrom:[dateDay dateAtStartOfDay] toDate:[dateDay dateAtEndOfDay]];
-    }
-    for (TripSummary * sum in trips)
+    for (TripSummary * sum in daySum.all_trips)
     {
-        GPSTurningAnalyzer * turnAnalyzer = [GPSTurningAnalyzer new];
-        [[GPSLogger sharedLogger].offTimeAnalyzer analyzeTripForSum:sum withAnalyzer:@{@"TurningAnalyzer":turnAnalyzer}];
-        
         // update region info
         [[BussinessDataProvider sharedInstance] updateRegionInfo:sum.region_group.start_region force:NO success:^(id) {
             [self.carousel reloadData];
@@ -237,24 +222,45 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
         } failure:nil];
         
         // update traffic light cnt
-        if (0 == [sum.traffic_light_tol_cnt integerValue]) {
+        if (0 == [sum.traffic_light_tol_cnt integerValue])
+        {
+            GPSTurningAnalyzer * turnAnalyzer = [GPSTurningAnalyzer new];
+            [[GPSLogger sharedLogger].offTimeAnalyzer analyzeTripForSum:sum withAnalyzer:@{@"TurningAnalyzer":turnAnalyzer}];
             [[BussinessDataProvider sharedInstance] updateRoadMarkForTrips:sum ofTurningPoints:[turnAnalyzer.filter featurePoints] success:^(id cnt) {
                 [self.carousel reloadData];
                 [self.slideShow reloadInputViews];
-//                NSArray * allTripView = [self.slideShow allPages];
-//                [allTripView enumerateObjectsUsingBlock:^(TripTodayView * oneSlide, NSUInteger idx, BOOL *stop) {
-//                    if (0 == idx) {
-//                        [oneSlide updateWithTripsToday:self.tripsYestoday];
-//                    } else if (1 == idx) {
-//                        [oneSlide updateWithTripsToday:self.tripsToday];
-//                    } else if (2 == idx) {
-//                        [oneSlide updateWithTripsToday:self.tripsTomorrow];
-//                    }
-//                }];
+                NSArray * allTripView = [self.slideShow allPages];
+                for (TripTodayView * oneSlide in allTripView) {
+                    [oneSlide update];
+                }
             } failure:nil];
         }
     }
-    return [[trips reverseObjectEnumerator] allObjects];
+}
+
+- (DaySummary*)fetchDayTripForDate:(NSDate*)dateDay
+{
+    if (nil == dateDay) {
+        dateDay = self.currentDate;
+    }
+
+    DaySummary * daySum = [[TripsCoreDataManager sharedManager] daySummaryByDay:dateDay];
+    [self updateDaySumInfo:daySum];
+    return daySum;
+}
+
+- (WeekSummary*)fetchWeekTripForDate:(NSDate*)dateDay
+{
+    if (nil == dateDay) {
+        dateDay = self.currentWeekDate;
+    }
+    
+    WeekSummary * weekSum = [[TripsCoreDataManager sharedManager] weekSummaryByDay:dateDay];
+    for (DaySummary * daySum in weekSum.all_days)
+    {
+        [self updateDaySumInfo:daySum];
+    }
+    return weekSum;
 }
 
 - (void)rebuildContent
@@ -263,24 +269,24 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
     
     if (0 == _currentIdx)
     {
-        self.tripsToday = [self fetchTripsForDate:self.currentDate withRange:eTripRangeDay];
-        self.tripsYestoday = [self fetchTripsForDate:[self.currentDate dateBySubtractingDays:1] withRange:eTripRangeDay];
+        self.sumToday = [self fetchDayTripForDate:self.currentDate];
+        self.sumYestoday = [self fetchDayTripForDate:[self.currentDate dateBySubtractingDays:1]];
         if (![self.currentDate isToday]) {
-            self.tripsTomorrow = [self fetchTripsForDate:[self.currentDate dateByAddingDays:1] withRange:eTripRangeDay];
+            self.sumTomorrow = [self fetchDayTripForDate:[self.currentDate dateByAddingDays:1]];
         } else {
-            self.tripsTomorrow = nil;
+            self.sumTomorrow = nil;
         }
         
         [self reloadContentOfDay];
     }
     else if (1 == _currentIdx)
     {
-        self.tripsThisWeek = [self fetchTripsForDate:self.currentWeekDate withRange:eTripRangeWeek];
-        self.tripsLastWeek = [self fetchTripsForDate:[self.currentWeekDate dateBySubtractingDays:7] withRange:eTripRangeWeek];
+        self.sumThisWeek = [self fetchWeekTripForDate:self.currentWeekDate];
+        self.sumLastWeek = [self fetchWeekTripForDate:[self.currentWeekDate dateBySubtractingDays:7]];
         if (![self.currentDate isThisWeek]) {
-            self.tripsNextWeek = [self fetchTripsForDate:[self.currentWeekDate dateByAddingDays:7] withRange:eTripRangeWeek];
+            self.sumNextWeek = [self fetchWeekTripForDate:[self.currentWeekDate dateByAddingDays:7]];
         } else {
-            self.tripsNextWeek = nil;
+            self.sumNextWeek = nil;
         }
         
         [self reloadContentOfWeek];
@@ -291,47 +297,55 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
 {
     [self.carousel reloadData];
     [self.carousel scrollToItemAtIndex:0 animated:NO];
-    if (self.tripsToday.count > 0) {
-        [self.carousel scrollToItemAtIndex:self.tripsToday.count-1 duration:MIN(MAX(self.tripsToday.count/2.0, 0.5), 2.5)];
+    NSArray * tripsToday = [self.sumToday.all_trips allObjects];
+    if (tripsToday > 0) {
+        [self.carousel scrollToItemAtIndex:tripsToday.count-1 duration:MIN(MAX(tripsToday.count/2.0, 0.5), 2.5)];
     }
     
     [self.switcher setLabelText:[self.currentDate isToday] ? @"今天" : [self.dateFormatter stringFromDate:self.currentDate] forIndex:0];
     
     [self.slideShow resetAllPage];
     
-    [self addSlideShow:self.tripsYestoday];
-    [self addSlideShow:self.tripsToday];
+    [self addSlideShowWithData:self.sumYestoday];
+    [self addSlideShowWithData:self.sumToday];
     if (![self.currentDate isToday]) {
-        [self addSlideShow:self.tripsTomorrow];
+        [self addSlideShowWithData:self.sumTomorrow];
     }
 
     [self.slideShow showPageAtIdx:1];
     
-    [self.detailCollection reloadInputViews];
+    [self.detailCollection reloadData];
 }
 
 - (void)reloadContentOfWeek
 {
     [self.slideShow resetAllPage];
     
-    [self addSlideShow:self.tripsLastWeek];
-    [self addSlideShow:self.tripsThisWeek];
+    [self addSlideShowWithData:self.sumLastWeek];
+    [self addSlideShowWithData:self.sumThisWeek];
     if (![self.currentWeekDate isThisWeek]) {
-        [self addSlideShow:self.tripsNextWeek];
+        [self addSlideShowWithData:self.sumNextWeek];
     }
     
     [self.slideShow showPageAtIdx:1];
     
     [self.switcher setLabelText:[self.currentWeekDate isThisWeek] ? @"本周" : [NSString stringWithFormat:@"第%ld周", (long)[self.currentWeekDate weekOfYear]] forIndex:1];
     
-    [self.detailCollection reloadInputViews];
+    [self.detailCollection reloadData];
 }
 
-- (void)addSlideShow:(NSArray*)tripsArray
+- (void)addSlideShowWithData:(id)sum
 {
     TripTodayView * todaySlide = [[[NSBundle mainBundle] loadNibNamed:@"TripTodayView" owner:self options:nil] lastObject];
     todaySlide.backgroundColor = [UIColor clearColor];
-    [todaySlide updateWithTripsToday:tripsArray];
+    if ([sum isKindOfClass:[DaySummary class]]) {
+        todaySlide.daySum = sum;
+    } else if ([sum isKindOfClass:[WeekSummary class]]) {
+        todaySlide.weekSum = sum;
+    } else {
+        return;
+    }
+    [todaySlide update];
     [self.slideShow addPage:todaySlide];
     
     NSUInteger pageIdx = [self.slideShow numberOfPages]-1;
@@ -357,12 +371,23 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
 }
 */
 
++ (UILabel*) geneLabelWithString:(NSString*)str
+{
+    UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 80, 20)];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.textColor = [UIColor whiteColor];
+    label.font = [UIFont systemFontOfSize:12];
+    label.adjustsFontSizeToFitWidth = YES;
+    label.text = str;
+    return label;
+}
+
 
 #pragma mark iCarouselDelegate
 
 - (NSInteger)numberOfItemsInCarousel:(iCarousel *)carousel
 {
-    return self.tripsToday.count;
+    return self.sumToday.all_trips.count;
 }
 
 - (UIView *)carousel:(iCarousel *)carousel viewForItemAtIndex:(NSInteger)index reusingView:(UIView *)view
@@ -379,7 +404,11 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
         view.layer.shadowRadius = 4.0f;
         [view addSubview:realView];
     }
-    [realView updateWithTripSummary:self.tripsToday[index]];
+    
+    NSArray * tripsToday = [[self.sumToday.all_trips allObjects] sortedArrayUsingComparator:^NSComparisonResult(TripSummary * obj1, TripSummary * obj2) {
+        return [obj1.start_date compare:obj2.start_date];
+    }];
+    [realView updateWithTripSummary:tripsToday[index]];
     
     return view;
 }
@@ -426,7 +455,8 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
 - (void)carousel:(iCarousel *)carousel didSelectItemAtIndex:(NSInteger)index
 {
     TicketDetailViewController * detailVC = [self.storyboard instantiateViewControllerWithIdentifier:@"TicketDetailId"];
-    detailVC.tripSum = self.tripsToday[index];
+    NSArray * tripsToday = [self.sumToday.all_trips allObjects];
+    detailVC.tripSum = tripsToday[index];
     [self.navigationController pushViewController:detailVC animated:YES];
     
 //    MapDisplayViewController * mapVC = [[UIStoryboard storyboardWithName:@"Debug" bundle:nil] instantiateViewControllerWithIdentifier:@"MapDisplayView"];
@@ -446,7 +476,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
     if (0 == _currentIdx) {
         return 2;
     } else if (1 == _currentIdx) {
-        return 2;
+        return 4;
     }
     return 0;
 }
@@ -465,7 +495,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
         } else if (1 == indexPath.row) {
             CarTripCarouselCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"iCarouselId" forIndexPath:indexPath];
             [realCell setCarouselView:self.carousel];
-            [realCell showNoResult:(0 == self.tripsToday.count)];
+            [realCell showNoResult:(0 == self.sumToday.all_trips.count)];
             
             cell = realCell;
         }
@@ -478,17 +508,88 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
             
             cell = realCell;
         } else if (1 == indexPath.row) {
+            NSArray * weekArr = [self.sumThisWeek.all_days allObjects];
+            NSMutableDictionary * distDict = [NSMutableDictionary dictionary];
+            NSMutableDictionary * duringDict = [NSMutableDictionary dictionary];
+            for (DaySummary * daySum in weekArr) {
+                [distDict setObject:daySum.total_dist forKey:@([daySum.date_day weekday])];
+                [duringDict setObject:daySum.total_during forKey:@([daySum.date_day weekday])];
+            }
+            
             WeekSumCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"weekSumCellId" forIndexPath:indexPath];
             realCell.distBarView.waitToUpdate = YES;
-//            graph5.waitToUpdate = YES;
-//            graph5.detailView = (UIView <MPDetailView> *)[self customDetailView];
-//            [graph5 setAlgorithm:^CGFloat(CGFloat x) {
-//                return tan(x);
-//            } numberOfPoints:8];
-//            graph5.graphColor = [UIColor colorWithRed:0.120 green:0.806 blue:0.157 alpha:1.000];
-//            
-//            coorX.coorStrArray = @[@"a", @"b", @"c", @"d", @"e", @"f", @"g", @"h"];
-//            graph5.coorDelegate = coorX;
+            [realCell.distBarView setAlgorithm:^CGFloat(CGFloat x) {
+                return [distDict[@(x+1)] floatValue]/1000.0;
+            } numberOfPoints:7 withGeneDetailBlock:^UILabel *(CGFloat y) {
+                return [[self class] geneLabelWithString:[NSString stringWithFormat:@"%.f", y]];
+            }];
+            
+            realCell.distBarView.coorDelegate = realCell.xCoorBarView;
+            
+            realCell.duringBarView.waitToUpdate = YES;
+            [realCell.duringBarView setAlgorithm:^CGFloat(CGFloat x) {
+                return [duringDict[@(x+1)] floatValue]/60.0;
+            } numberOfPoints:7 withGeneDetailBlock:^UILabel *(CGFloat y) {
+                return [[self class] geneLabelWithString:[NSString stringWithFormat:@"%.f", y]];
+            }];
+            
+            [realCell animWithDelay:0.1];
+
+            cell = realCell;
+        } else if (2 == indexPath.row) {
+            NSArray * weekArr = [self.sumThisWeek.all_days allObjects];
+            NSMutableDictionary * jamDuringDict = [NSMutableDictionary dictionary];
+            NSMutableDictionary * secondDict = [NSMutableDictionary dictionary];
+            for (DaySummary * daySum in weekArr) {
+                [jamDuringDict setObject:daySum.jam_during forKey:@([daySum.date_day weekday])];
+                [secondDict setObject:daySum.max_speed forKey:@([daySum.date_day weekday])];
+            }
+            
+            WeekJamCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"weekJamCellId" forIndexPath:indexPath];
+            realCell.jamDuringView.waitToUpdate = YES;
+            [realCell.jamDuringView setAlgorithm:^CGFloat(CGFloat x) {
+                return [jamDuringDict[@(x+1)] floatValue]/60.0;
+            } numberOfPoints:7 withGeneDetailBlock:^UILabel *(CGFloat y) {
+                return [[self class] geneLabelWithString:[NSString stringWithFormat:@"%.f", y]];
+            }];
+            
+            realCell.jamDuringView.coorDelegate = realCell.xCoorBarView;
+            
+            realCell.jamCountView.waitToUpdate = YES;
+            [realCell.jamCountView setAlgorithm:^CGFloat(CGFloat x) {
+                return [secondDict[@(x+1)] floatValue]*3.6;
+            } numberOfPoints:7 withGeneDetailBlock:^UILabel *(CGFloat y) {
+                return [[self class] geneLabelWithString:[NSString stringWithFormat:@"%.f", y]];
+            }];
+            
+            [realCell animWithDelay:0.1];
+            
+            cell = realCell;
+        } else if (3 == indexPath.row) {
+            NSArray * weekArr = [self.sumThisWeek.all_days allObjects];
+            NSMutableDictionary * waitingDict = [NSMutableDictionary dictionary];
+            NSMutableDictionary * lightCntDict = [NSMutableDictionary dictionary];
+            for (DaySummary * daySum in weekArr) {
+                [waitingDict setObject:daySum.traffic_light_waiting forKey:@([daySum.date_day weekday])];
+                [lightCntDict setObject:daySum.traffic_light_jam_cnt forKey:@([daySum.date_day weekday])];
+            }
+            
+            WeekTrafficLightCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"weekTrafficLightCellId" forIndexPath:indexPath];
+            realCell.lightDuringView.waitToUpdate = YES;
+            [realCell.lightDuringView setAlgorithm:^CGFloat(CGFloat x) {
+                return [waitingDict[@(x+1)] floatValue]/60.0;
+            } numberOfPoints:7 withGeneDetailBlock:^UILabel *(CGFloat y) {
+                return [[self class] geneLabelWithString:[NSString stringWithFormat:@"%.1f", y]];
+            }];
+            
+            realCell.lightCountView.waitToUpdate = YES;
+            [realCell.lightCountView setAlgorithm:^CGFloat(CGFloat x) {
+                return [lightCntDict[@(x+1)] integerValue];
+            } numberOfPoints:7 withGeneDetailBlock:^UILabel *(CGFloat y) {
+                return [[self class] geneLabelWithString:[NSString stringWithFormat:@"%.f", y]];
+            }];
+            
+            [realCell animWithDelay:0.1];
             
             cell = realCell;
         }
@@ -520,7 +621,11 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
         if (0 == indexPath.row) {
             return CGSizeMake(320.f, 210.f);
         } else if(1 == indexPath.row) {
-            return CGSizeMake(320.f, 260.f);
+            return CGSizeMake(320.f, 300.f);
+        } else if(2 == indexPath.row) {
+            return CGSizeMake(320.f, 300.f);
+        } else if(3 == indexPath.row) {
+            return CGSizeMake(320.f, 270.f);
         }
     }
     return CGSizeZero;

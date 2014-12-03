@@ -2,7 +2,7 @@
 //  EnvInfo.m
 //  TripMan
 //
-//  Created by taq on 11/29/14.
+//  Created by taq on 12/2/14.
 //  Copyright (c) 2014 Location. All rights reserved.
 //
 
@@ -12,6 +12,8 @@
 
 @implementation EnvInfo
 
+@dynamic addi_data;
+@dynamic addi_info;
 @dynamic day_avg_speed;
 @dynamic day_dist;
 @dynamic day_during;
@@ -21,8 +23,6 @@
 @dynamic night_dist;
 @dynamic night_during;
 @dynamic night_max_speed;
-@dynamic addi_info;
-@dynamic addi_data;
 @dynamic trip_owner;
 
 @end

@@ -15,6 +15,8 @@
 #import "TrafficJam.h"
 #import "TurningInfo.h"
 #import "RegionGroup.h"
+#import "DaySummary.h"
+#import "WeekSummary.h"
 #import "ParkingRegionDetail.h"
 
 @interface TripsCoreDataManager : CoreDataManager
@@ -39,11 +41,16 @@
 - (NSArray*) mostUsefulTripsLimit:(NSUInteger)limit;
 - (NSArray*) tripsWithStartRegion:(ParkingRegion*)region tripLimit:(NSInteger)limit;
 
+- (DaySummary*) daySummaryByDay:(NSDate*)dateDay;
+- (WeekSummary*) weekSummaryByDay:(NSDate*)dateWeek;
 
 // analyze info generate api
 
 - (TripSummary*) newTripAt:(NSDate*)beginDate;
 - (TripSummary*) newTripAt:(NSDate*)beginDate endAt:(NSDate*)endDate;
+
+- (DaySummary*) daySumForTrip:(TripSummary*)tripSum;
+- (WeekSummary*) weekSumForDay:(DaySummary*)daySum;
 
 - (DrivingInfo*) drivingInfoForTrip:(TripSummary*)tripSum;
 - (EnvInfo*) environmentForTrip:(TripSummary*)tripSum;

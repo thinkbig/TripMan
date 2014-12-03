@@ -2,7 +2,7 @@
 //  TrafficJam.m
 //  TripMan
 //
-//  Created by taq on 11/29/14.
+//  Created by taq on 12/2/14.
 //  Copyright (c) 2014 Location. All rights reserved.
 //
 
@@ -12,6 +12,7 @@
 
 @implementation TrafficJam
 
+@dynamic addi_data;
 @dynamic addi_info;
 @dynamic end_date;
 @dynamic end_lat;
@@ -24,7 +25,6 @@
 @dynamic traffic_avg_speed;
 @dynamic traffic_jam_dist;
 @dynamic traffic_jam_during;
-@dynamic addi_data;
 @dynamic trip_owner;
 
 @end

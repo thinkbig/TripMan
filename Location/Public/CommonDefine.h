@@ -10,6 +10,11 @@
 #define Location_CommonDefine_h
 
 #import "MainTabViewController.h"
+#import "AppDelegate.h"
+
+#define kNotifyUpgradeComplete        @"kNotifyUpgradeComplete"
+#define kNotifyNeedUpdate             @"kNotifyNeedUpdate"
+
 
 #define DEGREES_TO_RADIANS(x)               (x * M_PI/180.0)
 #define UIColorFromRGB(rgbValue)            [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 \
@@ -24,9 +29,12 @@
 #define InstVC(stID, vcID)          [[UIStoryboard storyboardWithName:(stID) bundle:nil] instantiateViewControllerWithIdentifier:(vcID)]
 #define InstFirstVC(stID)           [[UIStoryboard storyboardWithName:(stID) bundle:nil] instantiateInitialViewController]
 
-#define ROOT_VIEW_CONTROLLER        ((TSTabBarViewController*)([UIApplication sharedApplication].delegate.window.rootViewController))
+#define MAIN_WINDOW                 ([UIApplication sharedApplication].delegate.window)
+#define ROOT_VIEW_CONTROLLER        ((TSTabBarViewController*)(MAIN_WINDOW.rootViewController))
 #define MAIN_VIEW_CONTROLLER        (ROOT_VIEW_CONTROLLER.selectedViewController)
 #define PRESENT_VIEW_CONTROLLER     ([MAIN_VIEW_CONTROLLER isKindOfClass:[UINavigationController class]] ? ((UINavigationController*)MAIN_VIEW_CONTROLLER).topViewController : MAIN_VIEW_CONTROLLER)
+
+#define IS_UPDATING                 (((AppDelegate*)([UIApplication sharedApplication].delegate)).isUpdating)
 
 // directory define
 #define DocumentDirectory           [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject]

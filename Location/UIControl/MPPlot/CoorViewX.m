@@ -43,6 +43,8 @@
     if (nil == _geneLabelBlock) {
         _geneLabelBlock = ^(NSString * str) {
             UILabel * label = [UILabel new];
+            label.textColor = [UIColor whiteColor];
+            label.font = [UIFont boldSystemFontOfSize:16];
             label.text = str;
             [label sizeToFit];
             return label;

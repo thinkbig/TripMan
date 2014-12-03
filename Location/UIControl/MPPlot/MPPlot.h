@@ -11,7 +11,7 @@
 #import "_MPWButton.h"
 #import "CoorPlotProtocal.h"
 
-#define PADDING 12
+#define PADDING 18
 
 #define ANIMATIONDURATION 1.5
 
@@ -23,6 +23,7 @@ typedef NS_ENUM(NSUInteger, MPPlotType) {
 };
 
 typedef CGFloat(^GraphPointsAlgorithm)(CGFloat x);
+typedef UILabel * (^GeneDetailLabelBlock)(CGFloat y);
 
 struct _MPValuesRange {
     CGFloat max;
@@ -66,12 +67,15 @@ NS_INLINE MPGraphValuesRange MPGetBiggestRange(MPGraphValuesRange r1,MPGraphValu
     GraphPointsAlgorithm _customAlgorithm;
     NSUInteger _numberOfPoints;
     
+    BOOL  _useCustomRange;
+    
 }
 
 // Abstract Class
 + (id)plotWithType:(MPPlotType)type frame:(CGRect)frame;
 + (MPGraphValuesRange)rangeForValues:(NSArray *)values;
 
+@property (nonatomic, retain) NSMutableArray *detailLabels;
 @property (nonatomic, copy) NSArray *values; // array of NSNumber or NSString
 @property (nonatomic, retain) UIColor *graphColor; // color of the line
 @property (nonatomic, weak) id<CoorLayoutProtocal> coorDelegate;
@@ -86,7 +90,7 @@ NS_INLINE MPGraphValuesRange MPGetBiggestRange(MPGraphValuesRange r1,MPGraphValu
 @property (nonatomic, retain) NSNumberFormatter *detailLabelFormatter;
 
 - (void)animate;
-- (void)setAlgorithm:(GraphPointsAlgorithm)customAlgorithm numberOfPoints:(NSUInteger)numberOfPoints;
+- (void)setAlgorithm:(GraphPointsAlgorithm)customAlgorithm numberOfPoints:(NSUInteger)numberOfPoints withGeneDetailBlock:(GeneDetailLabelBlock)geneBlock;
 - (void)tap:(UIButton *)button;
 
 @end

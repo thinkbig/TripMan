@@ -18,6 +18,10 @@
 
 @implementation CarHomeViewController
 
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -43,8 +47,9 @@
     self.carMaintainLabel.backgroundColor = [UIColor orangeColor];
     self.carMaintainLabel.layer.cornerRadius = CGRectGetHeight(self.carMaintainLabel.bounds)/2.0f;
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadContent) name:kNotifyNeedUpdate object:nil];
+    
     [self reloadContent];
-
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -55,6 +60,9 @@
 
 - (void) reloadContent
 {
+    if (IS_UPDATING) {
+        return;
+    }
     CLLocation * curLoc = [BussinessDataProvider lastGoodLocation];
     if (curLoc) {
         ParkingRegionDetail * parkingDetail = [[TripsCoreDataManager sharedManager] parkingDetailForCoordinate:curLoc.coordinate];

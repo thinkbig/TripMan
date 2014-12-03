@@ -42,7 +42,7 @@
     self = [super init];
     
     if (self) {
-        self.valueRanges = MPMakeGraphValuesRange(CGFLOAT_MIN, CGFLOAT_MAX);
+        _valueRanges = MPMakeGraphValuesRange(CGFLOAT_MIN, CGFLOAT_MAX);
         NSAssert(![self isMemberOfClass:[MPPlot class]], @"You shouldn't init MPPlot directly, use the class method plotWithType:frame:");
     }
     
@@ -54,7 +54,7 @@
     self = [super initWithFrame:frame];
     
     if (self) {
-        self.valueRanges = MPMakeGraphValuesRange(CGFLOAT_MIN, CGFLOAT_MAX);
+        _valueRanges = MPMakeGraphValuesRange(CGFLOAT_MIN, CGFLOAT_MAX);
         NSAssert(![self isMemberOfClass:[MPPlot class]], @"You shouldn't init MPPlot directly, use the class method plotWithType:frame:");
     }
     
@@ -65,7 +65,7 @@
 {
     self = [super initWithCoder:aDecoder];
     if (self) {
-        self.valueRanges = MPMakeGraphValuesRange(CGFLOAT_MIN, CGFLOAT_MAX);
+        _valueRanges = MPMakeGraphValuesRange(CGFLOAT_MIN, CGFLOAT_MAX);
         NSAssert(![self isMemberOfClass:[MPPlot class]], @"You shouldn't init MPPlot directly, use the class method plotWithType:frame:");
     }
     return self;
@@ -103,13 +103,13 @@
 {
     CGFloat min,max;
     
-    if (MPValuesRangeNULL(self.valueRanges)) {
+    if (_useCustomRange && !MPValuesRangeNULL(_valueRanges)) {
+        max = _valueRanges.max;
+        min = _valueRanges.min;
+    } else {
         _valueRanges = [MPPlot rangeForValues:values];
         min = _valueRanges.min;
         max = _valueRanges.max;
-    }else{
-        max = _valueRanges.max;
-        min = _valueRanges.min;
     }
     
     NSMutableArray *pointsArray = [[NSMutableArray alloc] init];
@@ -141,21 +141,36 @@
 - (void)setValueRanges:(MPGraphValuesRange)valueRanges
 {
     _valueRanges = valueRanges;
+    _useCustomRange = YES;
     
     if (!MPValuesRangeNULL(valueRanges) && self.values) {
         points = [self pointsForArray:self.values];
     }
 }
 
-- (void)setAlgorithm:(GraphPointsAlgorithm)customAlgorithm numberOfPoints:(NSUInteger)numberOfPoints
+- (void)setAlgorithm:(GraphPointsAlgorithm)customAlgorithm numberOfPoints:(NSUInteger)numberOfPoints withGeneDetailBlock:(GeneDetailLabelBlock)geneBlock
 {
     _numberOfPoints = numberOfPoints;
     _customAlgorithm = customAlgorithm;
     
+    if (nil == self.detailLabels) {
+        self.detailLabels = [NSMutableArray arrayWithCapacity:numberOfPoints];
+    }
+    for (UILabel * oldLabel in self.detailLabels) {
+        [oldLabel removeFromSuperview];
+    }
+    [self.detailLabels removeAllObjects];
+    
     NSMutableArray* values=[[NSMutableArray alloc] init];
     
     for (NSUInteger i=0; i<numberOfPoints; i++) {
-        [values addObject:@(customAlgorithm(i))];
+        CGFloat val = customAlgorithm(i);
+        [values addObject:@(val)];
+        if (geneBlock) {
+            UILabel * label = geneBlock(val);
+            [label sizeToFit];
+            [self.detailLabels addObject:label];
+        }
     }
     
     self.values = values;
@@ -228,6 +243,11 @@
 
 - (void)tap:(UIButton *)button
 {
+    if (self.detailLabels.count > 0) {
+        // the detail view is shown by geneDetailBlock
+        return;
+    }
+    
     if (button.tag==currentTag) {
         currentTag = -1;
     }else{

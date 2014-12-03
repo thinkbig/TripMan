@@ -52,32 +52,46 @@
     
     // check if need rebuild db
     static NSString * rebuildKey = @"kLocationForceRebuildKey";
-    NSString * rebuildVal = @"value_000000000007"; // make sure it is different if this version should rebuild db
+    NSString * rebuildVal = @"value_000000000002"; // make sure it is different if this version should rebuild db
     NSString * oldVa = [[NSUserDefaults standardUserDefaults] objectForKey:rebuildKey];
     if (nil == oldVa || ![rebuildVal isEqualToString:oldVa])
     {
+        IS_UPDATING = YES;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateComplete) name:kNotifyUpgradeComplete object:nil];
+        
         [[NSUserDefaults standardUserDefaults] setObject:rebuildVal forKey:rebuildKey];
         [[NSUserDefaults standardUserDefaults] synchronize];
         
         // real rebuild db
         [[TripsCoreDataManager sharedManager] dropDb];
         [[BussinessDataProvider sharedInstance] reCreateCoreDataDb];
+    } else {
+        [self updateComplete];
     }
+    
+    DDLogWarn(@"@@@@@@@@@@@@@ didFinishLaunchingWithOptions @@@@@@@@@@@@@");
 
+    return YES;
+}
+
+- (void) updateComplete
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
+    IS_UPDATING = NO;
+    
+    [[BussinessDataProvider sharedInstance] updateWeatherToday:nil];
+    
     [self setupLogger];
     [self applicationDocumentsDirectory];
     
     self.locationTracker = [[LocationTracker alloc] init];
     [self.locationTracker startLocationTracking];
     
-    DDLogWarn(@"@@@@@@@@@@@@@ didFinishLaunchingWithOptions @@@@@@@@@@@@@");
-    
-    [[BussinessDataProvider sharedInstance] updateWeatherToday:nil];
-    
-    return YES;
+    [[NSNotificationCenter defaultCenter] postNotificationName:kNotifyNeedUpdate object:nil];
 }
 
--(void) setupLogger
+- (void) setupLogger
 {
 //    if (nil == self.afNetworkLogger) {
 //        self.afNetworkLogger = [[AFNetworkActivityLogger alloc] init];
@@ -148,9 +162,11 @@
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
-    [DDLog flushLog];
-    [[TripsCoreDataManager sharedManager] commit];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    if (!IS_UPDATING) {
+        [DDLog flushLog];
+        [[TripsCoreDataManager sharedManager] commit];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
     DDLogWarn(@"@@@@@@@@@@@@@ applicationWillResignActive @@@@@@@@@@@@@");
 }
 
@@ -167,19 +183,23 @@
 {
     DDLogWarn(@"@@@@@@@@@@@@@ applicationDidBecomeActive @@@@@@@@@@@@@");
     
-    [[GPSLogger sharedLogger].offTimeAnalyzer rollOutOfDateTrip];
-    
-    [[BussinessDataProvider sharedInstance] updateWeatherToday:nil];
-    [[BussinessDataProvider sharedInstance] updateAllRegionInfo:YES];
+    if (!IS_UPDATING) {
+        [[GPSLogger sharedLogger].offTimeAnalyzer rollOutOfDateTrip];
+        
+        [[BussinessDataProvider sharedInstance] updateWeatherToday:nil];
+        [[BussinessDataProvider sharedInstance] updateAllRegionInfo:YES];
+    }
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     DDLogWarn(@"@@@@@@@@@@@@@ applicationWillTerminate @@@@@@@@@@@@@");
     [[NSUserDefaults standardUserDefaults] synchronize];
-    [DDLog flushLog];
-    [[TripsCoreDataManager sharedManager] commit];
-    [self.locationTracker startLocationTracking];
+    if (!IS_UPDATING) {
+        [DDLog flushLog];
+        [[TripsCoreDataManager sharedManager] commit];
+        [self.locationTracker startLocationTracking];
+    }
 }
 
 

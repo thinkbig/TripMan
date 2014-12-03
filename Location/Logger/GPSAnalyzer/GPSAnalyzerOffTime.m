@@ -21,7 +21,9 @@
 #import "EnvInfo.h"
 #import "TrafficJam.h"
 #import "TurningInfo.h"
+#import "DaySummary.h"
 #import "ParkingRegion.h"
+#import "NSDate+Utilities.h"
 #import "TSPair.h"
 
 @implementation GPSAnalyzerOffTime
@@ -108,6 +110,108 @@
     }
 }
 
+
+- (void)analyzeDaySum:(DaySummary*)daySum
+{
+    if (nil == daySum) {
+        return;
+    }
+    TripsCoreDataManager * manager = [TripsCoreDataManager sharedManager];
+    
+    CGFloat total_dist = 0;
+    CGFloat total_during = 0;
+    CGFloat jam_dist = 0;
+    CGFloat jam_during = 0;
+    CGFloat traffic_light_jam_cnt = 0;
+    CGFloat traffic_light_waiting = 0;
+    CGFloat max_speed = 0;
+    NSArray * tripSums = [daySum.all_trips allObjects];
+    for (TripSummary * sum in tripSums) {
+        if (![sum.is_analyzed boolValue]) {
+            [self analyzeTripForSum:sum withAnalyzer:nil];
+        }
+        total_dist += [sum.total_dist floatValue];
+        total_during += [sum.total_during floatValue];
+        jam_dist += [sum.traffic_jam_dist floatValue];
+        jam_during += [sum.traffic_jam_during floatValue];
+        traffic_light_jam_cnt += [sum.traffic_light_jam_cnt floatValue];
+        for (TrafficJam * jam in sum.traffic_jams) {
+            if ([jam.near_traffic_light boolValue]) {
+                traffic_light_waiting += [jam.traffic_jam_during doubleValue];
+            }
+        }
+        max_speed = MAX(max_speed, [sum.max_speed floatValue]);
+    }
+    daySum.total_dist = @(total_dist);
+    daySum.total_during = @(total_during);
+    daySum.jam_dist = @(jam_dist);
+    daySum.jam_during = @(jam_during);
+    daySum.traffic_light_jam_cnt = @(traffic_light_jam_cnt);
+    daySum.traffic_light_waiting = @(traffic_light_waiting);
+    daySum.max_speed = @(max_speed);
+    daySum.is_analyzed = @(YES);
+    
+    [manager commit];
+}
+
+- (void)analyzeWeekSum:(WeekSummary*)weekSum
+{
+    if (nil == weekSum) {
+        return;
+    }
+    TripsCoreDataManager * manager = [TripsCoreDataManager sharedManager];
+
+    CGFloat total_dist = 0;
+    CGFloat total_during = 0;
+    CGFloat jam_dist = 0;
+    CGFloat jam_during = 0;
+    CGFloat traffic_light_jam_cnt = 0;
+    CGFloat traffic_light_waiting = 0;
+    CGFloat max_speed = 0;
+    NSInteger trip_cnt = 0;
+    TripSummary *trip_most_dist = nil;
+    TripSummary *trip_most_during = nil;
+    TripSummary *trip_most_jam_during = nil;
+    NSArray * tripSums = [weekSum.all_days allObjects];
+    for (DaySummary * sum in tripSums) {
+        if (![sum.is_analyzed boolValue]) {
+            [self analyzeDaySum:sum];
+        }
+        total_dist += [sum.total_dist floatValue];
+        total_during += [sum.total_during floatValue];
+        jam_dist += [sum.jam_dist floatValue];
+        jam_during += [sum.jam_during floatValue];
+        traffic_light_jam_cnt += [sum.traffic_light_jam_cnt floatValue];
+        traffic_light_waiting += [sum.traffic_light_waiting floatValue];
+        max_speed = MAX(max_speed, [sum.max_speed floatValue]);
+        trip_cnt += [sum.all_trips count];
+        for (TripSummary * realTrip in sum.all_trips) {
+            if ([trip_most_dist.total_dist floatValue] < [realTrip.total_dist floatValue]) {
+                trip_most_dist = realTrip;
+            }
+            if ([trip_most_dist.total_during floatValue] < [realTrip.total_during floatValue]) {
+                trip_most_during = realTrip;
+            }
+            if ([trip_most_dist.traffic_jam_during floatValue] < [realTrip.traffic_jam_during floatValue]) {
+                trip_most_jam_during = realTrip;
+            }
+        }
+    }
+    weekSum.total_dist = @(total_dist);
+    weekSum.total_during = @(total_during);
+    weekSum.jam_dist = @(jam_dist);
+    weekSum.jam_during = @(jam_during);
+    weekSum.traffic_light_jam_cnt = @(traffic_light_jam_cnt);
+    weekSum.traffic_light_waiting = @(traffic_light_waiting);
+    weekSum.max_speed = @(max_speed);
+    weekSum.trip_cnt = @(trip_cnt);
+    weekSum.trip_most_dist = trip_most_dist;
+    weekSum.trip_most_during = trip_most_during;
+    weekSum.trip_most_jam_during = trip_most_jam_during;
+    weekSum.is_analyzed = @(YES);
+    
+    [manager commit];
+}
 
 - (void)analyzeTripForSum:(TripSummary*)tripSum withAnalyzer:(NSDictionary*)anaDict
 {
@@ -296,15 +400,39 @@
     return unfinishedTrip;
 }
 
-- (NSArray*)analyzeTripStartFrom:(NSDate*)fromDate toDate:(NSDate*)toDate
+- (NSArray*)analyzeTripStartFrom:(NSDate*)fromDate toDate:(NSDate*)toDate shouldUpdateGlobalInfo:(BOOL)update
 {
     [self rollOutOfDateTrip];
     
+    if (update) [[GToolUtil sharedInstance] showPieHUDWithText:@"升级中..." andProgress:10];
+    
     NSArray * returnTrips = [[TripsCoreDataManager sharedManager] tripStartFrom:fromDate toDate:toDate];
     NSEnumerator * enumerator = [returnTrips reverseObjectEnumerator];
+    
+    if (update) [[GToolUtil sharedInstance] showPieHUDWithText:@"升级中..." andProgress:20];
+    
+    TripSummary * lastSum = nil;
+    NSInteger tolCnt = returnTrips.count;
+    NSInteger curIdx = 1;
     for (TripSummary * sum in enumerator) {
+        if (lastSum && ![lastSum.start_date isEqualToDateIgnoringTime:sum.start_date]) {
+            DaySummary * lastDaysum = lastSum.day_summary;
+            [self analyzeDaySum:lastDaysum];
+            if (lastDaysum && ![lastSum.start_date isSameWeekAsDate:sum.start_date]) {
+                [self analyzeWeekSum:lastDaysum.week_summary];
+            }
+        }
         [self analyzeTripForSum:sum withAnalyzer:nil];
+        lastSum = sum;
+        
+        if (update) [[GToolUtil sharedInstance] showPieHUDWithText:@"升级中..." andProgress:20+70*((CGFloat)curIdx/(CGFloat)tolCnt)];
+        curIdx++;
     }
+    if (lastSum) {
+        [self analyzeDaySum:lastSum.day_summary];
+        [self analyzeWeekSum:lastSum.day_summary.week_summary];
+    }
+    if (update) [[GToolUtil sharedInstance] showPieHUDWithText:@"升级中..." andProgress:95];
     return returnTrips;
 }
 

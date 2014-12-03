@@ -75,7 +75,7 @@
 
 - (IBAction)refresh:(id)sender
 {
-    NSArray * coreSum = [[GPSLogger sharedLogger].offTimeAnalyzer analyzeTripStartFrom:nil toDate:nil];
+    NSArray * coreSum = [[GPSLogger sharedLogger].offTimeAnalyzer analyzeTripStartFrom:nil toDate:nil shouldUpdateGlobalInfo:YES];
     [[BussinessDataProvider sharedInstance] updateAllRegionInfo:NO];
     self.anaResult = coreSum;
     [self.contentTable reloadData];
