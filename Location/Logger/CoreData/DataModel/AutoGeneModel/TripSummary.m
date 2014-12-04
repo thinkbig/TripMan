@@ -28,11 +28,11 @@
 @dynamic total_dist;
 @dynamic total_during;
 @dynamic traffic_avg_speed;
+@dynamic traffic_heavy_jam_cnt;
 @dynamic traffic_jam_dist;
 @dynamic traffic_jam_during;
 @dynamic traffic_light_jam_cnt;
 @dynamic traffic_light_tol_cnt;
-@dynamic traffic_heavy_jam_cnt;
 @dynamic day_summary;
 @dynamic driving_info;
 @dynamic environment;

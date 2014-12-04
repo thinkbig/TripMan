@@ -236,10 +236,10 @@
             if ([trip_most_dist.total_dist floatValue] < [realTrip.total_dist floatValue]) {
                 trip_most_dist = realTrip;
             }
-            if ([trip_most_dist.total_during floatValue] < [realTrip.total_during floatValue]) {
+            if ([trip_most_during.total_during floatValue] < [realTrip.total_during floatValue]) {
                 trip_most_during = realTrip;
             }
-            if ([trip_most_dist.traffic_jam_during floatValue] < [realTrip.traffic_jam_during floatValue]) {
+            if ([trip_most_jam_during.traffic_jam_during floatValue] < [realTrip.traffic_jam_during floatValue]) {
                 trip_most_jam_during = realTrip;
             }
         }

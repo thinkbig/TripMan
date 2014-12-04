@@ -22,8 +22,8 @@
 @dynamic max_speed;
 @dynamic total_dist;
 @dynamic total_during;
-@dynamic trip_cnt;
 @dynamic traffic_heavy_jam_cnt;
+@dynamic trip_cnt;
 @dynamic all_days;
 @dynamic trip_most_dist;
 @dynamic trip_most_during;

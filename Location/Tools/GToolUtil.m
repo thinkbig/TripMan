@@ -74,7 +74,7 @@ static GToolUtil * _sharedUtil = nil;
             self.sharedPitHUD.layoutChangeAnimationDuration = 0.0;
             [self.sharedPitHUD showInView:MAIN_WINDOW];
             [self.sharedPitHUD setProgress:progress/100.0f animated:YES];
-            self.sharedPitHUD.detailTextLabel.text = [NSString stringWithFormat:@"%li %%", (long)progress];
+            self.sharedPitHUD.detailTextLabel.text = [NSString stringWithFormat:@"%ld %%", (long)progress];
             self.sharedPitHUD.textLabel.text = str;
         });
     } else if (progress >= 100) {

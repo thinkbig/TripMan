@@ -19,6 +19,7 @@
 #import "WeekSummary.h"
 #import "MonthSummary.h"
 #import "CarTripCell.h"
+#import "NSAttributedString+Style.h"
 
 typedef NS_ENUM(NSUInteger, eTripRange) {
     eTripRangeDay = 0,
@@ -480,10 +481,10 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
 
 + (UILabel*) geneLabelWithString:(NSString*)str
 {
-    UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 80, 20)];
+    UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 80, 16)];
     label.textAlignment = NSTextAlignmentCenter;
     label.textColor = [UIColor whiteColor];
-    label.font = [UIFont systemFontOfSize:12];
+    label.font = [UIFont systemFontOfSize:10];
     label.adjustsFontSizeToFitWidth = YES;
     label.text = str;
     return label;
@@ -583,9 +584,9 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
     if (0 == _currentIdx) {
         return 2;
     } else if (1 == _currentIdx) {
-        return 4;
+        return 5;
     } else if (2 == _currentIdx) {
-        return 1;
+        return 4;
     }
     return 0;
 }
@@ -654,6 +655,40 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
             cell = realCell;
         } else if (2 == indexPath.row) {
             NSArray * weekArr = [self.sumThisWeek.all_days allObjects];
+            NSMutableDictionary * avgDict = [NSMutableDictionary dictionary];
+            NSMutableDictionary * maxDict = [NSMutableDictionary dictionary];
+            CGFloat maxSpeed = 0;
+            for (DaySummary * daySum in weekArr) {
+                [maxDict setObject:daySum.max_speed forKey:@([daySum.date_day weekday])];
+                [avgDict setObject:daySum.avg_speed forKey:@([daySum.date_day weekday])];
+                maxSpeed = MAX(maxSpeed, [daySum.max_speed floatValue]);
+            }
+            maxSpeed *= 3.6;
+            
+            WeekSpeedCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"weekSpeedCellId" forIndexPath:indexPath];
+            realCell.maxSpeedView.waitToUpdate = YES;
+            realCell.maxSpeedView.valueRanges = MPMakeGraphValuesRange(0, maxSpeed);
+            [realCell.maxSpeedView setAlgorithm:^CGFloat(CGFloat x) {
+                return [maxDict[@(x+1)] floatValue]*3.6;
+            } numberOfPoints:7 withGeneDetailBlock:^UILabel *(CGFloat y) {
+                return [[self class] geneLabelWithString:[NSString stringWithFormat:@"%.f", y]];
+            }];
+            
+            realCell.avgSpeedView.waitToUpdate = YES;
+            realCell.avgSpeedView.valueRanges = MPMakeGraphValuesRange(0, maxSpeed);
+            [realCell.avgSpeedView setAlgorithm:^CGFloat(CGFloat x) {
+                return [avgDict[@(x+1)] floatValue]*3.6;
+            } numberOfPoints:7 withGeneDetailBlock:^UILabel *(CGFloat y) {
+                UILabel * label = [[self class] geneLabelWithString:(0==y ? @"" : [NSString stringWithFormat:@"%.f", y])];
+                label.textColor = [UIColor darkTextColor];
+                return label;
+            }];
+            
+            [realCell animWithDelay:0.1];
+            
+            cell = realCell;
+        } else if (3 == indexPath.row) {
+            NSArray * weekArr = [self.sumThisWeek.all_days allObjects];
             NSMutableDictionary * jamDuringDict = [NSMutableDictionary dictionary];
             NSMutableDictionary * secondDict = [NSMutableDictionary dictionary];
             for (DaySummary * daySum in weekArr) {
@@ -669,8 +704,6 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
                 return [[self class] geneLabelWithString:[NSString stringWithFormat:@"%.f", y]];
             }];
             
-            realCell.jamDuringView.coorDelegate = realCell.xCoorBarView;
-            
             realCell.jamCountView.waitToUpdate = YES;
             [realCell.jamCountView setAlgorithm:^CGFloat(CGFloat x) {
                 return [secondDict[@(x+1)] integerValue];
@@ -681,7 +714,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
             [realCell animWithDelay:0.1];
             
             cell = realCell;
-        } else if (3 == indexPath.row) {
+        } else if (4 == indexPath.row) {
             NSArray * weekArr = [self.sumThisWeek.all_days allObjects];
             NSMutableDictionary * waitingDict = [NSMutableDictionary dictionary];
             NSMutableDictionary * lightCntDict = [NSMutableDictionary dictionary];
@@ -720,6 +753,30 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
             [realCell setSliderView:self.slideShow];
             
             cell = realCell;
+        } else if (1 == indexPath.row) {
+            MonthBestCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"monthBestCellId" forIndexPath:indexPath];
+            realCell.titlePrev.text = @"本月最长行驶：";
+            NSString * valStr = [NSString stringWithFormat:@"%.f", [self.sumThisMonth.trip_most_dist.total_dist floatValue]/1000.0];
+            realCell.titleContent.attributedText = [NSAttributedString stringWithNumber:valStr font:[UIFont boldSystemFontOfSize:24] color:[UIColor whiteColor] andUnit:@"km" font:[UIFont boldSystemFontOfSize:12] color:[UIColor whiteColor]];
+            [realCell updateWithTripSum:self.sumThisMonth.trip_most_dist];
+            
+            cell = realCell;
+        } else if (2 == indexPath.row) {
+            MonthBestCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"monthBestCellId" forIndexPath:indexPath];
+            realCell.titlePrev.text = @"本月最久行驶：";
+            NSString * valStr = [NSString stringWithFormat:@"%.f", [self.sumThisMonth.trip_most_during.total_during floatValue]/60.0];
+            realCell.titleContent.attributedText = [NSAttributedString stringWithNumber:valStr font:[UIFont boldSystemFontOfSize:24] color:[UIColor whiteColor] andUnit:@"min" font:[UIFont boldSystemFontOfSize:12] color:[UIColor whiteColor]];
+            [realCell updateWithTripSum:self.sumThisMonth.trip_most_during];
+            
+            cell = realCell;
+        } else if (3 == indexPath.row) {
+            MonthBestCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"monthBestCellId" forIndexPath:indexPath];
+            realCell.titlePrev.text = @"本月最久拥堵：";
+            NSString * valStr = [NSString stringWithFormat:@"%.f", [self.sumThisMonth.trip_most_jam_during.traffic_jam_during floatValue]/60.0];
+            realCell.titleContent.attributedText = [NSAttributedString stringWithNumber:valStr font:[UIFont boldSystemFontOfSize:24] color:[UIColor whiteColor] andUnit:@"min" font:[UIFont boldSystemFontOfSize:12] color:[UIColor whiteColor]];
+            [realCell updateWithTripSum:self.sumThisMonth.trip_most_jam_during];
+            
+            cell = realCell;
         }
     }
     
@@ -751,13 +808,17 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
         } else if(1 == indexPath.row) {
             return CGSizeMake(320.f, 300.f);
         } else if(2 == indexPath.row) {
-            return CGSizeMake(320.f, 300.f);
+            return CGSizeMake(320.f, 200.f);
         } else if(3 == indexPath.row) {
+            return CGSizeMake(320.f, 260.f);
+        } else if(4 == indexPath.row) {
             return CGSizeMake(320.f, 270.f);
         }
     } else if (2 == _currentIdx) {
         if (0 == indexPath.row) {
             return CGSizeMake(320.f, 90.f);
+        } else if (_currentIdx >= 1 && _currentIdx <= 3) {
+            return CGSizeMake(320.f, 215.f);
         }
     }
     return CGSizeZero;
@@ -782,6 +843,23 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
         return CGSizeMake(320, 70);
     }
     return CGSizeZero;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (2 == _currentIdx) {
+        if (indexPath.row >= 1 && indexPath.row <= 3) {
+            TicketDetailViewController * detailVC = [self.storyboard instantiateViewControllerWithIdentifier:@"TicketDetailId"];
+            if (1 == indexPath.row) {
+                detailVC.tripSum = self.sumThisMonth.trip_most_dist;
+            } else if (2 == indexPath.row) {
+                detailVC.tripSum = self.sumThisMonth.trip_most_during;
+            } else {
+                detailVC.tripSum = self.sumThisMonth.trip_most_jam_during;
+            }
+            [self.navigationController pushViewController:detailVC animated:YES];
+        }
+    }
 }
 
 @end

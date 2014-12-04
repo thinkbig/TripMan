@@ -22,8 +22,8 @@
 @property (nonatomic, retain) NSNumber * max_speed;
 @property (nonatomic, retain) NSNumber * total_dist;
 @property (nonatomic, retain) NSNumber * total_during;
-@property (nonatomic, retain) NSNumber * trip_cnt;
 @property (nonatomic, retain) NSNumber * traffic_heavy_jam_cnt;
+@property (nonatomic, retain) NSNumber * trip_cnt;
 @property (nonatomic, retain) NSSet *all_days;
 @property (nonatomic, retain) TripSummary *trip_most_dist;
 @property (nonatomic, retain) TripSummary *trip_most_during;

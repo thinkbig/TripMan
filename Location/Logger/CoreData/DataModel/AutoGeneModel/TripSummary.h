@@ -23,11 +23,11 @@
 @property (nonatomic, retain) NSNumber * total_dist;
 @property (nonatomic, retain) NSNumber * total_during;
 @property (nonatomic, retain) NSNumber * traffic_avg_speed;
+@property (nonatomic, retain) NSNumber * traffic_heavy_jam_cnt;
 @property (nonatomic, retain) NSNumber * traffic_jam_dist;
 @property (nonatomic, retain) NSNumber * traffic_jam_during;
 @property (nonatomic, retain) NSNumber * traffic_light_jam_cnt;
 @property (nonatomic, retain) NSNumber * traffic_light_tol_cnt;
-@property (nonatomic, retain) NSNumber * traffic_heavy_jam_cnt;
 @property (nonatomic, retain) DaySummary *day_summary;
 @property (nonatomic, retain) DrivingInfo *driving_info;
 @property (nonatomic, retain) EnvInfo *environment;

@@ -21,10 +21,10 @@
 @dynamic max_speed;
 @dynamic total_dist;
 @dynamic total_during;
+@dynamic traffic_heavy_jam_cnt;
 @dynamic traffic_light_jam_cnt;
 @dynamic traffic_light_waiting;
 @dynamic trip_cnt;
-@dynamic traffic_heavy_jam_cnt;
 @dynamic all_days;
 
 @end

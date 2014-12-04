@@ -10,6 +10,7 @@
 #import "MPBarsGraphView.h"
 #import "MPGraphView.h"
 #import "CoorViewX.h"
+#import "TripTicketView.h"
 
 @interface CarTripHeader : UICollectionReusableView
 
@@ -54,9 +55,21 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
+@interface WeekSpeedCell : UICollectionViewCell
+
+@property (weak, nonatomic) IBOutlet MPBarsGraphView *maxSpeedView;
+@property (weak, nonatomic) IBOutlet MPBarsGraphView *avgSpeedView;
+@property (weak, nonatomic) IBOutlet UIView *maxColorView;
+@property (weak, nonatomic) IBOutlet UIView *avgColorView;
+
+- (void) animWithDelay:(CGFloat)delay;
+
+@end
+
+////////////////////////////////////////////////////////////////////////////////////////
+
 @interface WeekJamCell : UICollectionViewCell
 
-@property (weak, nonatomic) IBOutlet CoorViewX *xCoorBarView;
 @property (weak, nonatomic) IBOutlet MPGraphView *jamDuringView;
 @property (weak, nonatomic) IBOutlet MPGraphView *jamCountView;
 @property (weak, nonatomic) IBOutlet UIView *duringColorView;
@@ -78,3 +91,21 @@
 - (void) animWithDelay:(CGFloat)delay;
 
 @end
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+@interface MonthBestCell : UICollectionViewCell
+
+@property (weak, nonatomic) IBOutlet UIImageView *monthImage;
+@property (weak, nonatomic) IBOutlet UILabel *titlePrev;
+@property (weak, nonatomic) IBOutlet UILabel *titleContent;
+@property (weak, nonatomic) IBOutlet UILabel *timeLabel;
+
+@property (weak, nonatomic) IBOutlet UIView *tripDetailContainer;
+
+@property (nonatomic, strong) TripTicketView *      ticketView;
+
+- (void) updateWithTripSum:(TripSummary*)tripSum;
+
+@end
+
