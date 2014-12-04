@@ -312,6 +312,21 @@
     return weekSum;
 }
 
+- (MonthSummary*) monthSummaryByDay:(NSDate*)dateDay
+{
+    if (nil == dateDay) {
+        dateDay = [NSDate date];
+    }
+    NSDate * dayBegin = [dateDay dateAtStartOfMonth];
+    MonthSummary * monthSum = nil;
+    NSArray * monthSums = [MonthSummary where:@{@"date_month": dayBegin} inContext:self.tripAnalyzerContent];
+    if (monthSums.count > 0) {
+        monthSum = monthSums[0];
+    }
+    
+    return monthSum;
+}
+
 
 - (TripSummary*) newTripAt:(NSDate*)beginDate
 {
@@ -330,6 +345,7 @@
     
     DaySummary * daySum = [self daySumForTrip:newTrip];
     [self weekSumForDay:daySum];
+    [self monthSumForDay:daySum];
     
     return newTrip;
 }
@@ -369,6 +385,24 @@
     daySum.week_summary = weekSum;
     
     return weekSum;
+}
+
+- (MonthSummary*) monthSumForDay:(DaySummary*)daySum
+{
+    if (nil == daySum) {
+        return nil;
+    }
+    if (daySum.month_summary) {
+        return daySum.month_summary;
+    }
+    
+    NSDate * dayBegin = [daySum.date_day dateAtStartOfMonth];
+    MonthSummary * monthSum = [MonthSummary findOrCreate:@{@"date_month": dayBegin} inContext:self.tripAnalyzerContent];
+    monthSum.is_analyzed = @NO;
+    [monthSum addAll_daysObject:daySum];
+    daySum.month_summary = monthSum;
+    
+    return monthSum;
 }
 
 - (DrivingInfo*) drivingInfoForTrip:(TripSummary*)tripSum

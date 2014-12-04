@@ -9,6 +9,7 @@
 #import "CarTripViewController.h"
 #import "TripTicketView.h"
 #import "TripTodayView.h"
+#import "TripMonthView.h"
 #import "MapDisplayViewController.h"
 #import "NSDate+Utilities.h"
 #import "GPSTurningAnalyzer.h"
@@ -16,6 +17,7 @@
 #import "TicketDetailViewController.h"
 #import "DaySummary.h"
 #import "WeekSummary.h"
+#import "MonthSummary.h"
 #import "CarTripCell.h"
 
 typedef NS_ENUM(NSUInteger, eTripRange) {
@@ -35,10 +37,13 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
 @property (nonatomic, strong) WeekSummary *         sumThisWeek;
 @property (nonatomic, strong) WeekSummary *         sumNextWeek;
 @property (nonatomic, strong) NSDate *              currentWeekDate;
-@property (nonatomic, strong) NSMutableDictionary * tripsDayWithinCurrentWeek;
+
+@property (nonatomic, strong) MonthSummary *        sumLastMonth;
+@property (nonatomic, strong) MonthSummary *        sumThisMonth;
+@property (nonatomic, strong) MonthSummary *        sumNextMonth;
+@property (nonatomic, strong) NSDate *              currentMonthDate;
 
 @property (nonatomic, strong) NSDateFormatter *     dateFormatter;
-@property (nonatomic, strong) NSDateFormatter *     dateFormatterMonth;
 @property (nonatomic, strong) DVSwitch *            switcher;
 @property (nonatomic) NSUInteger                    currentIdx;
 
@@ -51,10 +56,6 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
     self.dateFormatter = [[NSDateFormatter alloc] init];
     [self.dateFormatter setDateFormat: @"MM.dd"];
     [self.dateFormatter setTimeZone:[NSTimeZone localTimeZone]];
-    
-    self.dateFormatterMonth = [[NSDateFormatter alloc] init];
-    [self.dateFormatterMonth setDateFormat: @"MM"];
-    [self.dateFormatterMonth setTimeZone:[NSTimeZone localTimeZone]];
 }
 
 - (NSDate *)currentWeekDate {
@@ -71,10 +72,12 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
     return _currentDate;
 }
 
-//- (NSMutableDictionary *)tripsDayWithinCurrentWeek
-//{
-//    
-//}
+- (NSDate *)currentMonthDate {
+    if (nil == _currentMonthDate) {
+        _currentMonthDate = [NSDate date];
+    }
+    return _currentMonthDate;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -103,6 +106,15 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
                 [nonRetainSelf showLastWeek];
             } else if (fromPage + 1 == toPage) {
                 [nonRetainSelf showNextWeek];
+            } else if (fromPage != toPage) {
+                // rebuild with currentDate
+                [nonRetainSelf rebuildContent];
+            }
+        } else if (2 == nonRetainSelf.currentIdx) {
+            if (fromPage - 1 == toPage) {
+                [nonRetainSelf showLastMonth];
+            } else if (fromPage + 1 == toPage) {
+                [nonRetainSelf showNextMonth];
             } else if (fromPage != toPage) {
                 // rebuild with currentDate
                 [nonRetainSelf rebuildContent];
@@ -209,6 +221,28 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
     [self reloadContentOfWeek];
 }
 
+- (void)showNextMonth
+{
+    if (self.currentMonthDate && ![self.currentMonthDate isThisMonth] && [self.currentMonthDate compare:[NSDate date]] == NSOrderedAscending) {
+        self.currentMonthDate = [self.currentMonthDate dateByAddingMonths:1];
+        self.sumLastMonth = self.sumThisMonth;
+        self.sumThisMonth = self.sumNextMonth;
+        self.sumNextMonth = [self fetchMonthTripForDate:[self.currentMonthDate dateByAddingMonths:1]];
+        
+        [self reloadContentOfMonth];
+    }
+}
+
+- (void)showLastMonth
+{
+    self.currentMonthDate = [self.currentMonthDate dateBySubtractingMonths:1];
+    self.sumNextMonth = self.sumThisMonth;
+    self.sumThisMonth = self.sumLastMonth;
+    self.sumLastMonth = [self fetchMonthTripForDate:[self.currentMonthDate dateBySubtractingMonths:1]];
+    
+    [self reloadContentOfMonth];
+}
+
 - (void)updateDaySumInfo:(DaySummary*)daySum
 {
     for (TripSummary * sum in daySum.all_trips)
@@ -230,8 +264,18 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
                 [self.carousel reloadData];
                 [self.slideShow reloadInputViews];
                 NSArray * allTripView = [self.slideShow allPages];
-                for (TripTodayView * oneSlide in allTripView) {
-                    [oneSlide update];
+                for (id oneSlide in allTripView) {
+                    if ([oneSlide isKindOfClass:[TripMonthView class]]) {
+                        TripMonthView * oneView = oneSlide;
+                        [oneView updateMonth];
+                    } else if ([oneSlide isKindOfClass:[TripTodayView class]]) {
+                        TripTodayView * oneView = oneSlide;
+                        if (1 == _currentIdx) {
+                            [oneView updateWeek];
+                        } else {
+                            [oneView updateDay];
+                        }
+                    }
                 }
             } failure:nil];
         }
@@ -246,6 +290,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
 
     DaySummary * daySum = [[TripsCoreDataManager sharedManager] daySummaryByDay:dateDay];
     [self updateDaySumInfo:daySum];
+    [[GPSLogger sharedLogger].offTimeAnalyzer analyzeDaySum:daySum];
     return daySum;
 }
 
@@ -260,7 +305,23 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
     {
         [self updateDaySumInfo:daySum];
     }
+    [[GPSLogger sharedLogger].offTimeAnalyzer analyzeWeekSum:weekSum];
     return weekSum;
+}
+
+- (MonthSummary*)fetchMonthTripForDate:(NSDate*)dateDay
+{
+    if (nil == dateDay) {
+        dateDay = self.currentMonthDate;
+    }
+    
+    MonthSummary * monthSum = [[TripsCoreDataManager sharedManager] monthSummaryByDay:dateDay];
+    for (DaySummary * daySum in monthSum.all_days)
+    {
+        [self updateDaySumInfo:daySum];
+    }
+    [[GPSLogger sharedLogger].offTimeAnalyzer analyzeMonthSum:monthSum];
+    return monthSum;
 }
 
 - (void)rebuildContent
@@ -291,6 +352,18 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
         
         [self reloadContentOfWeek];
     }
+    else if (2 == _currentIdx)
+    {
+        self.sumThisMonth = [self fetchMonthTripForDate:self.currentMonthDate];
+        self.sumLastMonth = [self fetchMonthTripForDate:[self.currentMonthDate dateBySubtractingMonths:1]];
+        if (![self.currentMonthDate isThisMonth]) {
+            self.sumNextMonth = [self fetchMonthTripForDate:[self.currentMonthDate dateByAddingMonths:1]];
+        } else {
+            self.sumNextMonth = nil;
+        }
+        
+        [self reloadContentOfMonth];
+    }
 }
 
 - (void)reloadContentOfDay
@@ -306,10 +379,10 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
     
     [self.slideShow resetAllPage];
     
-    [self addSlideShowWithData:self.sumYestoday];
-    [self addSlideShowWithData:self.sumToday];
+    [self addSlideShowWithData:self.sumYestoday isWeekSum:NO];
+    [self addSlideShowWithData:self.sumToday isWeekSum:NO];
     if (![self.currentDate isToday]) {
-        [self addSlideShowWithData:self.sumTomorrow];
+        [self addSlideShowWithData:self.sumTomorrow isWeekSum:NO];
     }
 
     [self.slideShow showPageAtIdx:1];
@@ -321,10 +394,10 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
 {
     [self.slideShow resetAllPage];
     
-    [self addSlideShowWithData:self.sumLastWeek];
-    [self addSlideShowWithData:self.sumThisWeek];
+    [self addSlideShowWithData:self.sumLastWeek isWeekSum:YES];
+    [self addSlideShowWithData:self.sumThisWeek isWeekSum:YES];
     if (![self.currentWeekDate isThisWeek]) {
-        [self addSlideShowWithData:self.sumNextWeek];
+        [self addSlideShowWithData:self.sumNextWeek isWeekSum:YES];
     }
     
     [self.slideShow showPageAtIdx:1];
@@ -334,18 +407,18 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
     [self.detailCollection reloadData];
 }
 
-- (void)addSlideShowWithData:(id)sum
+- (void)addSlideShowWithData:(id)sum isWeekSum:(BOOL)isWeek
 {
     TripTodayView * todaySlide = [[[NSBundle mainBundle] loadNibNamed:@"TripTodayView" owner:self options:nil] lastObject];
     todaySlide.backgroundColor = [UIColor clearColor];
-    if ([sum isKindOfClass:[DaySummary class]]) {
-        todaySlide.daySum = sum;
-    } else if ([sum isKindOfClass:[WeekSummary class]]) {
+    if (isWeek) {
         todaySlide.weekSum = sum;
+        [todaySlide updateWeek];
     } else {
-        return;
+        todaySlide.daySum = sum;
+        [todaySlide updateDay];
     }
-    [todaySlide update];
+    
     [self.slideShow addPage:todaySlide];
     
     NSUInteger pageIdx = [self.slideShow numberOfPages]-1;
@@ -359,6 +432,40 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
     [self.slideShow addAnimation:[DRDynamicSlideShowAnimation animationForSubview:todaySlide.firstView page:pageIdx-1 keyPath:@"transform" fromValue:[NSValue valueWithCGAffineTransform:CGAffineTransformMakeRotation(-0.9)] toValue:[NSValue valueWithCGAffineTransform:CGAffineTransformMakeRotation(0)] delay:0]];
     [self.slideShow addAnimation:[DRDynamicSlideShowAnimation animationForSubview:todaySlide.secondView page:pageIdx-1 keyPath:@"transform" fromValue:[NSValue valueWithCGAffineTransform:CGAffineTransformMakeRotation(-0.9)] toValue:[NSValue valueWithCGAffineTransform:CGAffineTransformMakeRotation(0)] delay:0]];
     [self.slideShow addAnimation:[DRDynamicSlideShowAnimation animationForSubview:todaySlide.thirdView page:pageIdx-1 keyPath:@"transform" fromValue:[NSValue valueWithCGAffineTransform:CGAffineTransformMakeRotation(-0.9)] toValue:[NSValue valueWithCGAffineTransform:CGAffineTransformMakeRotation(0)] delay:0]];
+}
+
+- (void)reloadContentOfMonth
+{
+    [self.slideShow resetAllPage];
+    
+    [self addMonthSlideShowWithData:self.sumLastMonth];
+    [self addMonthSlideShowWithData:self.sumThisMonth];
+    if (![self.currentMonthDate isThisMonth]) {
+        [self addMonthSlideShowWithData:self.sumNextMonth];
+    }
+    
+    [self.slideShow showPageAtIdx:1];
+    
+    [self.switcher setLabelText:[self.currentMonthDate isThisMonth] ? @"本月" : [NSString stringWithFormat:@"%ld月", (long)[self.currentMonthDate month]] forIndex:2];
+    
+    [self.detailCollection reloadData];
+}
+
+- (void)addMonthSlideShowWithData:(MonthSummary*)sum
+{
+    TripMonthView * monthSlide = [[[NSBundle mainBundle] loadNibNamed:@"TripMonthView" owner:self options:nil] lastObject];
+    monthSlide.backgroundColor = [UIColor clearColor];
+    monthSlide.monthSum = sum;
+    [monthSlide updateMonth];
+    [self.slideShow addPage:monthSlide];
+    
+    NSUInteger pageIdx = [self.slideShow numberOfPages]-1;
+    
+    // enter animation
+    [self.slideShow addAnimation:[DRDynamicSlideShowAnimation animationForSubview:monthSlide.viewOne page:pageIdx keyPath:@"center" toValue:[NSValue valueWithCGPoint:CGPointMake(monthSlide.viewOne.center.x+monthSlide.frame.size.width, monthSlide.viewOne.center.y-monthSlide.frame.size.height)] delay:0]];
+    
+    // exit animation
+    [self.slideShow addAnimation:[DRDynamicSlideShowAnimation animationForSubview:monthSlide.viewOne page:pageIdx-1 keyPath:@"transform" fromValue:[NSValue valueWithCGAffineTransform:CGAffineTransformMakeRotation(-0.9)] toValue:[NSValue valueWithCGAffineTransform:CGAffineTransformMakeRotation(0)] delay:0]];
 }
 
 /*
@@ -477,6 +584,8 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
         return 2;
     } else if (1 == _currentIdx) {
         return 4;
+    } else if (2 == _currentIdx) {
+        return 1;
     }
     return 0;
 }
@@ -489,6 +598,9 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
     {
         if (0 == indexPath.row) {
             CarTripSliderCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"SliderCellId" forIndexPath:indexPath];
+            CGSize contentSz = self.slideShow.contentSize;
+            contentSz.height = [self collectionView:collectionView layout:nil sizeForItemAtIndexPath:indexPath].height;
+            self.slideShow.contentSize = contentSz;
             [realCell setSliderView:self.slideShow];
             
             cell = realCell;
@@ -502,8 +614,12 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
     }
     else if (1 == _currentIdx)
     {
-        if (0 == indexPath.row) {
+        if (0 == indexPath.row)
+        {
             CarTripSliderCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"SliderCellId" forIndexPath:indexPath];
+            CGSize contentSz = self.slideShow.contentSize;
+            contentSz.height = [self collectionView:collectionView layout:nil sizeForItemAtIndexPath:indexPath].height;
+            self.slideShow.contentSize = contentSz;
             [realCell setSliderView:self.slideShow];
             
             cell = realCell;
@@ -542,7 +658,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
             NSMutableDictionary * secondDict = [NSMutableDictionary dictionary];
             for (DaySummary * daySum in weekArr) {
                 [jamDuringDict setObject:daySum.jam_during forKey:@([daySum.date_day weekday])];
-                [secondDict setObject:daySum.max_speed forKey:@([daySum.date_day weekday])];
+                [secondDict setObject:daySum.traffic_heavy_jam_cnt forKey:@([daySum.date_day weekday])];
             }
             
             WeekJamCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"weekJamCellId" forIndexPath:indexPath];
@@ -557,7 +673,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
             
             realCell.jamCountView.waitToUpdate = YES;
             [realCell.jamCountView setAlgorithm:^CGFloat(CGFloat x) {
-                return [secondDict[@(x+1)] floatValue]*3.6;
+                return [secondDict[@(x+1)] integerValue];
             } numberOfPoints:7 withGeneDetailBlock:^UILabel *(CGFloat y) {
                 return [[self class] geneLabelWithString:[NSString stringWithFormat:@"%.f", y]];
             }];
@@ -594,6 +710,18 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
             cell = realCell;
         }
     }
+    else if (2 == _currentIdx)
+    {
+        if (0 == indexPath.row) {
+            CarTripSliderCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"SliderCellId" forIndexPath:indexPath];
+            CGSize contentSz = self.slideShow.contentSize;
+            contentSz.height = [self collectionView:collectionView layout:nil sizeForItemAtIndexPath:indexPath].height;
+            self.slideShow.contentSize = contentSz;
+            [realCell setSliderView:self.slideShow];
+            
+            cell = realCell;
+        }
+    }
     
     return cell;
 }
@@ -626,6 +754,10 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
             return CGSizeMake(320.f, 300.f);
         } else if(3 == indexPath.row) {
             return CGSizeMake(320.f, 270.f);
+        }
+    } else if (2 == _currentIdx) {
+        if (0 == indexPath.row) {
+            return CGSizeMake(320.f, 90.f);
         }
     }
     return CGSizeZero;

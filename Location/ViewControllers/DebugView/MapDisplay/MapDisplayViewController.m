@@ -268,7 +268,7 @@
         [self.mapView addOverlay:lineOne];
     }
     
-    NSLog(@"traffic light = %@, total jam = %@, light jam = %@, heavy jam = %ld", _tripSum.traffic_light_tol_cnt, _tripSum.traffic_jam_cnt, _tripSum.traffic_light_jam_cnt, (long)heavyJam);
+    NSLog(@"traffic light = %@, total jam = %@, light jam = %@, heavy jam = %ld", _tripSum.traffic_light_tol_cnt, _tripSum.traffic_heavy_jam_cnt, _tripSum.traffic_light_jam_cnt, (long)heavyJam);
 }
 
 /*

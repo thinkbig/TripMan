@@ -122,7 +122,8 @@
     CGFloat total_during = 0;
     CGFloat jam_dist = 0;
     CGFloat jam_during = 0;
-    CGFloat traffic_light_jam_cnt = 0;
+    NSInteger traffic_heavy_jam_cnt = 0;
+    NSInteger traffic_light_jam_cnt = 0;
     CGFloat traffic_light_waiting = 0;
     CGFloat max_speed = 0;
     NSArray * tripSums = [daySum.all_trips allObjects];
@@ -134,7 +135,8 @@
         total_during += [sum.total_during floatValue];
         jam_dist += [sum.traffic_jam_dist floatValue];
         jam_during += [sum.traffic_jam_during floatValue];
-        traffic_light_jam_cnt += [sum.traffic_light_jam_cnt floatValue];
+        traffic_heavy_jam_cnt += [sum.traffic_heavy_jam_cnt integerValue];
+        traffic_light_jam_cnt += [sum.traffic_light_jam_cnt integerValue];
         for (TrafficJam * jam in sum.traffic_jams) {
             if ([jam.near_traffic_light boolValue]) {
                 traffic_light_waiting += [jam.traffic_jam_during doubleValue];
@@ -144,8 +146,10 @@
     }
     daySum.total_dist = @(total_dist);
     daySum.total_during = @(total_during);
+    daySum.avg_speed = total_during > 0 ? @(total_dist/total_during) : @0;
     daySum.jam_dist = @(jam_dist);
     daySum.jam_during = @(jam_during);
+    daySum.traffic_heavy_jam_cnt = @(traffic_heavy_jam_cnt);
     daySum.traffic_light_jam_cnt = @(traffic_light_jam_cnt);
     daySum.traffic_light_waiting = @(traffic_light_waiting);
     daySum.max_speed = @(max_speed);
@@ -165,24 +169,67 @@
     CGFloat total_during = 0;
     CGFloat jam_dist = 0;
     CGFloat jam_during = 0;
-    CGFloat traffic_light_jam_cnt = 0;
+    NSInteger heavy_jam_cnt = 0;
+    NSInteger traffic_light_jam_cnt = 0;
     CGFloat traffic_light_waiting = 0;
     CGFloat max_speed = 0;
     NSInteger trip_cnt = 0;
-    TripSummary *trip_most_dist = nil;
-    TripSummary *trip_most_during = nil;
-    TripSummary *trip_most_jam_during = nil;
     NSArray * tripSums = [weekSum.all_days allObjects];
     for (DaySummary * sum in tripSums) {
-        if (![sum.is_analyzed boolValue]) {
+        if (![sum.is_analyzed boolValue] || 0 == [sum.traffic_light_jam_cnt integerValue]) {
             [self analyzeDaySum:sum];
         }
         total_dist += [sum.total_dist floatValue];
         total_during += [sum.total_during floatValue];
         jam_dist += [sum.jam_dist floatValue];
         jam_during += [sum.jam_during floatValue];
-        traffic_light_jam_cnt += [sum.traffic_light_jam_cnt floatValue];
+        traffic_light_jam_cnt += [sum.traffic_light_jam_cnt integerValue];
         traffic_light_waiting += [sum.traffic_light_waiting floatValue];
+        max_speed = MAX(max_speed, [sum.max_speed floatValue]);
+        trip_cnt += [sum.all_trips count];
+        heavy_jam_cnt += [sum.traffic_heavy_jam_cnt integerValue];
+    }
+    weekSum.total_dist = @(total_dist);
+    weekSum.total_during = @(total_during);
+    weekSum.jam_dist = @(jam_dist);
+    weekSum.jam_during = @(jam_during);
+    weekSum.traffic_heavy_jam_cnt = @(heavy_jam_cnt);
+    weekSum.traffic_light_jam_cnt = @(traffic_light_jam_cnt);
+    weekSum.traffic_light_waiting = @(traffic_light_waiting);
+    weekSum.max_speed = @(max_speed);
+    weekSum.trip_cnt = @(trip_cnt);
+    weekSum.is_analyzed = @(YES);
+    
+    [manager commit];
+}
+
+- (void)analyzeMonthSum:(MonthSummary*)monthSum
+{
+    if (nil == monthSum) {
+        return;
+    }
+    TripsCoreDataManager * manager = [TripsCoreDataManager sharedManager];
+    
+    CGFloat total_dist = 0;
+    CGFloat total_during = 0;
+    CGFloat jam_dist = 0;
+    CGFloat jam_during = 0;
+    CGFloat max_speed = 0;
+    NSInteger trip_cnt = 0;
+    NSInteger heavy_jam_cnt = 0;
+    TripSummary *trip_most_dist = nil;
+    TripSummary *trip_most_during = nil;
+    TripSummary *trip_most_jam_during = nil;
+    NSArray * tripSums = [monthSum.all_days allObjects];
+    for (DaySummary * sum in tripSums) {
+        if (![sum.is_analyzed boolValue] || 0 == [sum.traffic_light_jam_cnt integerValue]) {
+            [self analyzeDaySum:sum];
+        }
+        total_dist += [sum.total_dist floatValue];
+        total_during += [sum.total_during floatValue];
+        jam_dist += [sum.jam_dist floatValue];
+        jam_during += [sum.jam_during floatValue];
+        heavy_jam_cnt += [sum.traffic_heavy_jam_cnt integerValue];
         max_speed = MAX(max_speed, [sum.max_speed floatValue]);
         trip_cnt += [sum.all_trips count];
         for (TripSummary * realTrip in sum.all_trips) {
@@ -197,18 +244,17 @@
             }
         }
     }
-    weekSum.total_dist = @(total_dist);
-    weekSum.total_during = @(total_during);
-    weekSum.jam_dist = @(jam_dist);
-    weekSum.jam_during = @(jam_during);
-    weekSum.traffic_light_jam_cnt = @(traffic_light_jam_cnt);
-    weekSum.traffic_light_waiting = @(traffic_light_waiting);
-    weekSum.max_speed = @(max_speed);
-    weekSum.trip_cnt = @(trip_cnt);
-    weekSum.trip_most_dist = trip_most_dist;
-    weekSum.trip_most_during = trip_most_during;
-    weekSum.trip_most_jam_during = trip_most_jam_during;
-    weekSum.is_analyzed = @(YES);
+    monthSum.total_dist = @(total_dist);
+    monthSum.total_during = @(total_during);
+    monthSum.jam_dist = @(jam_dist);
+    monthSum.jam_during = @(jam_during);
+    monthSum.traffic_heavy_jam_cnt = @(heavy_jam_cnt);
+    monthSum.max_speed = @(max_speed);
+    monthSum.trip_cnt = @(trip_cnt);
+    monthSum.trip_most_dist = trip_most_dist;
+    monthSum.trip_most_during = trip_most_during;
+    monthSum.trip_most_jam_during = trip_most_jam_during;
+    monthSum.is_analyzed = @(YES);
     
     [manager commit];
 }
@@ -288,6 +334,7 @@
     
     NSArray * oldJams = [tripSum.traffic_jams allObjects];
     NSArray * jamArr = [oneTripAna getTrafficJams];
+    __block NSInteger heavy_jam_cnt = 0;
     [jamArr enumerateObjectsUsingBlock:^(TSPair * pair, NSUInteger idx, BOOL *stop) {
         TrafficJam * jam = nil;
         if (idx < oldJams.count) {
@@ -309,12 +356,16 @@
         if ([jam.traffic_jam_during doubleValue] > 0) {
             jam.traffic_avg_speed = @([jam.traffic_jam_dist doubleValue]/[jam.traffic_jam_during doubleValue]);
         }
+        
+        if ([jam.traffic_jam_during floatValue] > cHeavyTrafficJamThreshold) {
+            heavy_jam_cnt++;
+        }
     }];
     for (NSInteger i = jamArr.count; i < oldJams.count; i++) {
         TrafficJam * removeJam = oldJams[i];
         [tripSum removeTraffic_jamsObject:removeJam];
     }
-    tripSum.traffic_jam_cnt = @(jamArr.count);
+    tripSum.traffic_heavy_jam_cnt = @(heavy_jam_cnt);
     
     // update analyze environment info
     EnvInfo * env_info = [manager environmentForTrip:tripSum];
@@ -418,8 +469,13 @@
         if (lastSum && ![lastSum.start_date isEqualToDateIgnoringTime:sum.start_date]) {
             DaySummary * lastDaysum = lastSum.day_summary;
             [self analyzeDaySum:lastDaysum];
-            if (lastDaysum && ![lastSum.start_date isSameWeekAsDate:sum.start_date]) {
-                [self analyzeWeekSum:lastDaysum.week_summary];
+            if (lastDaysum) {
+                if (![lastSum.start_date isSameWeekAsDate:sum.start_date]) {
+                    [self analyzeWeekSum:lastDaysum.week_summary];
+                }
+                if (![lastSum.start_date isSameMonthAsDate:sum.start_date]) {
+                    [self analyzeMonthSum:lastDaysum.month_summary];
+                }
             }
         }
         [self analyzeTripForSum:sum withAnalyzer:nil];
@@ -431,6 +487,7 @@
     if (lastSum) {
         [self analyzeDaySum:lastSum.day_summary];
         [self analyzeWeekSum:lastSum.day_summary.week_summary];
+        [self analyzeMonthSum:lastSum.day_summary.month_summary];
     }
     if (update) [[GToolUtil sharedInstance] showPieHUDWithText:@"升级中..." andProgress:95];
     return returnTrips;

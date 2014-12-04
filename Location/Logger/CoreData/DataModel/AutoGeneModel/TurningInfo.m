@@ -2,7 +2,7 @@
 //  TurningInfo.m
 //  TripMan
 //
-//  Created by taq on 12/2/14.
+//  Created by taq on 12/4/14.
 //  Copyright (c) 2014 Location. All rights reserved.
 //
 

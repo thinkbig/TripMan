@@ -29,6 +29,7 @@
 @property (nonatomic, strong) DaySummary *        daySum;
 @property (nonatomic, strong) WeekSummary *       weekSum;
 
-- (void) update;
+- (void) updateDay;
+- (void) updateWeek;
 
 @end

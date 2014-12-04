@@ -8,7 +8,6 @@
 
 #import "CarHomeViewController.h"
 #import "NSDate+Utilities.h"
-#import "GPSTrafficAnalyzer.h"
 
 @interface CarHomeViewController ()
 
@@ -85,10 +84,11 @@
     [mostTripDest addAttribute:NSForegroundColorAttributeName value:UIColorFromRGB(0x82d13a) range:NSMakeRange(6, mostDest.length-6)];
     self.suggestDistFrom.attributedText = mostTripDest;
     
-    // most trip info
+    // set during
     self.duringLabel.text = [NSString stringWithFormat:@"%.f", [_mostTrip.total_during floatValue]/60.0];
-    NSArray * heavyTraffic = [GPSTrafficAnalyzer trafficJamsInTrip:_mostTrip withThreshold:cHeavyTrafficJamThreshold];
-    self.jamLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)heavyTraffic.count];
+    
+    // most trip info
+    self.jamLabel.text = [NSString stringWithFormat:@"%@", _mostTrip.traffic_heavy_jam_cnt];
     
     NSDateFormatter * formatter = [[BussinessDataProvider sharedInstance] dateFormatterForFormatStr:@"HH:mm"];
     self.suggestLabel.text = _mostTrip.start_date ? [formatter stringFromDate:_mostTrip.start_date] : @"00:00";

@@ -17,6 +17,7 @@
 #import "RegionGroup.h"
 #import "DaySummary.h"
 #import "WeekSummary.h"
+#import "MonthSummary.h"
 #import "ParkingRegionDetail.h"
 
 @interface TripsCoreDataManager : CoreDataManager
@@ -42,7 +43,8 @@
 - (NSArray*) tripsWithStartRegion:(ParkingRegion*)region tripLimit:(NSInteger)limit;
 
 - (DaySummary*) daySummaryByDay:(NSDate*)dateDay;
-- (WeekSummary*) weekSummaryByDay:(NSDate*)dateWeek;
+- (WeekSummary*) weekSummaryByDay:(NSDate*)dateDay;
+- (MonthSummary*) monthSummaryByDay:(NSDate*)dateDay;
 
 // analyze info generate api
 
@@ -51,6 +53,7 @@
 
 - (DaySummary*) daySumForTrip:(TripSummary*)tripSum;
 - (WeekSummary*) weekSumForDay:(DaySummary*)daySum;
+- (MonthSummary*) monthSumForDay:(DaySummary*)daySum;
 
 - (DrivingInfo*) drivingInfoForTrip:(TripSummary*)tripSum;
 - (EnvInfo*) environmentForTrip:(TripSummary*)tripSum;

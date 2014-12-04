@@ -97,7 +97,7 @@
         }
         [realCell setJamDuringStr:[NSString stringWithFormat:@"%.f", [_tripSum.traffic_jam_during floatValue]/60.0]];
         [realCell setJamAvgSpeedStr:[NSString stringWithFormat:@"%.1f", [_tripSum.traffic_avg_speed floatValue]*3.6]];
-        [realCell setJamCountStr:[NSString stringWithFormat:@"%ld", (long)[_tripSum.traffic_jam_cnt integerValue]]];
+        [realCell setJamCountStr:[NSString stringWithFormat:@"%ld", (long)[_tripSum.traffic_heavy_jam_cnt integerValue]]];
         cell = realCell;
     }
     

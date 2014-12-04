@@ -8,6 +8,7 @@
 
 #import "TripTodayView.h"
 #import "TripSummary.h"
+#import "NSAttributedString+Style.h"
 
 @implementation TripTodayView
 
@@ -24,27 +25,6 @@
     self.tripCount.layer.cornerRadius = CGRectGetHeight(self.tripCount.bounds)/2.0f;
 }
 
-- (void)setWeekSum:(WeekSummary *)weekSum
-{
-    _weekSum = weekSum;
-    _daySum = nil;
-}
-
-- (void)setDaySum:(DaySummary *)daySum
-{
-    _daySum = daySum;
-    _weekSum = nil;
-}
-
-- (void) update
-{
-    if (_daySum) {
-        [self updateDay];
-    } else if (_weekSum) {
-        [self updateWeek];
-    }
-}
-
 - (void) updateWeek
 {
     if (![self.weekSum.is_analyzed boolValue] || [self.weekSum.traffic_light_waiting integerValue] == 0) {
@@ -59,10 +39,16 @@
     CGFloat trafficLightWaiting = [self.weekSum.traffic_light_waiting floatValue];
     NSUInteger tripCnt = [self.weekSum.trip_cnt integerValue];
     
-    self.todayDist.text = [NSString stringWithFormat:@"%.1fkm", totalDist/1000.0];
+    NSString * distStr = [NSString stringWithFormat:@"%.f", totalDist/1000.0];
+    self.todayDist.attributedText = [NSAttributedString stringWithNumber:distStr font:[UIFont boldSystemFontOfSize:50] color:UIColorFromRGB(0x82d13a) andUnit:@"km" font:[UIFont boldSystemFontOfSize:12] color:UIColorFromRGB(0x82d13a)];
+    
+    NSString * duringStr = [NSString stringWithFormat:@"%.f", totalDuring/60.0];
+    self.todayDuring.attributedText = [NSAttributedString stringWithNumber:duringStr font:[UIFont boldSystemFontOfSize:24] color:[UIColor whiteColor] andUnit:@"min" font:[UIFont boldSystemFontOfSize:12] color:UIColorFromRGB(0xbbbbbb)];
+    
+    NSString * maxSpeedStr = [NSString stringWithFormat:@"%.1f", maxSpeed*3.6];
+    self.todayMaxSpeed.attributedText = [NSAttributedString stringWithNumber:maxSpeedStr font:[UIFont boldSystemFontOfSize:24] color:[UIColor whiteColor] andUnit:@"km/h" font:[UIFont boldSystemFontOfSize:12] color:UIColorFromRGB(0xbbbbbb)];
+    
     self.tripCount.text = [NSString stringWithFormat:@"%lu", (unsigned long)tripCnt];
-    self.todayDuring.text = [NSString stringWithFormat:@"%.fmin", totalDuring/60.0];
-    self.todayMaxSpeed.text = [NSString stringWithFormat:@"%.1fkm/h", maxSpeed*3.6];
     self.jamDist.text = [NSString stringWithFormat:@"%.1fkm", jamDist/1000.0];
     self.jamDuring.text = [NSString stringWithFormat:@"%.fmin", jamDuring/60.0];
     self.trafficLightCnt.text = [NSString stringWithFormat:@"%lu处", (unsigned long)jamInTrafficLight];
@@ -82,10 +68,16 @@
     NSUInteger jamInTrafficLight = [self.daySum.traffic_light_jam_cnt integerValue];
     CGFloat trafficLightWaiting = [self.daySum.traffic_light_waiting floatValue];
     
-    self.todayDist.text = [NSString stringWithFormat:@"%.1fkm", totalDist/1000.0];
+    NSString * distStr = [NSString stringWithFormat:@"%.f", totalDist/1000.0];
+    self.todayDist.attributedText = [NSAttributedString stringWithNumber:distStr font:[UIFont boldSystemFontOfSize:50] color:UIColorFromRGB(0x82d13a) andUnit:@"km" font:[UIFont boldSystemFontOfSize:12] color:UIColorFromRGB(0x82d13a)];
+    
+    NSString * duringStr = [NSString stringWithFormat:@"%.f", totalDuring/60.0];
+    self.todayDuring.attributedText = [NSAttributedString stringWithNumber:duringStr font:[UIFont boldSystemFontOfSize:24] color:[UIColor whiteColor] andUnit:@"min" font:[UIFont boldSystemFontOfSize:12] color:UIColorFromRGB(0xbbbbbb)];
+    
+    NSString * maxSpeedStr = [NSString stringWithFormat:@"%.1f", maxSpeed*3.6];
+    self.todayMaxSpeed.attributedText = [NSAttributedString stringWithNumber:maxSpeedStr font:[UIFont boldSystemFontOfSize:24] color:[UIColor whiteColor] andUnit:@"km/h" font:[UIFont boldSystemFontOfSize:12] color:UIColorFromRGB(0xbbbbbb)];
+    
     self.tripCount.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.daySum.all_trips.count];
-    self.todayDuring.text = [NSString stringWithFormat:@"%.fmin", totalDuring/60.0];
-    self.todayMaxSpeed.text = [NSString stringWithFormat:@"%.1fkm/h", maxSpeed*3.6];
     self.jamDist.text = [NSString stringWithFormat:@"%.1fkm", jamDist/1000.0];
     self.jamDuring.text = [NSString stringWithFormat:@"%.fmin", jamDuring/60.0];
     self.trafficLightCnt.text = [NSString stringWithFormat:@"%lu处", (unsigned long)jamInTrafficLight];

@@ -11,6 +11,7 @@
 #import "GPSFMDBLogger.h"
 #import "TripSummary.h"
 #import "WeekSummary.h"
+#import "MonthSummary.h"
 
 @interface GPSAnalyzerOffTime : NSObject
 
@@ -26,5 +27,6 @@
 
 - (void)analyzeDaySum:(DaySummary*)daySum;
 - (void)analyzeWeekSum:(WeekSummary*)weekSum;
+- (void)analyzeMonthSum:(MonthSummary*)monthSum;
 
 @end
