@@ -86,25 +86,70 @@
 
 @implementation TicketJamDetailCell
 
-- (void) setJamDistStr:(NSString*)dist
+- (void) setLabel11Str:(NSString*)str withValue:(NSString*)val andUnit:(NSString*)unit
 {
-    self.jamDist.attributedText = [NSAttributedString stringWithNumber:dist font:[UIFont boldSystemFontOfSize:30] color:UIColorFromRGB(0x82d13a) andUnit:@"km" font:[UIFont boldSystemFontOfSize:12] color:UIColorFromRGB(0x82d13a)];
+    self.label11.text = str;
+    self.labelVal11.attributedText = [NSAttributedString stringWithNumber:val font:[UIFont boldSystemFontOfSize:30] color:UIColorFromRGB(0x82d13a) andUnit:unit font:[UIFont boldSystemFontOfSize:12] color:UIColorFromRGB(0x82d13a)];
 }
 
-- (void) setJamAvgSpeedStr:(NSString*)speed
+- (void) setLabel21Str:(NSString*)str withValue:(NSString*)val andUnit:(NSString*)unit
 {
-    self.jamAvgSpeed.attributedText = [NSAttributedString stringWithNumber:speed font:[UIFont boldSystemFontOfSize:18] color:[UIColor whiteColor] andUnit:@"km/h" font:[UIFont boldSystemFontOfSize:11] color:UIColorFromRGB(0xbbbbbb)];
+    self.label21.text = str;
+    self.labelVal21.attributedText = [NSAttributedString stringWithNumber:val font:[UIFont boldSystemFontOfSize:18] color:[UIColor whiteColor] andUnit:unit font:[UIFont boldSystemFontOfSize:11] color:UIColorFromRGB(0xbbbbbb)];
 }
 
-- (void) setJamDuringStr:(NSString*)during
+- (void) setLabel22Str:(NSString*)str withValue:(NSString*)val andUnit:(NSString*)unit
 {
-    self.jamDuring.attributedText = [NSAttributedString stringWithNumber:during font:[UIFont boldSystemFontOfSize:18] color:[UIColor whiteColor] andUnit:@"min" font:[UIFont boldSystemFontOfSize:11] color:UIColorFromRGB(0xbbbbbb)];
+    self.label22.text = str;
+    self.labelVal22.attributedText = [NSAttributedString stringWithNumber:val font:[UIFont boldSystemFontOfSize:18] color:[UIColor whiteColor] andUnit:unit font:[UIFont boldSystemFontOfSize:11] color:UIColorFromRGB(0xbbbbbb)];
 }
 
-- (void) setJamCountStr:(NSString*)count
+- (void) setLabel23Str:(NSString*)str withValue:(NSString*)val andUnit:(NSString*)unit
 {
-    self.jamCount.attributedText = [NSAttributedString stringWithNumber:count font:[UIFont boldSystemFontOfSize:18] color:[UIColor whiteColor] andUnit:@"次" font:[UIFont boldSystemFontOfSize:11] color:UIColorFromRGB(0xbbbbbb)];
+    self.label23.text = str;
+    self.labelVal23.attributedText = [NSAttributedString stringWithNumber:val font:[UIFont boldSystemFontOfSize:18] color:[UIColor whiteColor] andUnit:unit font:[UIFont boldSystemFontOfSize:11] color:UIColorFromRGB(0xbbbbbb)];
 }
 
 @end
 
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+@implementation TicketDriveDetailCell
+
+- (void) setLabel11Str:(NSString*)str withValue:(NSString*)val andUnit:(NSString*)unit
+{
+    self.label11.text = str;
+    self.labelVal11.attributedText = [NSAttributedString stringWithNumber:val font:[UIFont boldSystemFontOfSize:30] color:UIColorFromRGB(0x82d13a) andUnit:unit font:[UIFont boldSystemFontOfSize:12] color:UIColorFromRGB(0x82d13a)];
+}
+
+- (void) setLabel12Str:(NSString*)str withValue:(NSString*)val andUnit:(NSString*)unit
+{
+    self.label12.text = str;
+    self.labelVal12.attributedText = [NSAttributedString stringWithNumber:val font:[UIFont boldSystemFontOfSize:18] color:[UIColor whiteColor] andUnit:unit font:[UIFont boldSystemFontOfSize:11] color:UIColorFromRGB(0xbbbbbb)];
+}
+
+- (void) setLabel13Str:(NSString*)str withValue:(NSString*)val andUnit:(NSString*)unit
+{
+    self.label13.text = str;
+    self.labelVal13.attributedText = [NSAttributedString stringWithNumber:val font:[UIFont boldSystemFontOfSize:18] color:[UIColor whiteColor] andUnit:unit font:[UIFont boldSystemFontOfSize:11] color:UIColorFromRGB(0xbbbbbb)];
+}
+
+- (void) setLabel21Str:(NSString*)str withValue:(NSString*)val andUnit:(NSString*)unit
+{
+    self.label21.text = str;
+    self.labelVal21.attributedText = [NSAttributedString stringWithNumber:val font:[UIFont boldSystemFontOfSize:30] color:UIColorFromRGB(0x82d13a) andUnit:unit font:[UIFont boldSystemFontOfSize:12] color:UIColorFromRGB(0x82d13a)];
+}
+
+- (void) setLabel22Str:(NSString*)str withValue:(NSString*)val andUnit:(NSString*)unit
+{
+    self.label22.text = str;
+    self.labelVal22.attributedText = [NSAttributedString stringWithNumber:val font:[UIFont boldSystemFontOfSize:18] color:[UIColor whiteColor] andUnit:unit font:[UIFont boldSystemFontOfSize:11] color:UIColorFromRGB(0xbbbbbb)];
+}
+
+- (void) setLabel23Str:(NSString*)str withValue:(NSString*)val andUnit:(NSString*)unit
+{
+    self.label23.text = str;
+    self.labelVal23.attributedText = [NSAttributedString stringWithNumber:val font:[UIFont boldSystemFontOfSize:18] color:[UIColor whiteColor] andUnit:unit font:[UIFont boldSystemFontOfSize:11] color:UIColorFromRGB(0xbbbbbb)];
+}
+
+@end

@@ -306,20 +306,20 @@
     self.stopTimer = nil;
     [self startLocationTracking];
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        if ([PFInstallation currentInstallation].deviceToken) {
-            DDLogWarn(@"send silent push !!!!!!");
-            PFQuery *pushQuery = [PFInstallation query];
-            [pushQuery whereKey:@"deviceToken" equalTo:[PFInstallation currentInstallation].deviceToken]; // Set channel
-    
-            // Send push notification to query
-            PFPush *push = [[PFPush alloc] init];
-            [push setQuery:pushQuery];
-            //[push setMessage:@"Push by device token"];
-            [push setData:@{@"aps":@{@"content-available":@1, @"sound":@""}}];
-            [push sendPushInBackground];
-        }
-    });
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        if ([PFInstallation currentInstallation].deviceToken) {
+//            DDLogWarn(@"send silent push !!!!!!");
+//            PFQuery *pushQuery = [PFInstallation query];
+//            [pushQuery whereKey:@"deviceToken" equalTo:[PFInstallation currentInstallation].deviceToken]; // Set channel
+//    
+//            // Send push notification to query
+//            PFPush *push = [[PFPush alloc] init];
+//            [push setQuery:pushQuery];
+//            //[push setMessage:@"Push by device token"];
+//            [push setData:@{@"aps":@{@"content-available":@1, @"sound":@""}}];
+//            [push sendPushInBackground];
+//        }
+//    });
 }
 
 - (void)locationManager:(CLLocationManager *)manager monitoringDidFailForRegion:(CLCircularRegion *)region withError:(NSError *)error

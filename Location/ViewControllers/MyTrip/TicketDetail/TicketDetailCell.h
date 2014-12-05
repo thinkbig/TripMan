@@ -32,14 +32,54 @@
 
 @interface TicketJamDetailCell : UICollectionViewCell
 
-@property (weak, nonatomic) IBOutlet UILabel *jamDist;
-@property (weak, nonatomic) IBOutlet UILabel *jamAvgSpeed;
-@property (weak, nonatomic) IBOutlet UILabel *jamDuring;
-@property (weak, nonatomic) IBOutlet UILabel *jamCount;
+@property (weak, nonatomic) IBOutlet UIImageView *cellImage;
+@property (weak, nonatomic) IBOutlet UILabel *cellTitle;
 
-- (void) setJamDistStr:(NSString*)dist;
-- (void) setJamAvgSpeedStr:(NSString*)speed;
-- (void) setJamDuringStr:(NSString*)during;
-- (void) setJamCountStr:(NSString*)count;
+@property (weak, nonatomic) IBOutlet UILabel *labelVal11;
+@property (weak, nonatomic) IBOutlet UILabel *label11;
+
+@property (weak, nonatomic) IBOutlet UILabel *labelVal21;
+@property (weak, nonatomic) IBOutlet UILabel *label21;
+@property (weak, nonatomic) IBOutlet UILabel *labelVal22;
+@property (weak, nonatomic) IBOutlet UILabel *label22;
+@property (weak, nonatomic) IBOutlet UILabel *labelVal23;
+@property (weak, nonatomic) IBOutlet UILabel *label23;
+
+- (void) setLabel11Str:(NSString*)str withValue:(NSString*)val andUnit:(NSString*)unit;
+
+- (void) setLabel21Str:(NSString*)str withValue:(NSString*)val andUnit:(NSString*)unit;
+- (void) setLabel22Str:(NSString*)str withValue:(NSString*)val andUnit:(NSString*)unit;
+- (void) setLabel23Str:(NSString*)str withValue:(NSString*)val andUnit:(NSString*)unit;
+
+@end
+
+//////////////////////////////////////////////////////////////////////////////////
+
+@interface TicketDriveDetailCell : UICollectionViewCell
+
+@property (weak, nonatomic) IBOutlet UIImageView *cellImage;
+@property (weak, nonatomic) IBOutlet UILabel *cellTitle;
+
+@property (weak, nonatomic) IBOutlet UILabel *labelVal11;
+@property (weak, nonatomic) IBOutlet UILabel *label11;
+@property (weak, nonatomic) IBOutlet UILabel *labelVal12;
+@property (weak, nonatomic) IBOutlet UILabel *label12;
+@property (weak, nonatomic) IBOutlet UILabel *labelVal13;
+@property (weak, nonatomic) IBOutlet UILabel *label13;
+
+@property (weak, nonatomic) IBOutlet UILabel *labelVal21;
+@property (weak, nonatomic) IBOutlet UILabel *label21;
+@property (weak, nonatomic) IBOutlet UILabel *labelVal22;
+@property (weak, nonatomic) IBOutlet UILabel *label22;
+@property (weak, nonatomic) IBOutlet UILabel *labelVal23;
+@property (weak, nonatomic) IBOutlet UILabel *label23;
+
+- (void) setLabel11Str:(NSString*)str withValue:(NSString*)val andUnit:(NSString*)unit;
+- (void) setLabel12Str:(NSString*)str withValue:(NSString*)val andUnit:(NSString*)unit;
+- (void) setLabel13Str:(NSString*)str withValue:(NSString*)val andUnit:(NSString*)unit;
+
+- (void) setLabel21Str:(NSString*)str withValue:(NSString*)val andUnit:(NSString*)unit;
+- (void) setLabel22Str:(NSString*)str withValue:(NSString*)val andUnit:(NSString*)unit;
+- (void) setLabel23Str:(NSString*)str withValue:(NSString*)val andUnit:(NSString*)unit;
 
 @end
