@@ -243,8 +243,10 @@ static BussinessDataProvider * _sharedProvider = nil;
         dispatch_group_enter(downloadGroup);
         [facade requestWithSuccess:^(BaiduMarkModel * model) {
             dispatch_barrier_async(concurrent_queue, ^{
-                [trafficLights addObjectsFromArray:model.trafficLight];
-                trafficLightCnt += model.trafficLight.count-1;
+                if (model.trafficLight) {
+                    [trafficLights addObjectsFromArray:model.trafficLight];
+                    trafficLightCnt += model.trafficLight.count-1;
+                }
                 dispatch_group_leave(downloadGroup);
             });
         } failure:^(NSError * err) {
@@ -264,6 +266,7 @@ static BussinessDataProvider * _sharedProvider = nil;
                     [lightLocArr addObject:[item clLocation]];
                 }
                 
+                CGFloat traffic_light_waiting = 0;
                 NSUInteger jamInTrafficLight = 0;
                 for (TrafficJam * jam in sum.traffic_jams) {
                     jam.near_traffic_light = @NO;
@@ -273,6 +276,7 @@ static BussinessDataProvider * _sharedProvider = nil;
                     for (CLLocation * lightLoc in lightLocArr) {
                         if ([jamEndLoc distanceFromLocation:lightLoc] < cTrafficLightRegionRadius) {
                             jam.near_traffic_light = @YES;
+                            traffic_light_waiting += [jam.traffic_jam_during floatValue];
                             jamInTrafficLight++;
                             break;
                         }
@@ -280,6 +284,7 @@ static BussinessDataProvider * _sharedProvider = nil;
                     jam.is_analyzed = @YES;
                 }
                 sum.traffic_light_jam_cnt = @(jamInTrafficLight);
+                sum.traffic_light_waiting = @(traffic_light_waiting);
                 
                 [[TripsCoreDataManager sharedManager] commit];
             }

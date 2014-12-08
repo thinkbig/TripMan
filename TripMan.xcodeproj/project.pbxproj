@@ -99,6 +99,7 @@
 		A385C54A19F68FA000A0F7F6 /* GPSAcceleratorAnalyzer.m in Sources */ = {isa = PBXBuildFile; fileRef = A385C54919F68FA000A0F7F6 /* GPSAcceleratorAnalyzer.m */; };
 		A399C9FB1A12E0CA00665917 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A399C9FA1A12E0CA00665917 /* Main.storyboard */; };
 		A399CA051A12F5EE00665917 /* TripManUnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A399CA041A12F5EE00665917 /* TripManUnitTests.m */; };
+		A3A20CAD1A31F35B00CD1B71 /* TripSummary.m in Sources */ = {isa = PBXBuildFile; fileRef = A3A20CAC1A31F35B00CD1B71 /* TripSummary.m */; };
 		A3BD72AC1A14F2B00007ECA1 /* BaiduRoadMarkFacade.m in Sources */ = {isa = PBXBuildFile; fileRef = A3BD72AB1A14F2B00007ECA1 /* BaiduRoadMarkFacade.m */; };
 		A3BD72AF1A15A9950007ECA1 /* BaiduMarkModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A3BD72AE1A15A9950007ECA1 /* BaiduMarkModel.m */; };
 		A3BD72B21A15BC2E0007ECA1 /* BussinessDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = A3BD72B11A15BC2E0007ECA1 /* BussinessDataProvider.m */; };
@@ -127,7 +128,6 @@
 		A3E92F1C1A3045C20023328E /* DaySummary.m in Sources */ = {isa = PBXBuildFile; fileRef = A3E92F1B1A3045C20023328E /* DaySummary.m */; };
 		A3E92F1F1A3045C20023328E /* TurningInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A3E92F1E1A3045C20023328E /* TurningInfo.m */; };
 		A3E92F221A3045C20023328E /* RegionGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = A3E92F211A3045C20023328E /* RegionGroup.m */; };
-		A3E92F251A3045C20023328E /* TripSummary.m in Sources */ = {isa = PBXBuildFile; fileRef = A3E92F241A3045C20023328E /* TripSummary.m */; };
 		A3E92F281A3045C20023328E /* WeekSummary.m in Sources */ = {isa = PBXBuildFile; fileRef = A3E92F271A3045C20023328E /* WeekSummary.m */; };
 		A3E92F2B1A3045C20023328E /* MonthSummary.m in Sources */ = {isa = PBXBuildFile; fileRef = A3E92F2A1A3045C20023328E /* MonthSummary.m */; };
 		A3E92F2E1A3045C20023328E /* EnvInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A3E92F2D1A3045C20023328E /* EnvInfo.m */; };
@@ -377,6 +377,8 @@
 		A399CA001A12F5EE00665917 /* TripManUnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TripManUnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A399CA031A12F5EE00665917 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A399CA041A12F5EE00665917 /* TripManUnitTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TripManUnitTests.m; sourceTree = "<group>"; };
+		A3A20CAB1A31F35B00CD1B71 /* TripSummary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TripSummary.h; sourceTree = "<group>"; };
+		A3A20CAC1A31F35B00CD1B71 /* TripSummary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripSummary.m; sourceTree = "<group>"; };
 		A3BD72AA1A14F2B00007ECA1 /* BaiduRoadMarkFacade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaiduRoadMarkFacade.h; sourceTree = "<group>"; };
 		A3BD72AB1A14F2B00007ECA1 /* BaiduRoadMarkFacade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaiduRoadMarkFacade.m; sourceTree = "<group>"; };
 		A3BD72AD1A15A9950007ECA1 /* BaiduMarkModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaiduMarkModel.h; sourceTree = "<group>"; };
@@ -431,8 +433,6 @@
 		A3E92F1E1A3045C20023328E /* TurningInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TurningInfo.m; sourceTree = "<group>"; };
 		A3E92F201A3045C20023328E /* RegionGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegionGroup.h; sourceTree = "<group>"; };
 		A3E92F211A3045C20023328E /* RegionGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegionGroup.m; sourceTree = "<group>"; };
-		A3E92F231A3045C20023328E /* TripSummary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TripSummary.h; sourceTree = "<group>"; };
-		A3E92F241A3045C20023328E /* TripSummary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripSummary.m; sourceTree = "<group>"; };
 		A3E92F261A3045C20023328E /* WeekSummary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeekSummary.h; sourceTree = "<group>"; };
 		A3E92F271A3045C20023328E /* WeekSummary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeekSummary.m; sourceTree = "<group>"; };
 		A3E92F291A3045C20023328E /* MonthSummary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MonthSummary.h; sourceTree = "<group>"; };
@@ -617,8 +617,8 @@
 				A3E92F2A1A3045C20023328E /* MonthSummary.m */,
 				A3E92F261A3045C20023328E /* WeekSummary.h */,
 				A3E92F271A3045C20023328E /* WeekSummary.m */,
-				A3E92F231A3045C20023328E /* TripSummary.h */,
-				A3E92F241A3045C20023328E /* TripSummary.m */,
+				A3A20CAB1A31F35B00CD1B71 /* TripSummary.h */,
+				A3A20CAC1A31F35B00CD1B71 /* TripSummary.m */,
 				A3E92F201A3045C20023328E /* RegionGroup.h */,
 				A3E92F211A3045C20023328E /* RegionGroup.m */,
 				A3E92F1D1A3045C20023328E /* TurningInfo.h */,
@@ -1542,6 +1542,7 @@
 				A3E92F1C1A3045C20023328E /* DaySummary.m in Sources */,
 				A32CF4001A24C380008EA051 /* XYPieChart.m in Sources */,
 				A385C54719F6423300A0F7F6 /* GPSTurningAnalyzer.m in Sources */,
+				A3A20CAD1A31F35B00CD1B71 /* TripSummary.m in Sources */,
 				A34F01371A051EBD00F58C17 /* AFNetworkActivityLogger.m in Sources */,
 				A34F01151A03D78900F58C17 /* TripDetailViewController.m in Sources */,
 				A3D0B4BB1A2C64A80030B19E /* MPGraphView.m in Sources */,
@@ -1599,7 +1600,6 @@
 				A3E92F1F1A3045C20023328E /* TurningInfo.m in Sources */,
 				A3CD35FD19C6DCC00039F6E1 /* GPSFMDBLogger.m in Sources */,
 				A3D0B4BE1A2C64A80030B19E /* UIView+Frame.m in Sources */,
-				A3E92F251A3045C20023328E /* TripSummary.m in Sources */,
 				A3FDD16B1A028037007B3C65 /* IconTitleBtn.m in Sources */,
 				A34F01191A04A56F00F58C17 /* CommonFacade.m in Sources */,
 				A31FCA6319D94B9600A3BB4C /* GPSOffTimeFilter.m in Sources */,

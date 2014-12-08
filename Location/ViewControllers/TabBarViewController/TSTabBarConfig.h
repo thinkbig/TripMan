@@ -12,7 +12,7 @@
 #define itemSize                        44
 #define badgeSize                       (itemSize*0.3)
 #define tabBarBgImage                   @"somebgImage.png"
-#define tabBarHightLightImage           @"hightLightImage.png"
+#define tabBarHightLightImage           @"tab01_active"
 
 // Default height of the tab bar
 static const int kDefaultTabBarHeight = 48.0f;

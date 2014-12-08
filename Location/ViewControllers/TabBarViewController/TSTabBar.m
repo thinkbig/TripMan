@@ -26,7 +26,7 @@
         self.backgroundColor = [UIColor whiteColor];
         
         self.devideLineImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, 1)];
-        [self.devideLineImageView setBackgroundColor:[UIColor lightGrayColor]];
+        [self.devideLineImageView setBackgroundColor:[UIColor darkGrayColor]];
         [self addSubview:self.devideLineImageView];
         
         self.backgroundImageView = [[UIImageView alloc] initWithImage:[self defaultBackgroundImage]];
@@ -38,7 +38,7 @@
         
         self.selectedImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 1, frame.size.height, frame.size.height)];
         self.selectedImageView.image = [self defaultSelectionIndicatorImage];
-        self.selectedImageView.contentMode = UIViewContentModeBottom;
+        self.selectedImageView.contentMode = UIViewContentModeScaleToFill;
         self.selectedImageView.backgroundColor = [UIColor clearColor];
         self.selectedImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         [self addSubview:self.selectedImageView];

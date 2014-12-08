@@ -14,6 +14,9 @@
 #import <Crashlytics/Crashlytics.h>
 #import "NSString+MD5.h"
 
+static NSString * rebuildKey = @"kLocationForceRebuildKey";
+static NSString * rebuildVal = @"value_0000000000005"; // make sure it is different if this version should rebuild db
+
 @implementation AppDelegate
 
 - (NSURL *)applicationDocumentsDirectory
@@ -51,17 +54,12 @@
     }
     
     // check if need rebuild db
-    static NSString * rebuildKey = @"kLocationForceRebuildKey";
-    NSString * rebuildVal = @"value_000000000007"; // make sure it is different if this version should rebuild db
     NSString * oldVa = [[NSUserDefaults standardUserDefaults] objectForKey:rebuildKey];
     if (nil == oldVa || ![rebuildVal isEqualToString:oldVa])
     {
         IS_UPDATING = YES;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateComplete) name:kNotifyUpgradeComplete object:nil];
-        
-        [[NSUserDefaults standardUserDefaults] setObject:rebuildVal forKey:rebuildKey];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        
+
         // real rebuild db
         [[TripsCoreDataManager sharedManager] dropDb];
         [[BussinessDataProvider sharedInstance] reCreateCoreDataDb];
@@ -77,6 +75,9 @@
 - (void) updateComplete
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
+    [[NSUserDefaults standardUserDefaults] setObject:rebuildVal forKey:rebuildKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     
     IS_UPDATING = NO;
     

@@ -137,11 +137,7 @@
         jam_during += [sum.traffic_jam_during floatValue];
         traffic_heavy_jam_cnt += [sum.traffic_heavy_jam_cnt integerValue];
         traffic_light_jam_cnt += [sum.traffic_light_jam_cnt integerValue];
-        for (TrafficJam * jam in sum.traffic_jams) {
-            if ([jam.near_traffic_light boolValue]) {
-                traffic_light_waiting += [jam.traffic_jam_during doubleValue];
-            }
-        }
+        traffic_light_waiting += [sum.traffic_light_waiting floatValue];
         max_speed = MAX(max_speed, [sum.max_speed floatValue]);
     }
     daySum.total_dist = @(total_dist);
@@ -280,7 +276,7 @@
         // check the modified start point is valid
         GPSLogItem * logItem = logArr[0];
         CLLocationDistance distance = [stLogItem distanceFrom:logItem];
-        if (distance < cStartLocErrorDist) {
+        if (distance < cStartLocErrorDist*2.5) {
             // the modified start point is valid, add to array
             [rawData addObject:stLogItem];
             // extimate the start time
@@ -522,7 +518,7 @@
     }
     
     if (nil == stRegion) {
-        stRegion = [[GPSLogger sharedLogger].dbLogger selectLatestEventBefore:sum.start_date ofType:eGPSEventExitRegion];
+        stRegion = [[GPSLogger sharedLogger].dbLogger selectLatestEventBefore:sum.start_date ofType:eGPSEventMonitorRegion];
     }
     if (stRegion) {
         return [[GPSLogItem alloc] initWithEventItem:stRegion];

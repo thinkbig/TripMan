@@ -2,7 +2,7 @@
 //  TripSummary.m
 //  TripMan
 //
-//  Created by taq on 12/4/14.
+//  Created by taq on 12/5/14.
 //  Copyright (c) 2014 Location. All rights reserved.
 //
 
@@ -33,6 +33,7 @@
 @dynamic traffic_jam_during;
 @dynamic traffic_light_jam_cnt;
 @dynamic traffic_light_tol_cnt;
+@dynamic traffic_light_waiting;
 @dynamic day_summary;
 @dynamic driving_info;
 @dynamic environment;

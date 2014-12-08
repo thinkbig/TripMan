@@ -13,7 +13,6 @@
 
 @interface MapDisplayViewController ()
 
-@property (nonatomic) BOOL                      fullMap;
 @property (nonatomic, strong) NSArray *         gpsLogs;
 @property (nonatomic, strong) NSArray *         monitorRegions;
 
@@ -37,8 +36,7 @@
     
     [self updateTripInfo];
     
-    self.fullMap = YES;
-    [self switchMap:nil];
+    [self updateRouteView:[GPSOffTimeFilter smoothGPSData:_gpsLogs iteratorCnt:3]];
 }
 
 - (void)updateTripInfo
@@ -136,24 +134,6 @@
                 maxLon = [item.longitude doubleValue];
             if([item.longitude doubleValue] < minLon)
                 minLon = [item.longitude doubleValue];
-            
-            if (!self.fullMap) {
-                pointsToUse[realCnt++] = marsCoords;
-                if (i%2) {
-                    MKPolyline *lineOne = [MKPolyline polylineWithCoordinates:pointsToUse count:realCnt];
-                    lineOne.title = @"allLine";
-                    [self.mapView addOverlay:lineOne];
-                    realCnt = 0;
-                    pointsToUse[realCnt++] = marsCoords;
-                } else {
-                    MKPolyline *lineOne = [MKPolyline polylineWithCoordinates:pointsToUse count:realCnt];
-                    lineOne.title = @"jamLine";
-                    [self.mapView addOverlay:lineOne];
-                    realCnt = 0;
-                    pointsToUse[realCnt++] = marsCoords;
-                }
-                continue;
-            }
             
             // travel route and traffic jam route
             pointsToUse[realCnt++] = marsCoords;
@@ -321,17 +301,6 @@
 
 - (IBAction)switchMap:(UIBarButtonItem*)sender
 {
-    if (self.fullMap) {
-        [self updateRouteView:[GPSOffTimeFilter smoothGPSData:_gpsLogs iteratorCnt:3]];
-        sender.title = @"Simple";
-    } else {
-        GPSOffTimeFilter * filter = [GPSOffTimeFilter new];
-        [filter calGPSDataForTurning:_gpsLogs smoothFirst:YES];
-        NSArray * pts = [filter featurePoints];
-        [self updateRouteView:pts];
-        sender.title = @"Full";
-    }
-    self.fullMap = !_fullMap;
 }
 
 - (IBAction)close:(id)sender {

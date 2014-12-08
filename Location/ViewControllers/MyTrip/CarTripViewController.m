@@ -10,7 +10,6 @@
 #import "TripTicketView.h"
 #import "TripTodayView.h"
 #import "TripMonthView.h"
-#import "MapDisplayViewController.h"
 #import "NSDate+Utilities.h"
 #import "GPSTurningAnalyzer.h"
 #import "DVSwitch.h"
@@ -563,13 +562,11 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
 - (void)carousel:(iCarousel *)carousel didSelectItemAtIndex:(NSInteger)index
 {
     TicketDetailViewController * detailVC = [self.storyboard instantiateViewControllerWithIdentifier:@"TicketDetailId"];
-    NSArray * tripsToday = [self.sumToday.all_trips allObjects];
+    NSArray * tripsToday = [[self.sumToday.all_trips allObjects] sortedArrayUsingComparator:^NSComparisonResult(TripSummary * obj1, TripSummary * obj2) {
+        return [obj1.start_date compare:obj2.start_date];
+    }];
     detailVC.tripSum = tripsToday[index];
     [self.navigationController pushViewController:detailVC animated:YES];
-    
-//    MapDisplayViewController * mapVC = [[UIStoryboard storyboardWithName:@"Debug" bundle:nil] instantiateViewControllerWithIdentifier:@"MapDisplayView"];
-//    mapVC.tripSum = self.tripsToday[index];
-//    [self presentViewController:mapVC animated:YES completion:nil];
 }
 
 

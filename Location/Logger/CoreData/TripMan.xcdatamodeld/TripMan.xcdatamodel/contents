@@ -137,6 +137,7 @@
         <attribute name="traffic_jam_during" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="traffic_light_jam_cnt" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="traffic_light_tol_cnt" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="traffic_light_waiting" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <relationship name="day_summary" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="DaySummary" inverseName="all_trips" inverseEntity="DaySummary" syncable="YES"/>
         <relationship name="driving_info" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="DrivingInfo" inverseName="trip_owner" inverseEntity="DrivingInfo" syncable="YES"/>
         <relationship name="environment" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EnvInfo" inverseName="trip_owner" inverseEntity="EnvInfo" syncable="YES"/>
@@ -198,7 +199,7 @@
         <element name="ParkingRegion" positionX="-63" positionY="-18" width="128" height="300"/>
         <element name="RegionGroup" positionX="-18" positionY="135" width="128" height="253"/>
         <element name="TrafficJam" positionX="-27" positionY="126" width="128" height="253"/>
-        <element name="TripSummary" positionX="-45" positionY="72" width="128" height="373"/>
+        <element name="TripSummary" positionX="-45" positionY="72" width="128" height="390"/>
         <element name="TurningInfo" positionX="-9" positionY="108" width="128" height="238"/>
         <element name="WeatherInfo" positionX="9" positionY="144" width="128" height="223"/>
         <element name="WeekSummary" positionX="0" positionY="153" width="128" height="255"/>
