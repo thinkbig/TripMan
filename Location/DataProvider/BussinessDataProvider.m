@@ -233,12 +233,12 @@ static BussinessDataProvider * _sharedProvider = nil;
     dispatch_group_t downloadGroup = dispatch_group_create();
     
     for (int i = 0; i < ptArr.count-1; i++) {
-        GPSLogItem * first = ptArr[i];
-        GPSLogItem * second = ptArr[i+1];
+        NSDictionary * first = ptArr[i];
+        NSDictionary * second = ptArr[i+1];
         
         BaiduRoadMarkFacade * facade = [BaiduRoadMarkFacade new];
-        facade.fromCoor = [first locationCoordinate];
-        facade.toCoor = [second locationCoordinate];
+        facade.fromCoor = CLLocationCoordinate2DMake([first[@"lat"] doubleValue], [first[@"lon"] doubleValue]);
+        facade.toCoor = CLLocationCoordinate2DMake([second[@"lat"] doubleValue], [second[@"lon"] doubleValue]);
         
         dispatch_group_enter(downloadGroup);
         [facade requestWithSuccess:^(BaiduMarkModel * model) {
@@ -285,6 +285,8 @@ static BussinessDataProvider * _sharedProvider = nil;
                 }
                 sum.traffic_light_jam_cnt = @(jamInTrafficLight);
                 sum.traffic_light_waiting = @(traffic_light_waiting);
+                [[GPSLogger sharedLogger].offTimeAnalyzer analyzeDaySum:sum.day_summary];
+                [[GPSLogger sharedLogger].offTimeAnalyzer analyzeWeekSum:sum.day_summary.week_summary];
                 
                 [[TripsCoreDataManager sharedManager] commit];
             }

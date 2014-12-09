@@ -102,7 +102,7 @@
         [realCell setLabel11Str:@"缓行公里数" withValue:distStr andUnit:@"km"];
         [realCell setLabel21Str:@"缓行总耗时" withValue:[NSString stringWithFormat:@"%.f", [_tripSum.traffic_jam_during floatValue]/60.0] andUnit:@"min"];
         [realCell setLabel22Str:@"缓行速度" withValue:[NSString stringWithFormat:@"%.1f", [_tripSum.traffic_avg_speed floatValue]*3.6] andUnit:@"km/h"];
-        [realCell setLabel23Str:@"缓行次数" withValue:[NSString stringWithFormat:@"%ld", (long)[_tripSum.traffic_heavy_jam_cnt integerValue]] andUnit:@"次"];
+        [realCell setLabel23Str:@"拥堵点" withValue:[NSString stringWithFormat:@"%ld", (long)[_tripSum.traffic_heavy_jam_cnt integerValue]] andUnit:@"个"];
 
         cell = realCell;
     } else if (2 == indexPath.row) {
@@ -138,11 +138,11 @@
         
         [realCell setLabel11Str:@"加速次数" withValue:[NSString stringWithFormat:@"%ld", (long)[_tripSum.driving_info.acce_cnt integerValue]] andUnit:@"次"];
         [realCell setLabel12Str:@"深度加速次数" withValue:[NSString stringWithFormat:@"%ld", (long)[_tripSum.driving_info.hard_acce_cnt integerValue]] andUnit:@"次"];
-        [realCell setLabel13Str:@"5秒最大加度" withValue:[NSString stringWithFormat:@"%.1f", 3.6*([_tripSum.driving_info.max_acce_end_speed floatValue] - [_tripSum.driving_info.max_acce_begin_speed floatValue])] andUnit:@"km/h"];
+        [realCell setLabel13Str:@"5秒最大加速" withValue:[NSString stringWithFormat:@"%.1f", 3.6*([_tripSum.driving_info.max_acce_end_speed floatValue] - [_tripSum.driving_info.max_acce_begin_speed floatValue])] andUnit:@"km/h"];
         
         [realCell setLabel21Str:@"刹车次数" withValue:[NSString stringWithFormat:@"%ld", (long)[_tripSum.driving_info.acce_cnt integerValue]] andUnit:@"次"];
         [realCell setLabel22Str:@"深度刹车次数" withValue:[NSString stringWithFormat:@"%ld", (long)[_tripSum.driving_info.hard_breaking_cnt integerValue]] andUnit:@"次"];
-        [realCell setLabel23Str:@"5秒最大减度" withValue:[NSString stringWithFormat:@"%.1f", -3.6*([_tripSum.driving_info.max_breaking_end_speed floatValue] - [_tripSum.driving_info.max_breaking_begin_speed floatValue])] andUnit:@"km/h"];
+        [realCell setLabel23Str:@"5秒最大减速" withValue:[NSString stringWithFormat:@"%.1f", -3.6*([_tripSum.driving_info.max_breaking_end_speed floatValue] - [_tripSum.driving_info.max_breaking_begin_speed floatValue])] andUnit:@"km/h"];
         
         cell = realCell;
     }

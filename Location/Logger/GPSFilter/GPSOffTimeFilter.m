@@ -68,6 +68,15 @@
 + (NSArray*) smoothGPSData:(NSArray*)gpsData iteratorCnt:(NSInteger)repeat
 {
     if (repeat <= 0) {
+        if ([gpsData isKindOfClass:[NSMutableArray class]]) {
+            NSMutableArray * modifyArr = (NSMutableArray*)gpsData;
+            if (modifyArr.count > 0) {
+                while (modifyArr.count > 1 && [(GPSLogItem*)modifyArr[0] distanceFrom:(GPSLogItem*)modifyArr[1]] < 0.01) {
+                    [modifyArr removeObjectAtIndex:0];
+                }
+            }
+            return modifyArr;
+        }
         return gpsData;
     }
     NSMutableArray * smoothData = [NSMutableArray arrayWithCapacity:gpsData.count];

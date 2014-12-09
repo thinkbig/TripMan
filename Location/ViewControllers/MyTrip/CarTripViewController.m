@@ -258,9 +258,20 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
         // update traffic light cnt
         if (0 == [sum.traffic_light_tol_cnt integerValue])
         {
-            GPSTurningAnalyzer * turnAnalyzer = [GPSTurningAnalyzer new];
-            [[GPSLogger sharedLogger].offTimeAnalyzer analyzeTripForSum:sum withAnalyzer:@{@"TurningAnalyzer":turnAnalyzer}];
-            [[BussinessDataProvider sharedInstance] updateRoadMarkForTrips:sum ofTurningPoints:[turnAnalyzer.filter featurePoints] success:^(id cnt) {
+            NSArray * pts = nil;
+            NSData * ptsData = sum.turning_info.addi_data;
+            if (ptsData) {
+                pts = [NSKeyedUnarchiver unarchiveObjectWithData:ptsData];
+            }
+            if (nil == pts) {
+                [[GPSLogger sharedLogger].offTimeAnalyzer analyzeTripForSum:sum withAnalyzer:nil];
+                NSData * ptsData = sum.turning_info.addi_data;
+                if (ptsData) {
+                    pts = [NSKeyedUnarchiver unarchiveObjectWithData:ptsData];
+                }
+            }
+
+            [[BussinessDataProvider sharedInstance] updateRoadMarkForTrips:sum ofTurningPoints:pts success:^(id cnt) {
                 [self.carousel reloadData];
                 [self.slideShow reloadInputViews];
                 NSArray * allTripView = [self.slideShow allPages];
@@ -274,6 +285,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
                             [oneView updateWeek];
                         } else {
                             [oneView updateDay];
+                            [self.carousel reloadData];
                         }
                     }
                 }
@@ -330,39 +342,54 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
     
     if (0 == _currentIdx)
     {
-        self.sumToday = [self fetchDayTripForDate:self.currentDate];
-        self.sumYestoday = [self fetchDayTripForDate:[self.currentDate dateBySubtractingDays:1]];
-        if (![self.currentDate isToday]) {
-            self.sumTomorrow = [self fetchDayTripForDate:[self.currentDate dateByAddingDays:1]];
-        } else {
-            self.sumTomorrow = nil;
-        }
-        
-        [self reloadContentOfDay];
+        [self showLoading];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            self.sumToday = [self fetchDayTripForDate:self.currentDate];
+            self.sumYestoday = [self fetchDayTripForDate:[self.currentDate dateBySubtractingDays:1]];
+            if (![self.currentDate isToday]) {
+                self.sumTomorrow = [self fetchDayTripForDate:[self.currentDate dateByAddingDays:1]];
+            } else {
+                self.sumTomorrow = nil;
+            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self hideLoading];
+                [self reloadContentOfDay];
+            });
+        });
     }
     else if (1 == _currentIdx)
     {
-        self.sumThisWeek = [self fetchWeekTripForDate:self.currentWeekDate];
-        self.sumLastWeek = [self fetchWeekTripForDate:[self.currentWeekDate dateBySubtractingDays:7]];
-        if (![self.currentDate isThisWeek]) {
-            self.sumNextWeek = [self fetchWeekTripForDate:[self.currentWeekDate dateByAddingDays:7]];
-        } else {
-            self.sumNextWeek = nil;
-        }
-        
-        [self reloadContentOfWeek];
+        [self showLoading];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            self.sumThisWeek = [self fetchWeekTripForDate:self.currentWeekDate];
+            self.sumLastWeek = [self fetchWeekTripForDate:[self.currentWeekDate dateBySubtractingDays:7]];
+            if (![self.currentWeekDate isThisWeek]) {
+                self.sumNextWeek = [self fetchWeekTripForDate:[self.currentWeekDate dateByAddingDays:7]];
+            } else {
+                self.sumNextWeek = nil;
+            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self hideLoading];
+                [self reloadContentOfWeek];
+            });
+        });
     }
     else if (2 == _currentIdx)
     {
-        self.sumThisMonth = [self fetchMonthTripForDate:self.currentMonthDate];
-        self.sumLastMonth = [self fetchMonthTripForDate:[self.currentMonthDate dateBySubtractingMonths:1]];
-        if (![self.currentMonthDate isThisMonth]) {
-            self.sumNextMonth = [self fetchMonthTripForDate:[self.currentMonthDate dateByAddingMonths:1]];
-        } else {
-            self.sumNextMonth = nil;
-        }
-        
-        [self reloadContentOfMonth];
+        [self showLoading];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            self.sumThisMonth = [self fetchMonthTripForDate:self.currentMonthDate];
+            self.sumLastMonth = [self fetchMonthTripForDate:[self.currentMonthDate dateBySubtractingMonths:1]];
+            if (![self.currentMonthDate isThisMonth]) {
+                self.sumNextMonth = [self fetchMonthTripForDate:[self.currentMonthDate dateByAddingMonths:1]];
+            } else {
+                self.sumNextMonth = nil;
+            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self hideLoading];
+                [self reloadContentOfMonth];
+            });
+        });
     }
 }
 
@@ -778,6 +805,11 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
     }
     
     return cell;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    
 }
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath

@@ -280,7 +280,7 @@
             // the modified start point is valid, add to array
             [rawData addObject:stLogItem];
             // extimate the start time
-            stLogItem.timestamp = [logItem.timestamp dateByAddingTimeInterval:-distance/cAvgDrivingSpeed];
+            stLogItem.timestamp = [logItem.timestamp dateByAddingTimeInterval:-(distance*1.44)/cAvgDrivingSpeed];
             tripSum.start_date = stLogItem.timestamp;
         } else {
             stLogItem = nil;
@@ -353,7 +353,7 @@
             jam.traffic_avg_speed = @([jam.traffic_jam_dist doubleValue]/[jam.traffic_jam_during doubleValue]);
         }
         
-        if ([jam.traffic_jam_during floatValue] > cHeavyTrafficJamThreshold) {
+        if ([jam.traffic_jam_during floatValue] > cHeavyTrafficJamThreshold && [endLogItem distanceFrom:endLog] > 100 && [stLogItem distanceFrom:startLog] > 100) {
             heavy_jam_cnt++;
         }
     }];
@@ -416,6 +416,18 @@
     turning_info.turn_round_avg_speed = @(turningAnalyzer.turn_round_avg_speed);
     turning_info.turn_round_max_speed = @(turningAnalyzer.turn_round_max_speed);
     turning_info.is_analyzed = @YES;
+    
+    NSArray * featurePts = [turningAnalyzer.filter featurePoints];
+    NSMutableArray * ptsArr = [NSMutableArray arrayWithCapacity:featurePts.count];
+    for (GPSLogItem * item in featurePts) {
+        if (item.latitude && item.longitude) {
+            [ptsArr addObject:@{@"lat": item.latitude, @"lon": item.longitude}];
+        }
+    }
+    if (ptsArr) {
+        NSData * ptsData = [NSKeyedArchiver archivedDataWithRootObject:ptsArr];
+        turning_info.addi_data = ptsData;
+    }
     
     // update start and end location region
     [manager startRegionCenter:[stLogItem locationCoordinate] toRegionCenter:[endLogItem locationCoordinate] forTrip:tripSum];

@@ -61,6 +61,9 @@
     }
     
     [self appendVerifiedTrafficJamItem];
+    if (gpsLogs.count > 1) {
+        self.total_during = [((GPSLogItem*)[gpsLogs lastObject]).timestamp timeIntervalSinceDate:((GPSLogItem*)gpsLogs[0]).timestamp];
+    }
     if (self.total_during > 0) {
         self.avg_speed = _total_dist/_total_during;
     }
