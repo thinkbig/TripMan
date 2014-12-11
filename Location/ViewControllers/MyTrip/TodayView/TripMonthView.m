@@ -34,7 +34,7 @@
     NSUInteger tripCnt = [self.monthSum.trip_cnt integerValue];
     
     NSString * distStr = [NSString stringWithFormat:@"%.f", totalDist/1000.0];
-    self.tolDistLabel.attributedText = [NSAttributedString stringWithNumber:distStr font:[UIFont boldSystemFontOfSize:50] color:UIColorFromRGB(0x82d13a) andUnit:@"km" font:[UIFont boldSystemFontOfSize:12] color:UIColorFromRGB(0x82d13a)];
+    self.tolDistLabel.attributedText = [NSAttributedString stringWithNumber:distStr font:[UIFont boldSystemFontOfSize:40] color:UIColorFromRGB(0x82d13a) andUnit:@"km" font:[UIFont boldSystemFontOfSize:12] color:UIColorFromRGB(0x82d13a)];
     
     NSString * duringStr = [NSString stringWithFormat:@"%.f", totalDuring/60.0];
     self.tolDuringLabel.attributedText = [NSAttributedString stringWithNumber:duringStr font:[UIFont boldSystemFontOfSize:24] color:[UIColor whiteColor] andUnit:@"min" font:[UIFont boldSystemFontOfSize:12] color:UIColorFromRGB(0xbbbbbb)];

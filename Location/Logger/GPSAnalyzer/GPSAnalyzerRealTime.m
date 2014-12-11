@@ -8,6 +8,7 @@
 
 #import "GPSAnalyzerRealTime.h"
 #import <CoreMotion/CoreMotion.h>
+#import "LocationTracker.h"
 
 @interface GPSAnalyzerRealTime () {
     
@@ -22,6 +23,8 @@
     CGFloat     _endSpeedTrace;
     NSInteger   _endSpeedTraceCnt;
     NSInteger   _endSpeedTraceIdx;
+    
+    NSDate *    _lastestNormalSpeed;
     
     NSNumber *          _isInTrip;
     NSNumber *          _eStat;
@@ -115,6 +118,10 @@
     
     self.lastLogItem = gps;
     [self.logArr addObject:gps];
+    
+    if (speed > cInsTrafficJamSpeed) {
+        _lastestNormalSpeed = gps.timestamp;
+    }
     
     eMotionStat stat = [self checkStatus];
     [self removeOldData:([self eStat]!=stat)];
@@ -262,7 +269,7 @@
     BOOL isInTrip = [self isInTrip];
     if (!isInTrip && eStat == eMotionStatDriving) {
         [self setIsInTrip:YES];
-    } else if (isInTrip && (eStat == eMotionStatStationary || eStat == eMotionStatGPSLost)) {
+    } else if (isInTrip && (eStat < eMotionStatRunning)) {
         [self setIsInTrip:NO];
         
         // if the trip change from drive to stationary, reset all data to prevent cumulate error
@@ -292,6 +299,14 @@
             NSLog(@"$$$$$$$$$$$$$$$$$$$$$ start speed = %f", avgSpeed);
         }
     } else {
+        // fast deside using M7 chrip
+        if (_lastestNormalSpeed && [[NSDate date] timeIntervalSinceDate:_lastestNormalSpeed] >= 20) {
+            LocationTracker * tracker = ((AppDelegate*)([UIApplication sharedApplication].delegate)).locationTracker;
+            if ([tracker duringForWalkRunWithin:40] > 8 && [tracker duringForAutomationWithin:40] < 1) {
+                DDLogWarn(@"&&&&&&&&&&&&& motion regard as drive stop &&&&&&&&&&&&& ");
+                return eMotionStatWalking;
+            }
+        }
         if (_endSpeedTraceCnt > cDirveEndSamplePoint && _endSpeedTraceIdx < self.logArr.count) {
             GPSLogItem * item = ((GPSLogItem*)(self.logArr[_endSpeedTraceIdx]));
             if ([[NSDate date] timeIntervalSinceDate:item.timestamp] >= cDriveEndThreshold*0.6) {

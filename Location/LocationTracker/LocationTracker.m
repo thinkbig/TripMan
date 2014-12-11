@@ -12,8 +12,18 @@
 #import "GPSAnalyzerRealTime.h"
 #import <Parse/Parse.h>
 #import <CoreMotion/CoreMotion.h>
+#import "TSPair.h"
 
 #define kWakeUpBySystem             @"kWakeUpBySystem"
+#define kLocationAccu               kCLLocationAccuracyBest
+
+typedef enum
+{
+    MotionTypeNotMoving = 0,
+    MotionTypeWalking,
+    MotionTypeRunning,
+    MotionTypeAutomotive
+} LTMotionType;
 
 @interface LocationTracker ()
 {
@@ -31,6 +41,10 @@
 @property (nonatomic, strong) NSTimer *                     timer;
 @property (nonatomic, strong) NSTimer *                     stopTimer;
 
+@property (nonatomic) LTMotionType                          eCurrentMotion;
+@property (nonatomic, strong) NSMutableArray *              motionArray;
+@property (nonatomic) BOOL                                  isDetectMotion;
+
 @end
 
 @implementation LocationTracker
@@ -40,7 +54,7 @@
 	@synchronized(self) {
 		if (_locationManager == nil) {
 			_locationManager = [[CLLocationManager alloc] init];
-            _locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation;
+            _locationManager.desiredAccuracy = kLocationAccu;
 		}
 	}
 	return _locationManager;
@@ -81,25 +95,113 @@
         //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
         //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startSignificantMonitor) name:UIApplicationDidFinishLaunchingNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startLocationTracking) name:UIApplicationWillEnterForegroundNotification object:nil];
-        
-//        if ([CMMotionActivityManager isActivityAvailable]) {
-//            CMMotionActivityManager * activityManager = [LocationTracker sharedMotionActivityManager];
-//            [activityManager startActivityUpdatesToQueue:[NSOperationQueue currentQueue] withHandler:^(CMMotionActivity *activity) {
-//                if (activity.automotive && !_keepMonitoring) {
-//                    BOOL isDriving = [[[NSUserDefaults standardUserDefaults] objectForKey:kMotionIsInTrip] boolValue];
-//                    if (!isDriving) {
-//                        DDLogWarn(@"^^^^^^^^^^^^^^^^^^^^^^^ isDriving = %d", activity.automotive);
-//                        [self.stopTimer invalidate];
-//                        self.stopTimer = nil;
-//                        _lastStationaryDate = nil;
-//                        _keepMonitoring = YES;
-//                        [self startLocationTracking];
-//                    }
-//                }
-//            }];
-//        }
 	}
 	return self;
+}
+
+- (NSTimeInterval) duringForAutomationWithin:(NSTimeInterval)within
+{
+    if (self.motionArray.count == 0) {
+        return -1;
+    }
+    TSPair * lastPair = self.motionArray[0];
+    NSDate * toDate = [NSDate date];
+    NSDate * fromDate = [toDate dateByAddingTimeInterval:-within];
+    if ([fromDate compare:lastPair.first] == NSOrderedAscending) {
+        return -1;
+    }
+    
+    __block NSTimeInterval during = 0;
+    __block NSDate * lastDate = toDate;
+    NSArray * copyArr = [self.motionArray copy];
+    [copyArr enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(TSPair * obj, NSUInteger idx, BOOL *stop) {
+        if ([fromDate compare:obj.first] == NSOrderedAscending) {
+            if (MotionTypeAutomotive == (LTMotionType)[obj.second integerValue]) {
+                during += [lastDate timeIntervalSinceDate:obj.first];
+            }
+        } else {
+            if (MotionTypeAutomotive == (LTMotionType)[obj.second integerValue]) {
+                during += [lastDate timeIntervalSinceDate:fromDate];
+            }
+            *stop = YES;
+        }
+        lastDate = obj.first;
+    }];
+
+    return during;
+}
+
+- (NSTimeInterval) duringForWalkRunWithin:(NSTimeInterval)within
+{
+    if (self.motionArray.count == 0) {
+        return -1;
+    }
+    TSPair * lastPair = self.motionArray[0];
+    NSDate * toDate = [NSDate date];
+    NSDate * fromDate = [toDate dateByAddingTimeInterval:-within];
+    if ([fromDate compare:lastPair.first] == NSOrderedAscending) {
+        return -1;
+    }
+    
+    __block NSTimeInterval during = 0;
+    __block NSDate * lastDate = toDate;
+    NSArray * copyArr = [self.motionArray copy];
+    [copyArr enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(TSPair * obj, NSUInteger idx, BOOL *stop) {
+        if ([fromDate compare:obj.first] == NSOrderedAscending) {
+            if (MotionTypeWalking == (LTMotionType)[obj.second integerValue] || MotionTypeRunning == (LTMotionType)[obj.second integerValue]) {
+                during += [lastDate timeIntervalSinceDate:obj.first];
+            }
+        } else {
+            if (MotionTypeWalking == (LTMotionType)[obj.second integerValue] || MotionTypeRunning == (LTMotionType)[obj.second integerValue]) {
+                during += [lastDate timeIntervalSinceDate:fromDate];
+            }
+            *stop = YES;
+        }
+        lastDate = obj.first;
+    }];
+    
+    return during;
+}
+
+- (void)stopMotionChecker
+{
+    self.isDetectMotion = NO;
+    if ([CMMotionActivityManager isActivityAvailable]) {
+        CMMotionActivityManager * activityManager = [LocationTracker sharedMotionActivityManager];
+        [activityManager stopActivityUpdates];
+    }
+}
+
+- (void)startMotionChecker
+{
+    if (self.isDetectMotion) {
+        return;
+    }
+    self.motionArray = [NSMutableArray array];
+    self.eCurrentMotion = MotionTypeNotMoving;
+    if ([CMMotionActivityManager isActivityAvailable]) {
+        self.isDetectMotion = YES;
+        CMMotionActivityManager * activityManager = [LocationTracker sharedMotionActivityManager];
+        [activityManager startActivityUpdatesToQueue:[NSOperationQueue currentQueue] withHandler:^(CMMotionActivity *activity) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                LTMotionType type = MotionTypeNotMoving;
+                if (activity.walking) {
+                    type = MotionTypeWalking;
+                } else if (activity.running) {
+                    type = MotionTypeRunning;
+                } else if (activity.automotive) {
+                    type = MotionTypeAutomotive;
+                } else if (activity.stationary || activity.unknown) {
+                    type = MotionTypeNotMoving;
+                }
+                
+                if (type != self.eCurrentMotion) {
+                    [self.motionArray addObject:TSPairMake([NSDate date], @(type), nil)];
+                    self.eCurrentMotion = type;
+                }
+            });
+        }];
+    }
 }
 
 - (void)setKeepMonitor
@@ -188,7 +290,7 @@
         GPSEvent([NSDate date], eGPSEventGPSDeny);
     } else if (kCLAuthorizationStatusAuthorizedAlways == authorizationStatus) {
         DDLogInfo(@"authorizationStatus authorized");
-        locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation;
+        locationManager.desiredAccuracy = kLocationAccu;
         locationManager.distanceFilter = kCLDistanceFilterNone;
         locationManager.pausesLocationUpdatesAutomatically = NO;
         [locationManager startMonitoringSignificantLocationChanges];
@@ -199,7 +301,7 @@
             // ios 8
             [locationManager requestAlwaysAuthorization];
         } else {
-            locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation;
+            locationManager.desiredAccuracy = kLocationAccu;
             locationManager.distanceFilter = kCLDistanceFilterNone;
             locationManager.pausesLocationUpdatesAutomatically = NO;
             [locationManager startMonitoringSignificantLocationChanges];
@@ -218,6 +320,8 @@
 	[locationManager stopUpdatingLocation];
     [locationManager startMonitoringSignificantLocationChanges];
 
+    [self stopMotionChecker];
+    
     GPSEvent([NSDate date], eGPSEventStopGPS);
 }
 
@@ -254,7 +358,7 @@
     groupName = groupName.length > 0 ? groupName : @"DefaultReagionGroup";
     
     CLCircularRegion* theRegion = [[CLCircularRegion alloc] initWithCenter:theCoordinate radius:theRadius identifier:[self regionId:identifier withGroup:groupName]];
-    locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation;
+    locationManager.desiredAccuracy = kLocationAccu;
     locationManager.distanceFilter = kCLDistanceFilterNone;
     [locationManager startMonitoringForRegion:theRegion];
     GPSEvent5([NSDate date], eGPSEventMonitorRegion, theRegion, groupName, nil);
@@ -389,6 +493,7 @@
     
     if (isDriving)
     {
+        [self startMotionChecker];
         _keepMonitoring = NO;
         _lastStationaryDate = nil;
         CGFloat cof = 1.0f;
@@ -421,6 +526,14 @@
             }
             if (nil == _lastStationaryDate && mostAccuracyLocation.speed < cInsWalkingSpeed) {
                 _lastStationaryDate = mostAccuracyLocation.timestamp;
+            }
+            [self startMotionChecker];
+            if ([self duringForAutomationWithin:7] > 2) {
+                DDLogWarn(@"&&&&&&&&&&&&& motion regard as drive start &&&&&&&&&&&&& ");
+                _keepMonitoring = YES;
+            } else if ([self duringForWalkRunWithin:40] > 8) {
+                DDLogWarn(@"&&&&&&&&&&&&& motion regard as walking, stop monitor &&&&&&&&&&&&& ");
+                _keepMonitoring = NO;
             }
         }
 

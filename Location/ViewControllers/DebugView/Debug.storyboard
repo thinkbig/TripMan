@@ -163,7 +163,13 @@
                             <constraint firstAttribute="bottom" secondItem="nj3-DG-3a9" secondAttribute="bottom" id="fTK-TC-P84"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="D8d-cd-fOJ"/>
+                    <navigationItem key="navigationItem" id="D8d-cd-fOJ">
+                        <barButtonItem key="rightBarButtonItem" style="plain" systemItem="trash" id="9ER-nx-bEq">
+                            <connections>
+                                <action selector="clearAll:" destination="BUC-nw-9sd" id="1u6-tX-aZJ"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="fileListTable" destination="nj3-DG-3a9" id="h1p-Bk-HHi"/>
                     </connections>

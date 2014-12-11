@@ -146,6 +146,11 @@
         
         cell = realCell;
     }
+    if (indexPath.row % 2 == 0) {
+        cell.backgroundColor = [UIColor clearColor];
+    } else {
+        cell.backgroundColor = [UIColor colorWithWhite:0 alpha:0.2f];
+    }
     
     return cell;
 }
@@ -161,7 +166,7 @@
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
 {
-    return 1.0f;
+    return 0.0f;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath

@@ -72,12 +72,12 @@
         
         self.dbLogger = [[GPSFMDBLogger alloc] initWithLogDirectory:[self dbLogRootDirectory]];
         
-//        DDLogFileManagerDefault * manager = [[DDLogFileManagerDefault alloc] initWithLogsDirectory:[self fileLogRootDirectory]];
-//        self.fileLogger = [[DDFileLogger alloc] initWithLogFileManager:manager];
-//        self.fileLogger.maximumFileSize = (1024 * 1024 * 8);// 512
-//        self.fileLogger.rollingFrequency = DEFAULT_LOG_ROLLING_FREQUENCY;
-//        self.fileLogger.logFileManager.maximumNumberOfLogFiles = 60;
-//        self.fileLogger.logFileManager.logFilesDiskQuota = (1024 * 1024 * 1024);
+        DDLogFileManagerDefault * manager = [[DDLogFileManagerDefault alloc] initWithLogsDirectory:[self fileLogRootDirectory]];
+        self.fileLogger = [[DDFileLogger alloc] initWithLogFileManager:manager];
+        self.fileLogger.maximumFileSize = (1024 * 1024 * 8);// 512
+        self.fileLogger.rollingFrequency = DEFAULT_LOG_ROLLING_FREQUENCY;
+        self.fileLogger.logFileManager.maximumNumberOfLogFiles = 60;
+        self.fileLogger.logFileManager.logFilesDiskQuota = (1024 * 1024 * 1024);
         
         self.offTimeAnalyzer = [[GPSAnalyzerOffTime alloc] init];
         self.offTimeAnalyzer.dbLogger = self.dbLogger;
@@ -102,16 +102,20 @@
     [DDLog addLogger:self.offTimeAnalyzer.dbLogger];
     
     // file logger, log all info, NOT just gps info
-//    GPSFileLogFormatter * fileFormatter = [GPSFileLogFormatter new];
-//    [self.fileLogger setLogFormatter:fileFormatter];
-//    [DDLog addLogger:self.fileLogger];
+    if (self.fileLogger) {
+        GPSFileLogFormatter * fileFormatter = [GPSFileLogFormatter new];
+        [self.fileLogger setLogFormatter:fileFormatter];
+        [DDLog addLogger:self.fileLogger];
+    }
 }
 
 -(void) stopLogger
 {
     [DDLog removeLogger:self.gpsAnalyzer];
     [DDLog removeLogger:self.dbLogger];
-    //[DDLog removeLogger:self.fileLogger];
+    if (self.fileLogger) {
+        [DDLog removeLogger:self.fileLogger];
+    }
 }
 
 + (void)load

@@ -23,15 +23,15 @@
     
     self.chartCenter.layer.cornerRadius = CGRectGetHeight(self.chartCenter.bounds)/2.0;
     CGFloat height = CGRectGetHeight(self.pieChart.bounds);
-    self.pieChart.backgroundColor = [UIColor colorWithWhite:1 alpha:0.2];
-    self.pieChart.layer.cornerRadius = height/2.0;
+    self.pieChart.backgroundColor = [UIColor clearColor];
+    //self.pieChart.layer.cornerRadius = height/2.0;
     [self.pieChart setDataSource:self];
     [self.pieChart setStartPieAngle:M_PI_2];
     [self.pieChart setAnimationSpeed:1.0];
     [self.pieChart setShowPercentage:NO];
     [self.pieChart setShowLabel:NO];
-    [self.pieChart setPieRadius:height/2.0-4.0];
-    [self.pieChart setPieCenter:CGPointMake(height/2.0, height/2.0)];
+    [self.pieChart setPieRadius:height/2.0-7.0];
+    [self.pieChart setPieCenter:CGPointMake(height/2.0, height/2.0-1)];
     [self.pieChart setPieBackgroundColor:[UIColor clearColor]];
     [self.pieChart setUserInteractionEnabled:NO];
 }

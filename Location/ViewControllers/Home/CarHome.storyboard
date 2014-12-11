@@ -46,7 +46,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JkD-we-092" userLabel="Main View">
                                 <rect key="frame" x="0.0" y="70" width="320" height="260"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="home_suggest_bg" translatesAutoresizingMaskIntoConstraints="NO" id="Erg-8Z-sBU">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mainbar" translatesAutoresizingMaskIntoConstraints="NO" id="Erg-8Z-sBU">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="232"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="Erg-8Z-sBU" secondAttribute="height" multiplier="40:29" id="oxX-EE-05g"/>
@@ -463,8 +463,8 @@
     <resources>
         <image name="distancetoday" width="64" height="64"/>
         <image name="finetoday" width="64" height="64"/>
-        <image name="home_suggest_bg" width="320" height="232"/>
         <image name="main_bg" width="640" height="1136"/>
+        <image name="mainbar" width="640" height="464"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

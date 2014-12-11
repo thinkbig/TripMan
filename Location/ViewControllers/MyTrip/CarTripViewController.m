@@ -88,7 +88,13 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
     // init segment view
     self.switcher = [[DVSwitch alloc] initWithStringsArray:@[@"今天", @"本周", @"本月"]];
     self.switcher.sliderOffset = 2.0;
-    self.switcher.cornerRadius = 14;
+    self.switcher.cornerRadius = 0;
+    self.switcher.backgroundColor = [UIColor clearColor];
+    self.switcher.sliderColor = [UIColor clearColor];
+    self.switcher.sliderImage = [UIImage imageNamed:@"btn"];
+    self.switcher.labelTextColorInsideSlider = [UIColor whiteColor];
+    self.switcher.labelTextColorOutsideSlider = [UIColor colorWithWhite:1 alpha:0.54];
+    self.switcher.font = [UIFont boldSystemFontOfSize:14];
     [self.switcher setPressedHandler:^(NSUInteger index) {
         NSLog(@"Did press position on first switch at index: %lu", (unsigned long)index);
         weekSelf.currentIdx = index;
@@ -338,8 +344,6 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
 
 - (void)rebuildContent
 {
-    [self.detailCollection reloadData];
-    
     if (0 == _currentIdx)
     {
         [self showLoading];
@@ -667,13 +671,13 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
             
             realCell.distBarView.coorDelegate = realCell.xCoorBarView;
             
-            realCell.duringBarView.waitToUpdate = YES;
             [realCell.duringBarView setAlgorithm:^CGFloat(CGFloat x) {
                 return [duringDict[@(x+1)] floatValue]/60.0;
             } numberOfPoints:7 withGeneDetailBlock:^UILabel *(CGFloat y) {
                 return [[self class] geneLabelWithString:[NSString stringWithFormat:@"%.f", y]];
             }];
             
+            realCell.duringBarView.waitToUpdate = YES;
             [realCell animWithDelay:0.1];
 
             cell = realCell;
@@ -688,6 +692,9 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
                 maxSpeed = MAX(maxSpeed, [daySum.max_speed floatValue]);
             }
             maxSpeed *= 3.6;
+            if (0 == maxSpeed) {
+                maxSpeed = 1;
+            }
             
             WeekSpeedCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"weekSpeedCellId" forIndexPath:indexPath];
             realCell.maxSpeedView.waitToUpdate = YES;
@@ -839,7 +846,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
         } else if(2 == indexPath.row) {
             return CGSizeMake(320.f, 200.f);
         } else if(3 == indexPath.row) {
-            return CGSizeMake(320.f, 260.f);
+            return CGSizeMake(320.f, 240.f);
         } else if(4 == indexPath.row) {
             return CGSizeMake(320.f, 270.f);
         }
@@ -855,10 +862,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
 {
-    if (0 == section) {
-        return 10.f;
-    }
-    return 1.0f;
+    return 0.0f;
 }
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section

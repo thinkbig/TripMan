@@ -18,7 +18,7 @@
 @property (strong, nonatomic) void (^willBePressedHandlerBlock)(NSUInteger index);
 
 @property (strong, nonatomic) UIView *backgroundView;
-@property (strong, nonatomic) UIView *sliderView;
+@property (strong, nonatomic) UIImageView *sliderView;
 
 @property (nonatomic) NSInteger selectedIndex;
 
@@ -81,8 +81,9 @@
         label.userInteractionEnabled = YES;
     }
     
-    self.sliderView = [[UIView alloc] init];
+    self.sliderView = [[UIImageView alloc] init];
     self.sliderView.backgroundColor = self.sliderColor;
+    self.sliderView.image = self.sliderImage;
     self.sliderView.clipsToBounds = YES;
     [self addSubview:self.sliderView];
     
@@ -102,6 +103,8 @@
     
     UIPanGestureRecognizer *sliderRec = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(sliderMoved:)];
     [self.sliderView addGestureRecognizer:sliderRec];
+    
+    [self selectIndex:0 animated:NO];
     
     return self;
 }
@@ -174,6 +177,16 @@
     
     self.backgroundView.backgroundColor = self.backgroundColor;
     self.sliderView.backgroundColor = self.sliderColor;
+    self.sliderView.image = self.sliderImage;
+    if (self.sliderImage) {
+        self.sliderView.clipsToBounds = NO;
+        self.sliderView.layer.shadowOffset = CGSizeMake(0, 4);
+        self.sliderView.layer.shadowColor = [UIColor blackColor].CGColor;
+        self.sliderView.layer.shadowOpacity = 0.6f;
+        self.sliderView.layer.shadowRadius = 3.0f;
+    } else {
+        self.sliderView.clipsToBounds = YES;
+    }
     
     self.backgroundView.frame = [self convertRect:self.frame fromView:self.superview];
     
@@ -219,11 +232,10 @@
         
         self.sliderView.frame = newFrame;
         
-        for (UILabel *label in self.onTopLabels) {
-            
+        [self.onTopLabels enumerateObjectsUsingBlock:^(UILabel *label, NSUInteger idx, BOOL *stop) {
             label.frame = CGRectMake(label.frame.origin.x - offRect.origin.x, label.frame.origin.y - offRect.origin.y, label.frame.size.width, label.frame.size.height);
-        }
-        
+            label.alpha = (idx == selectedIndex) ? 1 : 0;
+        }];
     } completion:^(BOOL finished) {
         
         if (self.handlerBlock && callHandler) {
@@ -246,11 +258,10 @@
     CGRect offRect = CGRectMake(newFrame.origin.x - oldFrame.origin.x, newFrame.origin.y - oldFrame.origin.y, 0, 0);
     
     self.sliderView.frame = newFrame;
-    
-    for (UILabel *label in self.onTopLabels) {
-        
+    [self.onTopLabels enumerateObjectsUsingBlock:^(UILabel *label, NSUInteger idx, BOOL *stop) {
         label.frame = CGRectMake(label.frame.origin.x - offRect.origin.x, label.frame.origin.y - offRect.origin.y, label.frame.size.width, label.frame.size.height);
-    }
+        label.alpha = (idx == selectedIndex) ? 1 : 0;
+    }];
     
     if (self.handlerBlock && callHandler) {
         self.handlerBlock(selectedIndex);

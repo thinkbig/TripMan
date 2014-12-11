@@ -12,6 +12,7 @@
 
 @property (strong, nonatomic) UIColor *backgroundColor; // defaults to gray
 @property (strong, nonatomic) UIColor *sliderColor; // defaults to white
+@property (strong, nonatomic) UIImage *sliderImage; // defaults to nil
 @property (strong, nonatomic) UIColor *labelTextColorInsideSlider; // defaults to black
 @property (strong, nonatomic) UIColor *labelTextColorOutsideSlider; // defaults to white
 @property (strong, nonatomic) UIFont *font;

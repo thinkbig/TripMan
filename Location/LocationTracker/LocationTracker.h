@@ -26,4 +26,9 @@
 
 - (void)setParkingLocation:(CLLocation*)loc;
 
+- (void)startMotionChecker;
+- (void)stopMotionChecker;
+- (NSTimeInterval) duringForWalkRunWithin:(NSTimeInterval)within;
+- (NSTimeInterval) duringForAutomationWithin:(NSTimeInterval)within;
+
 @end
