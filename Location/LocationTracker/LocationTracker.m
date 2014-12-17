@@ -16,6 +16,7 @@
 
 #define kWakeUpBySystem             @"kWakeUpBySystem"
 #define kLocationAccu               kCLLocationAccuracyBest
+#define kLocationAccuNotDriving     kCLLocationAccuracyNearestTenMeters
 
 typedef enum
 {
@@ -44,6 +45,9 @@ typedef enum
 @property (nonatomic) LTMotionType                          eCurrentMotion;
 @property (nonatomic, strong) NSMutableArray *              motionArray;
 @property (nonatomic) BOOL                                  isDetectMotion;
+
+@property (nonatomic) BOOL                                  deferringUpdates;
+@property (nonatomic) BOOL                                  isDriving;
 
 @end
 
@@ -292,6 +296,7 @@ typedef enum
         GPSEvent([NSDate date], eGPSEventGPSDeny);
     } else if (kCLAuthorizationStatusAuthorizedAlways == authorizationStatus) {
         DDLogInfo(@"authorizationStatus authorized");
+        locationManager.desiredAccuracy = self.isDriving ? kLocationAccu : kLocationAccuNotDriving;
         [locationManager startMonitoringSignificantLocationChanges];
         [locationManager startUpdatingLocation];
         GPSEvent([NSDate date], eGPSEventStartGPS);
@@ -300,10 +305,16 @@ typedef enum
             // ios 8
             [locationManager requestAlwaysAuthorization];
         } else {
+            locationManager.desiredAccuracy = self.isDriving ? kLocationAccu : kLocationAccuNotDriving;
             [locationManager startMonitoringSignificantLocationChanges];
             [locationManager startUpdatingLocation];
             GPSEvent([NSDate date], eGPSEventStartGPS);
         }
+    }
+    
+    if (self.isDriving && !self.deferringUpdates) {
+        [locationManager allowDeferredLocationUpdatesUntilTraveled:10 timeout:10];
+        self.deferringUpdates = YES;
     }
 }
 
@@ -426,6 +437,12 @@ typedef enum
     [self recordEvent:eGPSEventMonitorFail forReagion:region];
 }
 
+- (void)locationManager:(CLLocationManager *)manager didFinishDeferredUpdatesWithError:(NSError *)error
+{
+    self.deferringUpdates = NO;
+    DDLogWarn(@"------------- DeferredLocationUpdates End %@ -------------- ", error);
+}
+
 -(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
     DDLogInfo(@"locationManager didUpdateLocations");
@@ -474,10 +491,9 @@ typedef enum
     BOOL isDriving = [[[NSUserDefaults standardUserDefaults] objectForKey:kMotionIsInTrip] boolValue];
     eMotionStat stat = (eMotionStat)[[[NSUserDefaults standardUserDefaults] objectForKey:kMotionCurrentStat] integerValue];
     
-    static BOOL lastStat = NO;
-    if (lastStat != isDriving) {
+    if (self.isDriving != isDriving) {
         DDLogWarn(@"drive stat change to: %d", isDriving);
-        lastStat = isDriving;
+        self.isDriving = isDriving;
         _recordCnt = 20;
     }
     static NSInteger recordInterval = 0;
@@ -543,7 +559,7 @@ typedef enum
         //if the instant speed is -1, means the gps module has just be waken
         if (!_keepMonitoring && nil == self.stopTimer && mostAccuracyLocation.speed < cInsWalkingSpeed && stat < eMotionStatWalking) {
             [self setStillLocation:mostAccuracyLocation force:NO];
-            self.stopTimer = [NSTimer scheduledTimerWithTimeInterval:10 target:self
+            self.stopTimer = [NSTimer scheduledTimerWithTimeInterval:2 target:self
                                                             selector:@selector(stopLocationDelayBy10Seconds)
                                                             userInfo:nil
                                                              repeats:NO];
