@@ -19,6 +19,7 @@
 #import "MonthSummary.h"
 #import "CarTripCell.h"
 #import "NSAttributedString+Style.h"
+#import "DataDebugPrinter.h"
 
 typedef NS_ENUM(NSUInteger, eTripRange) {
     eTripRangeDay = 0,
@@ -597,6 +598,9 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
         return [obj1.start_date compare:obj2.start_date];
     }];
     detailVC.tripSum = tripsToday[index];
+    
+    //NSString * str = [DataDebugPrinter jsonTripSummary:detailVC.tripSum];
+    
     [self.navigationController pushViewController:detailVC animated:YES];
 }
 

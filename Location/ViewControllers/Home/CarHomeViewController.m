@@ -88,7 +88,7 @@
     self.duringLabel.text = [NSString stringWithFormat:@"%.f", [_mostTrip.total_during floatValue]/60.0];
     
     // most trip info
-    self.jamLabel.text = [NSString stringWithFormat:@"%@", _mostTrip.traffic_heavy_jam_cnt];
+    self.jamLabel.text = [NSString stringWithFormat:@"%ld", (long)[_mostTrip.traffic_heavy_jam_cnt integerValue]];
     
     NSDateFormatter * formatter = [[BussinessDataProvider sharedInstance] dateFormatterForFormatStr:@"HH:mm"];
     self.suggestLabel.text = _mostTrip.start_date ? [formatter stringFromDate:_mostTrip.start_date] : @"00:00";

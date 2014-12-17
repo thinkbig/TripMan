@@ -9,6 +9,7 @@
 #import "TripsCoreDataManager.h"
 #import "NSManagedObject+ActiveRecord.h"
 #import "NSDate+Utilities.h"
+#import "GToolUtil.h"
 
 @interface TripsCoreDataManager ()
 
@@ -124,7 +125,8 @@
     }
     
     // insert a new record
-    ParkingRegion * newDbRegion = [ParkingRegion create:@{@"center_lat":@(coordinate.latitude), @"center_lon":@(coordinate.longitude), @"is_temp":@NO} inContext:self.tripAnalyzerContent];
+    NSString * parkingId = [GToolUtil createUUID];
+    ParkingRegion * newDbRegion = [ParkingRegion create:@{@"parking_id": parkingId, @"center_lat":@(coordinate.latitude), @"center_lon":@(coordinate.longitude), @"is_temp":@NO} inContext:self.tripAnalyzerContent];
     
     CLCircularRegion * region = [self circularRegionForCenter:coordinate];
     ParkingRegionDetail * detail = [ParkingRegionDetail new];
@@ -338,7 +340,8 @@
     if (nil == beginDate) {
         return nil;
     }
-    TripSummary * newTrip = [TripSummary create:@{@"start_date": beginDate, @"is_analyzed":@NO} inContext:self.tripAnalyzerContent];
+    NSString * tripId = [GToolUtil createUUID];
+    TripSummary * newTrip = [TripSummary create:@{@"trip_id": tripId, @"start_date": beginDate, @"is_analyzed":@NO} inContext:self.tripAnalyzerContent];
     if (endDate) {
         newTrip.end_date = endDate;
     }

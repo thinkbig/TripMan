@@ -2,7 +2,7 @@
 //  DaySummary.h
 //  TripMan
 //
-//  Created by taq on 12/4/14.
+//  Created by taq on 12/16/14.
 //  Copyright (c) 2014 Location. All rights reserved.
 //
 
@@ -15,6 +15,7 @@
 
 @property (nonatomic, retain) NSData * addi_data;
 @property (nonatomic, retain) NSString * addi_info;
+@property (nonatomic, retain) NSNumber * avg_speed;
 @property (nonatomic, retain) NSDate * date_day;
 @property (nonatomic, retain) NSNumber * is_analyzed;
 @property (nonatomic, retain) NSNumber * jam_dist;
@@ -25,7 +26,6 @@
 @property (nonatomic, retain) NSNumber * traffic_heavy_jam_cnt;
 @property (nonatomic, retain) NSNumber * traffic_light_jam_cnt;
 @property (nonatomic, retain) NSNumber * traffic_light_waiting;
-@property (nonatomic, retain) NSNumber * avg_speed;
 @property (nonatomic, retain) NSSet *all_trips;
 @property (nonatomic, retain) MonthSummary *month_summary;
 @property (nonatomic, retain) WeekSummary *week_summary;

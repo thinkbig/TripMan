@@ -15,4 +15,6 @@
 + (void)showToast:(NSString*)msg;
 - (void)showPieHUDWithText:(NSString*)str andProgress:(NSInteger)progress;
 
++ (NSString *)createUUID;
+
 @end

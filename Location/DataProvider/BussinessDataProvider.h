@@ -29,4 +29,7 @@
 
 - (NSDateFormatter*) dateFormatterForFormatStr:(NSString*)format;
 
+- (NSDate*) latestUpdatedTripDate;
+- (NSDate*) latestUpdatedRawTripDate;
+
 @end

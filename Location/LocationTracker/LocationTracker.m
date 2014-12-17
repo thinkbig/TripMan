@@ -55,6 +55,8 @@ typedef enum
 		if (_locationManager == nil) {
 			_locationManager = [[CLLocationManager alloc] init];
             _locationManager.desiredAccuracy = kLocationAccu;
+            _locationManager.distanceFilter = kCLDistanceFilterNone;
+            _locationManager.pausesLocationUpdatesAutomatically = NO;
 		}
 	}
 	return _locationManager;
@@ -65,7 +67,7 @@ typedef enum
 	@synchronized(self) {
 		if (_motionManager == nil) {
 			_motionManager = [[CMMotionManager alloc] init];
-            _motionManager.accelerometerUpdateInterval = 0.3;
+            _motionManager.accelerometerUpdateInterval = 1.0;
             //_motionManager.gyroUpdateInterval = 0.2;
 		}
 	}
@@ -189,7 +191,7 @@ typedef enum
                     type = MotionTypeWalking;
                 } else if (activity.running) {
                     type = MotionTypeRunning;
-                } else if (activity.automotive) {
+                } else if (activity.automotive && activity.confidence > CMMotionActivityConfidenceLow) {
                     type = MotionTypeAutomotive;
                 } else if (activity.stationary || activity.unknown) {
                     type = MotionTypeNotMoving;
@@ -290,9 +292,6 @@ typedef enum
         GPSEvent([NSDate date], eGPSEventGPSDeny);
     } else if (kCLAuthorizationStatusAuthorizedAlways == authorizationStatus) {
         DDLogInfo(@"authorizationStatus authorized");
-        locationManager.desiredAccuracy = kLocationAccu;
-        locationManager.distanceFilter = kCLDistanceFilterNone;
-        locationManager.pausesLocationUpdatesAutomatically = NO;
         [locationManager startMonitoringSignificantLocationChanges];
         [locationManager startUpdatingLocation];
         GPSEvent([NSDate date], eGPSEventStartGPS);
@@ -301,9 +300,6 @@ typedef enum
             // ios 8
             [locationManager requestAlwaysAuthorization];
         } else {
-            locationManager.desiredAccuracy = kLocationAccu;
-            locationManager.distanceFilter = kCLDistanceFilterNone;
-            locationManager.pausesLocationUpdatesAutomatically = NO;
             [locationManager startMonitoringSignificantLocationChanges];
             [locationManager startUpdatingLocation];
             GPSEvent([NSDate date], eGPSEventStartGPS);
@@ -358,8 +354,6 @@ typedef enum
     groupName = groupName.length > 0 ? groupName : @"DefaultReagionGroup";
     
     CLCircularRegion* theRegion = [[CLCircularRegion alloc] initWithCenter:theCoordinate radius:theRadius identifier:[self regionId:identifier withGroup:groupName]];
-    locationManager.desiredAccuracy = kLocationAccu;
-    locationManager.distanceFilter = kCLDistanceFilterNone;
     [locationManager startMonitoringForRegion:theRegion];
     GPSEvent5([NSDate date], eGPSEventMonitorRegion, theRegion, groupName, nil);
     
@@ -528,7 +522,7 @@ typedef enum
                 _lastStationaryDate = mostAccuracyLocation.timestamp;
             }
             [self startMotionChecker];
-            if ([self duringForAutomationWithin:7] > 2) {
+            if ([self duringForAutomationWithin:20] > 10) {
                 DDLogWarn(@"&&&&&&&&&&&&& motion regard as drive start &&&&&&&&&&&&& ");
                 _keepMonitoring = YES;
             } else if ([self duringForWalkRunWithin:40] > 8) {

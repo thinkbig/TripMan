@@ -17,4 +17,7 @@
 + (NSString*) printEnvInfo:(EnvInfo*)info;
 + (NSString*) printTurningInfo:(TurningInfo*)info;
 
+
++ (NSString*) jsonTripSummary:(TripSummary*)sum;
+
 @end

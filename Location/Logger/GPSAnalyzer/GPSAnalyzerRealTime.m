@@ -170,8 +170,6 @@
             CGFloat speed = [item.speed floatValue];
             // if the gps has just started, the speed will shown as -1, but the location data is valiad
             if ([thresDateStMove compare:item.timestamp] == NSOrderedDescending || (!findMoveStart && speed < cAvgStationarySpeed && speed >= 0)) {
-                //_startMoveTrace -= (speed < 0 ? 0 : speed);
-                //_startMoveTraceCnt--;
                 if (!findMoveStart && (speed < 0 || speed >= cAvgStationarySpeed)) {
                     findMoveStart = YES;
                 }
@@ -269,7 +267,7 @@
     BOOL isInTrip = [self isInTrip];
     if (!isInTrip && eStat == eMotionStatDriving) {
         [self setIsInTrip:YES];
-    } else if (isInTrip && (eStat < eMotionStatRunning)) {
+    } else if (isInTrip && (eStat < eMotionStatWalking)) {
         [self setIsInTrip:NO];
         
         // if the trip change from drive to stationary, reset all data to prevent cumulate error
@@ -302,9 +300,18 @@
         // fast deside using M7 chrip
         if (_lastestNormalSpeed && [[NSDate date] timeIntervalSinceDate:_lastestNormalSpeed] >= 20) {
             LocationTracker * tracker = ((AppDelegate*)([UIApplication sharedApplication].delegate)).locationTracker;
-            if ([tracker duringForWalkRunWithin:40] > 8 && [tracker duringForAutomationWithin:40] < 1) {
+            NSTimeInterval driveDuring = [tracker duringForAutomationWithin:40];
+            if (driveDuring > 5) {
+                _endSpeedTrace = 0;
+                _endSpeedTraceCnt = 0;
+                _endSpeedTraceIdx = self.logArr.count-1;
+                return eMotionStatDriving;
+            } else if (driveDuring < 1 && [tracker duringForWalkRunWithin:40] > 8) {
                 DDLogWarn(@"&&&&&&&&&&&&& motion regard as drive stop &&&&&&&&&&&&& ");
-                return eMotionStatWalking;
+                _endSpeedTrace = 0;
+                _endSpeedTraceCnt = 0;
+                _endSpeedTraceIdx = self.logArr.count-1;
+                return eMotionStatStationary;
             }
         }
         if (_endSpeedTraceCnt > cDirveEndSamplePoint && _endSpeedTraceIdx < self.logArr.count) {

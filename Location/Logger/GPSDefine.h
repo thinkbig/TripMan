@@ -65,7 +65,7 @@
 #define cHeavyTrafficJamThreshold               (60*2)
 
 #define cStartLocErrorDist                      2000
-#define cReagionRadius                          60
+#define cReagionRadius                          120
 #define cParkingRegionRadius                    500
 #define cTrafficLightRegionRadius               100
 

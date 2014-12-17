@@ -13,6 +13,7 @@
 #import "NSDate+Utilities.h"
 #import "GeoTransformer.h"
 #import "TSPair.h"
+#import "TSCache.h"
 #import "BaiduRoadMarkFacade.h"
 
 
@@ -340,6 +341,17 @@ static BussinessDataProvider * _sharedProvider = nil;
         self.dateFormaterDict[format] = formater;
     }
     return formater;
+}
+
+
+- (NSDate*) latestUpdatedTripDate
+{
+    return [[TSCache sharedInst] keychainCacheForKey:@"latestUpdatedTripDate"];
+}
+
+- (NSDate*) latestUpdatedRawTripDate
+{
+    return [[TSCache sharedInst] keychainCacheForKey:@"latestUpdatedRawTripDate"];
 }
 
 @end

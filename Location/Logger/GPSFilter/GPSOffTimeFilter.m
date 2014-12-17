@@ -71,6 +71,7 @@
         if ([gpsData isKindOfClass:[NSMutableArray class]]) {
             NSMutableArray * modifyArr = (NSMutableArray*)gpsData;
             if (modifyArr.count > 0) {
+                // 修复有重复起点的bug，如果起始2点距离为同一点，则删除一点
                 while (modifyArr.count > 1 && [(GPSLogItem*)modifyArr[0] distanceFrom:(GPSLogItem*)modifyArr[1]] < 0.01) {
                     [modifyArr removeObjectAtIndex:0];
                 }
@@ -85,17 +86,19 @@
     for (GPSLogItem * item in gpsData)
     {
         CGFloat accuracy = [item.horizontalAccuracy doubleValue];
+        // 如果该gpslog的gps精度无效（<0）或者大于100米，则丢弃
         if (accuracy < 0 || accuracy > 100) {
             continue;
         }
         if (accuracy < 30) {
-            // regard as good location
+            // regard as good location, 精度小于30米，则直接使用不做去噪处理
             if (penddingData.count == 1) {
                 if (smoothData.count > 0) {
                     GPSLogItem * newItem = [self smoothItem:@[[smoothData lastObject], item]];
                     [smoothData addObject:newItem];
                 }
             } else if (penddingData.count > 1) {
+                // 处理去噪队列，不同的精度给不同的权重，去一个平均值
                 GPSLogItem * newItem = [self smoothItem:penddingData];
                 [smoothData addObject:newItem];
             }
@@ -103,6 +106,7 @@
             [smoothData addObject:item];
             continue;
         } else {
+            // 否则，加入队列去噪
             [penddingData addObject:item];
             NSInteger thresHold = 2;
             if (penddingData.count >= thresHold) {
@@ -232,6 +236,7 @@
     CGFloat c = -firstPt.x*(secondPt.y-firstPt.y) + firstPt.y*(secondPt.x-firstPt.x);
     CGFloat a2b2 = a*a + b*b;
     
+    // 寻找距离 firstIdx 到 secondIdx 线段最远的一个点，作为下一个拐点的候选点
     for (long i = firstIdx+1; i < secondIdx; i++) {
         CGPoint curPt = [GPSOffTimeFilter item2Point:self.smoothData[i]];
         CGFloat curDist = powf(curPt.x*a+curPt.y*b+c, 2)/a2b2;
@@ -243,6 +248,7 @@
         }
     }
     
+    // 判断这个候选拐点是否是真的拐点，通过距离，角度，等来判断
     if (maxItem) {
         CGFloat dist1 = [firstItem distanceFrom:maxItem];
         CGFloat dist2 = [maxItem distanceFrom:secondItem];
@@ -268,6 +274,7 @@
         return featureIdx;
     }
     
+    // 返回-1，表示找不到满足条件的拐点
     return -1;
 }
 
@@ -278,8 +285,10 @@
         NSInteger firstIdx = [self.anglePointIdx[idx] integerValue];
         NSInteger secondIdx = [self.anglePointIdx[idx+1] integerValue];
         
+        // 寻找相邻2个拐点之间，可能还存在的拐点（最初的2个点即为起点和终点）
         NSInteger featureIdx = [self featurePointWithIdx:firstIdx andPt:secondIdx];
         
+        // 如果找到了可能的拐点，则把拐点插入队列，递归查找下一个
         if (featureIdx >= 0) {
             [self.anglePointIdx insertObject:@(featureIdx) atIndex:idx+1];
             [self _calFeaturePointsAtIdx:idx];
@@ -297,6 +306,7 @@
         NSInteger idx2 = [self.anglePointIdx[idx+1] integerValue];
         NSInteger idx3 = [self.anglePointIdx[idx+2] integerValue];
         
+        // 二次筛选拐点，如果相邻拐点的角度小于15度，则认为不是拐点，删除改拐点，递归查找下一个
         if ([self checkPotinAngle:[GPSOffTimeFilter item2Point:self.smoothData[idx1]] antPt:[GPSOffTimeFilter item2Point:self.smoothData[idx2]] antPt:[GPSOffTimeFilter item2Point:self.smoothData[idx3]]] > 15) {
             [self _filterFeaturePointsAtIdx:idx+1];
         } else {
@@ -308,6 +318,7 @@
 
 - (void) calGPSDataForTurning:(NSArray*)gpsData smoothFirst:(BOOL)smooth
 {
+    // 先去噪，平滑数据
     self.smoothData = gpsData;
     if (smooth) {
         self.smoothData = [GPSOffTimeFilter smoothGPSData:gpsData iteratorCnt:3];
@@ -315,12 +326,16 @@
     self.anglePointIdx = [NSMutableArray array];
     if (self.smoothData.count > 0)
     {
+        // 加入初始拐点（起点和终点）
         [self.anglePointIdx addObject:@0];
         if (self.smoothData.count > 1) {
             [self.anglePointIdx addObject:@(self.smoothData.count-1)];
         }
         
+        // 递归寻找拐点
         [self _calFeaturePointsAtIdx:0];
+        
+        // 验证筛选拐点
         [self _filterFeaturePointsAtIdx:0];
     }
 }

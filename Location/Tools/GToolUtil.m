@@ -99,4 +99,14 @@ static GToolUtil * _sharedUtil = nil;
     
 }
 
++ (NSString *)createUUID
+{
+    // Create universally unique identifier (object)
+    CFUUIDRef uuidObject = CFUUIDCreate(kCFAllocatorDefault);
+    // Get the string representation of CFUUID object.
+    NSString *uuidStr = (NSString *)CFBridgingRelease(CFUUIDCreateString(kCFAllocatorDefault, uuidObject));
+    CFRelease(uuidObject);
+    return uuidStr;
+}
+
 @end

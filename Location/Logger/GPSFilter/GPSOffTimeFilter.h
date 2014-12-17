@@ -33,8 +33,10 @@ typedef NS_ENUM(NSUInteger, eTurningStat) {
 
 @interface GPSOffTimeFilter : NSObject
 
+// 用来去噪，一般repeat为3
 + (NSArray*) smoothGPSData:(NSArray*)gpsData iteratorCnt:(NSInteger)repeat;
 
+// 计算拐点的入口
 - (void) calGPSDataForTurning:(NSArray*)gpsData smoothFirst:(BOOL)smooth;
 - (NSArray*) featurePointIndex;
 - (NSArray*) featurePoints;
