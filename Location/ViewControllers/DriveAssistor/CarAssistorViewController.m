@@ -10,6 +10,7 @@
 #import "DriveSuggestCell.h"
 #import "MapDisplayViewController.h"
 #import "SuggestDetailViewController.h"
+#import "RZCollectionTableView_Private.h"
 #import "ZBNSearchDisplayController.h"
 
 @interface CarAssistorViewController () {
@@ -109,6 +110,10 @@
     {
         DriveSuggestCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"suggestUsefulCell" forIndexPath:indexPath];
         [realCell updateWithTripSummary:self.topNMostUsedTrips[indexPath.row]];
+        realCell._rz_parentCollectionTableView = self.suggestCollectionView;
+        RZCollectionTableViewCellEditingItem * delItem = [RZCollectionTableViewCellEditingItem itemWithIcon:[UIImage imageNamed:@"deleteicon"] highlightedIcon:[UIImage imageNamed:@"deleteicon"] backgroundColor:[UIColor clearColor] hostBgImg:[UIImage imageNamed:@"deletetag"]];
+        [realCell setRzEditingItems:@[delItem]];
+        realCell.rzEditingEnabled = YES;
         cell = realCell;
     }
     else
@@ -142,7 +147,7 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     if (0 == indexPath.section) {
-        return CGSizeMake(300.f, 80.f);
+        return CGSizeMake(300.f, 70.f);
     } else if (1 == indexPath.section) {
         if (0 == indexPath.row) {
             return CGSizeMake(320, 40);
@@ -186,4 +191,10 @@
 //        [self presentViewController:mapVC animated:YES completion:nil];
     }
 }
+
+- (void)collectionView:(UICollectionView *)collectionView rzTableLayout:(RZCollectionTableViewLayout *)layout editingButtonPressedForIndex:(NSUInteger)buttonIndex forRowAtIndexPath:(NSIndexPath*)indexPath
+{
+    NSLog(@"delete butn idx = %ld", (long)indexPath.row);
+}
+
 @end

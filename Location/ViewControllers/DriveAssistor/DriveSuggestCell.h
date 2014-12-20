@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "RZCollectionTableViewCell.h"
 
-@interface DriveSuggestCell : UICollectionViewCell
+@interface DriveSuggestCell : RZCollectionTableViewCell
 
 @property (weak, nonatomic) IBOutlet UILabel *toStreet;
 @property (weak, nonatomic) IBOutlet UILabel *toLabel;

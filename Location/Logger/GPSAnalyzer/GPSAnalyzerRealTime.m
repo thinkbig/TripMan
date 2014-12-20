@@ -280,6 +280,10 @@
 
 - (eMotionStat) checkStatus
 {
+    if (DEBUG_MODE && sForceDriving) {
+        NSLog(@"Debug mode: forse driving");
+        return eMotionStatDriving;
+    }
     eMotionStat newStat = [self eStat];
     if (![self isInTrip]) {
         // check if start driving

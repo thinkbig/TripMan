@@ -91,12 +91,8 @@ static BussinessDataProvider * _sharedProvider = nil;
         [[GToolUtil sharedInstance] showPieHUDWithText:@"升级中..." andProgress:5];
         
         [[GPSLogger sharedLogger].offTimeAnalyzer analyzeTripStartFrom:nil toDate:nil shouldUpdateGlobalInfo:YES];
-        [[BussinessDataProvider sharedInstance] updateAllRegionInfo:YES];
-        
-        [self updateWeatherToday:nil];
         
         [[NSNotificationCenter defaultCenter] postNotificationName:kNotifyUpgradeComplete object:nil];
-        
         [[GToolUtil sharedInstance] showPieHUDWithText:@"升级完成" andProgress:100];
     });
 }

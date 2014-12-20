@@ -56,7 +56,7 @@
             NSError * err = nil;
             [self.managedObjectContext save:&err];
             if (err) {
-                DDLogWarn(@"Core Data commit fail: %@", err);
+                DDLogWarn(@"Core Data commit fail: %ld", (long)err.code);
             }
         }];
     }

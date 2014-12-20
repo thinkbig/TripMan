@@ -40,7 +40,7 @@
     NSUInteger tripCnt = [self.weekSum.trip_cnt integerValue];
     
     NSString * distStr = [NSString stringWithFormat:@"%.f", totalDist/1000.0];
-    self.todayDist.attributedText = [NSAttributedString stringWithNumber:distStr font:[UIFont boldSystemFontOfSize:50] color:UIColorFromRGB(0x82d13a) andUnit:@"km" font:[UIFont boldSystemFontOfSize:12] color:UIColorFromRGB(0x82d13a)];
+    self.todayDist.attributedText = [NSAttributedString stringWithNumber:distStr font:[UIFont boldSystemFontOfSize:50] color:UIColorFromRGB(0x5BEFFF) andUnit:@"km" font:[UIFont boldSystemFontOfSize:13] color:UIColorFromRGB(0x5BEFFF)];
     
     NSString * duringStr = [NSString stringWithFormat:@"%.f", totalDuring/60.0];
     self.todayDuring.attributedText = [NSAttributedString stringWithNumber:duringStr font:[UIFont boldSystemFontOfSize:24] color:[UIColor whiteColor] andUnit:@"min" font:[UIFont boldSystemFontOfSize:12] color:UIColorFromRGB(0xbbbbbb)];
@@ -49,10 +49,12 @@
     self.todayMaxSpeed.attributedText = [NSAttributedString stringWithNumber:maxSpeedStr font:[UIFont boldSystemFontOfSize:24] color:[UIColor whiteColor] andUnit:@"km/h" font:[UIFont boldSystemFontOfSize:12] color:UIColorFromRGB(0xbbbbbb)];
     
     self.tripCount.text = [NSString stringWithFormat:@"%lu", (unsigned long)tripCnt];
-    self.jamDist.text = [NSString stringWithFormat:@"%.1fkm", jamDist/1000.0];
-    self.jamDuring.text = [NSString stringWithFormat:@"%.fmin", jamDuring/60.0];
+    
+    self.jamDist.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%.1f", jamDist/1000.0] font:[UIFont boldSystemFontOfSize:16] color:[UIColor whiteColor] andUnit:@"km" font:[UIFont boldSystemFontOfSize:12] color:[UIColor whiteColor]];
+    self.jamDuring.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%.f", jamDuring/60.0] font:[UIFont boldSystemFontOfSize:16] color:[UIColor whiteColor] andUnit:@"min" font:[UIFont boldSystemFontOfSize:12] color:[UIColor whiteColor]];
+
     self.trafficLightCnt.text = [NSString stringWithFormat:@"%lu处", (unsigned long)jamInTrafficLight];
-    self.trafficLightWaiting.text = [NSString stringWithFormat:@"%.1fmin", trafficLightWaiting/60.0];
+    self.trafficLightWaiting.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%.1f", trafficLightWaiting/60.0] font:[UIFont boldSystemFontOfSize:16] color:[UIColor whiteColor] andUnit:@"min" font:[UIFont boldSystemFontOfSize:12] color:[UIColor whiteColor]];
 }
 
 - (void) updateDay
@@ -78,10 +80,12 @@
     self.todayMaxSpeed.attributedText = [NSAttributedString stringWithNumber:maxSpeedStr font:[UIFont boldSystemFontOfSize:24] color:[UIColor whiteColor] andUnit:@"km/h" font:[UIFont boldSystemFontOfSize:12] color:UIColorFromRGB(0xbbbbbb)];
     
     self.tripCount.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.daySum.all_trips.count];
-    self.jamDist.text = [NSString stringWithFormat:@"%.1fkm", jamDist/1000.0];
-    self.jamDuring.text = [NSString stringWithFormat:@"%.fmin", jamDuring/60.0];
+    
+    self.jamDist.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%.1f", jamDist/1000.0] font:[UIFont boldSystemFontOfSize:16] color:[UIColor whiteColor] andUnit:@"km" font:[UIFont boldSystemFontOfSize:12] color:[UIColor whiteColor]];
+    self.jamDuring.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%.f", jamDuring/60.0] font:[UIFont boldSystemFontOfSize:16] color:[UIColor whiteColor] andUnit:@"min" font:[UIFont boldSystemFontOfSize:12] color:[UIColor whiteColor]];
+    
     self.trafficLightCnt.text = [NSString stringWithFormat:@"%lu处", (unsigned long)jamInTrafficLight];
-    self.trafficLightWaiting.text = [NSString stringWithFormat:@"%.1fmin", trafficLightWaiting/60.0];
+    self.trafficLightWaiting.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%.1f", trafficLightWaiting/60.0] font:[UIFont boldSystemFontOfSize:16] color:[UIColor whiteColor] andUnit:@"min" font:[UIFont boldSystemFontOfSize:12] color:[UIColor whiteColor]];
 }
 
 @end

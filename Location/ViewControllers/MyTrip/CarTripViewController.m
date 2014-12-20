@@ -534,7 +534,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
     TripTicketView * realView = [[view subviews] lastObject];
     if (nil == realView || ![realView isKindOfClass:[TripTicketView class]]) {
         realView = [[[NSBundle mainBundle] loadNibNamed:@"TripTicketView" owner:self options:nil] lastObject];
-        realView.layer.cornerRadius = 10;
+        realView.layer.cornerRadius = 5;
         
         view = [[UIView alloc] initWithFrame:realView.bounds];
         view.layer.shadowColor = [UIColor blackColor].CGColor;

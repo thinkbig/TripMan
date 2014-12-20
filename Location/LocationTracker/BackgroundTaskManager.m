@@ -116,7 +116,7 @@
         }
         if ( self.bgTaskList.count > 0 )
         {
-            NSLog(@"kept background task id %@", [self.bgTaskList objectAtIndex:0]);
+            DDLogWarn(@"kept background task id %@", [self.bgTaskList objectAtIndex:0]);
         }
 //        if ( all )
 //        {

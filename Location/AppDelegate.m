@@ -12,10 +12,11 @@
 #import "GPSLogger.h"
 #import <Parse/Parse.h>
 #import <Crashlytics/Crashlytics.h>
+//#import <Cintric/Cintric.h>
 #import "NSString+MD5.h"
 
 static NSString * rebuildKey = @"kLocationForceRebuildKey";
-static NSString * rebuildVal = @"value_0000000000001"; // make sure it is different if this version should rebuild db
+static NSString * rebuildVal = @"value_0000000000005"; // make sure it is different if this version should rebuild db
 
 @implementation AppDelegate
 
@@ -28,6 +29,10 @@ static NSString * rebuildVal = @"value_0000000000001"; // make sure it is differ
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [Crashlytics startWithAPIKey:@"329c7a7f380b233aa478f78c8ccb5edf5ab72278"];
+    
+    // Sign up for a developer account at: https://www.cintric.com/register
+    //[CintricFind initWithApiKey:@"3c601eda17508279e5fcda88bc314061" andSecret:@"66d480af63780e19b4448f9eae7829e9"];
+    //[CintricFind setUniqueIdForUser:@"exampleId"];
     
     [Parse setApplicationId:@"2Vm0ziBqqos8KflxCetdDffvgq6wg4bj6g3uuWlX" clientKey:@"UZCgfJCFrYqDbEDR1COtoJD0fh51NLQ3bR4HM4lh"];
     if ([application respondsToSelector:@selector(registerUserNotificationSettings:)]) {
@@ -48,10 +53,6 @@ static NSString * rebuildVal = @"value_0000000000001"; // make sure it is differ
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
     self.baiduMapManager = [[BMKMapManager alloc] init];
-    BOOL ret = [self.baiduMapManager start:@"dKDmWAUwp4b0BhsxG6IGmiNn" generalDelegate:self];
-    if (!ret) {
-        DDLogWarn(@"baidu mapmanager start failed!");
-    }
     
     // check if need rebuild db
     NSString * oldVa = [[NSUserDefaults standardUserDefaults] objectForKey:rebuildKey];
@@ -81,7 +82,12 @@ static NSString * rebuildVal = @"value_0000000000001"; // make sure it is differ
     
     IS_UPDATING = NO;
     
+    BOOL ret = [self.baiduMapManager start:@"dKDmWAUwp4b0BhsxG6IGmiNn" generalDelegate:self];
+    if (!ret) {
+        DDLogWarn(@"baidu mapmanager start failed!");
+    }
     [[BussinessDataProvider sharedInstance] updateWeatherToday:nil];
+    [[BussinessDataProvider sharedInstance] updateAllRegionInfo:YES];
     
     [self setupLogger];
     [self applicationDocumentsDirectory];
@@ -148,6 +154,9 @@ static NSString * rebuildVal = @"value_0000000000001"; // make sure it is differ
     {
         //bla bla bla put your code here
         DDLogWarn(@"$$$$$$$$$$ Did recieve silent push notifycation = %@", userInfo);
+        if (DEBUG_MODE) {
+            sForceDriving = YES;
+        }
         [self.locationTracker setKeepMonitor];
         [self.locationTracker startLocationTracking];
         completionHandler(UIBackgroundFetchResultNewData);

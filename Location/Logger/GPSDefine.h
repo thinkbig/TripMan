@@ -84,4 +84,9 @@
 #define GPSEvent3(tstamp_, type_, msg_)                     GPSEvent5((tstamp_), (type_), nil, nil, (msg_))
 #define GPSEvent5(tstamp_, type_, region_, group_, msg_)    GPSEventInternal((tstamp_), @"%ld,%f,%f,%f,%@,%@,%@", (long)(type_), ((CLCircularRegion*)(region_)).center.latitude, ((CLCircularRegion*)(region_)).center.longitude, ((CLCircularRegion*)(region_)).radius, NotNulStr(((CLCircularRegion*)(region_)).identifier), NotNulStr(group_), NotNulStr(msg_))
 
+
+// debug config
+#define DEBUG_MODE      YES
+static BOOL             sForceDriving = NO;
+
 #endif

@@ -2,7 +2,7 @@
 //  ParkingRegion.m
 //  TripMan
 //
-//  Created by taq on 12/16/14.
+//  Created by taq on 12/18/14.
 //  Copyright (c) 2014 Location. All rights reserved.
 //
 
@@ -22,12 +22,12 @@
 @dynamic is_analyzed;
 @dynamic is_temp;
 @dynamic nearby_poi;
+@dynamic parking_id;
 @dynamic province;
 @dynamic rate;
 @dynamic street;
 @dynamic street_num;
 @dynamic user_mark;
-@dynamic parking_id;
 @dynamic group_owner_ed;
 @dynamic group_owner_st;
 

@@ -12,11 +12,12 @@
 #import "GPSAnalyzerRealTime.h"
 #import <Parse/Parse.h>
 #import <CoreMotion/CoreMotion.h>
+#import <Cintric/Cintric.h>
 #import "TSPair.h"
 
 #define kWakeUpBySystem             @"kWakeUpBySystem"
 #define kLocationAccu               kCLLocationAccuracyBest
-#define kLocationAccuNotDriving     kCLLocationAccuracyNearestTenMeters
+#define kLocationAccuNotDriving     kCLLocationAccuracyBest
 
 typedef enum
 {
@@ -26,7 +27,7 @@ typedef enum
     MotionTypeAutomotive
 } LTMotionType;
 
-@interface LocationTracker ()
+@interface LocationTracker () <CintricFindDelegate>
 {
     CLCircularRegion *            _lastParkingRegion;
     CLCircularRegion *            _lastStillRegion;
@@ -93,16 +94,31 @@ typedef enum
     self = [super init];
 	if (self)
     {
+//        [CintricFind setDelegate:self];
+//        [CintricFind updateLocation];
+        
         [self setKeepMonitor];
         [self preload];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tripStatChange:) name:kNotifyTripStatChange object:nil];
         
-        //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
         //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startSignificantMonitor) name:UIApplicationDidFinishLaunchingNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startLocationTracking) name:UIApplicationWillEnterForegroundNotification object:nil];
 	}
 	return self;
+}
+
+- (void)applicationEnterBackground
+{
+    [[BackgroundTaskManager sharedBackgroundTaskManager] beginNewBackgroundTask];
+}
+
+#pragma mark - Cintric Delegate
+
+- (void)didUpdateDeviceLocation:(CLLocation *)location
+{
+    DDLogWarn(@"$$$$$$$$$$$$$$$$$$$ %@-(%f,%f)-%f, accuracy=%f, altitude=%f", location.timestamp, location.coordinate.latitude, location.coordinate.longitude, location.speed, location.horizontalAccuracy, location.altitude);
 }
 
 - (NSTimeInterval) duringForAutomationWithin:(NSTimeInterval)within
@@ -250,7 +266,9 @@ typedef enum
         NSNumber * lon = notification.userInfo[@"lon"];
         CLCircularRegion* theRegion = [[CLCircularRegion alloc] initWithCenter:CLLocationCoordinate2DMake([lat doubleValue], [lon doubleValue]) radius:cReagionRadius identifier:@"tripStEd"];
         if ([inTrip boolValue]) {
-            GPSEvent5(statDate, eGPSEventDriveStart, theRegion, @"tripStEd", nil);
+            if (!DEBUG_MODE) {
+                GPSEvent5(statDate, eGPSEventDriveStart, theRegion, @"tripStEd", nil);
+            }
             // remove all monitor spot
             CLLocationManager * manager = [LocationTracker sharedLocationManager];
             NSSet * regions = manager.monitoredRegions;
@@ -258,7 +276,9 @@ typedef enum
                 [manager stopMonitoringForRegion:region];
             }
         } else {
-            GPSEvent5(statDate, eGPSEventDriveEnd, theRegion, @"tripStEd", nil);
+            if (!DEBUG_MODE) {
+                GPSEvent5(statDate, eGPSEventDriveEnd, theRegion, @"tripStEd", nil);
+            }
             if (lat && lon) {
                 CLLocation * stopLoc = [[CLLocation alloc] initWithLatitude:[lat doubleValue] longitude:[lon doubleValue]];
                 [self setParkingLocation:stopLoc];
@@ -312,10 +332,10 @@ typedef enum
         }
     }
     
-    if (self.isDriving && !self.deferringUpdates) {
-        [locationManager allowDeferredLocationUpdatesUntilTraveled:10 timeout:10];
-        self.deferringUpdates = YES;
-    }
+//    if (self.isDriving && !self.deferringUpdates) {
+//        [locationManager allowDeferredLocationUpdatesUntilTraveled:10 timeout:10];
+//        self.deferringUpdates = YES;
+//    }
 }
 
 - (void)realStop
@@ -325,7 +345,7 @@ typedef enum
     
     CLLocationManager *locationManager = [LocationTracker sharedLocationManager];
 	[locationManager stopUpdatingLocation];
-    [locationManager startMonitoringSignificantLocationChanges];
+    [locationManager stopMonitoringSignificantLocationChanges];
 
     [self stopMotionChecker];
     
@@ -485,19 +505,22 @@ typedef enum
         [self.timer invalidate];
         self.timer = nil;
     }
-    
-    [[BackgroundTaskManager sharedBackgroundTaskManager] beginNewBackgroundTask];
-        
+
     BOOL isDriving = [[[NSUserDefaults standardUserDefaults] objectForKey:kMotionIsInTrip] boolValue];
     eMotionStat stat = (eMotionStat)[[[NSUserDefaults standardUserDefaults] objectForKey:kMotionCurrentStat] integerValue];
     
+    NSTimeInterval backgroundRemain = -1;
+    if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
+        [[BackgroundTaskManager sharedBackgroundTaskManager] beginNewBackgroundTask];
+        backgroundRemain = [UIApplication sharedApplication].backgroundTimeRemaining;
+    }
     if (self.isDriving != isDriving) {
-        DDLogWarn(@"drive stat change to: %d", isDriving);
+        DDLogWarn(@"drive stat change to: %d, remain (%f)", isDriving, backgroundRemain);
         self.isDriving = isDriving;
         _recordCnt = 20;
     }
     static NSInteger recordInterval = 0;
-    if (_recordCnt-- > 0 || recordInterval++%20 == 0) {
+    if (_recordCnt-- > 0 || recordInterval++%15 == 0) {
         DDLogWarn(@"location is: <%f, %f>, speed=%f, accuracy=%f, altitude=%f", mostAccuracyLocation.coordinate.latitude, mostAccuracyLocation.coordinate.longitude, mostAccuracyLocation.speed, mostAccuracyLocation.horizontalAccuracy, mostAccuracyLocation.altitude);
     }
     
@@ -509,7 +532,8 @@ typedef enum
         CGFloat cof = 1.0f;
         if (mostAccuracyLocation.speed  < cInsStationarySpeed) cof = 2.0f;
         else if (mostAccuracyLocation.speed  < cInsWalkingSpeed) cof = 1.5f;
-        self.timer = [NSTimer scheduledTimerWithTimeInterval:10*cof target:self
+        cof = MIN(0.8*backgroundRemain, 10*cof);
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:cof target:self
                                                     selector:@selector(startLocationTracking)
                                                     userInfo:nil
                                                      repeats:NO];

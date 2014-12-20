@@ -9,6 +9,7 @@
 #import "TripTicketView.h"
 #import "ParkingRegion.h"
 #import "RegionGroup.h"
+#import "NSAttributedString+Style.h"
 
 @implementation TripTicketView
 
@@ -45,10 +46,10 @@
         self.toDate.text = @"00:00";
     }
     
-    self.distLabel.text = [NSString stringWithFormat:@"%.1fkm", [sum.total_dist floatValue]/1000.0f];
-    self.speedLabel.text = [NSString stringWithFormat:@"%.1fkm/h", [sum.max_speed floatValue]*3.6];
-    self.duringLabel.text = [NSString stringWithFormat:@"%.fmin", [sum.total_during floatValue]/60.0];
-    self.trafficLightLabel.text = sum.traffic_light_jam_cnt ? [NSString stringWithFormat:@"%@处", sum.traffic_light_jam_cnt] : @"未知";
+    self.distLabel.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%.1f", [sum.total_dist floatValue]/1000.0f] font:[UIFont boldSystemFontOfSize:18] color:[UIColor blackColor] andUnit:@"km" font:[UIFont boldSystemFontOfSize:11] color:[UIColor blackColor]];
+    self.speedLabel.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%.1f", [sum.max_speed floatValue]*3.6] font:[UIFont boldSystemFontOfSize:18] color:[UIColor blackColor] andUnit:@"km/h" font:[UIFont boldSystemFontOfSize:11] color:[UIColor blackColor]];
+    self.duringLabel.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%.f", [sum.total_during floatValue]/60.0] font:[UIFont boldSystemFontOfSize:18] color:[UIColor blackColor] andUnit:@"min" font:[UIFont boldSystemFontOfSize:11] color:[UIColor blackColor]];
+    self.trafficLightLabel.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%ld", (long)[sum.traffic_light_jam_cnt integerValue]] font:[UIFont boldSystemFontOfSize:18] color:[UIColor blackColor] andUnit:@"处" font:[UIFont boldSystemFontOfSize:11] color:[UIColor blackColor]];
 }
 
 @end

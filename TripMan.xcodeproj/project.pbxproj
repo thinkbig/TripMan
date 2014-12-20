@@ -65,17 +65,6 @@
 		A348906C1A3FCB6F002DE948 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = A34890661A3FCB6F002DE948 /* NSData+Base64.m */; };
 		A34890731A3FCCAF002DE948 /* NSData+Godzippa.m in Sources */ = {isa = PBXBuildFile; fileRef = A34890701A3FCCAF002DE948 /* NSData+Godzippa.m */; };
 		A34890741A3FCCAF002DE948 /* NSFileManager+Godzippa.m in Sources */ = {isa = PBXBuildFile; fileRef = A34890721A3FCCAF002DE948 /* NSFileManager+Godzippa.m */; };
-		A34890771A40042D002DE948 /* TrafficJam.m in Sources */ = {isa = PBXBuildFile; fileRef = A34890761A40042D002DE948 /* TrafficJam.m */; };
-		A348907A1A40042E002DE948 /* RegionGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = A34890791A40042E002DE948 /* RegionGroup.m */; };
-		A348907D1A40042E002DE948 /* TripSummary.m in Sources */ = {isa = PBXBuildFile; fileRef = A348907C1A40042E002DE948 /* TripSummary.m */; };
-		A34890801A40042E002DE948 /* TurningInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A348907F1A40042E002DE948 /* TurningInfo.m */; };
-		A34890831A40042E002DE948 /* WeatherInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A34890821A40042E002DE948 /* WeatherInfo.m */; };
-		A34890861A40042E002DE948 /* WeekSummary.m in Sources */ = {isa = PBXBuildFile; fileRef = A34890851A40042E002DE948 /* WeekSummary.m */; };
-		A34890891A40042E002DE948 /* DaySummary.m in Sources */ = {isa = PBXBuildFile; fileRef = A34890881A40042E002DE948 /* DaySummary.m */; };
-		A348908C1A40042E002DE948 /* DrivingInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A348908B1A40042E002DE948 /* DrivingInfo.m */; };
-		A348908F1A40042E002DE948 /* EnvInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A348908E1A40042E002DE948 /* EnvInfo.m */; };
-		A34890921A40042E002DE948 /* MonthSummary.m in Sources */ = {isa = PBXBuildFile; fileRef = A34890911A40042E002DE948 /* MonthSummary.m */; };
-		A34890951A40042E002DE948 /* ParkingRegion.m in Sources */ = {isa = PBXBuildFile; fileRef = A34890941A40042E002DE948 /* ParkingRegion.m */; };
 		A34F00E61A03C8BE00F58C17 /* CarHealthViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A34F00E51A03C8BE00F58C17 /* CarHealthViewController.m */; };
 		A34F00E91A03C8D500F58C17 /* CarHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A34F00E81A03C8D500F58C17 /* CarHomeViewController.m */; };
 		A34F00EC1A03C8E900F58C17 /* CarTripViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A34F00EB1A03C8E900F58C17 /* CarTripViewController.m */; };
@@ -105,6 +94,59 @@
 		A34F019A1A07289C00F58C17 /* CommonWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = A34F01991A07289C00F58C17 /* CommonWrapper.m */; };
 		A35495AF1A2F472C000D9311 /* TripMonthView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A35495AE1A2F472C000D9311 /* TripMonthView.xib */; };
 		A35495B21A2F4745000D9311 /* TripMonthView.m in Sources */ = {isa = PBXBuildFile; fileRef = A35495B11A2F4745000D9311 /* TripMonthView.m */; };
+		A35C25AC1A41CB69005F6658 /* Cintric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A35C25AB1A41CB69005F6658 /* Cintric.framework */; };
+		A35C26241A426F4B005F6658 /* CAAnimation+RZBlocks.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C25B11A426F4B005F6658 /* CAAnimation+RZBlocks.m */; };
+		A35C26251A426F4B005F6658 /* NSObject+RZBlockKVO.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C25B41A426F4B005F6658 /* NSObject+RZBlockKVO.m */; };
+		A35C26261A426F4B005F6658 /* NSDate+RZExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C25B71A426F4B005F6658 /* NSDate+RZExtensions.m */; };
+		A35C26271A426F4B005F6658 /* NSDictionary+RZExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C25BA1A426F4B005F6658 /* NSDictionary+RZExtensions.m */; };
+		A35C26281A426F4B005F6658 /* NSAttributedString+RZExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C25BD1A426F4B005F6658 /* NSAttributedString+RZExtensions.m */; };
+		A35C26291A426F4B005F6658 /* NSString+RZStringFormatting.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C25BF1A426F4B005F6658 /* NSString+RZStringFormatting.m */; };
+		A35C262A1A426F4B005F6658 /* NSString+RZStringSize.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C25C11A426F4B005F6658 /* NSString+RZStringSize.m */; };
+		A35C262B1A426F4B005F6658 /* NSUndoManager+RZBlockUndo.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C25C41A426F4B005F6658 /* NSUndoManager+RZBlockUndo.m */; };
+		A35C262C1A426F4B005F6658 /* UIAlertView+RZCompletionBlocks.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C25C71A426F4B005F6658 /* UIAlertView+RZCompletionBlocks.m */; };
+		A35C262D1A426F4B005F6658 /* UIColor+RZExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C25CA1A426F4B005F6658 /* UIColor+RZExtensions.m */; };
+		A35C262E1A426F4B005F6658 /* UIFont+RZExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C25CD1A426F4B005F6658 /* UIFont+RZExtensions.m */; };
+		A35C262F1A426F4B005F6658 /* UIImage+RZAverageColor.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C25D01A426F4B005F6658 /* UIImage+RZAverageColor.m */; };
+		A35C26301A426F4B005F6658 /* UIImage+RZResize.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C25D21A426F4B005F6658 /* UIImage+RZResize.m */; };
+		A35C26321A426F4B005F6658 /* UIImage+RZSolidColor.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C25D61A426F4B005F6658 /* UIImage+RZSolidColor.m */; };
+		A35C26331A426F4B005F6658 /* UIImage+RZStretchHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C25D81A426F4B005F6658 /* UIImage+RZStretchHelpers.m */; };
+		A35C26341A426F4B005F6658 /* UIImageView+RZAXMaintainImageColors.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C25DB1A426F4B005F6658 /* UIImageView+RZAXMaintainImageColors.m */; };
+		A35C26351A426F4B005F6658 /* UIView+RZAutoLayoutHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C25DE1A426F4B005F6658 /* UIView+RZAutoLayoutHelpers.m */; };
+		A35C26361A426F4B005F6658 /* UIView+RZBorders.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C25E01A426F4B005F6658 /* UIView+RZBorders.m */; };
+		A35C26371A426F4B005F6658 /* UIView+RZFrameUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C25E21A426F4B005F6658 /* UIView+RZFrameUtils.m */; };
+		A35C26381A426F4B005F6658 /* UIViewController+RZKeyboardWatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C25E51A426F4B005F6658 /* UIViewController+RZKeyboardWatcher.m */; };
+		A35C26391A426F4B005F6658 /* RZAnimatedCountingLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C25E91A426F4B005F6658 /* RZAnimatedCountingLabel.m */; };
+		A35C263A1A426F4B005F6658 /* RZAnimatedImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C25EC1A426F4B005F6658 /* RZAnimatedImageView.m */; };
+		A35C263B1A426F4B005F6658 /* RZButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C25EF1A426F4B005F6658 /* RZButtonView.m */; };
+		A35C263C1A426F4B005F6658 /* RZCollectionTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C25F21A426F4B005F6658 /* RZCollectionTableView.m */; };
+		A35C263D1A426F4B005F6658 /* RZCollectionTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C25F51A426F4B005F6658 /* RZCollectionTableViewCell.m */; };
+		A35C263E1A426F4B005F6658 /* RZCollectionViewAnimationAssistant.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C25F81A426F4B005F6658 /* RZCollectionViewAnimationAssistant.m */; };
+		A35C263F1A426F4B005F6658 /* RZDelayedOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C25FB1A426F4B005F6658 /* RZDelayedOperation.m */; };
+		A35C26401A426F4B005F6658 /* RZLocationService.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C25FE1A426F4B005F6658 /* RZLocationService.m */; };
+		A35C26411A426F4B005F6658 /* RZProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C26011A426F4B005F6658 /* RZProgressView.m */; };
+		A35C26421A426F4B005F6658 /* RZRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C26041A426F4B005F6658 /* RZRevealViewController.m */; };
+		A35C26431A426F4B005F6658 /* RZSegmentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C26071A426F4B005F6658 /* RZSegmentViewController.m */; };
+		A35C26441A426F4B005F6658 /* RZViewControllerTransitioningContext.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C26091A426F4B005F6658 /* RZViewControllerTransitioningContext.m */; };
+		A35C26451A426F4B005F6658 /* RZSingleChildContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C260C1A426F4B005F6658 /* RZSingleChildContainerViewController.m */; };
+		A35C26461A426F4B005F6658 /* RZSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C260F1A426F4B005F6658 /* RZSplitViewController.m */; };
+		A35C26471A426F4B005F6658 /* RZTelprompt.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C26121A426F4B005F6658 /* RZTelprompt.m */; };
+		A35C26481A426F4B005F6658 /* RZViewFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C26151A426F4B005F6658 /* RZViewFactory.m */; };
+		A35C26491A426F4B005F6658 /* RZWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C26181A426F4B005F6658 /* RZWebViewController.m */; };
+		A35C264A1A426F4B005F6658 /* RZWaiter.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C261C1A426F4B005F6658 /* RZWaiter.m */; };
+		A35C264B1A426F4B005F6658 /* RZCommonUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C26201A426F4B005F6658 /* RZCommonUtils.m */; };
+		A35C264C1A426F4B005F6658 /* RZDispatch.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C26231A426F4B005F6658 /* RZDispatch.m */; };
+		A35C26501A42C5BB005F6658 /* ScrollSegView.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C264F1A42C5BB005F6658 /* ScrollSegView.m */; };
+		A35C26531A42FD8A005F6658 /* TurningInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C26521A42FD8A005F6658 /* TurningInfo.m */; };
+		A35C26561A42FD8A005F6658 /* DrivingInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C26551A42FD8A005F6658 /* DrivingInfo.m */; };
+		A35C26591A42FD8B005F6658 /* EnvInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C26581A42FD8B005F6658 /* EnvInfo.m */; };
+		A35C265C1A42FD8B005F6658 /* MonthSummary.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C265B1A42FD8B005F6658 /* MonthSummary.m */; };
+		A35C265F1A42FD8B005F6658 /* RegionGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C265E1A42FD8B005F6658 /* RegionGroup.m */; };
+		A35C26621A42FD8B005F6658 /* TripSummary.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C26611A42FD8B005F6658 /* TripSummary.m */; };
+		A35C26651A42FD8B005F6658 /* ParkingRegion.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C26641A42FD8B005F6658 /* ParkingRegion.m */; };
+		A35C26681A42FD8B005F6658 /* TrafficJam.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C26671A42FD8B005F6658 /* TrafficJam.m */; };
+		A35C266B1A42FD8B005F6658 /* WeekSummary.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C266A1A42FD8B005F6658 /* WeekSummary.m */; };
+		A35C266E1A42FD8B005F6658 /* DaySummary.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C266D1A42FD8B005F6658 /* DaySummary.m */; };
+		A35C26711A42FD8B005F6658 /* WeatherInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C26701A42FD8B005F6658 /* WeatherInfo.m */; };
 		A377B42F19F5537900DDB5EE /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = A377B42E19F5537900DDB5EE /* NSString+MD5.m */; };
 		A378ABE31A164664006A3B68 /* DVSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = A378ABE21A164664006A3B68 /* DVSwitch.m */; };
 		A378ABE71A16F124006A3B68 /* DRDynamicSlideShow.m in Sources */ = {isa = PBXBuildFile; fileRef = A378ABE61A16F124006A3B68 /* DRDynamicSlideShow.m */; };
@@ -325,28 +367,6 @@
 		A34890701A3FCCAF002DE948 /* NSData+Godzippa.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Godzippa.m"; sourceTree = "<group>"; };
 		A34890711A3FCCAF002DE948 /* NSFileManager+Godzippa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+Godzippa.h"; sourceTree = "<group>"; };
 		A34890721A3FCCAF002DE948 /* NSFileManager+Godzippa.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+Godzippa.m"; sourceTree = "<group>"; };
-		A34890751A40042D002DE948 /* TrafficJam.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrafficJam.h; sourceTree = "<group>"; };
-		A34890761A40042D002DE948 /* TrafficJam.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrafficJam.m; sourceTree = "<group>"; };
-		A34890781A40042E002DE948 /* RegionGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegionGroup.h; sourceTree = "<group>"; };
-		A34890791A40042E002DE948 /* RegionGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegionGroup.m; sourceTree = "<group>"; };
-		A348907B1A40042E002DE948 /* TripSummary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TripSummary.h; sourceTree = "<group>"; };
-		A348907C1A40042E002DE948 /* TripSummary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripSummary.m; sourceTree = "<group>"; };
-		A348907E1A40042E002DE948 /* TurningInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TurningInfo.h; sourceTree = "<group>"; };
-		A348907F1A40042E002DE948 /* TurningInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TurningInfo.m; sourceTree = "<group>"; };
-		A34890811A40042E002DE948 /* WeatherInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeatherInfo.h; sourceTree = "<group>"; };
-		A34890821A40042E002DE948 /* WeatherInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeatherInfo.m; sourceTree = "<group>"; };
-		A34890841A40042E002DE948 /* WeekSummary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeekSummary.h; sourceTree = "<group>"; };
-		A34890851A40042E002DE948 /* WeekSummary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeekSummary.m; sourceTree = "<group>"; };
-		A34890871A40042E002DE948 /* DaySummary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DaySummary.h; sourceTree = "<group>"; };
-		A34890881A40042E002DE948 /* DaySummary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DaySummary.m; sourceTree = "<group>"; };
-		A348908A1A40042E002DE948 /* DrivingInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DrivingInfo.h; sourceTree = "<group>"; };
-		A348908B1A40042E002DE948 /* DrivingInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DrivingInfo.m; sourceTree = "<group>"; };
-		A348908D1A40042E002DE948 /* EnvInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EnvInfo.h; sourceTree = "<group>"; };
-		A348908E1A40042E002DE948 /* EnvInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EnvInfo.m; sourceTree = "<group>"; };
-		A34890901A40042E002DE948 /* MonthSummary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MonthSummary.h; sourceTree = "<group>"; };
-		A34890911A40042E002DE948 /* MonthSummary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MonthSummary.m; sourceTree = "<group>"; };
-		A34890931A40042E002DE948 /* ParkingRegion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParkingRegion.h; sourceTree = "<group>"; };
-		A34890941A40042E002DE948 /* ParkingRegion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParkingRegion.m; sourceTree = "<group>"; };
 		A34F00E31A03C32A00F58C17 /* CommonDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommonDefine.h; sourceTree = "<group>"; };
 		A34F00E41A03C8BE00F58C17 /* CarHealthViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CarHealthViewController.h; sourceTree = "<group>"; };
 		A34F00E51A03C8BE00F58C17 /* CarHealthViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CarHealthViewController.m; sourceTree = "<group>"; };
@@ -402,6 +422,112 @@
 		A35495AE1A2F472C000D9311 /* TripMonthView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TripMonthView.xib; sourceTree = "<group>"; };
 		A35495B01A2F4745000D9311 /* TripMonthView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TripMonthView.h; sourceTree = "<group>"; };
 		A35495B11A2F4745000D9311 /* TripMonthView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripMonthView.m; sourceTree = "<group>"; };
+		A35C25AB1A41CB69005F6658 /* Cintric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Cintric.framework; sourceTree = "<group>"; };
+		A35C25B01A426F4B005F6658 /* CAAnimation+RZBlocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CAAnimation+RZBlocks.h"; sourceTree = "<group>"; };
+		A35C25B11A426F4B005F6658 /* CAAnimation+RZBlocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CAAnimation+RZBlocks.m"; sourceTree = "<group>"; };
+		A35C25B31A426F4B005F6658 /* NSObject+RZBlockKVO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+RZBlockKVO.h"; sourceTree = "<group>"; };
+		A35C25B41A426F4B005F6658 /* NSObject+RZBlockKVO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+RZBlockKVO.m"; sourceTree = "<group>"; };
+		A35C25B61A426F4B005F6658 /* NSDate+RZExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+RZExtensions.h"; sourceTree = "<group>"; };
+		A35C25B71A426F4B005F6658 /* NSDate+RZExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+RZExtensions.m"; sourceTree = "<group>"; };
+		A35C25B91A426F4B005F6658 /* NSDictionary+RZExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+RZExtensions.h"; sourceTree = "<group>"; };
+		A35C25BA1A426F4B005F6658 /* NSDictionary+RZExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+RZExtensions.m"; sourceTree = "<group>"; };
+		A35C25BC1A426F4B005F6658 /* NSAttributedString+RZExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSAttributedString+RZExtensions.h"; sourceTree = "<group>"; };
+		A35C25BD1A426F4B005F6658 /* NSAttributedString+RZExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSAttributedString+RZExtensions.m"; sourceTree = "<group>"; };
+		A35C25BE1A426F4B005F6658 /* NSString+RZStringFormatting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+RZStringFormatting.h"; sourceTree = "<group>"; };
+		A35C25BF1A426F4B005F6658 /* NSString+RZStringFormatting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+RZStringFormatting.m"; sourceTree = "<group>"; };
+		A35C25C01A426F4B005F6658 /* NSString+RZStringSize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+RZStringSize.h"; sourceTree = "<group>"; };
+		A35C25C11A426F4B005F6658 /* NSString+RZStringSize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+RZStringSize.m"; sourceTree = "<group>"; };
+		A35C25C31A426F4B005F6658 /* NSUndoManager+RZBlockUndo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSUndoManager+RZBlockUndo.h"; sourceTree = "<group>"; };
+		A35C25C41A426F4B005F6658 /* NSUndoManager+RZBlockUndo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSUndoManager+RZBlockUndo.m"; sourceTree = "<group>"; };
+		A35C25C61A426F4B005F6658 /* UIAlertView+RZCompletionBlocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertView+RZCompletionBlocks.h"; sourceTree = "<group>"; };
+		A35C25C71A426F4B005F6658 /* UIAlertView+RZCompletionBlocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertView+RZCompletionBlocks.m"; sourceTree = "<group>"; };
+		A35C25C91A426F4B005F6658 /* UIColor+RZExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+RZExtensions.h"; sourceTree = "<group>"; };
+		A35C25CA1A426F4B005F6658 /* UIColor+RZExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+RZExtensions.m"; sourceTree = "<group>"; };
+		A35C25CC1A426F4B005F6658 /* UIFont+RZExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIFont+RZExtensions.h"; sourceTree = "<group>"; };
+		A35C25CD1A426F4B005F6658 /* UIFont+RZExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIFont+RZExtensions.m"; sourceTree = "<group>"; };
+		A35C25CF1A426F4B005F6658 /* UIImage+RZAverageColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+RZAverageColor.h"; sourceTree = "<group>"; };
+		A35C25D01A426F4B005F6658 /* UIImage+RZAverageColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+RZAverageColor.m"; sourceTree = "<group>"; };
+		A35C25D11A426F4B005F6658 /* UIImage+RZResize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+RZResize.h"; sourceTree = "<group>"; };
+		A35C25D21A426F4B005F6658 /* UIImage+RZResize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+RZResize.m"; sourceTree = "<group>"; };
+		A35C25D51A426F4B005F6658 /* UIImage+RZSolidColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+RZSolidColor.h"; sourceTree = "<group>"; };
+		A35C25D61A426F4B005F6658 /* UIImage+RZSolidColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+RZSolidColor.m"; sourceTree = "<group>"; };
+		A35C25D71A426F4B005F6658 /* UIImage+RZStretchHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+RZStretchHelpers.h"; sourceTree = "<group>"; };
+		A35C25D81A426F4B005F6658 /* UIImage+RZStretchHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+RZStretchHelpers.m"; sourceTree = "<group>"; };
+		A35C25DA1A426F4B005F6658 /* UIImageView+RZAXMaintainImageColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+RZAXMaintainImageColors.h"; sourceTree = "<group>"; };
+		A35C25DB1A426F4B005F6658 /* UIImageView+RZAXMaintainImageColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+RZAXMaintainImageColors.m"; sourceTree = "<group>"; };
+		A35C25DD1A426F4B005F6658 /* UIView+RZAutoLayoutHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+RZAutoLayoutHelpers.h"; sourceTree = "<group>"; };
+		A35C25DE1A426F4B005F6658 /* UIView+RZAutoLayoutHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+RZAutoLayoutHelpers.m"; sourceTree = "<group>"; };
+		A35C25DF1A426F4B005F6658 /* UIView+RZBorders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+RZBorders.h"; sourceTree = "<group>"; };
+		A35C25E01A426F4B005F6658 /* UIView+RZBorders.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+RZBorders.m"; sourceTree = "<group>"; };
+		A35C25E11A426F4B005F6658 /* UIView+RZFrameUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+RZFrameUtils.h"; sourceTree = "<group>"; };
+		A35C25E21A426F4B005F6658 /* UIView+RZFrameUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+RZFrameUtils.m"; sourceTree = "<group>"; };
+		A35C25E41A426F4B005F6658 /* UIViewController+RZKeyboardWatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+RZKeyboardWatcher.h"; sourceTree = "<group>"; };
+		A35C25E51A426F4B005F6658 /* UIViewController+RZKeyboardWatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+RZKeyboardWatcher.m"; sourceTree = "<group>"; };
+		A35C25E81A426F4B005F6658 /* RZAnimatedCountingLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RZAnimatedCountingLabel.h; sourceTree = "<group>"; };
+		A35C25E91A426F4B005F6658 /* RZAnimatedCountingLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RZAnimatedCountingLabel.m; sourceTree = "<group>"; };
+		A35C25EB1A426F4B005F6658 /* RZAnimatedImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RZAnimatedImageView.h; sourceTree = "<group>"; };
+		A35C25EC1A426F4B005F6658 /* RZAnimatedImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RZAnimatedImageView.m; sourceTree = "<group>"; };
+		A35C25EE1A426F4B005F6658 /* RZButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RZButtonView.h; sourceTree = "<group>"; };
+		A35C25EF1A426F4B005F6658 /* RZButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RZButtonView.m; sourceTree = "<group>"; };
+		A35C25F11A426F4B005F6658 /* RZCollectionTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RZCollectionTableView.h; sourceTree = "<group>"; };
+		A35C25F21A426F4B005F6658 /* RZCollectionTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RZCollectionTableView.m; sourceTree = "<group>"; };
+		A35C25F31A426F4B005F6658 /* RZCollectionTableView_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RZCollectionTableView_Private.h; sourceTree = "<group>"; };
+		A35C25F41A426F4B005F6658 /* RZCollectionTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RZCollectionTableViewCell.h; sourceTree = "<group>"; };
+		A35C25F51A426F4B005F6658 /* RZCollectionTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RZCollectionTableViewCell.m; sourceTree = "<group>"; };
+		A35C25F71A426F4B005F6658 /* RZCollectionViewAnimationAssistant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RZCollectionViewAnimationAssistant.h; sourceTree = "<group>"; };
+		A35C25F81A426F4B005F6658 /* RZCollectionViewAnimationAssistant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RZCollectionViewAnimationAssistant.m; sourceTree = "<group>"; };
+		A35C25FA1A426F4B005F6658 /* RZDelayedOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RZDelayedOperation.h; sourceTree = "<group>"; };
+		A35C25FB1A426F4B005F6658 /* RZDelayedOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RZDelayedOperation.m; sourceTree = "<group>"; };
+		A35C25FD1A426F4B005F6658 /* RZLocationService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RZLocationService.h; sourceTree = "<group>"; };
+		A35C25FE1A426F4B005F6658 /* RZLocationService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RZLocationService.m; sourceTree = "<group>"; };
+		A35C26001A426F4B005F6658 /* RZProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RZProgressView.h; sourceTree = "<group>"; };
+		A35C26011A426F4B005F6658 /* RZProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RZProgressView.m; sourceTree = "<group>"; };
+		A35C26031A426F4B005F6658 /* RZRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RZRevealViewController.h; sourceTree = "<group>"; };
+		A35C26041A426F4B005F6658 /* RZRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RZRevealViewController.m; sourceTree = "<group>"; };
+		A35C26061A426F4B005F6658 /* RZSegmentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RZSegmentViewController.h; sourceTree = "<group>"; };
+		A35C26071A426F4B005F6658 /* RZSegmentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RZSegmentViewController.m; sourceTree = "<group>"; };
+		A35C26081A426F4B005F6658 /* RZViewControllerTransitioningContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RZViewControllerTransitioningContext.h; sourceTree = "<group>"; };
+		A35C26091A426F4B005F6658 /* RZViewControllerTransitioningContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RZViewControllerTransitioningContext.m; sourceTree = "<group>"; };
+		A35C260B1A426F4B005F6658 /* RZSingleChildContainerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RZSingleChildContainerViewController.h; sourceTree = "<group>"; };
+		A35C260C1A426F4B005F6658 /* RZSingleChildContainerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RZSingleChildContainerViewController.m; sourceTree = "<group>"; };
+		A35C260E1A426F4B005F6658 /* RZSplitViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RZSplitViewController.h; sourceTree = "<group>"; };
+		A35C260F1A426F4B005F6658 /* RZSplitViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RZSplitViewController.m; sourceTree = "<group>"; };
+		A35C26111A426F4B005F6658 /* RZTelprompt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RZTelprompt.h; sourceTree = "<group>"; };
+		A35C26121A426F4B005F6658 /* RZTelprompt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RZTelprompt.m; sourceTree = "<group>"; };
+		A35C26141A426F4B005F6658 /* RZViewFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RZViewFactory.h; sourceTree = "<group>"; };
+		A35C26151A426F4B005F6658 /* RZViewFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RZViewFactory.m; sourceTree = "<group>"; };
+		A35C26171A426F4B005F6658 /* RZWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RZWebViewController.h; sourceTree = "<group>"; };
+		A35C26181A426F4B005F6658 /* RZWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RZWebViewController.m; sourceTree = "<group>"; };
+		A35C261B1A426F4B005F6658 /* RZWaiter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RZWaiter.h; sourceTree = "<group>"; };
+		A35C261C1A426F4B005F6658 /* RZWaiter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RZWaiter.m; sourceTree = "<group>"; };
+		A35C261F1A426F4B005F6658 /* RZCommonUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RZCommonUtils.h; sourceTree = "<group>"; };
+		A35C26201A426F4B005F6658 /* RZCommonUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RZCommonUtils.m; sourceTree = "<group>"; };
+		A35C26221A426F4B005F6658 /* RZDispatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RZDispatch.h; sourceTree = "<group>"; };
+		A35C26231A426F4B005F6658 /* RZDispatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RZDispatch.m; sourceTree = "<group>"; };
+		A35C264E1A42C5BB005F6658 /* ScrollSegView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollSegView.h; sourceTree = "<group>"; };
+		A35C264F1A42C5BB005F6658 /* ScrollSegView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScrollSegView.m; sourceTree = "<group>"; };
+		A35C26511A42FD8A005F6658 /* TurningInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TurningInfo.h; sourceTree = "<group>"; };
+		A35C26521A42FD8A005F6658 /* TurningInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TurningInfo.m; sourceTree = "<group>"; };
+		A35C26541A42FD8A005F6658 /* DrivingInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DrivingInfo.h; sourceTree = "<group>"; };
+		A35C26551A42FD8A005F6658 /* DrivingInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DrivingInfo.m; sourceTree = "<group>"; };
+		A35C26571A42FD8B005F6658 /* EnvInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EnvInfo.h; sourceTree = "<group>"; };
+		A35C26581A42FD8B005F6658 /* EnvInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EnvInfo.m; sourceTree = "<group>"; };
+		A35C265A1A42FD8B005F6658 /* MonthSummary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MonthSummary.h; sourceTree = "<group>"; };
+		A35C265B1A42FD8B005F6658 /* MonthSummary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MonthSummary.m; sourceTree = "<group>"; };
+		A35C265D1A42FD8B005F6658 /* RegionGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegionGroup.h; sourceTree = "<group>"; };
+		A35C265E1A42FD8B005F6658 /* RegionGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegionGroup.m; sourceTree = "<group>"; };
+		A35C26601A42FD8B005F6658 /* TripSummary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TripSummary.h; sourceTree = "<group>"; };
+		A35C26611A42FD8B005F6658 /* TripSummary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripSummary.m; sourceTree = "<group>"; };
+		A35C26631A42FD8B005F6658 /* ParkingRegion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParkingRegion.h; sourceTree = "<group>"; };
+		A35C26641A42FD8B005F6658 /* ParkingRegion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParkingRegion.m; sourceTree = "<group>"; };
+		A35C26661A42FD8B005F6658 /* TrafficJam.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrafficJam.h; sourceTree = "<group>"; };
+		A35C26671A42FD8B005F6658 /* TrafficJam.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrafficJam.m; sourceTree = "<group>"; };
+		A35C26691A42FD8B005F6658 /* WeekSummary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeekSummary.h; sourceTree = "<group>"; };
+		A35C266A1A42FD8B005F6658 /* WeekSummary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeekSummary.m; sourceTree = "<group>"; };
+		A35C266C1A42FD8B005F6658 /* DaySummary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DaySummary.h; sourceTree = "<group>"; };
+		A35C266D1A42FD8B005F6658 /* DaySummary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DaySummary.m; sourceTree = "<group>"; };
+		A35C266F1A42FD8B005F6658 /* WeatherInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeatherInfo.h; sourceTree = "<group>"; };
+		A35C26701A42FD8B005F6658 /* WeatherInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeatherInfo.m; sourceTree = "<group>"; };
 		A377B42D19F5537900DDB5EE /* NSString+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5.h"; sourceTree = "<group>"; };
 		A377B42E19F5537900DDB5EE /* NSString+MD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MD5.m"; sourceTree = "<group>"; };
 		A378ABE11A164664006A3B68 /* DVSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVSwitch.h; sourceTree = "<group>"; };
@@ -504,6 +630,7 @@
 				A3CD728E19D17128005F84E2 /* Crashlytics.framework in Frameworks */,
 				A320CFFF19BE97FF00F4038A /* QuartzCore.framework in Frameworks */,
 				A320CFFD19BE97F200F4038A /* AudioToolbox.framework in Frameworks */,
+				A35C25AC1A41CB69005F6658 /* Cintric.framework in Frameworks */,
 				A320CFF119BE977000F4038A /* Security.framework in Frameworks */,
 				A320CFEF19BE976500F4038A /* SystemConfiguration.framework in Frameworks */,
 				A320CFED19BE974B00F4038A /* CFNetwork.framework in Frameworks */,
@@ -552,6 +679,7 @@
 		5C90908E18B3A66A00510153 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A35C25AB1A41CB69005F6658 /* Cintric.framework */,
 				A3CD728D19D17128005F84E2 /* Crashlytics.framework */,
 				A3CD728619D138F0005F84E2 /* MapKit.framework */,
 				A3CD35EB19C6A1A70039F6E1 /* CoreMotion.framework */,
@@ -640,28 +768,28 @@
 		A31411721A0A7BAE0019F557 /* AutoGeneModel */ = {
 			isa = PBXGroup;
 			children = (
-				A34890931A40042E002DE948 /* ParkingRegion.h */,
-				A34890941A40042E002DE948 /* ParkingRegion.m */,
-				A34890901A40042E002DE948 /* MonthSummary.h */,
-				A34890911A40042E002DE948 /* MonthSummary.m */,
-				A348908D1A40042E002DE948 /* EnvInfo.h */,
-				A348908E1A40042E002DE948 /* EnvInfo.m */,
-				A348908A1A40042E002DE948 /* DrivingInfo.h */,
-				A348908B1A40042E002DE948 /* DrivingInfo.m */,
-				A34890871A40042E002DE948 /* DaySummary.h */,
-				A34890881A40042E002DE948 /* DaySummary.m */,
-				A34890841A40042E002DE948 /* WeekSummary.h */,
-				A34890851A40042E002DE948 /* WeekSummary.m */,
-				A34890811A40042E002DE948 /* WeatherInfo.h */,
-				A34890821A40042E002DE948 /* WeatherInfo.m */,
-				A348907E1A40042E002DE948 /* TurningInfo.h */,
-				A348907F1A40042E002DE948 /* TurningInfo.m */,
-				A348907B1A40042E002DE948 /* TripSummary.h */,
-				A348907C1A40042E002DE948 /* TripSummary.m */,
-				A34890781A40042E002DE948 /* RegionGroup.h */,
-				A34890791A40042E002DE948 /* RegionGroup.m */,
-				A34890751A40042D002DE948 /* TrafficJam.h */,
-				A34890761A40042D002DE948 /* TrafficJam.m */,
+				A35C266F1A42FD8B005F6658 /* WeatherInfo.h */,
+				A35C26701A42FD8B005F6658 /* WeatherInfo.m */,
+				A35C266C1A42FD8B005F6658 /* DaySummary.h */,
+				A35C266D1A42FD8B005F6658 /* DaySummary.m */,
+				A35C26691A42FD8B005F6658 /* WeekSummary.h */,
+				A35C266A1A42FD8B005F6658 /* WeekSummary.m */,
+				A35C26661A42FD8B005F6658 /* TrafficJam.h */,
+				A35C26671A42FD8B005F6658 /* TrafficJam.m */,
+				A35C26631A42FD8B005F6658 /* ParkingRegion.h */,
+				A35C26641A42FD8B005F6658 /* ParkingRegion.m */,
+				A35C26601A42FD8B005F6658 /* TripSummary.h */,
+				A35C26611A42FD8B005F6658 /* TripSummary.m */,
+				A35C265D1A42FD8B005F6658 /* RegionGroup.h */,
+				A35C265E1A42FD8B005F6658 /* RegionGroup.m */,
+				A35C265A1A42FD8B005F6658 /* MonthSummary.h */,
+				A35C265B1A42FD8B005F6658 /* MonthSummary.m */,
+				A35C26571A42FD8B005F6658 /* EnvInfo.h */,
+				A35C26581A42FD8B005F6658 /* EnvInfo.m */,
+				A35C26541A42FD8A005F6658 /* DrivingInfo.h */,
+				A35C26551A42FD8A005F6658 /* DrivingInfo.m */,
+				A35C26511A42FD8A005F6658 /* TurningInfo.h */,
+				A35C26521A42FD8A005F6658 /* TurningInfo.m */,
 			);
 			path = AutoGeneModel;
 			sourceTree = "<group>";
@@ -1110,6 +1238,7 @@
 		A34F01421A06699300F58C17 /* UIControl */ = {
 			isa = PBXGroup;
 			children = (
+				A35C264D1A42C597005F6658 /* ScrollSegView */,
 				A3D0B4A81A2C64A80030B19E /* MPPlot */,
 				A32CF3FD1A24C380008EA051 /* XYPieChart */,
 				A331F5B81A1CC5DB001F4DE3 /* A3ParallaxScrollView */,
@@ -1133,6 +1262,7 @@
 		A34F01471A0715A900F58C17 /* ThirdParty */ = {
 			isa = PBXGroup;
 			children = (
+				A35C25AD1A426F4B005F6658 /* RZUtils */,
 				A34890581A3FCB6F002DE948 /* AnyJson */,
 				A34890541A3FC5FF002DE948 /* AFgzipRequestSerializer */,
 				A3147A231A0920E4001CCE09 /* BaiduMapSDK */,
@@ -1158,6 +1288,383 @@
 				A37A1C811A0B6C6C00633E25 /* BaiduReverseGeocodingWrapper.m */,
 			);
 			path = geocoding;
+			sourceTree = "<group>";
+		};
+		A35C25AD1A426F4B005F6658 /* RZUtils */ = {
+			isa = PBXGroup;
+			children = (
+				A35C25AE1A426F4B005F6658 /* Categories */,
+				A35C25E61A426F4B005F6658 /* Components */,
+				A35C26191A426F4B005F6658 /* Test Utilities */,
+				A35C261D1A426F4B005F6658 /* Utility */,
+			);
+			path = RZUtils;
+			sourceTree = "<group>";
+		};
+		A35C25AE1A426F4B005F6658 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				A35C25AF1A426F4B005F6658 /* CoreAnimation */,
+				A35C25B21A426F4B005F6658 /* KVO */,
+				A35C25B51A426F4B005F6658 /* NSDate */,
+				A35C25B81A426F4B005F6658 /* NSDictionary */,
+				A35C25BB1A426F4B005F6658 /* NSString */,
+				A35C25C21A426F4B005F6658 /* NSUndoManager */,
+				A35C25C51A426F4B005F6658 /* UIAlertView */,
+				A35C25C81A426F4B005F6658 /* UIColor */,
+				A35C25CB1A426F4B005F6658 /* UIFont */,
+				A35C25CE1A426F4B005F6658 /* UIImage */,
+				A35C25D91A426F4B005F6658 /* UIImageView */,
+				A35C25DC1A426F4B005F6658 /* UIView */,
+				A35C25E31A426F4B005F6658 /* UIViewController */,
+			);
+			path = Categories;
+			sourceTree = "<group>";
+		};
+		A35C25AF1A426F4B005F6658 /* CoreAnimation */ = {
+			isa = PBXGroup;
+			children = (
+				A35C25B01A426F4B005F6658 /* CAAnimation+RZBlocks.h */,
+				A35C25B11A426F4B005F6658 /* CAAnimation+RZBlocks.m */,
+			);
+			path = CoreAnimation;
+			sourceTree = "<group>";
+		};
+		A35C25B21A426F4B005F6658 /* KVO */ = {
+			isa = PBXGroup;
+			children = (
+				A35C25B31A426F4B005F6658 /* NSObject+RZBlockKVO.h */,
+				A35C25B41A426F4B005F6658 /* NSObject+RZBlockKVO.m */,
+			);
+			path = KVO;
+			sourceTree = "<group>";
+		};
+		A35C25B51A426F4B005F6658 /* NSDate */ = {
+			isa = PBXGroup;
+			children = (
+				A35C25B61A426F4B005F6658 /* NSDate+RZExtensions.h */,
+				A35C25B71A426F4B005F6658 /* NSDate+RZExtensions.m */,
+			);
+			path = NSDate;
+			sourceTree = "<group>";
+		};
+		A35C25B81A426F4B005F6658 /* NSDictionary */ = {
+			isa = PBXGroup;
+			children = (
+				A35C25B91A426F4B005F6658 /* NSDictionary+RZExtensions.h */,
+				A35C25BA1A426F4B005F6658 /* NSDictionary+RZExtensions.m */,
+			);
+			path = NSDictionary;
+			sourceTree = "<group>";
+		};
+		A35C25BB1A426F4B005F6658 /* NSString */ = {
+			isa = PBXGroup;
+			children = (
+				A35C25BC1A426F4B005F6658 /* NSAttributedString+RZExtensions.h */,
+				A35C25BD1A426F4B005F6658 /* NSAttributedString+RZExtensions.m */,
+				A35C25BE1A426F4B005F6658 /* NSString+RZStringFormatting.h */,
+				A35C25BF1A426F4B005F6658 /* NSString+RZStringFormatting.m */,
+				A35C25C01A426F4B005F6658 /* NSString+RZStringSize.h */,
+				A35C25C11A426F4B005F6658 /* NSString+RZStringSize.m */,
+			);
+			path = NSString;
+			sourceTree = "<group>";
+		};
+		A35C25C21A426F4B005F6658 /* NSUndoManager */ = {
+			isa = PBXGroup;
+			children = (
+				A35C25C31A426F4B005F6658 /* NSUndoManager+RZBlockUndo.h */,
+				A35C25C41A426F4B005F6658 /* NSUndoManager+RZBlockUndo.m */,
+			);
+			path = NSUndoManager;
+			sourceTree = "<group>";
+		};
+		A35C25C51A426F4B005F6658 /* UIAlertView */ = {
+			isa = PBXGroup;
+			children = (
+				A35C25C61A426F4B005F6658 /* UIAlertView+RZCompletionBlocks.h */,
+				A35C25C71A426F4B005F6658 /* UIAlertView+RZCompletionBlocks.m */,
+			);
+			path = UIAlertView;
+			sourceTree = "<group>";
+		};
+		A35C25C81A426F4B005F6658 /* UIColor */ = {
+			isa = PBXGroup;
+			children = (
+				A35C25C91A426F4B005F6658 /* UIColor+RZExtensions.h */,
+				A35C25CA1A426F4B005F6658 /* UIColor+RZExtensions.m */,
+			);
+			path = UIColor;
+			sourceTree = "<group>";
+		};
+		A35C25CB1A426F4B005F6658 /* UIFont */ = {
+			isa = PBXGroup;
+			children = (
+				A35C25CC1A426F4B005F6658 /* UIFont+RZExtensions.h */,
+				A35C25CD1A426F4B005F6658 /* UIFont+RZExtensions.m */,
+			);
+			path = UIFont;
+			sourceTree = "<group>";
+		};
+		A35C25CE1A426F4B005F6658 /* UIImage */ = {
+			isa = PBXGroup;
+			children = (
+				A35C25CF1A426F4B005F6658 /* UIImage+RZAverageColor.h */,
+				A35C25D01A426F4B005F6658 /* UIImage+RZAverageColor.m */,
+				A35C25D11A426F4B005F6658 /* UIImage+RZResize.h */,
+				A35C25D21A426F4B005F6658 /* UIImage+RZResize.m */,
+				A35C25D51A426F4B005F6658 /* UIImage+RZSolidColor.h */,
+				A35C25D61A426F4B005F6658 /* UIImage+RZSolidColor.m */,
+				A35C25D71A426F4B005F6658 /* UIImage+RZStretchHelpers.h */,
+				A35C25D81A426F4B005F6658 /* UIImage+RZStretchHelpers.m */,
+			);
+			path = UIImage;
+			sourceTree = "<group>";
+		};
+		A35C25D91A426F4B005F6658 /* UIImageView */ = {
+			isa = PBXGroup;
+			children = (
+				A35C25DA1A426F4B005F6658 /* UIImageView+RZAXMaintainImageColors.h */,
+				A35C25DB1A426F4B005F6658 /* UIImageView+RZAXMaintainImageColors.m */,
+			);
+			path = UIImageView;
+			sourceTree = "<group>";
+		};
+		A35C25DC1A426F4B005F6658 /* UIView */ = {
+			isa = PBXGroup;
+			children = (
+				A35C25DD1A426F4B005F6658 /* UIView+RZAutoLayoutHelpers.h */,
+				A35C25DE1A426F4B005F6658 /* UIView+RZAutoLayoutHelpers.m */,
+				A35C25DF1A426F4B005F6658 /* UIView+RZBorders.h */,
+				A35C25E01A426F4B005F6658 /* UIView+RZBorders.m */,
+				A35C25E11A426F4B005F6658 /* UIView+RZFrameUtils.h */,
+				A35C25E21A426F4B005F6658 /* UIView+RZFrameUtils.m */,
+			);
+			path = UIView;
+			sourceTree = "<group>";
+		};
+		A35C25E31A426F4B005F6658 /* UIViewController */ = {
+			isa = PBXGroup;
+			children = (
+				A35C25E41A426F4B005F6658 /* UIViewController+RZKeyboardWatcher.h */,
+				A35C25E51A426F4B005F6658 /* UIViewController+RZKeyboardWatcher.m */,
+			);
+			path = UIViewController;
+			sourceTree = "<group>";
+		};
+		A35C25E61A426F4B005F6658 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				A35C25E71A426F4B005F6658 /* RZAnimatedCountingLabel */,
+				A35C25EA1A426F4B005F6658 /* RZAnimatedImageView */,
+				A35C25ED1A426F4B005F6658 /* RZButtonView */,
+				A35C25F01A426F4B005F6658 /* RZCollectionTableView */,
+				A35C25F61A426F4B005F6658 /* RZCollectionViewAnimationAssistant */,
+				A35C25F91A426F4B005F6658 /* RZDelayedOperation */,
+				A35C25FC1A426F4B005F6658 /* RZLocationService */,
+				A35C25FF1A426F4B005F6658 /* RZProgressView */,
+				A35C26021A426F4B005F6658 /* RZRevealViewController */,
+				A35C26051A426F4B005F6658 /* RZSegmentedViewController */,
+				A35C260A1A426F4B005F6658 /* RZSingleChildContainerViewController */,
+				A35C260D1A426F4B005F6658 /* RZSplitViewController */,
+				A35C26101A426F4B005F6658 /* RZTelprompt */,
+				A35C26131A426F4B005F6658 /* RZViewFactory */,
+				A35C26161A426F4B005F6658 /* RZWebViewController */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		A35C25E71A426F4B005F6658 /* RZAnimatedCountingLabel */ = {
+			isa = PBXGroup;
+			children = (
+				A35C25E81A426F4B005F6658 /* RZAnimatedCountingLabel.h */,
+				A35C25E91A426F4B005F6658 /* RZAnimatedCountingLabel.m */,
+			);
+			path = RZAnimatedCountingLabel;
+			sourceTree = "<group>";
+		};
+		A35C25EA1A426F4B005F6658 /* RZAnimatedImageView */ = {
+			isa = PBXGroup;
+			children = (
+				A35C25EB1A426F4B005F6658 /* RZAnimatedImageView.h */,
+				A35C25EC1A426F4B005F6658 /* RZAnimatedImageView.m */,
+			);
+			path = RZAnimatedImageView;
+			sourceTree = "<group>";
+		};
+		A35C25ED1A426F4B005F6658 /* RZButtonView */ = {
+			isa = PBXGroup;
+			children = (
+				A35C25EE1A426F4B005F6658 /* RZButtonView.h */,
+				A35C25EF1A426F4B005F6658 /* RZButtonView.m */,
+			);
+			path = RZButtonView;
+			sourceTree = "<group>";
+		};
+		A35C25F01A426F4B005F6658 /* RZCollectionTableView */ = {
+			isa = PBXGroup;
+			children = (
+				A35C25F11A426F4B005F6658 /* RZCollectionTableView.h */,
+				A35C25F21A426F4B005F6658 /* RZCollectionTableView.m */,
+				A35C25F31A426F4B005F6658 /* RZCollectionTableView_Private.h */,
+				A35C25F41A426F4B005F6658 /* RZCollectionTableViewCell.h */,
+				A35C25F51A426F4B005F6658 /* RZCollectionTableViewCell.m */,
+			);
+			path = RZCollectionTableView;
+			sourceTree = "<group>";
+		};
+		A35C25F61A426F4B005F6658 /* RZCollectionViewAnimationAssistant */ = {
+			isa = PBXGroup;
+			children = (
+				A35C25F71A426F4B005F6658 /* RZCollectionViewAnimationAssistant.h */,
+				A35C25F81A426F4B005F6658 /* RZCollectionViewAnimationAssistant.m */,
+			);
+			path = RZCollectionViewAnimationAssistant;
+			sourceTree = "<group>";
+		};
+		A35C25F91A426F4B005F6658 /* RZDelayedOperation */ = {
+			isa = PBXGroup;
+			children = (
+				A35C25FA1A426F4B005F6658 /* RZDelayedOperation.h */,
+				A35C25FB1A426F4B005F6658 /* RZDelayedOperation.m */,
+			);
+			path = RZDelayedOperation;
+			sourceTree = "<group>";
+		};
+		A35C25FC1A426F4B005F6658 /* RZLocationService */ = {
+			isa = PBXGroup;
+			children = (
+				A35C25FD1A426F4B005F6658 /* RZLocationService.h */,
+				A35C25FE1A426F4B005F6658 /* RZLocationService.m */,
+			);
+			path = RZLocationService;
+			sourceTree = "<group>";
+		};
+		A35C25FF1A426F4B005F6658 /* RZProgressView */ = {
+			isa = PBXGroup;
+			children = (
+				A35C26001A426F4B005F6658 /* RZProgressView.h */,
+				A35C26011A426F4B005F6658 /* RZProgressView.m */,
+			);
+			path = RZProgressView;
+			sourceTree = "<group>";
+		};
+		A35C26021A426F4B005F6658 /* RZRevealViewController */ = {
+			isa = PBXGroup;
+			children = (
+				A35C26031A426F4B005F6658 /* RZRevealViewController.h */,
+				A35C26041A426F4B005F6658 /* RZRevealViewController.m */,
+			);
+			path = RZRevealViewController;
+			sourceTree = "<group>";
+		};
+		A35C26051A426F4B005F6658 /* RZSegmentedViewController */ = {
+			isa = PBXGroup;
+			children = (
+				A35C26061A426F4B005F6658 /* RZSegmentViewController.h */,
+				A35C26071A426F4B005F6658 /* RZSegmentViewController.m */,
+				A35C26081A426F4B005F6658 /* RZViewControllerTransitioningContext.h */,
+				A35C26091A426F4B005F6658 /* RZViewControllerTransitioningContext.m */,
+			);
+			path = RZSegmentedViewController;
+			sourceTree = "<group>";
+		};
+		A35C260A1A426F4B005F6658 /* RZSingleChildContainerViewController */ = {
+			isa = PBXGroup;
+			children = (
+				A35C260B1A426F4B005F6658 /* RZSingleChildContainerViewController.h */,
+				A35C260C1A426F4B005F6658 /* RZSingleChildContainerViewController.m */,
+			);
+			path = RZSingleChildContainerViewController;
+			sourceTree = "<group>";
+		};
+		A35C260D1A426F4B005F6658 /* RZSplitViewController */ = {
+			isa = PBXGroup;
+			children = (
+				A35C260E1A426F4B005F6658 /* RZSplitViewController.h */,
+				A35C260F1A426F4B005F6658 /* RZSplitViewController.m */,
+			);
+			path = RZSplitViewController;
+			sourceTree = "<group>";
+		};
+		A35C26101A426F4B005F6658 /* RZTelprompt */ = {
+			isa = PBXGroup;
+			children = (
+				A35C26111A426F4B005F6658 /* RZTelprompt.h */,
+				A35C26121A426F4B005F6658 /* RZTelprompt.m */,
+			);
+			path = RZTelprompt;
+			sourceTree = "<group>";
+		};
+		A35C26131A426F4B005F6658 /* RZViewFactory */ = {
+			isa = PBXGroup;
+			children = (
+				A35C26141A426F4B005F6658 /* RZViewFactory.h */,
+				A35C26151A426F4B005F6658 /* RZViewFactory.m */,
+			);
+			path = RZViewFactory;
+			sourceTree = "<group>";
+		};
+		A35C26161A426F4B005F6658 /* RZWebViewController */ = {
+			isa = PBXGroup;
+			children = (
+				A35C26171A426F4B005F6658 /* RZWebViewController.h */,
+				A35C26181A426F4B005F6658 /* RZWebViewController.m */,
+			);
+			path = RZWebViewController;
+			sourceTree = "<group>";
+		};
+		A35C26191A426F4B005F6658 /* Test Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				A35C261A1A426F4B005F6658 /* RZWaiter */,
+			);
+			path = "Test Utilities";
+			sourceTree = "<group>";
+		};
+		A35C261A1A426F4B005F6658 /* RZWaiter */ = {
+			isa = PBXGroup;
+			children = (
+				A35C261B1A426F4B005F6658 /* RZWaiter.h */,
+				A35C261C1A426F4B005F6658 /* RZWaiter.m */,
+			);
+			path = RZWaiter;
+			sourceTree = "<group>";
+		};
+		A35C261D1A426F4B005F6658 /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				A35C261E1A426F4B005F6658 /* RZCommonUtils */,
+				A35C26211A426F4B005F6658 /* RZDispatch */,
+			);
+			path = Utility;
+			sourceTree = "<group>";
+		};
+		A35C261E1A426F4B005F6658 /* RZCommonUtils */ = {
+			isa = PBXGroup;
+			children = (
+				A35C261F1A426F4B005F6658 /* RZCommonUtils.h */,
+				A35C26201A426F4B005F6658 /* RZCommonUtils.m */,
+			);
+			path = RZCommonUtils;
+			sourceTree = "<group>";
+		};
+		A35C26211A426F4B005F6658 /* RZDispatch */ = {
+			isa = PBXGroup;
+			children = (
+				A35C26221A426F4B005F6658 /* RZDispatch.h */,
+				A35C26231A426F4B005F6658 /* RZDispatch.m */,
+			);
+			path = RZDispatch;
+			sourceTree = "<group>";
+		};
+		A35C264D1A42C597005F6658 /* ScrollSegView */ = {
+			isa = PBXGroup;
+			children = (
+				A35C264E1A42C5BB005F6658 /* ScrollSegView.h */,
+				A35C264F1A42C5BB005F6658 /* ScrollSegView.m */,
+			);
+			path = ScrollSegView;
 			sourceTree = "<group>";
 		};
 		A377B42B19F5532400DDB5EE /* Category */ = {
@@ -1611,29 +2118,40 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A35C26341A426F4B005F6658 /* UIImageView+RZAXMaintainImageColors.m in Sources */,
 				A340E8F419EEC7610014C14B /* GPSEndTraceAnalyzer.m in Sources */,
 				A35495B21A2F4745000D9311 /* TripMonthView.m in Sources */,
 				A3FDD16F1A02814D007B3C65 /* UIControl+Blocks.m in Sources */,
 				A3BD72AF1A15A9950007ECA1 /* BaiduMarkModel.m in Sources */,
 				A34890681A3FCB6F002DE948 /* AJJson2ObjectSerializer.m in Sources */,
+				A35C26261A426F4B005F6658 /* NSDate+RZExtensions.m in Sources */,
+				A35C266E1A42FD8B005F6658 /* DaySummary.m in Sources */,
+				A35C26411A426F4B005F6658 /* RZProgressView.m in Sources */,
 				A342849B19C42081002DB0FD /* GPSLogger.m in Sources */,
+				A35C26251A426F4B005F6658 /* NSObject+RZBlockKVO.m in Sources */,
 				A34F01221A04D98E00F58C17 /* BaseBaiduFacade.m in Sources */,
+				A35C266B1A42FD8B005F6658 /* WeekSummary.m in Sources */,
 				A3CD360E19C9767F0039F6E1 /* GPSAnalyzerOffTime.m in Sources */,
+				A35C26421A426F4B005F6658 /* RZRevealViewController.m in Sources */,
 				A3FDD17A1A028A6B007B3C65 /* GViewController.m in Sources */,
 				A34F01141A03D78900F58C17 /* MapDisplayViewController.m in Sources */,
 				A34890691A3FCB6F002DE948 /* AJObject2JsonSerializer.m in Sources */,
 				A32CF4001A24C380008EA051 /* XYPieChart.m in Sources */,
+				A35C26461A426F4B005F6658 /* RZSplitViewController.m in Sources */,
+				A35C26501A42C5BB005F6658 /* ScrollSegView.m in Sources */,
 				A385C54719F6423300A0F7F6 /* GPSTurningAnalyzer.m in Sources */,
-				A34890801A40042E002DE948 /* TurningInfo.m in Sources */,
 				A34F01371A051EBD00F58C17 /* AFNetworkActivityLogger.m in Sources */,
+				A35C265C1A42FD8B005F6658 /* MonthSummary.m in Sources */,
 				A34F01151A03D78900F58C17 /* TripDetailViewController.m in Sources */,
 				A3D0B4BB1A2C64A80030B19E /* MPGraphView.m in Sources */,
 				A331F5BB1A1CC5DB001F4DE3 /* A3ParallaxScrollView.m in Sources */,
 				A34F00EF1A03C8F800F58C17 /* CarSettingViewController.m in Sources */,
 				A37E03F21A0DE19B00B0B0EC /* TripTicketView.m in Sources */,
 				A378ABE31A164664006A3B68 /* DVSwitch.m in Sources */,
-				A34890921A40042E002DE948 /* MonthSummary.m in Sources */,
 				A3CD728A19D14430005F84E2 /* GeoTransformer.m in Sources */,
+				A35C264A1A426F4B005F6658 /* RZWaiter.m in Sources */,
+				A35C262E1A426F4B005F6658 /* UIFont+RZExtensions.m in Sources */,
+				A35C26291A426F4B005F6658 /* NSString+RZStringFormatting.m in Sources */,
 				5C90909C18B3A66A00510153 /* main.m in Sources */,
 				A34F011D1A04A7EF00F58C17 /* TSHttpClient.m in Sources */,
 				A3D0B4B81A2C64A80030B19E /* _MPWButton.m in Sources */,
@@ -1643,79 +2161,109 @@
 				A3CD360519C6DE610039F6E1 /* GPSLogItem.m in Sources */,
 				A385C54A19F68FA000A0F7F6 /* GPSAcceleratorAnalyzer.m in Sources */,
 				A3CD361919CAB0AD0039F6E1 /* BackgroundTaskManager.m in Sources */,
+				A35C26321A426F4B005F6658 /* UIImage+RZSolidColor.m in Sources */,
 				A3BD72AC1A14F2B00007ECA1 /* BaiduRoadMarkFacade.m in Sources */,
+				A35C262F1A426F4B005F6658 /* UIImage+RZAverageColor.m in Sources */,
 				A32CF8A81A2BF97E006932F7 /* CarTripCell.m in Sources */,
-				A348908F1A40042E002DE948 /* EnvInfo.m in Sources */,
+				A35C26391A426F4B005F6658 /* RZAnimatedCountingLabel.m in Sources */,
 				A348906C1A3FCB6F002DE948 /* NSData+Base64.m in Sources */,
 				A34F00F31A03CB8C00F58C17 /* CarAssistorViewController.m in Sources */,
 				A3BD72B21A15BC2E0007ECA1 /* BussinessDataProvider.m in Sources */,
-				A34890831A40042E002DE948 /* WeatherInfo.m in Sources */,
+				A35C263A1A426F4B005F6658 /* RZAnimatedImageView.m in Sources */,
+				A35C262D1A426F4B005F6658 /* UIColor+RZExtensions.m in Sources */,
+				A35C262B1A426F4B005F6658 /* NSUndoManager+RZBlockUndo.m in Sources */,
 				A3171A8A1A0905C4003EA8CE /* TSCache.m in Sources */,
+				A35C263E1A426F4B005F6658 /* RZCollectionViewAnimationAssistant.m in Sources */,
 				A34F01971A07259D00F58C17 /* BaiduGeocodingWrapper.m in Sources */,
 				A3FDD1601A027F64007B3C65 /* TSTabBarViewController.m in Sources */,
+				A35C263B1A426F4B005F6658 /* RZButtonView.m in Sources */,
+				A35C26441A426F4B005F6658 /* RZViewControllerTransitioningContext.m in Sources */,
+				A35C26371A426F4B005F6658 /* UIView+RZFrameUtils.m in Sources */,
 				A331F5C71A1D700A001F4DE3 /* SuggestOverLayerCollectionViewController.m in Sources */,
+				A35C26451A426F4B005F6658 /* RZSingleChildContainerViewController.m in Sources */,
 				A37E03EC1A0D216900B0B0EC /* TSPair.m in Sources */,
+				A35C26301A426F4B005F6658 /* UIImage+RZResize.m in Sources */,
 				A3326B281A2DFAA800C9F1C9 /* GToolUtil.m in Sources */,
+				A35C26651A42FD8B005F6658 /* ParkingRegion.m in Sources */,
+				A35C26561A42FD8A005F6658 /* DrivingInfo.m in Sources */,
+				A35C263C1A426F4B005F6658 /* RZCollectionTableView.m in Sources */,
 				A3CD361219C9CDC90039F6E1 /* GPSTripSummaryAnalyzer.m in Sources */,
 				A34F00F61A03CC5600F58C17 /* MainTabViewController.m in Sources */,
 				A3FDD15E1A027F64007B3C65 /* TSTabBarItem.m in Sources */,
-				A34890951A40042E002DE948 /* ParkingRegion.m in Sources */,
+				A35C263D1A426F4B005F6658 /* RZCollectionTableViewCell.m in Sources */,
+				A35C26711A42FD8B005F6658 /* WeatherInfo.m in Sources */,
 				A3EF5A361A0F553100B38232 /* DriveSuggestCell.m in Sources */,
-				A34890861A40042E002DE948 /* WeekSummary.m in Sources */,
+				A35C26271A426F4B005F6658 /* NSDictionary+RZExtensions.m in Sources */,
 				A331F5BF1A1CCA1E001F4DE3 /* SuggestDetailViewController.m in Sources */,
+				A35C262A1A426F4B005F6658 /* NSString+RZStringSize.m in Sources */,
 				A3D0B4BC1A2C64A80030B19E /* MPPlot.m in Sources */,
 				A33544141A23759F0023815B /* SuggestDetailCell.m in Sources */,
 				A3D0B4BD1A2C64A80030B19E /* UIBezierPath+curved.m in Sources */,
 				A348906B1A3FCB6F002DE948 /* AJSerializer.m in Sources */,
 				A34890571A3FC600002DE948 /* AFgzipRequestSerializer.m in Sources */,
 				A34F00EC1A03C8E900F58C17 /* CarTripViewController.m in Sources */,
-				A34890891A40042E002DE948 /* DaySummary.m in Sources */,
 				A3171A901A090666003EA8CE /* NSDictionary+QueryString.m in Sources */,
 				A37A1C821A0B6C6C00633E25 /* BaiduReverseGeocodingWrapper.m in Sources */,
+				A35C26281A426F4B005F6658 /* NSAttributedString+RZExtensions.m in Sources */,
+				A35C26361A426F4B005F6658 /* UIView+RZBorders.m in Sources */,
 				A3CD360219C6DCC80039F6E1 /* GPSAnalyzerRealTime.m in Sources */,
+				A35C26591A42FD8B005F6658 /* EnvInfo.m in Sources */,
+				A35C26491A426F4B005F6658 /* RZWebViewController.m in Sources */,
 				A34F019A1A07289C00F58C17 /* CommonWrapper.m in Sources */,
 				A314A6E41A0BBD9A00C12040 /* NSDate+Utilities.m in Sources */,
 				A34F01931A071F3200F58C17 /* BaiduPOISearchWrapper.m in Sources */,
 				A31FCA6F19E6711300A3BB4C /* GPSEventItem.m in Sources */,
-				A348908C1A40042E002DE948 /* DrivingInfo.m in Sources */,
-				A348907D1A40042E002DE948 /* TripSummary.m in Sources */,
+				A35C262C1A426F4B005F6658 /* UIAlertView+RZCompletionBlocks.m in Sources */,
 				A34890671A3FCB6F002DE948 /* AJClassHelper.m in Sources */,
+				A35C26681A42FD8B005F6658 /* TrafficJam.m in Sources */,
 				A3171A911A090666003EA8CE /* NSString+URLEncoding.m in Sources */,
 				A382A4471A124CFF00974E7A /* PICircularProgressView.m in Sources */,
+				A35C26241A426F4B005F6658 /* CAAnimation+RZBlocks.m in Sources */,
 				A34F013C1A052A6B00F58C17 /* BaiduWeatherModel.m in Sources */,
+				A35C26331A426F4B005F6658 /* UIImage+RZStretchHelpers.m in Sources */,
 				A34F00E91A03C8D500F58C17 /* CarHomeViewController.m in Sources */,
 				A31FCA8C19EBC1D400A3BB4C /* DDLog+CustomTime.m in Sources */,
 				A3CD35FD19C6DCC00039F6E1 /* GPSFMDBLogger.m in Sources */,
+				A35C26481A426F4B005F6658 /* RZViewFactory.m in Sources */,
 				A3D0B4BE1A2C64A80030B19E /* UIView+Frame.m in Sources */,
 				A3FDD16B1A028037007B3C65 /* IconTitleBtn.m in Sources */,
 				A34F01191A04A56F00F58C17 /* CommonFacade.m in Sources */,
 				A31FCA6319D94B9600A3BB4C /* GPSOffTimeFilter.m in Sources */,
 				A3FDD16A1A028037007B3C65 /* CustomBadge.m in Sources */,
 				A348906A1A3FCB6F002DE948 /* AJPropertyDescriptor.m in Sources */,
-				A348907A1A40042E002DE948 /* RegionGroup.m in Sources */,
+				A35C264B1A426F4B005F6658 /* RZCommonUtils.m in Sources */,
 				A3D0B4BA1A2C64A80030B19E /* MPBarsGraphView.m in Sources */,
 				A318CEE71A26067900320E8F /* TicketDetailCell.m in Sources */,
 				A314118A1A0A7C700019F557 /* ParkingRegionDetail.m in Sources */,
+				A35C265F1A42FD8B005F6658 /* RegionGroup.m in Sources */,
 				A32CF4041A24C4C0008EA051 /* TicketDetailViewController.m in Sources */,
 				A3D0B4B91A2C64A80030B19E /* CoorViewX.m in Sources */,
 				A314116C1A0A4CCD0019F557 /* TripMan.xcdatamodeld in Sources */,
 				A33544111A1F1C3C0023815B /* ZBNSearchDisplayController.m in Sources */,
 				A378ABE71A16F124006A3B68 /* DRDynamicSlideShow.m in Sources */,
 				A314116D1A0A4CCD0019F557 /* TripsCoreDataManager.m in Sources */,
+				A35C264C1A426F4B005F6658 /* RZDispatch.m in Sources */,
 				A318CEEB1A2618DE00320E8F /* NSAttributedString+Style.m in Sources */,
+				A35C26351A426F4B005F6658 /* UIView+RZAutoLayoutHelpers.m in Sources */,
+				A35C26531A42FD8A005F6658 /* TurningInfo.m in Sources */,
 				A34F01271A04F22400F58C17 /* BaiduWeatherFacade.m in Sources */,
+				A35C26401A426F4B005F6658 /* RZLocationService.m in Sources */,
 				A34F01131A03D78900F58C17 /* LogFileListViewController.m in Sources */,
 				A34890731A3FCCAF002DE948 /* NSData+Godzippa.m in Sources */,
+				A35C26621A42FD8B005F6658 /* TripSummary.m in Sources */,
 				A34284A019C6770A002DB0FD /* GPSFileLogFormatter.m in Sources */,
 				A34F01121A03D78900F58C17 /* LogFileContentViewController.m in Sources */,
 				5C9090A018B3A66A00510153 /* AppDelegate.m in Sources */,
 				A34890741A3FCCAF002DE948 /* NSFileManager+Godzippa.m in Sources */,
+				A35C26471A426F4B005F6658 /* RZTelprompt.m in Sources */,
 				A3CD361A19CAB0AD0039F6E1 /* LocationTracker.m in Sources */,
+				A35C263F1A426F4B005F6658 /* RZDelayedOperation.m in Sources */,
+				A35C26381A426F4B005F6658 /* UIViewController+RZKeyboardWatcher.m in Sources */,
 				A34F01461A06699300F58C17 /* iCarousel.m in Sources */,
+				A35C26431A426F4B005F6658 /* RZSegmentViewController.m in Sources */,
 				A378ABED1A17A7C2006A3B68 /* TripTodayView.m in Sources */,
 				A377B42F19F5537900DDB5EE /* NSString+MD5.m in Sources */,
 				A342AD441A0C6CF000C92849 /* DataDebugPrinter.m in Sources */,
-				A34890771A40042D002DE948 /* TrafficJam.m in Sources */,
 				A34F00E61A03C8BE00F58C17 /* CarHealthViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
