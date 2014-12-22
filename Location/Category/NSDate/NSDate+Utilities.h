@@ -6,11 +6,12 @@
 
 #import <Foundation/Foundation.h>
 
-#define D_MINUTE	60
-#define D_HOUR		3600
-#define D_DAY		86400
-#define D_WEEK		604800
-#define D_YEAR		31556926
+#define D_MINUTE            60
+#define D_HOUR              3600
+#define D_DAY               86400
+#define D_WEEK              604800
+#define D_YEAR              31556926
+#define D_FIRST_WEEKDAY     2   // monday
 
 @interface NSDate (Utilities)
 + (NSCalendar *) currentCalendar; // avoid bottlenecks

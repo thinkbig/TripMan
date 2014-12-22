@@ -72,7 +72,7 @@
 
 - (void)awakeFromNib
 {
-    self.xCoorBarView.coorStrArray = @[@"周日", @"周一", @"周二", @"周三", @"周四", @"周五", @"周六"];
+    self.xCoorBarView.coorStrArray = @[@"周一", @"周二", @"周三", @"周四", @"周五", @"周六", @"周日"];
     self.duringBarView.upSideDown = YES;
     self.distBarView.showBottomLine = NO;
     self.duringBarView.showBottomLine = NO;

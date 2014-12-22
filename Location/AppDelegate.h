@@ -24,6 +24,9 @@
 @property (strong, nonatomic) BMKMapManager *  baiduMapManager;
 @property (nonatomic) BOOL  isUpdating;
 
+// debug mode
+@property (nonatomic) BOOL  forceDriving;
+
 -(void) setupLogger;
 
 @end

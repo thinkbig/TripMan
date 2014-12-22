@@ -16,7 +16,7 @@
 #import "NSString+MD5.h"
 
 static NSString * rebuildKey = @"kLocationForceRebuildKey";
-static NSString * rebuildVal = @"value_0000000000005"; // make sure it is different if this version should rebuild db
+static NSString * rebuildVal = @"value_0000000000003"; // make sure it is different if this version should rebuild db
 
 @implementation AppDelegate
 
@@ -155,7 +155,7 @@ static NSString * rebuildVal = @"value_0000000000005"; // make sure it is differ
         //bla bla bla put your code here
         DDLogWarn(@"$$$$$$$$$$ Did recieve silent push notifycation = %@", userInfo);
         if (DEBUG_MODE) {
-            sForceDriving = YES;
+            self.forceDriving = YES;
         }
         [self.locationTracker setKeepMonitor];
         [self.locationTracker startLocationTracking];

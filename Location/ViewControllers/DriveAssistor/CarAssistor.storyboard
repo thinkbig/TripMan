@@ -120,6 +120,9 @@
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="40"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
+                                                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PLd-r0-n1Z" customClass="ScrollSegView">
+                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="40"/>
+                                                </scrollView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="您可能想去" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="coA-Ca-5OO">
                                                     <rect key="frame" x="60" y="9" width="239" height="21"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
@@ -516,8 +519,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="greentag" width="587" height="138"/>
-        <image name="main_bg" width="640" height="1136"/>
+        <image name="greentag" width="289" height="65"/>
+        <image name="main_bg" width="320" height="568"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

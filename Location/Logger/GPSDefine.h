@@ -86,7 +86,7 @@
 
 
 // debug config
-#define DEBUG_MODE      YES
-static BOOL             sForceDriving = NO;
+#define DEBUG_MODE      NO
+
 
 #endif

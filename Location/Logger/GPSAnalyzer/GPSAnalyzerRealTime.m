@@ -280,7 +280,7 @@
 
 - (eMotionStat) checkStatus
 {
-    if (DEBUG_MODE && sForceDriving) {
+    if (DEBUG_MODE && IS_FORCE_DRIVING) {
         NSLog(@"Debug mode: forse driving");
         return eMotionStatDriving;
     }

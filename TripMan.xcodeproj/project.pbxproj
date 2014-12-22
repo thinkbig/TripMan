@@ -94,7 +94,6 @@
 		A34F019A1A07289C00F58C17 /* CommonWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = A34F01991A07289C00F58C17 /* CommonWrapper.m */; };
 		A35495AF1A2F472C000D9311 /* TripMonthView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A35495AE1A2F472C000D9311 /* TripMonthView.xib */; };
 		A35495B21A2F4745000D9311 /* TripMonthView.m in Sources */ = {isa = PBXBuildFile; fileRef = A35495B11A2F4745000D9311 /* TripMonthView.m */; };
-		A35C25AC1A41CB69005F6658 /* Cintric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A35C25AB1A41CB69005F6658 /* Cintric.framework */; };
 		A35C26241A426F4B005F6658 /* CAAnimation+RZBlocks.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C25B11A426F4B005F6658 /* CAAnimation+RZBlocks.m */; };
 		A35C26251A426F4B005F6658 /* NSObject+RZBlockKVO.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C25B41A426F4B005F6658 /* NSObject+RZBlockKVO.m */; };
 		A35C26261A426F4B005F6658 /* NSDate+RZExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C25B71A426F4B005F6658 /* NSDate+RZExtensions.m */; };
@@ -147,6 +146,7 @@
 		A35C266B1A42FD8B005F6658 /* WeekSummary.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C266A1A42FD8B005F6658 /* WeekSummary.m */; };
 		A35C266E1A42FD8B005F6658 /* DaySummary.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C266D1A42FD8B005F6658 /* DaySummary.m */; };
 		A35C26711A42FD8B005F6658 /* WeatherInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C26701A42FD8B005F6658 /* WeatherInfo.m */; };
+		A35C26731A451EE9005F6658 /* LocationTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C26721A451EE9005F6658 /* LocationTracker.m */; };
 		A377B42F19F5537900DDB5EE /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = A377B42E19F5537900DDB5EE /* NSString+MD5.m */; };
 		A378ABE31A164664006A3B68 /* DVSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = A378ABE21A164664006A3B68 /* DVSwitch.m */; };
 		A378ABE71A16F124006A3B68 /* DRDynamicSlideShow.m in Sources */ = {isa = PBXBuildFile; fileRef = A378ABE61A16F124006A3B68 /* DRDynamicSlideShow.m */; };
@@ -171,7 +171,6 @@
 		A3CD360E19C9767F0039F6E1 /* GPSAnalyzerOffTime.m in Sources */ = {isa = PBXBuildFile; fileRef = A3CD360D19C9767F0039F6E1 /* GPSAnalyzerOffTime.m */; };
 		A3CD361219C9CDC90039F6E1 /* GPSTripSummaryAnalyzer.m in Sources */ = {isa = PBXBuildFile; fileRef = A3CD361119C9CDC90039F6E1 /* GPSTripSummaryAnalyzer.m */; };
 		A3CD361919CAB0AD0039F6E1 /* BackgroundTaskManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A3CD361619CAB0AD0039F6E1 /* BackgroundTaskManager.m */; };
-		A3CD361A19CAB0AD0039F6E1 /* LocationTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = A3CD361819CAB0AD0039F6E1 /* LocationTracker.m */; };
 		A3CD728719D138F0005F84E2 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3CD728619D138F0005F84E2 /* MapKit.framework */; };
 		A3CD728A19D14430005F84E2 /* GeoTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = A3CD728919D14430005F84E2 /* GeoTransformer.m */; };
 		A3CD728E19D17128005F84E2 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3CD728D19D17128005F84E2 /* Crashlytics.framework */; };
@@ -422,7 +421,6 @@
 		A35495AE1A2F472C000D9311 /* TripMonthView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TripMonthView.xib; sourceTree = "<group>"; };
 		A35495B01A2F4745000D9311 /* TripMonthView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TripMonthView.h; sourceTree = "<group>"; };
 		A35495B11A2F4745000D9311 /* TripMonthView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripMonthView.m; sourceTree = "<group>"; };
-		A35C25AB1A41CB69005F6658 /* Cintric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Cintric.framework; sourceTree = "<group>"; };
 		A35C25B01A426F4B005F6658 /* CAAnimation+RZBlocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CAAnimation+RZBlocks.h"; sourceTree = "<group>"; };
 		A35C25B11A426F4B005F6658 /* CAAnimation+RZBlocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CAAnimation+RZBlocks.m"; sourceTree = "<group>"; };
 		A35C25B31A426F4B005F6658 /* NSObject+RZBlockKVO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+RZBlockKVO.h"; sourceTree = "<group>"; };
@@ -528,6 +526,7 @@
 		A35C266D1A42FD8B005F6658 /* DaySummary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DaySummary.m; sourceTree = "<group>"; };
 		A35C266F1A42FD8B005F6658 /* WeatherInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeatherInfo.h; sourceTree = "<group>"; };
 		A35C26701A42FD8B005F6658 /* WeatherInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeatherInfo.m; sourceTree = "<group>"; };
+		A35C26721A451EE9005F6658 /* LocationTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationTracker.m; sourceTree = "<group>"; };
 		A377B42D19F5537900DDB5EE /* NSString+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5.h"; sourceTree = "<group>"; };
 		A377B42E19F5537900DDB5EE /* NSString+MD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MD5.m"; sourceTree = "<group>"; };
 		A378ABE11A164664006A3B68 /* DVSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVSwitch.h; sourceTree = "<group>"; };
@@ -574,7 +573,6 @@
 		A3CD361519CAB0AD0039F6E1 /* BackgroundTaskManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackgroundTaskManager.h; sourceTree = "<group>"; };
 		A3CD361619CAB0AD0039F6E1 /* BackgroundTaskManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BackgroundTaskManager.m; sourceTree = "<group>"; };
 		A3CD361719CAB0AD0039F6E1 /* LocationTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationTracker.h; sourceTree = "<group>"; };
-		A3CD361819CAB0AD0039F6E1 /* LocationTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationTracker.m; sourceTree = "<group>"; };
 		A3CD728619D138F0005F84E2 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		A3CD728819D14430005F84E2 /* GeoTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeoTransformer.h; sourceTree = "<group>"; };
 		A3CD728919D14430005F84E2 /* GeoTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeoTransformer.m; sourceTree = "<group>"; };
@@ -630,7 +628,6 @@
 				A3CD728E19D17128005F84E2 /* Crashlytics.framework in Frameworks */,
 				A320CFFF19BE97FF00F4038A /* QuartzCore.framework in Frameworks */,
 				A320CFFD19BE97F200F4038A /* AudioToolbox.framework in Frameworks */,
-				A35C25AC1A41CB69005F6658 /* Cintric.framework in Frameworks */,
 				A320CFF119BE977000F4038A /* Security.framework in Frameworks */,
 				A320CFEF19BE976500F4038A /* SystemConfiguration.framework in Frameworks */,
 				A320CFED19BE974B00F4038A /* CFNetwork.framework in Frameworks */,
@@ -679,7 +676,6 @@
 		5C90908E18B3A66A00510153 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				A35C25AB1A41CB69005F6658 /* Cintric.framework */,
 				A3CD728D19D17128005F84E2 /* Crashlytics.framework */,
 				A3CD728619D138F0005F84E2 /* MapKit.framework */,
 				A3CD35EB19C6A1A70039F6E1 /* CoreMotion.framework */,
@@ -1814,7 +1810,7 @@
 				A3CD361519CAB0AD0039F6E1 /* BackgroundTaskManager.h */,
 				A3CD361619CAB0AD0039F6E1 /* BackgroundTaskManager.m */,
 				A3CD361719CAB0AD0039F6E1 /* LocationTracker.h */,
-				A3CD361819CAB0AD0039F6E1 /* LocationTracker.m */,
+				A35C26721A451EE9005F6658 /* LocationTracker.m */,
 				A3CD728819D14430005F84E2 /* GeoTransformer.h */,
 				A3CD728919D14430005F84E2 /* GeoTransformer.m */,
 			);
@@ -2222,6 +2218,7 @@
 				A34F013C1A052A6B00F58C17 /* BaiduWeatherModel.m in Sources */,
 				A35C26331A426F4B005F6658 /* UIImage+RZStretchHelpers.m in Sources */,
 				A34F00E91A03C8D500F58C17 /* CarHomeViewController.m in Sources */,
+				A35C26731A451EE9005F6658 /* LocationTracker.m in Sources */,
 				A31FCA8C19EBC1D400A3BB4C /* DDLog+CustomTime.m in Sources */,
 				A3CD35FD19C6DCC00039F6E1 /* GPSFMDBLogger.m in Sources */,
 				A35C26481A426F4B005F6658 /* RZViewFactory.m in Sources */,
@@ -2256,7 +2253,6 @@
 				5C9090A018B3A66A00510153 /* AppDelegate.m in Sources */,
 				A34890741A3FCCAF002DE948 /* NSFileManager+Godzippa.m in Sources */,
 				A35C26471A426F4B005F6658 /* RZTelprompt.m in Sources */,
-				A3CD361A19CAB0AD0039F6E1 /* LocationTracker.m in Sources */,
 				A35C263F1A426F4B005F6658 /* RZDelayedOperation.m in Sources */,
 				A35C26381A426F4B005F6658 /* UIViewController+RZKeyboardWatcher.m in Sources */,
 				A34F01461A06699300F58C17 /* iCarousel.m in Sources */,
