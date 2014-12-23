@@ -8,8 +8,9 @@
 
 #import "GViewController.h"
 #import "RZCollectionTableView.h"
+#import "ZBNSearchDisplayController.h"
 
-@interface CarAssistorViewController : GViewController <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UISearchDisplayDelegate>
+@interface CarAssistorViewController : GViewController <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UISearchDisplayDelegate, ZBNSearchDisplayDelegate>
 
 @property (weak, nonatomic) IBOutlet RZCollectionTableView *suggestCollectionView;
 

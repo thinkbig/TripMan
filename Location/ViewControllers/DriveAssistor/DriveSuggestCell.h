@@ -8,6 +8,16 @@
 
 #import <UIKit/UIKit.h>
 #import "RZCollectionTableViewCell.h"
+#import "ScrollSegView.h"
+
+@interface SearchPOIHeader : UICollectionReusableView
+
+@property (weak, nonatomic) IBOutlet UIView *backgroundMask;
+@property (weak, nonatomic) IBOutlet UIImageView *rightIcon;
+
+@end
+
+/////////////////////////////////////////////////////////////////////////////////
 
 @interface DriveSuggestCell : RZCollectionTableViewCell
 
@@ -22,6 +32,13 @@
 
 @end
 
+/////////////////////////////////////////////////////////////////////////////////
+
+@interface SuggestPOICategoryCell : UICollectionViewCell
+
+@property (weak, nonatomic) IBOutlet ScrollSegView *scrollSeg;
+
+@end
 
 /////////////////////////////////////////////////////////////////////////////////
 
@@ -33,10 +50,4 @@
 
 @end
 
-/////////////////////////////////////////////////////////////////////////////////
 
-@interface SearchPOIHeader : UICollectionReusableView
-
-@property (weak, nonatomic) IBOutlet UIView *backgroundMask;
-
-@end

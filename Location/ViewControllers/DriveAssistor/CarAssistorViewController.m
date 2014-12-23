@@ -11,17 +11,26 @@
 #import "MapDisplayViewController.h"
 #import "SuggestDetailViewController.h"
 #import "RZCollectionTableView_Private.h"
-#import "ZBNSearchDisplayController.h"
+#import "POICategory.h"
+#import "UIImage+RZSolidColor.h"
+#import "CTPOICategoryFacade.h"
 
 @interface CarAssistorViewController () {
     ZBNSearchDisplayController *       searchDisplayController;
 }
 
 @property (nonatomic, strong) NSArray *                         topNMostUsedTrips;
+@property (nonatomic, strong) SearchPOIHeader*                  header;
+@property (nonatomic, strong) NSArray *                         categories;
 
 @end
 
 @implementation CarAssistorViewController
+
+- (void)internalInit
+{
+    self.categories = [[CTPOICategoryFacade new] defaultCategorys];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -29,16 +38,33 @@
     
     self.edgesForExtendedLayout = UIRectEdgeNone;
     
-    _searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, 220, 44)];
+    _searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, 220, 40)];
     _searchBar.translucent = YES;
-    _searchBar.placeholder = @"输入要去的地名";
+    _searchBar.placeholder = @"搜索要去的地名                     ";
     _searchBar.barTintColor = [UIColor clearColor];
     _searchBar.backgroundColor = [UIColor clearColor];
+    [self.searchBar setSearchFieldBackgroundImage:[UIImage rz_solidColorImageWithSize:CGSizeMake(28, 28) color:[UIColor clearColor]] forState:UIControlStateNormal];
     [_searchBar setSearchBarStyle:UISearchBarStyleMinimal];
     
     searchDisplayController = [[ZBNSearchDisplayController alloc] initWithSearchBar:_searchBar contentsController:self];
+    searchDisplayController.delegate = self;
     
+    [_searchBar setImage:[UIImage new] forSearchBarIcon:UISearchBarIconSearch state:UIControlStateNormal];
+    _searchBar.searchTextPositionAdjustment = UIOffsetMake(8, 0);
+    [[UILabel appearanceWhenContainedIn:[UISearchBar class], nil] setTextColor:UIColorFromRGB(0xaaaaaa)];
+    [[UITextField appearanceWhenContainedIn:[UISearchBar class], nil] setDefaultTextAttributes:@{
+                                                                                                 NSFontAttributeName: [UIFont boldSystemFontOfSize:16],
+                                                                                                 NSForegroundColorAttributeName: [UIColor whiteColor]
+                                                                                                 }];
     [self reloadContent];
+}
+
+- (void)updateData
+{
+    CTPOICategoryFacade * poiFacade = [CTPOICategoryFacade new];
+    [poiFacade requestWithSuccess:^(id array) {
+        self.categories = array;
+    } failure:nil];
 }
 
 - (void)reloadContent
@@ -70,12 +96,12 @@
     [super viewWillDisappear:animated];
 }
 
-- (void)searchDisplayControllerWillBeginSearch:(UISearchDisplayController *)controller {
-    self.navigationController.navigationBar.translucent = YES;
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
+    self.header.rightIcon.hidden = YES;
 }
 
-- (void)searchDisplayControllerDidEndSearch:(UISearchDisplayController *)controller {
-    self.navigationController.navigationBar.translucent = NO;
+- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
+    self.header.rightIcon.hidden = NO;
 }
 
 /*
@@ -96,7 +122,7 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     if (0 == section) {
-        return self.topNMostUsedTrips.count;
+        return 3;
     } else if (1 == section) {
         return 5;
     }
@@ -108,19 +134,28 @@
     UICollectionViewCell* cell = nil;
     if (0 == indexPath.section)
     {
-        DriveSuggestCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"suggestUsefulCell" forIndexPath:indexPath];
-        [realCell updateWithTripSummary:self.topNMostUsedTrips[indexPath.row]];
-        realCell._rz_parentCollectionTableView = self.suggestCollectionView;
-        RZCollectionTableViewCellEditingItem * delItem = [RZCollectionTableViewCellEditingItem itemWithIcon:[UIImage imageNamed:@"deleteicon"] highlightedIcon:[UIImage imageNamed:@"deleteicon"] backgroundColor:[UIColor clearColor] hostBgImg:[UIImage imageNamed:@"deletetag"]];
-        [realCell setRzEditingItems:@[delItem]];
-        realCell.rzEditingEnabled = YES;
-        cell = realCell;
+        if (indexPath.row < self.topNMostUsedTrips.count) {
+            DriveSuggestCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"suggestUsefulCell" forIndexPath:indexPath];
+            [realCell updateWithTripSummary:self.topNMostUsedTrips[indexPath.row]];
+            realCell._rz_parentCollectionTableView = self.suggestCollectionView;
+            RZCollectionTableViewCellEditingItem * delItem = [RZCollectionTableViewCellEditingItem itemWithIcon:[UIImage imageNamed:@"deleteicon"] highlightedIcon:[UIImage imageNamed:@"deleteicon"] backgroundColor:[UIColor clearColor] hostBgImg:[UIImage imageNamed:@"deletetag"]];
+            [realCell setRzEditingItems:@[delItem]];
+            realCell.rzEditingEnabled = YES;
+            cell = realCell;
+        } else {
+            UICollectionViewCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"suggestNewCell" forIndexPath:indexPath];
+            cell = realCell;
+        }
     }
     else
     {
         if (0 == indexPath.row) {
-            UICollectionViewCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"SuggestPOIFirst" forIndexPath:indexPath];
-            
+            SuggestPOICategoryCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"SuggestPOIFirst" forIndexPath:indexPath];
+            NSMutableArray * strArr = [NSMutableArray array];
+            for (POICategory * cat in self.categories) {
+                [strArr addObject:cat.disp_name];
+            }
+            realCell.scrollSeg.segStrings = strArr;
             cell = realCell;
         } else {
             UICollectionViewCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"SuggestPOICell" forIndexPath:indexPath];
@@ -136,10 +171,10 @@
 {
     UICollectionReusableView* reusableView = nil;
     if (kind == UICollectionElementKindSectionHeader) {
-        SearchPOIHeader* header = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"SuggestPOIHeader" forIndexPath:indexPath];
-        _searchBar.center = CGPointMake(header.backgroundMask.bounds.size.width/2.0, header.backgroundMask.bounds.size.height/2.0);
-        [header.backgroundMask addSubview:_searchBar];
-        reusableView = header;
+        self.header = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"SuggestPOIHeader" forIndexPath:indexPath];
+        _searchBar.center = CGPointMake(self.header.backgroundMask.bounds.size.width/2.0, self.header.backgroundMask.bounds.size.height/2.0);
+        [self.header.backgroundMask addSubview:_searchBar];
+        reusableView = self.header;
     }
     
     return reusableView;
@@ -147,7 +182,7 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     if (0 == indexPath.section) {
-        return CGSizeMake(300.f, 70.f);
+        return CGSizeMake(300.f, 65.f);
     } else if (1 == indexPath.section) {
         if (0 == indexPath.row) {
             return CGSizeMake(320, 40);
@@ -167,13 +202,18 @@
 }
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{
-    return UIEdgeInsetsMake(10.f, 0, 0, 0);
+    if (0 == section) {
+        return UIEdgeInsetsMake(5.f, 0, 0, 0);
+    } else if (1 == section) {
+        return UIEdgeInsetsMake(15.f, 0, 0, 0);
+    }
+    return UIEdgeInsetsZero;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section;
 {
     if (0 == section) {
-        return CGSizeMake(320, 90);
+        return CGSizeMake(320, 80);
     }
     return CGSizeZero;
 }
@@ -182,9 +222,13 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if (0 == indexPath.section) {
-        SuggestDetailViewController * suggestDetail = [self.storyboard instantiateViewControllerWithIdentifier:@"SuggestDetailID"];
-        suggestDetail.tripSum = self.topNMostUsedTrips[indexPath.row];
-        [self.navigationController pushViewController:suggestDetail animated:YES];
+        if (indexPath.row < self.topNMostUsedTrips.count) {
+            SuggestDetailViewController * suggestDetail = [self.storyboard instantiateViewControllerWithIdentifier:@"SuggestDetailID"];
+            suggestDetail.tripSum = self.topNMostUsedTrips[indexPath.row];
+            [self.navigationController pushViewController:suggestDetail animated:YES];
+        } else {
+            [self showToast:@"自定义添加功能尚在开发中"];
+        }
         
 //        MapDisplayViewController * mapVC = [[UIStoryboard storyboardWithName:@"Debug" bundle:nil] instantiateViewControllerWithIdentifier:@"MapDisplayView"];
 //        mapVC.tripSum = self.topNMostUsedTrips[indexPath.row];

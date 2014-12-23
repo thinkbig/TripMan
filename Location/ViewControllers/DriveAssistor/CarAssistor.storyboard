@@ -43,7 +43,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="78i-Eh-BHb">
                                     <size key="itemSize" width="50" height="50"/>
-                                    <size key="headerReferenceSize" width="50" height="90"/>
+                                    <size key="headerReferenceSize" width="50" height="80"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
@@ -52,20 +52,20 @@
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="300" height="70"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="300" height="65"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="greentag" translatesAutoresizingMaskIntoConstraints="NO" id="leV-nI-1xN">
-                                                    <rect key="frame" x="0.0" y="0.0" width="300" height="70"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="300" height="65"/>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="街道" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="7" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wdd-ri-Tst">
-                                                    <rect key="frame" x="144" y="10" width="72" height="21"/>
+                                                    <rect key="frame" x="144" y="8" width="72" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="建议出发时间" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="8" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wy4-ie-z54">
-                                                    <rect key="frame" x="15" y="40" width="120" height="21"/>
+                                                    <rect key="frame" x="15" y="37" width="120" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
@@ -74,13 +74,13 @@
                                                     <rect key="frame" x="222" y="0.0" width="80" height="70"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="10分钟" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="8" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="z8N-y7-j1C">
-                                                            <rect key="frame" x="10" y="15" width="55" height="21"/>
+                                                            <rect key="frame" x="10" y="14" width="55" height="21"/>
                                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
                                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="预计耗时" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="8" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="I8f-pZ-3Yh">
-                                                            <rect key="frame" x="10" y="35" width="55" height="21"/>
+                                                            <rect key="frame" x="10" y="34" width="55" height="21"/>
                                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
                                                             <color key="textColor" red="0.066666666669999999" green="0.80392156859999997" blue="0.1333333333" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
@@ -89,13 +89,13 @@
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="N个堵点" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="7" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Egr-2V-bHD">
-                                                    <rect key="frame" x="144" y="40" width="64" height="21"/>
+                                                    <rect key="frame" x="144" y="37" width="64" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="终点" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="7" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Kr5-jq-BAI">
-                                                    <rect key="frame" x="15" y="9" width="120" height="24"/>
+                                                    <rect key="frame" x="15" y="7" width="120" height="24"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
@@ -104,7 +104,7 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        <size key="customSize" width="300" height="70"/>
+                                        <size key="customSize" width="300" height="65"/>
                                         <connections>
                                             <outlet property="jamCntLabel" destination="Egr-2V-bHD" id="GdR-3p-vuG"/>
                                             <outlet property="jamDuringLabel" destination="z8N-y7-j1C" id="E8O-30-lr1"/>
@@ -113,27 +113,61 @@
                                             <outlet property="toStreet" destination="wdd-ri-Tst" id="HIQ-fC-D22"/>
                                         </connections>
                                     </collectionViewCell>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="SuggestPOIFirst" reuseIdentifier="SuggestPOIFirst" id="UZi-el-Y2p">
+                                    <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="suggestNewCell" id="Qsh-4Q-0Kb">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="300" height="65"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="plustag" translatesAutoresizingMaskIntoConstraints="NO" id="XCJ-rp-43I">
+                                                    <rect key="frame" x="0.0" y="0.0" width="300" height="65"/>
+                                                </imageView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstItem="XCJ-rp-43I" firstAttribute="top" secondItem="Qsh-4Q-0Kb" secondAttribute="top" id="3xI-Ll-C8j"/>
+                                            <constraint firstAttribute="trailing" secondItem="XCJ-rp-43I" secondAttribute="trailing" id="MqE-r6-Io6"/>
+                                            <constraint firstItem="XCJ-rp-43I" firstAttribute="leading" secondItem="Qsh-4Q-0Kb" secondAttribute="leading" id="QWt-gJ-vJr"/>
+                                            <constraint firstAttribute="bottom" secondItem="XCJ-rp-43I" secondAttribute="bottom" id="k7c-aE-Y90"/>
+                                        </constraints>
+                                        <size key="customSize" width="300" height="65"/>
+                                    </collectionViewCell>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="SuggestPOIFirst" reuseIdentifier="SuggestPOIFirst" id="UZi-el-Y2p" customClass="SuggestPOICategoryCell">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="40"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PLd-r0-n1Z" customClass="ScrollSegView">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="shadow" translatesAutoresizingMaskIntoConstraints="NO" id="Puo-cH-YcT">
+                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="5"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="5" id="9R3-J5-vNA"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PLd-r0-n1Z" customClass="ScrollSegView">
                                                     <rect key="frame" x="0.0" y="0.0" width="320" height="40"/>
                                                 </scrollView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="您可能想去" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="coA-Ca-5OO">
-                                                    <rect key="frame" x="60" y="9" width="239" height="21"/>
-                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
-                                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                         <color key="backgroundColor" red="0.046886152569999999" green="0.12938177300000001" blue="0.37646742719999998" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstItem="Puo-cH-YcT" firstAttribute="leading" secondItem="UZi-el-Y2p" secondAttribute="leading" id="KfO-IZ-gMp"/>
+                                            <constraint firstAttribute="trailing" secondItem="Puo-cH-YcT" secondAttribute="trailing" id="Nfu-RJ-WId"/>
+                                            <constraint firstAttribute="trailing" secondItem="PLd-r0-n1Z" secondAttribute="trailing" id="RrO-q3-UZ4"/>
+                                            <constraint firstItem="PLd-r0-n1Z" firstAttribute="top" secondItem="UZi-el-Y2p" secondAttribute="top" id="WA2-sz-xPc"/>
+                                            <constraint firstAttribute="bottom" secondItem="PLd-r0-n1Z" secondAttribute="bottom" id="fxA-hW-aBE"/>
+                                            <constraint firstItem="Puo-cH-YcT" firstAttribute="top" secondItem="UZi-el-Y2p" secondAttribute="top" id="hyI-AZ-Bst"/>
+                                            <constraint firstItem="PLd-r0-n1Z" firstAttribute="leading" secondItem="UZi-el-Y2p" secondAttribute="leading" id="nHB-Tv-oTE"/>
+                                        </constraints>
                                         <size key="customSize" width="320" height="40"/>
+                                        <connections>
+                                            <outlet property="scrollSeg" destination="PLd-r0-n1Z" id="1Tm-Ct-veB"/>
+                                        </connections>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="SuggestPOICell" id="lh3-mZ-UMc" customClass="DriveSuggestPOICell">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
@@ -166,6 +200,13 @@
                                                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Kmp-Gt-Ayj">
+                                                    <rect key="frame" x="35" y="0.0" width="1" height="70"/>
+                                                    <color key="backgroundColor" red="0.048159600869999999" green="0.35500217779999999" blue="0.67807614800000005" alpha="1" colorSpace="calibratedRGB"/>
+                                                </view>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="greenicon" translatesAutoresizingMaskIntoConstraints="NO" id="lFu-sl-teX">
+                                                    <rect key="frame" x="18" y="14" width="35" height="44"/>
+                                                </imageView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
@@ -182,19 +223,31 @@
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="90"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ujf-S6-D3A">
-                                            <rect key="frame" x="10" y="30" width="300" height="50"/>
-                                            <color key="backgroundColor" white="1" alpha="0.20000000000000001" colorSpace="calibratedWhite"/>
+                                        <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ujf-S6-D3A">
+                                            <rect key="frame" x="15" y="30" width="290" height="40"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Searcharea" translatesAutoresizingMaskIntoConstraints="NO" id="yKI-th-phc">
+                                                    <rect key="frame" x="0.0" y="0.0" width="290" height="40"/>
+                                                </imageView>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="searchicon" translatesAutoresizingMaskIntoConstraints="NO" id="BQL-bV-vsx">
+                                                    <rect key="frame" x="9" y="7" width="25" height="25"/>
+                                                </imageView>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="voiceicon" translatesAutoresizingMaskIntoConstraints="NO" id="vYN-PI-bdM">
+                                                    <rect key="frame" x="257" y="8" width="25" height="25"/>
+                                                </imageView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstAttribute="bottomMargin" secondItem="ujf-S6-D3A" secondAttribute="bottom" constant="2" id="BgC-I4-ylh"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="ujf-S6-D3A" secondAttribute="bottom" constant="12" id="BgC-I4-ylh"/>
                                         <constraint firstItem="ujf-S6-D3A" firstAttribute="centerX" secondItem="zQo-RO-4s7" secondAttribute="centerX" id="Bjo-Pv-QTn"/>
-                                        <constraint firstItem="ujf-S6-D3A" firstAttribute="leading" secondItem="zQo-RO-4s7" secondAttribute="leadingMargin" constant="2" id="F6U-mz-tc8"/>
+                                        <constraint firstItem="ujf-S6-D3A" firstAttribute="leading" secondItem="zQo-RO-4s7" secondAttribute="leadingMargin" constant="7" id="F6U-mz-tc8"/>
                                         <constraint firstItem="ujf-S6-D3A" firstAttribute="top" secondItem="zQo-RO-4s7" secondAttribute="topMargin" constant="22" id="W6H-tP-3P9"/>
                                     </constraints>
                                     <connections>
                                         <outlet property="backgroundMask" destination="ujf-S6-D3A" id="cUM-hF-7st"/>
+                                        <outlet property="rightIcon" destination="vYN-PI-bdM" id="qSI-nQ-P2A"/>
                                     </connections>
                                 </collectionReusableView>
                                 <connections>
@@ -519,8 +572,14 @@
         </scene>
     </scenes>
     <resources>
+        <image name="Searcharea" width="289" height="40"/>
+        <image name="greenicon" width="35" height="44"/>
         <image name="greentag" width="289" height="65"/>
         <image name="main_bg" width="320" height="568"/>
+        <image name="plustag" width="289" height="65"/>
+        <image name="searchicon" width="25" height="25"/>
+        <image name="shadow" width="266" height="6"/>
+        <image name="voiceicon" width="25" height="25"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

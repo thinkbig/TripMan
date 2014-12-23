@@ -8,6 +8,8 @@
 
 #import "ScrollSegView.h"
 
+#define SCROLL_SEG_MARGIN      8
+
 @interface ScrollSegView ()
 
 @property (nonatomic, strong) NSMutableArray *      segViews;
@@ -59,9 +61,12 @@
         [btn setTitleColor:self.normalTextColor forState:UIControlStateNormal];
         [btn setTitleColor:self.hightLightTextColor forState:UIControlStateHighlighted];
         [btn setTitleColor:self.hightLightTextColor forState:UIControlStateSelected];
-        btn.titleLabel.font = [UIFont systemFontOfSize:18];
+        btn.titleLabel.font = [UIFont boldSystemFontOfSize:14];
         [btn setTitle:str forState:UIControlStateNormal];
         [btn sizeToFit];
+        CGRect oldFrame = btn.frame;
+        oldFrame.size.width += 8;
+        btn.frame = oldFrame;
         btn.tag = idx;
         [btn addTarget:self action:@selector(selItem:) forControlEvents:UIControlEventTouchUpInside];
         [self.segViews addObject:btn];
@@ -75,12 +80,14 @@
 {
     [super layoutSubviews];
     
-    __block CGFloat xPos = 0;
+    CGFloat height = self.bounds.size.height;
+    __block CGFloat xPos = SCROLL_SEG_MARGIN;
     [self.segViews enumerateObjectsUsingBlock:^(UIButton * obj, NSUInteger idx, BOOL *stop) {
         CGRect oldRc = obj.frame;
         oldRc.origin.x = xPos;
+        oldRc.size.height = height;
         obj.frame = oldRc;
-        xPos = CGRectGetMaxX(oldRc);
+        xPos = CGRectGetMaxX(oldRc) + SCROLL_SEG_MARGIN;
         obj.selected = (idx == _selIdx);
     }];
     
@@ -99,6 +106,7 @@
         [self.segViews enumerateObjectsUsingBlock:^(UIButton * obj, NSUInteger idx, BOOL *stop) {
             obj.selected = (idx == selIdx);
         }];
+        NSLog(@"select item at index %lu", (unsigned long)selIdx);
         if (self.selBlock) {
             self.selBlock(selIdx);
         }

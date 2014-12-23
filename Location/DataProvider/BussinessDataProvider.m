@@ -97,6 +97,11 @@ static BussinessDataProvider * _sharedProvider = nil;
     });
 }
 
+- (NSString *)currentCity
+{
+    return _latestCityDate[@"city"];
+}
+
 - (void) updateWeatherToday:(CLLocation*)loc
 {
     if (_isWeatherUpdating) {

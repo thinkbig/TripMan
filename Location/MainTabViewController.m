@@ -46,7 +46,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.tabBar.backgroundColor = UIColorFromRGB(0x1b1f26);
+    self.tabBar.devideLineImageView.image = nil;
+    self.tabBar.backgroundImageView.image = [UIImage imageNamed:@"tabbar"];
     [self setSelectedIndex:0 animed:YES];
     
 }

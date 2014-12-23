@@ -36,7 +36,7 @@
         self.backgroundImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         [self addSubview:self.backgroundImageView];
         
-        self.selectedImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 1, frame.size.height, frame.size.height)];
+        self.selectedImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, frame.size.height, frame.size.height)];
         self.selectedImageView.image = [self defaultSelectionIndicatorImage];
         self.selectedImageView.contentMode = UIViewContentModeScaleToFill;
         self.selectedImageView.backgroundColor = [UIColor clearColor];

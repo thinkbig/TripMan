@@ -25,6 +25,11 @@ typedef NS_ENUM(NSUInteger, eCacheStrategy) {
     eCacheStrategySqlite
 };
 
+typedef NS_ENUM(NSUInteger, eCallbackStrategy) {
+    eCallBackCacheIfExist = 0,
+    eCallBackCacheIfRequestFail,
+    eCallBackCacheAndRequestNew
+};
 
 @interface CommonFacade : NSObject
 
@@ -60,6 +65,7 @@ typedef NS_ENUM(NSUInteger, eCacheStrategy) {
 
 - (eCacheStrategy) cacheStrategy;       // default for no cache
 - (NSTimeInterval) expiredDuring;
+- (eCallbackStrategy) callbackStrategy; // only work when cache strategy is on
 
 // override this if u need custom key for caching
 - (NSString*) keyByUrl:(NSString*)url resPath:(NSString*)path andParam:(NSDictionary*)param;
@@ -67,5 +73,9 @@ typedef NS_ENUM(NSUInteger, eCacheStrategy) {
 // no need to override these 2 functions below
 - (id) cachedResultForKey:(NSString*)key;
 - (void) cacheObject:(id)obj forKey:(NSString*)key;
+
+
+// helper functin
++ (id) fromJsonString:(NSString*)str;
 
 @end

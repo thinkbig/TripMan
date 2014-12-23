@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="02J-oe-V3C">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="02J-oe-V3C">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
@@ -1312,16 +1312,16 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Slider" width="508" height="57"/>
-        <image name="bluedot" width="31" height="46"/>
-        <image name="blueicon" width="70" height="88"/>
+        <image name="Slider" width="254" height="28"/>
+        <image name="bluedot" width="15" height="23"/>
+        <image name="blueicon" width="35" height="44"/>
         <image name="distancetotal" width="70" height="88"/>
-        <image name="greenicon" width="70" height="88"/>
-        <image name="main_bg" width="640" height="1136"/>
-        <image name="navbarshadow" width="640" height="29"/>
-        <image name="shadow" width="640" height="11"/>
-        <image name="speedbar" width="320" height="236"/>
-        <image name="yellowicon" width="70" height="88"/>
+        <image name="greenicon" width="35" height="44"/>
+        <image name="main_bg" width="320" height="568"/>
+        <image name="navbarshadow" width="320" height="14"/>
+        <image name="shadow" width="320" height="5"/>
+        <image name="speedbar" width="160" height="118"/>
+        <image name="yellowicon" width="35" height="44"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

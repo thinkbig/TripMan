@@ -114,6 +114,15 @@
     [searchBar setShowsCancelButton:YES animated:YES];
     [self setActive:YES animated:YES];
     [_searchResultsTableView reloadData];
+    if ([self.delegate respondsToSelector:@selector(searchBarTextDidBeginEditing:)]) {
+        [self.delegate searchBarTextDidBeginEditing:searchBar];
+    }
+}
+
+- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
+    if ([self.delegate respondsToSelector:@selector(searchBarTextDidEndEditing:)]) {
+        [self.delegate searchBarTextDidEndEditing:searchBar];
+    }
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {

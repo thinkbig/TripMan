@@ -13,11 +13,6 @@
 
 @implementation DriveSuggestCell
 
-- (void)awakeFromNib
-{
-    self.layer.cornerRadius = 5;
-}
-
 - (NSString*) safeText:(NSString*)str withDefault:(NSString*)defaultStr
 {
     return str.length > 0 ? str : defaultStr;
@@ -45,11 +40,12 @@
 
 /////////////////////////////////////////////////////////////////////////////////
 
-@implementation SearchPOIHeader
+@implementation SuggestPOICategoryCell
 
-- (void)awakeFromNib
-{
-    self.backgroundMask.layer.cornerRadius = 8;
-}
+@end
+
+/////////////////////////////////////////////////////////////////////////////////
+
+@implementation SearchPOIHeader
 
 @end

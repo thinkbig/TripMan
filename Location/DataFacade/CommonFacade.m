@@ -33,13 +33,18 @@
 - (void)fetchDataWithPath:(NSString *)resPath requestType:(eRequestType)type param:(NSDictionary*)param constructBodyBlock:(void (^)(id <AFMultipartFormData> formData))block success:(successFacadeBlock)success failure:(failureFacadeBlock)failure
 {
     NSString * keyUrl = [self keyByUrl:[self baseUrl] resPath:resPath andParam:param];
-    if (eCacheStrategyNone != [self cacheStrategy]) {
+    eCallbackStrategy cbStrategy = [self callbackStrategy];
+    BOOL cacheCallBacked = NO;
+    if (eCacheStrategyNone != [self cacheStrategy] && (eCallBackCacheIfExist == cbStrategy || eCallBackCacheAndRequestNew == cbStrategy)) {
         id cachedResult = [self cachedResultForKey:keyUrl];
         if (cachedResult) {
+            cacheCallBacked = YES;
             if (success) {
                 success(cachedResult);
             }
-            return;
+            if (eCallBackCacheIfExist == cbStrategy) {
+                return;
+            }
         }
     }
     
@@ -74,6 +79,22 @@
         }
     }
     
+    void (^failureBlock)(NSError *) = ^(NSError *error) {
+        if (eCallBackCacheIfRequestFail == cbStrategy) {
+            id cachedResult = [self cachedResultForKey:keyUrl];
+            if (cachedResult) {
+                if (success) {
+                    success(cachedResult);
+                }
+                return;
+            }
+        }
+        // strategy eCallBackCacheAndRequestNew have been callback once, do not need call back again
+        if (failure && !(cacheCallBacked)) {
+            failure(error);
+        }
+    };
+    
     void (^successBlock)(id) = ^(id orig) {
         if (success || failure || eCacheStrategyNone != [self cacheStrategy]) {
             NSError * err = nil;
@@ -82,20 +103,14 @@
                 id returnObj = [self parseRespData:result error:&err];
                 if (nil == err) {
                     [self cacheObject:returnObj forKey:keyUrl];
-                    if (success) {
+                    if (success && !(cacheCallBacked)) {
                         success(returnObj);
                     }
                 }
             }
-            if (err && failure) {
-                failure(err);
+            if (err) {
+                failureBlock(err);
             }
-        }
-    };
-    
-    void (^failureBlock)(NSError *) = ^(NSError *error) {
-        if (failure) {
-            failure(error);
         }
     };
     
@@ -237,6 +252,10 @@
     return MAXFLOAT;
 }
 
+- (eCallbackStrategy) callbackStrategy {
+    return eCallBackCacheIfExist;
+}
+
 - (id) cachedResultForKey:(NSString*)key
 {
     if (nil == key) {
@@ -266,6 +285,16 @@
     } else if (eCacheStrategySqlite == strategy) {
         [[TSCache sharedInst] setSqlitCache:obj forKey:key expiresIn:[self expiredDuring]];
     }
+}
+
++ (id) fromJsonString:(NSString*)str
+{
+    id json = nil;
+    if (str) {
+        NSData *data = [str dataUsingEncoding:NSUTF8StringEncoding];
+        json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+    }
+    return json;
 }
 
 @end

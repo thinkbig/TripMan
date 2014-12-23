@@ -147,6 +147,9 @@
 		A35C266E1A42FD8B005F6658 /* DaySummary.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C266D1A42FD8B005F6658 /* DaySummary.m */; };
 		A35C26711A42FD8B005F6658 /* WeatherInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C26701A42FD8B005F6658 /* WeatherInfo.m */; };
 		A35C26731A451EE9005F6658 /* LocationTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C26721A451EE9005F6658 /* LocationTracker.m */; };
+		A35C26771A4808EC005F6658 /* POICategory.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C26761A4808EC005F6658 /* POICategory.m */; };
+		A35C267F1A48FC70005F6658 /* BaseChetuFacade.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C267E1A48FC70005F6658 /* BaseChetuFacade.m */; };
+		A35C26831A48FCE2005F6658 /* CTPOICategoryFacade.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C26821A48FCE2005F6658 /* CTPOICategoryFacade.m */; };
 		A377B42F19F5537900DDB5EE /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = A377B42E19F5537900DDB5EE /* NSString+MD5.m */; };
 		A378ABE31A164664006A3B68 /* DVSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = A378ABE21A164664006A3B68 /* DVSwitch.m */; };
 		A378ABE71A16F124006A3B68 /* DRDynamicSlideShow.m in Sources */ = {isa = PBXBuildFile; fileRef = A378ABE61A16F124006A3B68 /* DRDynamicSlideShow.m */; };
@@ -527,6 +530,12 @@
 		A35C266F1A42FD8B005F6658 /* WeatherInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeatherInfo.h; sourceTree = "<group>"; };
 		A35C26701A42FD8B005F6658 /* WeatherInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeatherInfo.m; sourceTree = "<group>"; };
 		A35C26721A451EE9005F6658 /* LocationTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationTracker.m; sourceTree = "<group>"; };
+		A35C26751A4808EC005F6658 /* POICategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POICategory.h; sourceTree = "<group>"; };
+		A35C26761A4808EC005F6658 /* POICategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = POICategory.m; sourceTree = "<group>"; };
+		A35C267D1A48FC70005F6658 /* BaseChetuFacade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseChetuFacade.h; sourceTree = "<group>"; };
+		A35C267E1A48FC70005F6658 /* BaseChetuFacade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseChetuFacade.m; sourceTree = "<group>"; };
+		A35C26811A48FCE2005F6658 /* CTPOICategoryFacade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTPOICategoryFacade.h; sourceTree = "<group>"; };
+		A35C26821A48FCE2005F6658 /* CTPOICategoryFacade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTPOICategoryFacade.m; sourceTree = "<group>"; };
 		A377B42D19F5537900DDB5EE /* NSString+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5.h"; sourceTree = "<group>"; };
 		A377B42E19F5537900DDB5EE /* NSString+MD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MD5.m"; sourceTree = "<group>"; };
 		A378ABE11A164664006A3B68 /* DVSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVSwitch.h; sourceTree = "<group>"; };
@@ -1140,6 +1149,7 @@
 		A34F01161A04A56F00F58C17 /* DataFacade */ = {
 			isa = PBXGroup;
 			children = (
+				A35C267C1A48FC56005F6658 /* CheTuApi */,
 				A34F011F1A04D96B00F58C17 /* BaiduApi */,
 				A34F01171A04A56F00F58C17 /* CommonFacade.h */,
 				A34F01181A04A56F00F58C17 /* CommonFacade.m */,
@@ -1180,6 +1190,7 @@
 			children = (
 				A37E03E91A0D216900B0B0EC /* Basic */,
 				A34F01391A052A4800F58C17 /* Baidu */,
+				A35C26741A4808BC005F6658 /* TripPOI */,
 			);
 			path = DataModel;
 			sourceTree = "<group>";
@@ -1661,6 +1672,34 @@
 				A35C264F1A42C5BB005F6658 /* ScrollSegView.m */,
 			);
 			path = ScrollSegView;
+			sourceTree = "<group>";
+		};
+		A35C26741A4808BC005F6658 /* TripPOI */ = {
+			isa = PBXGroup;
+			children = (
+				A35C26751A4808EC005F6658 /* POICategory.h */,
+				A35C26761A4808EC005F6658 /* POICategory.m */,
+			);
+			path = TripPOI;
+			sourceTree = "<group>";
+		};
+		A35C267C1A48FC56005F6658 /* CheTuApi */ = {
+			isa = PBXGroup;
+			children = (
+				A35C26801A48FCE2005F6658 /* CTPOI */,
+				A35C267D1A48FC70005F6658 /* BaseChetuFacade.h */,
+				A35C267E1A48FC70005F6658 /* BaseChetuFacade.m */,
+			);
+			path = CheTuApi;
+			sourceTree = "<group>";
+		};
+		A35C26801A48FCE2005F6658 /* CTPOI */ = {
+			isa = PBXGroup;
+			children = (
+				A35C26811A48FCE2005F6658 /* CTPOICategoryFacade.h */,
+				A35C26821A48FCE2005F6658 /* CTPOICategoryFacade.m */,
+			);
+			path = CTPOI;
 			sourceTree = "<group>";
 		};
 		A377B42B19F5532400DDB5EE /* Category */ = {
@@ -2148,6 +2187,7 @@
 				A35C264A1A426F4B005F6658 /* RZWaiter.m in Sources */,
 				A35C262E1A426F4B005F6658 /* UIFont+RZExtensions.m in Sources */,
 				A35C26291A426F4B005F6658 /* NSString+RZStringFormatting.m in Sources */,
+				A35C26771A4808EC005F6658 /* POICategory.m in Sources */,
 				5C90909C18B3A66A00510153 /* main.m in Sources */,
 				A34F011D1A04A7EF00F58C17 /* TSHttpClient.m in Sources */,
 				A3D0B4B81A2C64A80030B19E /* _MPWButton.m in Sources */,
@@ -2238,11 +2278,13 @@
 				A314116C1A0A4CCD0019F557 /* TripMan.xcdatamodeld in Sources */,
 				A33544111A1F1C3C0023815B /* ZBNSearchDisplayController.m in Sources */,
 				A378ABE71A16F124006A3B68 /* DRDynamicSlideShow.m in Sources */,
+				A35C267F1A48FC70005F6658 /* BaseChetuFacade.m in Sources */,
 				A314116D1A0A4CCD0019F557 /* TripsCoreDataManager.m in Sources */,
 				A35C264C1A426F4B005F6658 /* RZDispatch.m in Sources */,
 				A318CEEB1A2618DE00320E8F /* NSAttributedString+Style.m in Sources */,
 				A35C26351A426F4B005F6658 /* UIView+RZAutoLayoutHelpers.m in Sources */,
 				A35C26531A42FD8A005F6658 /* TurningInfo.m in Sources */,
+				A35C26831A48FCE2005F6658 /* CTPOICategoryFacade.m in Sources */,
 				A34F01271A04F22400F58C17 /* BaiduWeatherFacade.m in Sources */,
 				A35C26401A426F4B005F6658 /* RZLocationService.m in Sources */,
 				A34F01131A03D78900F58C17 /* LogFileListViewController.m in Sources */,

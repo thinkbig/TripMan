@@ -36,4 +36,7 @@
 - (void)textDidChange:(NSString *)searchText;
 - (void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope;
 
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar;
+- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar;
+
 @end
