@@ -141,7 +141,7 @@
     _oldSearchFrame = self.searchBar.frame;
     _oldSearchSupperFrame = self.searchBar.superview.frame;
     
-    CGFloat y = CGRectGetMaxY(_oldSearchSupperFrame) + 5;
+    CGFloat y = CGRectGetMaxY(_oldSearchSupperFrame) + 10;
     CGFloat height = _searchContentsController.view.frame.size.height - y;
     _searchResultsTableView.frame = CGRectMake(0.0f, y, _searchContentsController.view.frame.size.width, height);
     

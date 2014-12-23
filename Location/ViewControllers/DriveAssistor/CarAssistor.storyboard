@@ -223,7 +223,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="80"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
-                                        <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ujf-S6-D3A">
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ujf-S6-D3A">
                                             <rect key="frame" x="15" y="30" width="290" height="40"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Searcharea" translatesAutoresizingMaskIntoConstraints="NO" id="yKI-th-phc">
@@ -240,7 +240,7 @@
                                         </view>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstAttribute="bottomMargin" secondItem="ujf-S6-D3A" secondAttribute="bottom" constant="12" id="BgC-I4-ylh"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="ujf-S6-D3A" secondAttribute="bottom" constant="2" id="BgC-I4-ylh"/>
                                         <constraint firstItem="ujf-S6-D3A" firstAttribute="centerX" secondItem="zQo-RO-4s7" secondAttribute="centerX" id="Bjo-Pv-QTn"/>
                                         <constraint firstItem="ujf-S6-D3A" firstAttribute="leading" secondItem="zQo-RO-4s7" secondAttribute="leadingMargin" constant="7" id="F6U-mz-tc8"/>
                                         <constraint firstItem="ujf-S6-D3A" firstAttribute="top" secondItem="zQo-RO-4s7" secondAttribute="topMargin" constant="22" id="W6H-tP-3P9"/>
