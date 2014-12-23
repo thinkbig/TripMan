@@ -150,6 +150,7 @@
 		A35C26771A4808EC005F6658 /* POICategory.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C26761A4808EC005F6658 /* POICategory.m */; };
 		A35C267F1A48FC70005F6658 /* BaseChetuFacade.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C267E1A48FC70005F6658 /* BaseChetuFacade.m */; };
 		A35C26831A48FCE2005F6658 /* CTPOICategoryFacade.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C26821A48FCE2005F6658 /* CTPOICategoryFacade.m */; };
+		A35C26861A490F5F005F6658 /* HomeTripCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C26851A490F5F005F6658 /* HomeTripCell.m */; };
 		A377B42F19F5537900DDB5EE /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = A377B42E19F5537900DDB5EE /* NSString+MD5.m */; };
 		A378ABE31A164664006A3B68 /* DVSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = A378ABE21A164664006A3B68 /* DVSwitch.m */; };
 		A378ABE71A16F124006A3B68 /* DRDynamicSlideShow.m in Sources */ = {isa = PBXBuildFile; fileRef = A378ABE61A16F124006A3B68 /* DRDynamicSlideShow.m */; };
@@ -164,6 +165,7 @@
 		A385C54A19F68FA000A0F7F6 /* GPSAcceleratorAnalyzer.m in Sources */ = {isa = PBXBuildFile; fileRef = A385C54919F68FA000A0F7F6 /* GPSAcceleratorAnalyzer.m */; };
 		A399C9FB1A12E0CA00665917 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A399C9FA1A12E0CA00665917 /* Main.storyboard */; };
 		A399CA051A12F5EE00665917 /* TripManUnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A399CA041A12F5EE00665917 /* TripManUnitTests.m */; };
+		A3B5DFC91A49200C00576F77 /* FXLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = A3B5DFC81A49200C00576F77 /* FXLabel.m */; };
 		A3BD72AC1A14F2B00007ECA1 /* BaiduRoadMarkFacade.m in Sources */ = {isa = PBXBuildFile; fileRef = A3BD72AB1A14F2B00007ECA1 /* BaiduRoadMarkFacade.m */; };
 		A3BD72AF1A15A9950007ECA1 /* BaiduMarkModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A3BD72AE1A15A9950007ECA1 /* BaiduMarkModel.m */; };
 		A3BD72B21A15BC2E0007ECA1 /* BussinessDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = A3BD72B11A15BC2E0007ECA1 /* BussinessDataProvider.m */; };
@@ -536,6 +538,8 @@
 		A35C267E1A48FC70005F6658 /* BaseChetuFacade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseChetuFacade.m; sourceTree = "<group>"; };
 		A35C26811A48FCE2005F6658 /* CTPOICategoryFacade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTPOICategoryFacade.h; sourceTree = "<group>"; };
 		A35C26821A48FCE2005F6658 /* CTPOICategoryFacade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTPOICategoryFacade.m; sourceTree = "<group>"; };
+		A35C26841A490F5F005F6658 /* HomeTripCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeTripCell.h; sourceTree = "<group>"; };
+		A35C26851A490F5F005F6658 /* HomeTripCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeTripCell.m; sourceTree = "<group>"; };
 		A377B42D19F5537900DDB5EE /* NSString+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5.h"; sourceTree = "<group>"; };
 		A377B42E19F5537900DDB5EE /* NSString+MD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MD5.m"; sourceTree = "<group>"; };
 		A378ABE11A164664006A3B68 /* DVSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVSwitch.h; sourceTree = "<group>"; };
@@ -562,6 +566,8 @@
 		A399CA001A12F5EE00665917 /* TripManUnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TripManUnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A399CA031A12F5EE00665917 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A399CA041A12F5EE00665917 /* TripManUnitTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TripManUnitTests.m; sourceTree = "<group>"; };
+		A3B5DFC71A49200C00576F77 /* FXLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXLabel.h; sourceTree = "<group>"; };
+		A3B5DFC81A49200C00576F77 /* FXLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXLabel.m; sourceTree = "<group>"; };
 		A3BD72AA1A14F2B00007ECA1 /* BaiduRoadMarkFacade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaiduRoadMarkFacade.h; sourceTree = "<group>"; };
 		A3BD72AB1A14F2B00007ECA1 /* BaiduRoadMarkFacade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaiduRoadMarkFacade.m; sourceTree = "<group>"; };
 		A3BD72AD1A15A9950007ECA1 /* BaiduMarkModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaiduMarkModel.h; sourceTree = "<group>"; };
@@ -1269,6 +1275,7 @@
 		A34F01471A0715A900F58C17 /* ThirdParty */ = {
 			isa = PBXGroup;
 			children = (
+				A3B5DFC61A49200C00576F77 /* FXLabel */,
 				A35C25AD1A426F4B005F6658 /* RZUtils */,
 				A34890581A3FCB6F002DE948 /* AnyJson */,
 				A34890541A3FC5FF002DE948 /* AFgzipRequestSerializer */,
@@ -1798,6 +1805,15 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		A3B5DFC61A49200C00576F77 /* FXLabel */ = {
+			isa = PBXGroup;
+			children = (
+				A3B5DFC71A49200C00576F77 /* FXLabel.h */,
+				A3B5DFC81A49200C00576F77 /* FXLabel.m */,
+			);
+			path = FXLabel;
+			sourceTree = "<group>";
+		};
 		A3BD72A91A14F2350007ECA1 /* RoadMark */ = {
 			isa = PBXGroup;
 			children = (
@@ -1949,6 +1965,8 @@
 				A34F00FB1A03D0B200F58C17 /* CarHome.storyboard */,
 				A34F00E71A03C8D500F58C17 /* CarHomeViewController.h */,
 				A34F00E81A03C8D500F58C17 /* CarHomeViewController.m */,
+				A35C26841A490F5F005F6658 /* HomeTripCell.h */,
+				A35C26851A490F5F005F6658 /* HomeTripCell.m */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -2162,6 +2180,7 @@
 				A35C26261A426F4B005F6658 /* NSDate+RZExtensions.m in Sources */,
 				A35C266E1A42FD8B005F6658 /* DaySummary.m in Sources */,
 				A35C26411A426F4B005F6658 /* RZProgressView.m in Sources */,
+				A35C26861A490F5F005F6658 /* HomeTripCell.m in Sources */,
 				A342849B19C42081002DB0FD /* GPSLogger.m in Sources */,
 				A35C26251A426F4B005F6658 /* NSObject+RZBlockKVO.m in Sources */,
 				A34F01221A04D98E00F58C17 /* BaseBaiduFacade.m in Sources */,
@@ -2218,6 +2237,7 @@
 				A331F5C71A1D700A001F4DE3 /* SuggestOverLayerCollectionViewController.m in Sources */,
 				A35C26451A426F4B005F6658 /* RZSingleChildContainerViewController.m in Sources */,
 				A37E03EC1A0D216900B0B0EC /* TSPair.m in Sources */,
+				A3B5DFC91A49200C00576F77 /* FXLabel.m in Sources */,
 				A35C26301A426F4B005F6658 /* UIImage+RZResize.m in Sources */,
 				A3326B281A2DFAA800C9F1C9 /* GToolUtil.m in Sources */,
 				A35C26651A42FD8B005F6658 /* ParkingRegion.m in Sources */,

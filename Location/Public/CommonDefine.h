@@ -39,6 +39,13 @@
 // directory define
 #define DocumentDirectory           [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject]
 
+
+// define common color
+#define COLOR_STAT_GREEN            UIColorFromRGB(0x7bce33)
+#define COLOR_STAT_YELLOW           UIColorFromRGB(0xffba00)
+#define COLOR_STAT_RED              UIColorFromRGB(0xe34b3f)
+#define COLOR_SEPRATOR_GRAY         UIColorFromRGB(0x393d44)
+
 // debug define
 #define IS_FORCE_DRIVING             (((AppDelegate*)([UIApplication sharedApplication].delegate)).forceDriving)
 

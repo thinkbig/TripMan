@@ -11,33 +11,6 @@
 
 @interface CarHomeViewController : GViewController
 
-@property (weak, nonatomic) IBOutlet UILabel *suggestDest;
-@property (weak, nonatomic) IBOutlet UILabel *suggestDistFrom;
-
-@property (weak, nonatomic) IBOutlet UIView *duringView;
-@property (weak, nonatomic) IBOutlet UILabel *duringLabel;
-@property (weak, nonatomic) IBOutlet UIView *jamView;
-@property (weak, nonatomic) IBOutlet UILabel *jamLabel;
-@property (weak, nonatomic) IBOutlet UIView *suggestView;
-@property (weak, nonatomic) IBOutlet UILabel *suggestLabel;
-
-@property (weak, nonatomic) IBOutlet UIView *statusView;
-@property (weak, nonatomic) IBOutlet UIView *statusColorView;
-@property (weak, nonatomic) IBOutlet UILabel *statusLabel;
-
-
-@property (weak, nonatomic) IBOutlet UIImageView *todayTripIcon;
-@property (weak, nonatomic) IBOutlet UILabel *todayTripSum;
-
-@property (weak, nonatomic) IBOutlet UIImageView *IllegalIcon;
-@property (weak, nonatomic) IBOutlet UILabel *IllegalCount;
-@property (weak, nonatomic) IBOutlet UILabel *IllegalPendingCount;
-
-
-@property (weak, nonatomic) IBOutlet PICircularProgressView *carHealthProgress;
-@property (weak, nonatomic) IBOutlet UILabel *carHeathLabel;
-
-@property (weak, nonatomic) IBOutlet PICircularProgressView *carMaintainProgress;
-@property (weak, nonatomic) IBOutlet UILabel *carMaintainLabel;
+@property (weak, nonatomic) IBOutlet UICollectionView *homeCollection;
 
 @end

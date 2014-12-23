@@ -22,7 +22,7 @@
         [appearance setRoundedTail:NO];
         [appearance setShowShadow:YES];
         
-        [appearance setThicknessRatio:0.12f];
+        [appearance setThicknessRatio:0.1f];
         
         [appearance setInnerBackgroundColor:nil];
         [appearance setOuterBackgroundColor:nil];
