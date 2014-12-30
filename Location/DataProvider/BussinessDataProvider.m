@@ -169,6 +169,9 @@ static BussinessDataProvider * _sharedProvider = nil;
     }
 
     for (ParkingRegionDetail * region in regions) {
+        if ([region.coreDataItem.is_temp boolValue]) {
+            continue;
+        }
         if (force || ![region.coreDataItem.is_analyzed boolValue]) {
             BaiduReverseGeocodingWrapper * wrapper = [BaiduReverseGeocodingWrapper new];
             wrapper.coordinate = [GeoTransformer earth2Baidu:region.region.center];
@@ -195,6 +198,9 @@ static BussinessDataProvider * _sharedProvider = nil;
 
 - (void) updateRegionInfo:(ParkingRegion*)region force:(BOOL)force success:(successFacadeBlock)success failure:(failureFacadeBlock)failure
 {
+    if ([region.is_temp boolValue]) {
+        return;
+    }
     if (force || ![region.is_analyzed boolValue]) {
         BaiduReverseGeocodingWrapper * wrapper = [BaiduReverseGeocodingWrapper new];
         wrapper.coordinate = [GeoTransformer earth2Baidu:CLLocationCoordinate2DMake([region.center_lat doubleValue], [region.center_lon doubleValue])];

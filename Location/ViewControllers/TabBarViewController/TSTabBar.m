@@ -46,6 +46,17 @@
     return self;
 }
 
+- (void)setTabShadowImage:(UIImage*)image
+{
+    if (image) {
+        self.devideLineImageView.image = image;
+        self.devideLineImageView.backgroundColor = [UIColor clearColor];
+        CGSize imgSz = image.size;
+        CGSize frameSz = self.bounds.size;
+        self.devideLineImageView.frame = CGRectMake((frameSz.width-imgSz.width)/2, -imgSz.height, imgSz.width, imgSz.height);
+    }
+}
+
 - (void)setItemModels:(NSArray*)itemModels
 {
     if (itemModels.count == 0) {

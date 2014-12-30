@@ -48,20 +48,23 @@
     view.frame = self.contentView.bounds;
     [self.contentView addSubview:view];
     
-    self.noResultLabel.hidden = YES;
+    self.noResultView.hidden = YES;
 }
 
 - (void) showNoResult:(BOOL)show
 {
-    self.noResultLabel.hidden = !show;
+    self.noResultView.hidden = !show;
 }
 
 - (void)layoutSubviews
 {
     [super layoutSubviews];
     for (UIView * view in self.contentView.subviews) {
-        view.frame = self.contentView.bounds;
+        if (view != self.shadowView) {
+            view.frame = self.contentView.bounds;
+        }
     }
+    [self.contentView bringSubviewToFront:self.shadowView];
 }
 
 @end

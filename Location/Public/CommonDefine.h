@@ -44,7 +44,15 @@
 #define COLOR_STAT_GREEN            UIColorFromRGB(0x7bce33)
 #define COLOR_STAT_YELLOW           UIColorFromRGB(0xffba00)
 #define COLOR_STAT_RED              UIColorFromRGB(0xe34b3f)
+#define COLOR_STATUS_BLUE           UIColorFromRGB(0x00EBFF)
+#define COLOR_UNIT_GRAY             [UIColor colorWithWhite:1.0 alpha:0.54f]
+
 #define COLOR_SEPRATOR_GRAY         UIColorFromRGB(0x393d44)
+
+// defne common font
+#define DIGITAL_FONT                @"HelveticaNeue-CondensedBold"
+#define DigitalFontSize(sz_)        [UIFont fontWithName:DIGITAL_FONT size:(sz_)]
+
 
 // debug define
 #define IS_FORCE_DRIVING             (((AppDelegate*)([UIApplication sharedApplication].delegate)).forceDriving)

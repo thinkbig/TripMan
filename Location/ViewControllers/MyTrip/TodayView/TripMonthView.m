@@ -11,18 +11,13 @@
 
 @implementation TripMonthView
 
-/*
+/*tatag
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect {
     // Drawing code
 }
 */
-
-- (void)awakeFromNib
-{
-    self.tolCntLabel.layer.cornerRadius = CGRectGetHeight(self.tolCntLabel.bounds)/2.0f;
-}
 
 - (void) updateMonth
 {
@@ -33,11 +28,12 @@
     CGFloat totalDuring = [self.monthSum.total_during floatValue];
     NSUInteger tripCnt = [self.monthSum.trip_cnt integerValue];
     
+    
     NSString * distStr = [NSString stringWithFormat:@"%.f", totalDist/1000.0];
-    self.tolDistLabel.attributedText = [NSAttributedString stringWithNumber:distStr font:[UIFont boldSystemFontOfSize:40] color:UIColorFromRGB(0x82d13a) andUnit:@"km" font:[UIFont boldSystemFontOfSize:12] color:UIColorFromRGB(0x82d13a)];
+    self.tolDistLabel.attributedText = [NSAttributedString stringWithNumber:distStr font:[self.tolDistLabel.font fontWithSize:50] color:self.tolDistLabel.textColor andUnit:@"km" font:[self.tolDistLabel.font fontWithSize:17] color:self.tolDistLabel.textColor];
     
     NSString * duringStr = [NSString stringWithFormat:@"%.f", totalDuring/60.0];
-    self.tolDuringLabel.attributedText = [NSAttributedString stringWithNumber:duringStr font:[UIFont boldSystemFontOfSize:24] color:[UIColor whiteColor] andUnit:@"min" font:[UIFont boldSystemFontOfSize:12] color:UIColorFromRGB(0xbbbbbb)];
+    self.tolDuringLabel.attributedText = [NSAttributedString stringWithNumber:duringStr font:[self.tolDuringLabel.font fontWithSize:30] color:self.tolDuringLabel.textColor andUnit:@"min" font:[self.tolDuringLabel.font fontWithSize:14] color:self.tolDuringLabel.textColor];
     
     self.tolCntLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)tripCnt];
 }

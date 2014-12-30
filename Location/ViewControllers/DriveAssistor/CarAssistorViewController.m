@@ -158,8 +158,8 @@
             realCell.scrollSeg.segStrings = strArr;
             cell = realCell;
         } else {
-            UICollectionViewCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"SuggestPOICell" forIndexPath:indexPath];
-            
+            DriveSuggestPOICell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"SuggestPOICell" forIndexPath:indexPath];
+            [realCell useMockData];
             cell = realCell;
         }
     }
@@ -198,7 +198,7 @@
     if (0 == section) {
         return 10.f;
     }
-    return 1.0f;
+    return 0.0f;
 }
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section{

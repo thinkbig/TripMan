@@ -46,10 +46,10 @@
         self.toDate.text = @"00:00";
     }
     
-    self.distLabel.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%.1f", [sum.total_dist floatValue]/1000.0f] font:[UIFont boldSystemFontOfSize:18] color:[UIColor blackColor] andUnit:@"km" font:[UIFont boldSystemFontOfSize:11] color:[UIColor blackColor]];
-    self.speedLabel.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%.1f", [sum.max_speed floatValue]*3.6] font:[UIFont boldSystemFontOfSize:18] color:[UIColor blackColor] andUnit:@"km/h" font:[UIFont boldSystemFontOfSize:11] color:[UIColor blackColor]];
-    self.duringLabel.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%.f", [sum.total_during floatValue]/60.0] font:[UIFont boldSystemFontOfSize:18] color:[UIColor blackColor] andUnit:@"min" font:[UIFont boldSystemFontOfSize:11] color:[UIColor blackColor]];
-    self.trafficLightLabel.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%ld", (long)[sum.traffic_light_jam_cnt integerValue]] font:[UIFont boldSystemFontOfSize:18] color:[UIColor blackColor] andUnit:@"处" font:[UIFont boldSystemFontOfSize:11] color:[UIColor blackColor]];
+    self.distLabel.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%.1f", [sum.total_dist floatValue]/1000.0f] font:[self.distLabel.font fontWithSize:17] color:self.distLabel.textColor andUnit:@"km" font:[self.distLabel.font fontWithSize:14] color:self.distLabel.textColor];
+    self.speedLabel.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%.1f", [sum.max_speed floatValue]*3.6] font:[self.speedLabel.font fontWithSize:17] color:self.speedLabel.textColor andUnit:@"km/h" font:[self.speedLabel.font fontWithSize:14] color:self.speedLabel.textColor];
+    self.duringLabel.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%.f", [sum.total_during floatValue]/60.0] font:[self.duringLabel.font fontWithSize:17] color:self.duringLabel.textColor andUnit:@"min" font:[self.duringLabel.font fontWithSize:14] color:self.duringLabel.textColor];
+    self.trafficLightLabel.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%ld", (long)[sum.traffic_light_jam_cnt integerValue]] font:[self.trafficLightLabel.font fontWithSize:17] color:self.trafficLightLabel.textColor andUnit:@"处" font:[self.trafficLightLabel.font fontWithSize:14] color:self.trafficLightLabel.textColor];
 }
 
 @end

@@ -25,6 +25,7 @@
 @property (nonatomic, strong) UIImageView *         devideLineImageView;
 @property (nonatomic, strong) NSArray *             itemModels;
 
+- (void)setTabShadowImage:(UIImage*)image;
 - (void)setSelectedIndex:(NSUInteger)selectedIndex animed:(BOOL)animed;
 - (void)setBadge:(NSString*)badgeStr forIndex:(NSUInteger)idx;
 

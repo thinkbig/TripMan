@@ -45,4 +45,8 @@
 //    isShown = !isShown;
 }
 
+- (IBAction)reInstall:(id)sender {
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://fir.im/y764"]];
+}
+
 @end

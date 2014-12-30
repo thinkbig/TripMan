@@ -75,6 +75,9 @@
 
 - (void) updateHeader
 {
+    if (IS_UPDATING) {
+        return;
+    }
     NSString * destStr = _mostTrip.region_group.end_region.nearby_poi;
     if (_mostTrip.region_group.end_region.street) {
         if (destStr) {
@@ -83,15 +86,19 @@
             destStr = _mostTrip.region_group.end_region.street;
         }
     }
-    self.header.suggestDest.text = destStr ? destStr : @"未知地点";
+    self.header.suggestDest.text = destStr.length > 0 ? destStr : @"未知地点";
     NSString * mostDest = [NSString stringWithFormat:@"距我的地点约 %.1fkm", [_mostTrip.total_dist floatValue]/1000.0];
     NSMutableAttributedString * mostTripDest = [[NSMutableAttributedString alloc] initWithString:mostDest];
     [mostTripDest addAttribute:NSForegroundColorAttributeName value:UIColorFromRGB(0x82d13a) range:NSMakeRange(6, mostDest.length-6)];
+    [mostTripDest addAttribute:NSFontAttributeName value:DigitalFontSize(13) range:NSMakeRange(6, mostDest.length-6)];
     self.header.suggestDistFrom.attributedText = mostTripDest;
 }
 
 - (void) updateTrip
 {
+    if (IS_UPDATING) {
+        return;
+    }
     // set during
     self.tripCell.duringLabel.text = [NSString stringWithFormat:@"%.f", [_mostTrip.total_during floatValue]/60.0];
     
@@ -105,6 +112,9 @@
 
 - (void) updateHealth
 {
+    if (IS_UPDATING) {
+        return;
+    }
     // update today trip summary
     DaySummary * daySum = [[TripsCoreDataManager sharedManager] daySummaryByDay:nil];
     [[GPSLogger sharedLogger].offTimeAnalyzer analyzeDaySum:daySum];
@@ -118,15 +128,15 @@
     NSMutableAttributedString *todayStr = [[NSMutableAttributedString alloc] initWithString:rawStr];
     [todayStr addAttribute:NSForegroundColorAttributeName value:UIColorFromRGB(0x7bce33) range:NSMakeRange(0, kmRange.location)];
     [todayStr addAttribute:NSForegroundColorAttributeName value:UIColorFromRGB(0x7bce33) range:NSMakeRange(kmRange.location+kmRange.length, minRange.location-(kmRange.location+kmRange.length))];
-    [todayStr addAttribute:NSFontAttributeName value:[UIFont boldSystemFontOfSize:14] range:NSMakeRange(0, kmRange.location)];
-    [todayStr addAttribute:NSFontAttributeName value:[UIFont boldSystemFontOfSize:14] range:NSMakeRange(kmRange.location+kmRange.length, minRange.location-(kmRange.location+kmRange.length))];
+    [todayStr addAttribute:NSFontAttributeName value:DigitalFontSize(14) range:NSMakeRange(0, kmRange.location)];
+    [todayStr addAttribute:NSFontAttributeName value:DigitalFontSize(14) range:NSMakeRange(kmRange.location+kmRange.length, minRange.location-(kmRange.location+kmRange.length))];
     
     self.healthCell.todayTripSum.attributedText = todayStr;
     
     // update illegal
-    UIFont * font12 = [UIFont boldSystemFontOfSize:12];
-    self.healthCell.IllegalCount.attributedText = [NSAttributedString stringWithNumber:@"0" font:font12 color:COLOR_STAT_RED andUnit:@" 新违章" font:font12 color:[UIColor whiteColor]];
-    self.healthCell.IllegalPendingCount.attributedText = [NSAttributedString stringWithNumber:@"0" font:font12 color:COLOR_STAT_RED andUnit:@" 未处理违章" font:font12 color:[UIColor whiteColor]];
+    UIFont * font12 = [UIFont boldSystemFontOfSize:11];
+    self.healthCell.IllegalCount.attributedText = [NSAttributedString stringWithNumber:@"0" font:DigitalFontSize(14) color:COLOR_STAT_RED andUnit:@" 新违章" font:font12 color:[UIColor whiteColor]];
+    self.healthCell.IllegalPendingCount.attributedText = [NSAttributedString stringWithNumber:@"0" font:DigitalFontSize(14) color:COLOR_STAT_RED andUnit:@" 未处理违章" font:font12 color:[UIColor whiteColor]];
 }
 
 

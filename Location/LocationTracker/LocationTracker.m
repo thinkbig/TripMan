@@ -12,12 +12,13 @@
 #import "GPSAnalyzerRealTime.h"
 #import <Parse/Parse.h>
 #import <CoreMotion/CoreMotion.h>
-//#import <Cintric/Cintric.h>
 #import "TSPair.h"
+
+#define kLocationUpdateInterval     10
 
 #define kWakeUpBySystem             @"kWakeUpBySystem"
 #define kLocationAccu               kCLLocationAccuracyBest
-#define kLocationAccuNotDriving     kCLLocationAccuracyNearestTenMeters
+#define kLocationAccuNotDriving     kCLLocationAccuracyBest
 
 typedef enum
 {
@@ -27,7 +28,7 @@ typedef enum
     MotionTypeAutomotive
 } LTMotionType;
 
-@interface LocationTracker () //<CintricFindDelegate>
+@interface LocationTracker ()
 {
     CLCircularRegion *            _lastParkingRegion;
     CLCircularRegion *            _lastStillRegion;
@@ -37,34 +38,35 @@ typedef enum
     
     NSInteger                     _recordCnt;
     
+    BOOL                          _locationStarted;
+    BOOL                          _setShoudlStop;
+    
+    CLLocation *                  _lastLoc;
 }
 
 @property (nonatomic, strong) CMAccelerometerData *         lastAcceleraion;
-@property (nonatomic, strong) NSTimer *                     timer;
-@property (nonatomic, strong) NSTimer *                     stopTimer;
 
 @property (nonatomic) LTMotionType                          eCurrentMotion;
 @property (nonatomic, strong) NSMutableArray *              motionArray;
 @property (nonatomic) BOOL                                  isDetectMotion;
 
-@property (nonatomic) BOOL                                  deferringUpdates;
+@property (nonatomic, strong) NSTimer *                     restartTimer;
 @property (nonatomic) BOOL                                  isDriving;
 
 @end
 
 @implementation LocationTracker
 
-+ (CLLocationManager *)sharedLocationManager {
-	static CLLocationManager *_locationManager;
-	@synchronized(self) {
-		if (_locationManager == nil) {
-			_locationManager = [[CLLocationManager alloc] init];
-            _locationManager.desiredAccuracy = kLocationAccu;
-            _locationManager.distanceFilter = kCLDistanceFilterNone;
-            _locationManager.pausesLocationUpdatesAutomatically = NO;
-		}
-	}
-	return _locationManager;
+- (CLLocationManager *)locationManager
+{
+    if (nil == _locationManager) {
+        _locationManager = [[CLLocationManager alloc] init];
+        _locationManager.delegate = self;
+        _locationManager.desiredAccuracy = kLocationAccu;
+        _locationManager.distanceFilter = kCLDistanceFilterNone;
+        _locationManager.pausesLocationUpdatesAutomatically = NO;
+    }
+    return _locationManager;
 }
 
 + (CMMotionManager *)sharedMotionManager {
@@ -94,9 +96,7 @@ typedef enum
     self = [super init];
 	if (self)
     {
-//        [CintricFind setDelegate:self];
-//        [CintricFind updateLocation];
-        
+        _locationStarted = NO;
         [self setKeepMonitor];
         [self preload];
         
@@ -108,18 +108,6 @@ typedef enum
 	}
 	return self;
 }
-
-//- (void)applicationEnterBackground
-//{
-//    [[BackgroundTaskManager sharedBackgroundTaskManager] beginNewBackgroundTask];
-//}
-
-//#pragma mark - Cintric Delegate
-//
-//- (void)didUpdateDeviceLocation:(CLLocation *)location
-//{
-//    DDLogWarn(@"$$$$$$$$$$$$$$$$$$$ %@-(%f,%f)-%f, accuracy=%f, altitude=%f", location.timestamp, location.coordinate.latitude, location.coordinate.longitude, location.speed, location.horizontalAccuracy, location.altitude);
-//}
 
 - (NSTimeInterval) duringForAutomationWithin:(NSTimeInterval)within
 {
@@ -204,7 +192,7 @@ typedef enum
     if ([CMMotionActivityManager isActivityAvailable]) {
         self.isDetectMotion = YES;
         CMMotionActivityManager * activityManager = [LocationTracker sharedMotionActivityManager];
-        [activityManager startActivityUpdatesToQueue:[NSOperationQueue currentQueue] withHandler:^(CMMotionActivity *activity) {
+        [activityManager startActivityUpdatesToQueue:[NSOperationQueue mainQueue] withHandler:^(CMMotionActivity *activity) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 LTMotionType type = MotionTypeNotMoving;
                 if (activity.walking) {
@@ -226,8 +214,22 @@ typedef enum
     }
 }
 
+- (void) startAcceleratorChecker
+{
+    CMMotionManager *motionManager = [LocationTracker sharedMotionManager];
+    [motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue currentQueue]
+                                        withHandler:^(CMAccelerometerData  *accelerometerData, NSError *error) {
+                                            if(error){
+                                                DDLogWarn(@"CMMotionManager error: %@", error);
+                                            } else {
+                                                self.lastAcceleraion = accelerometerData;
+                                            }
+                                        }];
+}
+
 - (void)setKeepMonitor
 {
+    _setShoudlStop = NO;
     _keepMonitoring = YES;
     _lastStationaryDate = nil;
     _recordCnt = 20;
@@ -235,7 +237,7 @@ typedef enum
 
 - (void)preload
 {
-    CLLocationManager * manager = [LocationTracker sharedLocationManager];
+    CLLocationManager * manager = self.locationManager;
     NSSet * regions = manager.monitoredRegions;
     NSString * stillId = [self regionId:REGION_ID_LAST_STILL withGroup:REGION_GROUP_LAST_STILL];
     NSString * parkingId = [self regionId:REGION_ID_LAST_PARKING withGroup:REGION_GROUP_LAST_PARKING];
@@ -270,7 +272,7 @@ typedef enum
                 GPSEvent5(statDate, eGPSEventDriveStart, theRegion, @"tripStEd", nil);
             }
             // remove all monitor spot
-            CLLocationManager * manager = [LocationTracker sharedLocationManager];
+            CLLocationManager * manager = self.locationManager;
             NSSet * regions = manager.monitoredRegions;
             for (CLCircularRegion * region in regions) {
                 [manager stopMonitoringForRegion:region];
@@ -291,77 +293,44 @@ typedef enum
 {
     DDLogWarn(@"startLocationTracking");
     
-    if (self.timer) {
-        [self.timer invalidate];
-        self.timer = nil;
-    }
-    
-    if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
-        [[BackgroundTaskManager sharedBackgroundTaskManager] beginNewBackgroundTask];
-    }
-
-    CMMotionManager *motionManager = [LocationTracker sharedMotionManager];
-    [motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue currentQueue]
-                                        withHandler:^(CMAccelerometerData  *accelerometerData, NSError *error) {
-                                            if(error){
-                                                DDLogWarn(@"CMMotionManager error: %@", error);
-                                            } else {
-                                                self.lastAcceleraion = accelerometerData;
-                                            }
-                                        }];
-
-    CLLocationManager *locationManager = [LocationTracker sharedLocationManager];
-    locationManager.delegate = self;
-	CLAuthorizationStatus authorizationStatus= [CLLocationManager authorizationStatus];
-    if(authorizationStatus == kCLAuthorizationStatusDenied || authorizationStatus == kCLAuthorizationStatusRestricted){
-        DDLogWarn(@"authorizationStatus failed");
-        GPSEvent([NSDate date], eGPSEventGPSDeny);
-    } else if (kCLAuthorizationStatusAuthorizedAlways == authorizationStatus) {
-        DDLogInfo(@"authorizationStatus authorized");
-        locationManager.desiredAccuracy = self.isDriving ? kLocationAccu : kLocationAccuNotDriving;
-        [locationManager startUpdatingLocation];
-        [locationManager startMonitoringSignificantLocationChanges];
-        GPSEvent([NSDate date], eGPSEventStartGPS);
-    } else if (kCLAuthorizationStatusNotDetermined == authorizationStatus) {
-        if ([locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]) {
-            // ios 8
-            [locationManager requestAlwaysAuthorization];
-        } else {
-            locationManager.desiredAccuracy = self.isDriving ? kLocationAccu : kLocationAccuNotDriving;
-            [locationManager startUpdatingLocation];
-            [locationManager startMonitoringSignificantLocationChanges];
-            GPSEvent([NSDate date], eGPSEventStartGPS);
-        }
-    }
-    
-//    if (self.isDriving && !self.deferringUpdates) {
-//        [locationManager allowDeferredLocationUpdatesUntilTraveled:10 timeout:10];
-//        self.deferringUpdates = YES;
-//    }
+    [self setKeepMonitor];
+    [self startAcceleratorChecker];
+    [self startMotionChecker];
+    [self runBackgroundTask:1];
 }
 
 - (void)realStop
 {
+    [self.restartTimer invalidate];
+    self.restartTimer = nil;
+    
+    if (_setShoudlStop) {
+        return;
+    }
+    _setShoudlStop = YES;
+    
+    DDLogWarn(@"realStopLocationTracking");
+    
     CMMotionManager *motionManager = [LocationTracker sharedMotionManager];
     [motionManager stopAccelerometerUpdates];
     
-    CLLocationManager *locationManager = [LocationTracker sharedLocationManager];
+    CLLocationManager *locationManager = self.locationManager;
 	[locationManager stopUpdatingLocation];
     [locationManager stopMonitoringSignificantLocationChanges];
 
     [self stopMotionChecker];
     
-    GPSEvent([NSDate date], eGPSEventStopGPS);
-}
-
-- (void)stopLocationTracking {
-    DDLogWarn(@"stopLocationTracking");
-    
-    if (self.timer) {
-        [self.timer invalidate];
-        self.timer = nil;
+    CLLocation * lastGoodGPS = [BussinessDataProvider lastGoodLocation];
+    if (lastGoodGPS) {
+        [self setStillLocation:lastGoodGPS force:YES];
     }
-    [self realStop];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:kWakeUpBySystem];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    });
+    
+    GPSEvent([NSDate date], eGPSEventStopGPS);
 }
 
 - (BOOL)registerNotificationForLocation:(CLLocation *)myLocation withRadius:(NSNumber *)myRadius assignIdentifier:(NSString *)identifier group:(NSString*)groupName
@@ -373,7 +342,7 @@ typedef enum
     
     // If the radius is too large, registration fails automatically,
     // so clamp the radius to the max value.
-    CLLocationManager *locationManager = [LocationTracker sharedLocationManager];
+    CLLocationManager *locationManager = self.locationManager;
     CLLocationDistance theRadius = [myRadius doubleValue];
     if (theRadius > locationManager.maximumRegionMonitoringDistance) {
         theRadius = locationManager.maximumRegionMonitoringDistance;
@@ -408,12 +377,75 @@ typedef enum
 }
 
 
+- (void)runBackgroundTask: (int)time
+{
+    [self.restartTimer invalidate];
+    
+    //check if application is in background mode
+    UIApplication * app = [UIApplication sharedApplication];
+    CLAuthorizationStatus authorizationStatus= [CLLocationManager authorizationStatus];
+    if (app.applicationState == UIApplicationStateBackground) {
+        if (kCLAuthorizationStatusAuthorizedAlways != authorizationStatus) {
+            return;
+        }
+        //create UIBackgroundTaskIdentifier and create tackground task, which starts after time
+        __block UIBackgroundTaskIdentifier bgTask = [app beginBackgroundTaskWithExpirationHandler:^{
+            [app endBackgroundTask:bgTask];
+            bgTask = UIBackgroundTaskInvalid;
+        }];
+        
+        self.restartTimer = [NSTimer scheduledTimerWithTimeInterval:time target:self selector:@selector(__realStartLocation) userInfo:nil repeats:NO];
+    } else {
+        if (kCLAuthorizationStatusNotDetermined == authorizationStatus) {
+            CLLocationManager *locationManager = self.locationManager;
+            if ([locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]) {
+                // ios 8
+                [locationManager requestAlwaysAuthorization];
+            } else {
+                self.restartTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(__realStartLocation) userInfo:nil repeats:NO];
+            }
+        } else {
+            self.restartTimer = [NSTimer scheduledTimerWithTimeInterval:time target:self selector:@selector(__realStartLocation) userInfo:nil repeats:NO];
+        }
+    }
+}
+
+- (void) __realStartLocation
+{
+    NSLog(@"&&&&&&&&&&&&&&&&&&&&&& start &&&&&&&&&&&&&&&&&&&&&&");
+    
+    CLLocationManager *locationManager = self.locationManager;
+    locationManager.desiredAccuracy = self.isDriving ? kLocationAccu : kLocationAccuNotDriving;
+    [locationManager startUpdatingLocation];
+    [locationManager startMonitoringSignificantLocationChanges];
+    
+}
+
+- (void) __realPauseLocationWithRestartDuring:(NSTimeInterval)restartIntval
+{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSLog(@"&&&&&&&&&&&&&&&&&&&&&& stop &&&&&&&&&&&&&&&&&&&&&&");
+        CLLocationManager *locationManager = self.locationManager;
+        [locationManager stopUpdatingLocation];
+        //[locationManager stopMonitoringSignificantLocationChanges];
+        if (!_setShoudlStop) {
+            [self runBackgroundTask:restartIntval];
+        }
+    });
+}
+
 #pragma mark - CLLocationManagerDelegate Methods
 
-- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
+- (void)__locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
 {
     if (status > kCLAuthorizationStatusDenied) {
         [self startLocationTracking];
+    }
+}
+- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
+{
+    if (status > kCLAuthorizationStatusDenied) {
+        [self runBackgroundTask:1];
     }
 }
 
@@ -433,24 +465,7 @@ typedef enum
     [[NSNotificationCenter defaultCenter] postNotificationName:kNotifyExitReagion object:nil userInfo:@{@"date":[NSDate date]}];
     
     [self setKeepMonitor];
-    [self.stopTimer invalidate];
-    self.stopTimer = nil;
-    [self startLocationTracking];
-    
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        if ([PFInstallation currentInstallation].deviceToken) {
-//            DDLogWarn(@"send silent push !!!!!!");
-//            PFQuery *pushQuery = [PFInstallation query];
-//            [pushQuery whereKey:@"deviceToken" equalTo:[PFInstallation currentInstallation].deviceToken]; // Set channel
-//    
-//            // Send push notification to query
-//            PFPush *push = [[PFPush alloc] init];
-//            [push setQuery:pushQuery];
-//            //[push setMessage:@"Push by device token"];
-//            [push setData:@{@"aps":@{@"content-available":@1, @"sound":@""}}];
-//            [push sendPushInBackground];
-//        }
-//    });
+    [self runBackgroundTask:1];
 }
 
 - (void)locationManager:(CLLocationManager *)manager monitoringDidFailForRegion:(CLCircularRegion *)region withError:(NSError *)error
@@ -461,22 +476,28 @@ typedef enum
 
 - (void)locationManager:(CLLocationManager *)manager didFinishDeferredUpdatesWithError:(NSError *)error
 {
-    self.deferringUpdates = NO;
     DDLogWarn(@"------------- DeferredLocationUpdates End %@ -------------- ", error);
+}
+
+- (BOOL) isGPSWarning:(CLLocation*)loc
+{
+    return (loc.speed < 0 && loc.horizontalAccuracy > 100);
 }
 
 -(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
-    DDLogInfo(@"locationManager didUpdateLocations");
+    NSLog(@"locationManager didUpdateLocations");
     
     NSNumber * wakeupBySys = [[NSUserDefaults standardUserDefaults] objectForKey:kWakeUpBySystem];
     if (nil == wakeupBySys || [wakeupBySys boolValue]) {
         [self setKeepMonitor];
         [[NSUserDefaults standardUserDefaults] setObject:@(NO) forKey:kWakeUpBySystem];
+        [self startLocationTracking];
     }
-        
+    
     CLLocationAccuracy mostAccuracy = MAXFLOAT;
     CLLocation * mostAccuracyLocation = nil;
+    CGFloat calSpeed = -1;
     for(int i=0;i<locations.count;i++){
         CLLocation * newLocation = [locations objectAtIndex:i];
         CLLocationCoordinate2D theLocation = newLocation.coordinate;
@@ -489,78 +510,76 @@ typedef enum
         }
         
         //Select only valid location and also location with good accuracy
-        if(newLocation!=nil && theAccuracy>0 && theAccuracy<500 && (!(theLocation.latitude==0.0 && theLocation.longitude==0.0))){
-            GPSLog(newLocation, self.lastAcceleraion);
+        if(newLocation!=nil && theAccuracy>0 && theAccuracy<500 && (!(theLocation.latitude==0.0 && theLocation.longitude==0.0)))
+        {
+            BOOL isMost = NO;
             if (mostAccuracy > theAccuracy) {
                 mostAccuracy = theAccuracy;
                 mostAccuracyLocation = newLocation;
+                calSpeed = mostAccuracyLocation.speed;
+                isMost = YES;
             }
+            
+            CGFloat speed = newLocation.speed;
+            if (newLocation.speed < 0 && _lastLoc) {
+                NSTimeInterval interval = [newLocation.timestamp timeIntervalSinceDate:_lastLoc.timestamp];
+                CGFloat dist = [newLocation distanceFromLocation:_lastLoc];
+                if (interval > 2 && dist > 5) {
+                    CGFloat tmpSpeed = dist/interval;
+                    if (speed < cAvgNoiceSpeed) {
+                        speed = tmpSpeed;
+                        if (isMost) {
+                            calSpeed = speed;
+                        }
+                    }
+                }
+            }
+            _lastLoc = newLocation;
+            
+            GPSLog2(newLocation, self.lastAcceleraion, speed);
         }
     }
     
     if (nil == mostAccuracyLocation) {
+        DDLogWarn(@"good location is not valid, keep start");
+        UIApplication * app = [UIApplication sharedApplication];
+        if (app.applicationState != UIApplicationStateActive) {
+            NSTimeInterval backgroundRemain = [UIApplication sharedApplication].backgroundTimeRemaining;
+            if (backgroundRemain > 0 && backgroundRemain < 20) {
+                DDLogWarn(@"backgroundRemain is low %f", backgroundRemain);
+                __block UIBackgroundTaskIdentifier bgTask = [app beginBackgroundTaskWithExpirationHandler:^{
+                    [app endBackgroundTask:bgTask];
+                    bgTask = UIBackgroundTaskInvalid;
+                }];
+            }
+        }
         return;
     }
     
-    //If the timer still valid, return it (Will not run the code below)
-    if (self.timer) {
-        [self.timer invalidate];
-        self.timer = nil;
-    }
-
+    BOOL isWarming = [self isGPSWarning:mostAccuracyLocation];
     BOOL isDriving = [[[NSUserDefaults standardUserDefaults] objectForKey:kMotionIsInTrip] boolValue];
-    eMotionStat stat = (eMotionStat)[[[NSUserDefaults standardUserDefaults] objectForKey:kMotionCurrentStat] integerValue];
     
-    NSTimeInterval backgroundRemain = -1;
-    if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
-        //[[BackgroundTaskManager sharedBackgroundTaskManager] beginNewBackgroundTask];
-        backgroundRemain = [UIApplication sharedApplication].backgroundTimeRemaining;
-    }
     if (self.isDriving != isDriving) {
-        DDLogWarn(@"drive stat change to: %d, remain (%f)", isDriving, backgroundRemain);
+        DDLogWarn(@"drive stat change to: %d", isDriving);
         self.isDriving = isDriving;
         _recordCnt = 20;
     }
     static NSInteger recordInterval = 0;
-    if (_recordCnt-- > 0 || recordInterval++%15 == 0) {
-        DDLogWarn(@"location is: <%f, %f>, speed=%f, accuracy=%f, altitude=%f", mostAccuracyLocation.coordinate.latitude, mostAccuracyLocation.coordinate.longitude, mostAccuracyLocation.speed, mostAccuracyLocation.horizontalAccuracy, mostAccuracyLocation.altitude);
+    if (_recordCnt-- > 0 || recordInterval++%5 == 0) {
+        DDLogWarn(@"location is: <%f, %f>, speed=%f, accuracy=%f, altitude=%f", mostAccuracyLocation.coordinate.latitude, mostAccuracyLocation.coordinate.longitude, calSpeed, mostAccuracyLocation.horizontalAccuracy, mostAccuracyLocation.altitude);
     }
     
-    if (isDriving)
+    if (!isDriving)
     {
-        [self startMotionChecker];
-        _keepMonitoring = NO;
-        _lastStationaryDate = nil;
-        CGFloat cof = 1.0f;
-        if (mostAccuracyLocation.speed  < cInsStationarySpeed) cof = 2.0f;
-        else if (mostAccuracyLocation.speed  < cInsWalkingSpeed) cof = 1.5f;
-        cof = MIN(0.8*backgroundRemain, 10*cof);
-        self.timer = [NSTimer scheduledTimerWithTimeInterval:cof target:self
-                                                    selector:@selector(startLocationTracking)
-                                                    userInfo:nil
-                                                     repeats:NO];
-        [self.stopTimer invalidate];
-        self.stopTimer = nil;
-    }
-    else
-    {
-        CGFloat cof = 1.0f;
-        if (mostAccuracyLocation.speed >= 0) {
-            if (mostAccuracyLocation.speed  < cInsStationarySpeed) cof = 3.0f;
-            else if (mostAccuracyLocation.speed  < cInsWalkingSpeed) cof = 2.0f;
-            else if (mostAccuracyLocation.speed  < cInsRunningSpeed) cof = 1.5f;
-            else if (mostAccuracyLocation.speed < 0 && mostAccuracyLocation.horizontalAccuracy > 100) cof = 0.5f;   // warming up gps
-        }
-        
         if (_keepMonitoring) {
-            if (mostAccuracyLocation.speed > cInsDrivingSpeed || (mostAccuracyLocation.speed < 0 && mostAccuracyLocation.horizontalAccuracy > 100)) {
+            if (calSpeed > cInsDrivingSpeed || isWarming) {
                 // already driving OR the gps is warming
                 _lastStationaryDate = nil;
             }
             if (_lastStationaryDate && [mostAccuracyLocation.timestamp timeIntervalSinceDate:_lastStationaryDate] > cCanStopMonitoringThreshold) {
                 _keepMonitoring = NO;
             }
-            if (nil == _lastStationaryDate && mostAccuracyLocation.speed < cInsWalkingSpeed) {
+            if (nil == _lastStationaryDate && calSpeed < cInsWalkingSpeed) {
                 _lastStationaryDate = mostAccuracyLocation.timestamp;
             }
             [self startMotionChecker];
@@ -572,53 +591,36 @@ typedef enum
                 _keepMonitoring = NO;
             }
         }
-
-        if (_keepMonitoring) {
-            cof = MIN(0.8*backgroundRemain, 10*cof);
-            NSLog(@"WWWWWWWWWWWWWWWWWW = %f", cof);
-            self.timer = [NSTimer scheduledTimerWithTimeInterval:cof target:self
-                                                        selector:@selector(startLocationTracking)
-                                                        userInfo:nil
-                                                         repeats:NO];
-        }
         
         //Will only stop the locationManager after 10 seconds, so that we can get some accurate locations
         //The location manager will only operate for 10 seconds to save battery
         //if the instant speed is -1, means the gps module has just be waken
-        if (!_keepMonitoring && nil == self.stopTimer && mostAccuracyLocation.speed < cInsWalkingSpeed && stat < eMotionStatWalking) {
+        if (!_keepMonitoring) {
             [self setStillLocation:mostAccuracyLocation force:NO];
-            self.stopTimer = [NSTimer scheduledTimerWithTimeInterval:2 target:self
-                                                            selector:@selector(stopLocationDelayBy10Seconds)
-                                                            userInfo:nil
-                                                             repeats:NO];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self realStop];
+            });
+        }
+    } else {
+        _keepMonitoring = NO;
+        _lastStationaryDate = nil;
+    }
+    
+    if (![wakeupBySys boolValue] && mostAccuracyLocation && !isWarming) {
+        NSTimeInterval interval = calSpeed > cInsDrivingSpeed ? kLocationUpdateInterval : kLocationUpdateInterval*1.5;
+        if (isDriving) {
+            [self __realPauseLocationWithRestartDuring:interval];
+        } else {
+            if (_keepMonitoring) {
+                [self __realPauseLocationWithRestartDuring:interval];
+            }
         }
     }
 }
 
-//Stop the locationManager
--(void)stopLocationDelayBy10Seconds
-{
-    [self.stopTimer invalidate];
-    self.stopTimer = nil;
-    
-    [self realStop];
-    
-    CLLocation * lastGoodGPS = [BussinessDataProvider lastGoodLocation];
-    if (lastGoodGPS) {
-        [self setStillLocation:lastGoodGPS force:YES];
-    }
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:kWakeUpBySystem];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    });
-    
-    DDLogWarn(@"######## locationManager stop Updating after 10 seconds");
-}
-
 - (void)locationManager: (CLLocationManager *)manager didFailWithError: (NSError *)error
 {
-    DDLogInfo(@"locationManager error:%@",error);
+    DDLogWarn(@"locationManager error:%@",error);
     GPSEvent3([NSDate date], eGPSEventGPSFail, error.localizedDescription);
     
     switch([error code])

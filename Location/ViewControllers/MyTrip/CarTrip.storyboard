@@ -43,7 +43,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Njr-Qm-tjz">
-                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="itemSize" width="320" height="50"/>
                                     <size key="headerReferenceSize" width="320" height="70"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -66,19 +66,39 @@
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="240"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="当天没有开车" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zbz-m7-53e">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x7J-iM-Mth" userLabel="No result View">
                                                     <rect key="frame" x="0.0" y="0.0" width="320" height="240"/>
-                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="该天没有行车记录噢" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zbz-m7-53e">
+                                                            <rect key="frame" x="10" y="41" width="300" height="40"/>
+                                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                                            <color key="textColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="nodrive" translatesAutoresizingMaskIntoConstraints="NO" id="kbz-sK-YUs">
+                                                            <rect key="frame" x="117" y="94" width="87" height="106"/>
+                                                        </imageView>
+                                                    </subviews>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="shadow" translatesAutoresizingMaskIntoConstraints="NO" id="K3Z-rc-9sn">
+                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="5"/>
+                                                </imageView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
-                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.20000000000000001" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.40000000000000002" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstItem="x7J-iM-Mth" firstAttribute="leading" secondItem="U5q-BG-M9A" secondAttribute="leading" id="0Sl-UF-78X"/>
+                                            <constraint firstItem="x7J-iM-Mth" firstAttribute="top" secondItem="U5q-BG-M9A" secondAttribute="top" id="DaK-aT-fJ2"/>
+                                            <constraint firstAttribute="bottom" secondItem="x7J-iM-Mth" secondAttribute="bottom" id="Mu1-ZG-MdP"/>
+                                            <constraint firstAttribute="trailing" secondItem="x7J-iM-Mth" secondAttribute="trailing" id="WCk-Kf-oV1"/>
+                                        </constraints>
                                         <size key="customSize" width="320" height="240"/>
                                         <connections>
                                             <outlet property="noResultLabel" destination="zbz-m7-53e" id="wNL-TK-MAv"/>
+                                            <outlet property="noResultView" destination="x7J-iM-Mth" id="C8C-1f-HIa"/>
+                                            <outlet property="shadowView" destination="K3Z-rc-9sn" id="xqH-ZW-k5h"/>
                                         </connections>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="weekSumCellId" id="0Ri-WX-wsa" customClass="WeekSumCell">
@@ -686,11 +706,17 @@
                                                         <constraint firstAttribute="height" constant="44" id="kVJ-88-L33"/>
                                                     </constraints>
                                                 </imageView>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="distanceicon" translatesAutoresizingMaskIntoConstraints="NO" id="e6v-pW-dl3">
+                                                    <rect key="frame" x="24" y="36" width="20" height="20"/>
+                                                </imageView>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="yellowicon" translatesAutoresizingMaskIntoConstraints="NO" id="jHC-7g-8zh">
                                                     <rect key="frame" x="16" y="90" width="35" height="44"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="44" id="BpZ-I6-w3W"/>
                                                     </constraints>
+                                                </imageView>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="timeicon" translatesAutoresizingMaskIntoConstraints="NO" id="1hc-TM-r38">
+                                                    <rect key="frame" x="24" y="98" width="20" height="20"/>
                                                 </imageView>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="greenicon" translatesAutoresizingMaskIntoConstraints="NO" id="VXv-sP-tdA">
                                                     <rect key="frame" x="16" y="146" width="35" height="44"/>
@@ -793,8 +819,8 @@
                                                                 <constraint firstAttribute="height" constant="18" id="6Yg-Si-KDk"/>
                                                                 <constraint firstAttribute="width" constant="42" id="Kxm-6c-OHm"/>
                                                             </constraints>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                            <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <fontDescription key="fontDescription" name="HelveticaNeue-CondensedBold" family="Helvetica Neue" pointSize="11"/>
+                                                            <color key="textColor" red="0.8901960784313725" green="0.29411764705882354" blue="0.24705882352941178" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="30-60" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jok-E6-Q4u">
@@ -802,8 +828,8 @@
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="18" id="VbS-ql-OGP"/>
                                                             </constraints>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                            <color key="textColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <fontDescription key="fontDescription" name="HelveticaNeue-CondensedBold" family="Helvetica Neue" pointSize="11"/>
+                                                            <color key="textColor" red="1" green="0.72941176470588232" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="60-100" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AaI-SD-dYg">
@@ -811,14 +837,14 @@
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="18" id="41W-wG-lxQ"/>
                                                             </constraints>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                            <color key="textColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <fontDescription key="fontDescription" name="HelveticaNeue-CondensedBold" family="Helvetica Neue" pointSize="11"/>
+                                                            <color key="textColor" red="0.4823529411764706" green="0.80784313725490198" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&gt;100" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="01o-A4-fEw">
                                                             <rect key="frame" x="113" y="83" width="42" height="18"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                            <color key="textColor" red="0.0" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <fontDescription key="fontDescription" name="HelveticaNeue-CondensedBold" family="Helvetica Neue" pointSize="11"/>
+                                                            <color key="textColor" red="0.0" green="0.92156862745098034" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
@@ -842,6 +868,9 @@
                                                         <constraint firstItem="AaI-SD-dYg" firstAttribute="trailing" secondItem="Jok-E6-Q4u" secondAttribute="trailing" id="yHH-Ob-euB"/>
                                                     </constraints>
                                                 </view>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="speedicon" translatesAutoresizingMaskIntoConstraints="NO" id="Gqe-f2-yUS">
+                                                    <rect key="frame" x="24" y="153" width="20" height="20"/>
+                                                </imageView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
@@ -1000,6 +1029,9 @@
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="slowdriveicon" translatesAutoresizingMaskIntoConstraints="NO" id="iZ4-Rr-Crc">
+                                                    <rect key="frame" x="23" y="21" width="20" height="20"/>
+                                                </imageView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
@@ -1315,12 +1347,17 @@
         <image name="Slider" width="254" height="28"/>
         <image name="bluedot" width="15" height="23"/>
         <image name="blueicon" width="35" height="44"/>
+        <image name="distanceicon" width="20" height="20"/>
         <image name="distancetotal" width="70" height="88"/>
         <image name="greenicon" width="35" height="44"/>
         <image name="main_bg" width="320" height="568"/>
         <image name="navbarshadow" width="320" height="14"/>
-        <image name="shadow" width="320" height="5"/>
+        <image name="nodrive" width="87" height="106"/>
+        <image name="shadow" width="266" height="6"/>
+        <image name="slowdriveicon" width="20" height="20"/>
         <image name="speedbar" width="160" height="118"/>
+        <image name="speedicon" width="20" height="20"/>
+        <image name="timeicon" width="20" height="20"/>
         <image name="yellowicon" width="35" height="44"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

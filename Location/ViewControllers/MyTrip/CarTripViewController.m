@@ -115,7 +115,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
                 [nonRetainSelf showNextWeek];
             } else if (fromPage != toPage) {
                 // rebuild with currentDate
-                [nonRetainSelf rebuildContent];
+                [nonRetainSelf rebuildContent:YES];
             }
         } else if (2 == nonRetainSelf.currentIdx) {
             if (fromPage - 1 == toPage) {
@@ -124,7 +124,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
                 [nonRetainSelf showNextMonth];
             } else if (fromPage != toPage) {
                 // rebuild with currentDate
-                [nonRetainSelf rebuildContent];
+                [nonRetainSelf rebuildContent:YES];
             }
         } else {
             if (fromPage - 1 == toPage) {
@@ -133,7 +133,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
                 [nonRetainSelf showTomorrow];
             } else if (fromPage != toPage) {
                 // rebuild with currentDate
-                [nonRetainSelf rebuildContent];
+                [nonRetainSelf rebuildContent:YES];
             }
         }
     }];
@@ -148,8 +148,6 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
         self.carousel.decelerationRate = 0.7;
         self.carousel.itemOffset = CGPointMake(0, 15);
     }
-    
-    [self rebuildContent];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -158,6 +156,8 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
     [UIView animateWithDuration:0.6 delay:0.2 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         [self.slideShow setAlpha:1];
     } completion:nil];
+    
+    [self rebuildContent:NO];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -180,7 +180,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
 {
     if (currentIdx != _currentIdx) {
         _currentIdx = currentIdx;
-        [self rebuildContent];
+        [self rebuildContent:YES];
     }
 }
 
@@ -343,10 +343,14 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
     return monthSum;
 }
 
-- (void)rebuildContent
+- (void)rebuildContent:(BOOL)force
 {
     if (0 == _currentIdx)
     {
+        if (!force && self.sumTomorrow) {
+            // means not today
+            return;
+        }
         [self showLoading];
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             self.sumToday = [self fetchDayTripForDate:self.currentDate];
@@ -364,6 +368,9 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
     }
     else if (1 == _currentIdx)
     {
+        if (!force && self.sumNextWeek) {
+            return;
+        }
         [self showLoading];
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             self.sumThisWeek = [self fetchWeekTripForDate:self.currentWeekDate];
@@ -381,6 +388,9 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
     }
     else if (2 == _currentIdx)
     {
+        if (!force && self.sumNextWeek) {
+            return;
+        }
         [self showLoading];
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             self.sumThisMonth = [self fetchMonthTripForDate:self.currentMonthDate];
@@ -537,10 +547,10 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
         realView.layer.cornerRadius = 5;
         
         view = [[UIView alloc] initWithFrame:realView.bounds];
-        view.layer.shadowColor = [UIColor blackColor].CGColor;
-        view.layer.shadowOffset = CGSizeMake(0, -4);
+        view.layer.shadowColor = [UIColor darkGrayColor].CGColor;
+        view.layer.shadowOffset = CGSizeMake(0, -3);
         view.layer.shadowOpacity = 0.6f;
-        view.layer.shadowRadius = 4.0f;
+        view.layer.shadowRadius = 3.0f;
         [view addSubview:realView];
     }
     

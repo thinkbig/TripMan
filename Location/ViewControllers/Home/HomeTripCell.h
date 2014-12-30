@@ -26,6 +26,8 @@
 @property (weak, nonatomic) IBOutlet FXLabel *jamLabel;
 @property (weak, nonatomic) IBOutlet FXLabel *suggestLabel;
 
+@property (weak, nonatomic) IBOutlet UIView *statusContainer;
+@property (weak, nonatomic) IBOutlet UIImageView *statusBgImage;
 @property (weak, nonatomic) IBOutlet UIView *statusColorView;
 @property (weak, nonatomic) IBOutlet UILabel *statusLabel;
 

@@ -18,11 +18,10 @@
 
 @interface LocationTracker : NSObject <CLLocationManagerDelegate>
 
-+ (CLLocationManager *)sharedLocationManager;
+@property (nonatomic, strong) CLLocationManager *   locationManager;
 
 - (void)setKeepMonitor;
 - (void)startLocationTracking;
-- (void)stopLocationTracking;
 
 - (void)setParkingLocation:(CLLocation*)loc;
 

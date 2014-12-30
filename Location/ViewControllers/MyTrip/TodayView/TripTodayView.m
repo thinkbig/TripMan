@@ -10,6 +10,19 @@
 #import "TripSummary.h"
 #import "NSAttributedString+Style.h"
 
+@interface TripTodayView () {
+    CGFloat         _totalDistF;
+    CGFloat         _totalDuringF;
+    CGFloat         _jamDistF;
+    CGFloat         _jamDuringF;
+    CGFloat         _maxSpeedF;
+    NSUInteger      _jamInTrafficLightN;
+    CGFloat         _trafficLightWaitingF;
+    NSUInteger      _tripCntN;
+}
+
+@end
+
 @implementation TripTodayView
 
 /*
@@ -20,9 +33,24 @@
 }
 */
 
-- (void)awakeFromNib
+- (void) __updateContent
 {
-    self.tripCount.layer.cornerRadius = CGRectGetHeight(self.tripCount.bounds)/2.0f;
+    NSString * distStr = [NSString stringWithFormat:@"%.f", _totalDistF/1000.0];
+    self.todayDist.attributedText = [NSAttributedString stringWithNumber:distStr font:[self.todayDist.font fontWithSize:50] color:self.todayDist.textColor andUnit:@"km" font:[self.todayDist.font fontWithSize:17] color:self.todayDist.textColor];
+    
+    NSString * duringStr = [NSString stringWithFormat:@"%.f", _totalDuringF/60.0];
+    self.todayDuring.attributedText = [NSAttributedString stringWithNumber:duringStr font:[self.todayDuring.font fontWithSize:30] color:self.todayDuring.textColor andUnit:@"min" font:[self.todayDuring.font fontWithSize:14] color:self.todayDuring.textColor];
+    
+    NSString * maxSpeedStr = [NSString stringWithFormat:@"%.1f", _maxSpeedF*3.6];
+    self.todayMaxSpeed.attributedText = [NSAttributedString stringWithNumber:maxSpeedStr font:[self.todayMaxSpeed.font fontWithSize:30] color:self.todayMaxSpeed.textColor andUnit:@"km/h" font:[self.todayMaxSpeed.font fontWithSize:14] color:self.todayMaxSpeed.textColor];
+    
+    self.tripCount.text = [NSString stringWithFormat:@"%lu", (unsigned long)_tripCntN];
+    
+    self.jamDist.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%.1f", _jamDistF/1000.0] font:[self.jamDist.font fontWithSize:17] color:self.jamDist.textColor andUnit:@"km" font:[self.jamDist.font fontWithSize:14] color:self.jamDist.textColor];
+    self.jamDuring.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%.f", _jamDuringF/60.0] font:[self.jamDuring.font fontWithSize:17] color:self.jamDuring.textColor andUnit:@"min" font:[self.jamDuring.font fontWithSize:14] color:self.jamDuring.textColor];
+    
+    self.trafficLightCnt.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%lu", (unsigned long)_jamInTrafficLightN] font:[self.trafficLightCnt.font fontWithSize:17] color:self.trafficLightCnt.textColor andUnit:@"处" font:[UIFont boldSystemFontOfSize:14] color:self.trafficLightCnt.textColor];
+    self.trafficLightWaiting.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%.1f", _trafficLightWaitingF/60.0] font:[self.trafficLightWaiting.font fontWithSize:17] color:self.trafficLightWaiting.textColor andUnit:@"min" font:[self.trafficLightWaiting.font fontWithSize:14] color:self.trafficLightWaiting.textColor];
 }
 
 - (void) updateWeek
@@ -30,31 +58,16 @@
     if (![self.weekSum.is_analyzed boolValue] || [self.weekSum.traffic_light_waiting integerValue] == 0) {
         [[GPSLogger sharedLogger].offTimeAnalyzer analyzeWeekSum:self.weekSum];
     }
-    CGFloat totalDist = [self.weekSum.total_dist floatValue];
-    CGFloat totalDuring = [self.weekSum.total_during floatValue];
-    CGFloat jamDist = [self.weekSum.jam_dist floatValue];
-    CGFloat jamDuring = [self.weekSum.jam_during floatValue];
-    CGFloat maxSpeed = [self.weekSum.max_speed floatValue];
-    NSUInteger jamInTrafficLight = [self.weekSum.traffic_light_jam_cnt integerValue];
-    CGFloat trafficLightWaiting = [self.weekSum.traffic_light_waiting floatValue];
-    NSUInteger tripCnt = [self.weekSum.trip_cnt integerValue];
+    _totalDistF = [self.weekSum.total_dist floatValue];
+    _totalDuringF = [self.weekSum.total_during floatValue];
+    _jamDistF = [self.weekSum.jam_dist floatValue];
+    _jamDuringF = [self.weekSum.jam_during floatValue];
+    _maxSpeedF = [self.weekSum.max_speed floatValue];
+    _jamInTrafficLightN = [self.weekSum.traffic_light_jam_cnt integerValue];
+    _trafficLightWaitingF = [self.weekSum.traffic_light_waiting floatValue];
+    _tripCntN = [self.weekSum.trip_cnt integerValue];
     
-    NSString * distStr = [NSString stringWithFormat:@"%.f", totalDist/1000.0];
-    self.todayDist.attributedText = [NSAttributedString stringWithNumber:distStr font:[UIFont boldSystemFontOfSize:50] color:UIColorFromRGB(0x5BEFFF) andUnit:@"km" font:[UIFont boldSystemFontOfSize:13] color:UIColorFromRGB(0x5BEFFF)];
-    
-    NSString * duringStr = [NSString stringWithFormat:@"%.f", totalDuring/60.0];
-    self.todayDuring.attributedText = [NSAttributedString stringWithNumber:duringStr font:[UIFont boldSystemFontOfSize:24] color:[UIColor whiteColor] andUnit:@"min" font:[UIFont boldSystemFontOfSize:12] color:UIColorFromRGB(0xbbbbbb)];
-    
-    NSString * maxSpeedStr = [NSString stringWithFormat:@"%.1f", maxSpeed*3.6];
-    self.todayMaxSpeed.attributedText = [NSAttributedString stringWithNumber:maxSpeedStr font:[UIFont boldSystemFontOfSize:24] color:[UIColor whiteColor] andUnit:@"km/h" font:[UIFont boldSystemFontOfSize:12] color:UIColorFromRGB(0xbbbbbb)];
-    
-    self.tripCount.text = [NSString stringWithFormat:@"%lu", (unsigned long)tripCnt];
-    
-    self.jamDist.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%.1f", jamDist/1000.0] font:[UIFont boldSystemFontOfSize:16] color:[UIColor whiteColor] andUnit:@"km" font:[UIFont boldSystemFontOfSize:12] color:[UIColor whiteColor]];
-    self.jamDuring.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%.f", jamDuring/60.0] font:[UIFont boldSystemFontOfSize:16] color:[UIColor whiteColor] andUnit:@"min" font:[UIFont boldSystemFontOfSize:12] color:[UIColor whiteColor]];
-
-    self.trafficLightCnt.text = [NSString stringWithFormat:@"%lu处", (unsigned long)jamInTrafficLight];
-    self.trafficLightWaiting.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%.1f", trafficLightWaiting/60.0] font:[UIFont boldSystemFontOfSize:16] color:[UIColor whiteColor] andUnit:@"min" font:[UIFont boldSystemFontOfSize:12] color:[UIColor whiteColor]];
+    [self __updateContent];
 }
 
 - (void) updateDay
@@ -62,30 +75,16 @@
     if (![self.daySum.is_analyzed boolValue] || [self.daySum.traffic_light_waiting integerValue] == 0) {
         [[GPSLogger sharedLogger].offTimeAnalyzer analyzeDaySum:self.daySum];
     }
-    CGFloat totalDist = [self.daySum.total_dist floatValue];
-    CGFloat totalDuring = [self.daySum.total_during floatValue];
-    CGFloat jamDist = [self.daySum.jam_dist floatValue];
-    CGFloat jamDuring = [self.daySum.jam_during floatValue];
-    CGFloat maxSpeed = [self.daySum.max_speed floatValue];
-    NSUInteger jamInTrafficLight = [self.daySum.traffic_light_jam_cnt integerValue];
-    CGFloat trafficLightWaiting = [self.daySum.traffic_light_waiting floatValue];
+    _totalDistF = [self.daySum.total_dist floatValue];
+    _totalDuringF = [self.daySum.total_during floatValue];
+    _jamDistF = [self.daySum.jam_dist floatValue];
+    _jamDuringF = [self.daySum.jam_during floatValue];
+    _maxSpeedF = [self.daySum.max_speed floatValue];
+    _jamInTrafficLightN = [self.daySum.traffic_light_jam_cnt integerValue];
+    _trafficLightWaitingF = [self.daySum.traffic_light_waiting floatValue];
+    _tripCntN = self.daySum.all_trips.count;
     
-    NSString * distStr = [NSString stringWithFormat:@"%.f", totalDist/1000.0];
-    self.todayDist.attributedText = [NSAttributedString stringWithNumber:distStr font:[UIFont boldSystemFontOfSize:50] color:UIColorFromRGB(0x82d13a) andUnit:@"km" font:[UIFont boldSystemFontOfSize:12] color:UIColorFromRGB(0x82d13a)];
-    
-    NSString * duringStr = [NSString stringWithFormat:@"%.f", totalDuring/60.0];
-    self.todayDuring.attributedText = [NSAttributedString stringWithNumber:duringStr font:[UIFont boldSystemFontOfSize:24] color:[UIColor whiteColor] andUnit:@"min" font:[UIFont boldSystemFontOfSize:12] color:UIColorFromRGB(0xbbbbbb)];
-    
-    NSString * maxSpeedStr = [NSString stringWithFormat:@"%.1f", maxSpeed*3.6];
-    self.todayMaxSpeed.attributedText = [NSAttributedString stringWithNumber:maxSpeedStr font:[UIFont boldSystemFontOfSize:24] color:[UIColor whiteColor] andUnit:@"km/h" font:[UIFont boldSystemFontOfSize:12] color:UIColorFromRGB(0xbbbbbb)];
-    
-    self.tripCount.text = [NSString stringWithFormat:@"%lu", (unsigned long)self.daySum.all_trips.count];
-    
-    self.jamDist.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%.1f", jamDist/1000.0] font:[UIFont boldSystemFontOfSize:16] color:[UIColor whiteColor] andUnit:@"km" font:[UIFont boldSystemFontOfSize:12] color:[UIColor whiteColor]];
-    self.jamDuring.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%.f", jamDuring/60.0] font:[UIFont boldSystemFontOfSize:16] color:[UIColor whiteColor] andUnit:@"min" font:[UIFont boldSystemFontOfSize:12] color:[UIColor whiteColor]];
-    
-    self.trafficLightCnt.text = [NSString stringWithFormat:@"%lu处", (unsigned long)jamInTrafficLight];
-    self.trafficLightWaiting.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%.1f", trafficLightWaiting/60.0] font:[UIFont boldSystemFontOfSize:16] color:[UIColor whiteColor] andUnit:@"min" font:[UIFont boldSystemFontOfSize:12] color:[UIColor whiteColor]];
+    [self __updateContent];
 }
 
 @end

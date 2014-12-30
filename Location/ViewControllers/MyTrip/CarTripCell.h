@@ -33,6 +33,8 @@
 @interface CarTripCarouselCell : UICollectionViewCell
 
 @property (weak, nonatomic) IBOutlet UILabel *noResultLabel;
+@property (weak, nonatomic) IBOutlet UIView *noResultView;
+@property (weak, nonatomic) IBOutlet UIImageView *shadowView;
 
 - (void) setCarouselView:(UIView*)view;
 - (void) showNoResult:(BOOL)show;

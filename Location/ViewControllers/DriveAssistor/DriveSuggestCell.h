@@ -28,6 +28,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *jamCntLabel;
 @property (weak, nonatomic) IBOutlet UILabel *jamDuringLabel;
 
+@property (weak, nonatomic) IBOutlet UIImageView *bgStatusImage;
+@property (weak, nonatomic) IBOutlet UILabel *duringStatusLabel;
+
 - (void) updateWithTripSummary:(TripSummary*)sum;
 
 @end
@@ -44,9 +47,16 @@
 
 @interface DriveSuggestPOICell : UICollectionViewCell
 
+@property (weak, nonatomic) IBOutlet UIImageView *iconStatusImage;
+@property (weak, nonatomic) IBOutlet UIImageView *iconImage;
+
 @property (weak, nonatomic) IBOutlet UILabel *destPOILabel;
 @property (weak, nonatomic) IBOutlet UILabel *destStreetLabel;
+
 @property (weak, nonatomic) IBOutlet UILabel *estimateDuringLabel;
+@property (weak, nonatomic) IBOutlet UILabel *duringStatusLabel;
+
+- (void) useMockData;
 
 @end
 

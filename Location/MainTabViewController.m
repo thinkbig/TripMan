@@ -46,7 +46,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.tabBar.devideLineImageView.image = nil;
+    [self.tabBar setTabShadowImage:[UIImage imageNamed:@"shadowtab"]];
     self.tabBar.backgroundImageView.image = [UIImage imageNamed:@"tabbar"];
     [self setSelectedIndex:0 animed:YES];
     
