@@ -98,7 +98,7 @@
     ParkingRegionDetail * nearestRegion = nil;
     CLLocationDistance nearestDist = MAXFLOAT;
     for (ParkingRegionDetail * detail in self.parkingDetails) {
-        if ([detail.region containsCoordinate:coordinate]) {
+        if (![detail.coreDataItem.is_temp boolValue] && [detail.region containsCoordinate:coordinate]) {
             CLLocation * curLoc = [[CLLocation alloc] initWithLatitude:detail.region.center.latitude longitude:detail.region.center.longitude];
             CLLocationDistance dist = [curLoc distanceFromLocation:loc];
             if (dist < nearestDist) {
@@ -211,9 +211,9 @@
 {
     NSArray * regionGroupArr = nil;
     if (limit > 0) {
-        regionGroupArr = [RegionGroup where:@"is_temp == NO" order:@{@"relative_trips_cnt": @"DESC"} limit:@(limit)];
+        regionGroupArr = [RegionGroup where:@"is_temp = NO" order:@{@"relative_trips_cnt": @"DESC"} limit:@(limit)];
     } else {
-        regionGroupArr = [RegionGroup where:@"is_temp == NO" order:@{@"relative_trips_cnt": @"DESC"}];
+        regionGroupArr = [RegionGroup where:@"is_temp = NO" order:@{@"relative_trips_cnt": @"DESC"}];
     }
     
     NSMutableArray * bestTrips = [NSMutableArray array];
@@ -261,6 +261,28 @@
         }
     }];
     return bestTrips;
+}
+
+- (NSArray*) mostUsedParkingRegionLimit:(NSUInteger)limit
+{
+    for (ParkingRegionDetail * parkLoc in self.parkingDetails) {
+        NSUInteger tripCnt = 0;
+        for (RegionGroup * group in parkLoc.coreDataItem.group_owner_ed) {
+            tripCnt += group.trips.count;
+        }
+        parkLoc.parkingCnt = tripCnt;
+    }
+
+    NSArray * sortArr = [self.parkingDetails sortedArrayUsingComparator:^NSComparisonResult(ParkingRegionDetail * obj1, ParkingRegionDetail * obj2) {
+        if (obj1.parkingCnt > obj2.parkingCnt) {
+            return (NSComparisonResult)NSOrderedAscending;
+        }
+        if (obj1.parkingCnt < obj2.parkingCnt) {
+            return (NSComparisonResult)NSOrderedDescending;
+        }
+        return (NSComparisonResult)NSOrderedSame;
+    }];
+    return sortArr;
 }
 
 - (void) setNeedAnalyzeForDay:(NSDate*)dateDay

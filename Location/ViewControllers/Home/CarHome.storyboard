@@ -104,17 +104,17 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Jcz-tw-3LQ">
-                                                    <rect key="frame" x="63" y="216" width="195" height="30"/>
+                                                    <rect key="frame" x="59" y="216" width="203" height="38"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="roadcondition" translatesAutoresizingMaskIntoConstraints="NO" id="SgB-XF-F6L">
-                                                            <rect key="frame" x="0.0" y="0.0" width="195" height="30"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="203" height="38"/>
                                                         </imageView>
                                                         <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xWx-lR-2bh" userLabel="Stat Color View">
-                                                            <rect key="frame" x="22" y="11" width="8" height="8"/>
+                                                            <rect key="frame" x="22" y="13" width="8" height="8"/>
                                                             <color key="backgroundColor" red="0.50980392159999999" green="0.81960784310000001" blue="0.2274509804" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="目前道路无特殊情况" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8AS-T5-Xjk">
-                                                            <rect key="frame" x="43" y="4" width="150" height="21"/>
+                                                            <rect key="frame" x="43" y="6" width="150" height="21"/>
                                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <nil key="highlightedColor"/>
@@ -313,6 +313,9 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <connections>
+                        <outlet property="homeCollection" destination="vFc-m3-nn5" id="79z-ww-TKC"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Oma-yU-Qx2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

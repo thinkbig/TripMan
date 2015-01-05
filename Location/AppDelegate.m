@@ -16,7 +16,7 @@
 #import "NSString+MD5.h"
 
 static NSString * rebuildKey = @"kLocationForceRebuildKey";
-static NSString * rebuildVal = @"value_0000000000001"; // make sure it is different if this version should rebuild db
+static NSString * rebuildVal = @"value_0000000000004"; // make sure it is different if this version should rebuild db
 
 @implementation AppDelegate
 
@@ -75,6 +75,8 @@ static NSString * rebuildVal = @"value_0000000000001"; // make sure it is differ
 
 - (void) updateComplete
 {
+    NSLog(@"updateComplete");
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     [[NSUserDefaults standardUserDefaults] setObject:rebuildVal forKey:rebuildKey];
@@ -92,7 +94,9 @@ static NSString * rebuildVal = @"value_0000000000001"; // make sure it is differ
     [self setupLogger];
     [self applicationDocumentsDirectory];
     
-    self.locationTracker = [[LocationTracker alloc] init];
+    if (nil == self.locationTracker) {
+        self.locationTracker = [[LocationTracker alloc] init];
+    }
     [self.locationTracker startLocationTracking];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kNotifyNeedUpdate object:nil];
@@ -183,7 +187,9 @@ static NSString * rebuildVal = @"value_0000000000001"; // make sure it is differ
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
     DDLogWarn(@"@@@@@@@@@@@@@ applicationDidEnterBackground @@@@@@@@@@@@@");
-    [self.locationTracker startLocationTracking];
+    if (!IS_UPDATING) {
+        [self.locationTracker startLocationTracking];
+    }
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application

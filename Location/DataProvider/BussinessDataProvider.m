@@ -63,16 +63,19 @@ static BussinessDataProvider * _sharedProvider = nil;
         NSMutableArray * finishedTrips = [NSMutableArray arrayWithCapacity:tripEvents.count/2];
         TSPair * curPair = nil;
         for (GPSEventItem * item in tripEvents) {
-            if (eGPSEventDriveStart == [item.eventType integerValue]) {
+            eGPSEvent eventType = (eGPSEvent)[item.eventType integerValue];
+            if (eGPSEventDriveStart == eventType) {
                 if (curPair) {
                     curPair.second = item.timestamp;
                     [finishedTrips addObject:curPair];
                 }
                 curPair = TSPairMake(item.timestamp, nil, nil);
-            } else if (eGPSEventDriveEnd == [item.eventType integerValue]) {
+            } else if (eGPSEventDriveEnd == eventType) {
                 if (curPair) {
                     curPair.second = item.timestamp;
                 }
+            } else if (eGPSEventDriveIgnore == eventType) {
+                curPair = nil;
             }
             if (curPair.first && curPair.second) {
                 [finishedTrips addObject:curPair];
@@ -92,7 +95,9 @@ static BussinessDataProvider * _sharedProvider = nil;
         
         [[GPSLogger sharedLogger].offTimeAnalyzer analyzeTripStartFrom:nil toDate:nil shouldUpdateGlobalInfo:YES];
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:kNotifyUpgradeComplete object:nil];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:kNotifyUpgradeComplete object:nil];
+        });
         [[GToolUtil sharedInstance] showPieHUDWithText:@"升级完成" andProgress:100];
     });
 }

@@ -60,4 +60,12 @@
 
 @implementation SearchPOIHeader
 
+- (void)awakeFromNib
+{
+    self.backgroundMask.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.backgroundMask.layer.shadowOffset = CGSizeMake(0, 5);
+    self.backgroundMask.layer.shadowOpacity = 0.5f;
+    self.backgroundMask.layer.shadowRadius = 3.0f;
+}
+
 @end

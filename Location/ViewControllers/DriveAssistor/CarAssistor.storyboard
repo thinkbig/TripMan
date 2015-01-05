@@ -156,7 +156,7 @@
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
-                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.40000000000000002" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstItem="Puo-cH-YcT" firstAttribute="leading" secondItem="UZi-el-Y2p" secondAttribute="leading" id="KfO-IZ-gMp"/>
                                             <constraint firstAttribute="trailing" secondItem="Puo-cH-YcT" secondAttribute="trailing" id="Nfu-RJ-WId"/>

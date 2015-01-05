@@ -154,12 +154,12 @@
             }
             isJam = curSpeed <= cAvgTrafficJamSpeed ? YES : NO;
             
-            if ([item.horizontalAccuracy doubleValue] >= 30) {
-                // location with low accuracy
-                MKCircle * circle = [MKCircle circleWithCenterCoordinate:marsCoords radius:[item.horizontalAccuracy doubleValue]/5.0];
-                circle.title = @"ErrCircle";
-                [self.mapView addOverlay:circle];
-            }
+//            if ([item.horizontalAccuracy doubleValue] >= 30) {
+//                // location with low accuracy
+//                MKCircle * circle = [MKCircle circleWithCenterCoordinate:marsCoords radius:[item.horizontalAccuracy doubleValue]/5.0];
+//                circle.title = @"ErrCircle";
+//                [self.mapView addOverlay:circle];
+//            }
             
             if (i > 0) {
                 // break or accelerate
@@ -248,6 +248,19 @@
         }
         
         [self.mapView addOverlay:lineOne];
+    }
+    
+    // draw turning point
+    NSData * ptsData = self.tripSum.turning_info.addi_data;
+    if (ptsData) {
+        NSArray * pts = [NSKeyedUnarchiver unarchiveObjectWithData:ptsData];
+        for (NSDictionary * first in pts) {
+            CLLocationCoordinate2D coords = CLLocationCoordinate2DMake([first[@"lat"] doubleValue], [first[@"lon"] doubleValue]);
+            CLLocationCoordinate2D marsCoords = [GeoTransformer earth2Mars:coords];
+            MKCircle * circle = [MKCircle circleWithCenterCoordinate:marsCoords radius:10];
+            circle.title = @"ErrCircle";
+            [self.mapView addOverlay:circle];
+        }
     }
     
     NSLog(@"traffic light = %@, total jam = %@, light jam = %@, heavy jam = %ld", _tripSum.traffic_light_tol_cnt, _tripSum.traffic_heavy_jam_cnt, _tripSum.traffic_light_jam_cnt, (long)heavyJam);

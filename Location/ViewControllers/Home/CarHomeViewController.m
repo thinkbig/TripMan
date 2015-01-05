@@ -100,7 +100,7 @@
         return;
     }
     // set during
-    self.tripCell.duringLabel.text = [NSString stringWithFormat:@"%.f", [_mostTrip.total_during floatValue]/60.0];
+    self.tripCell.duringLabel.text = [NSString stringWithFormat:@"%02d", (int)([_mostTrip.total_during floatValue]/60.0)];
     
     // most trip info
     self.tripCell.jamLabel.text = [NSString stringWithFormat:@"%ld", (long)[_mostTrip.traffic_heavy_jam_cnt integerValue]];

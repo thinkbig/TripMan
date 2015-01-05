@@ -41,6 +41,7 @@
 - (ParkingRegionDetail*) parkingDetailForCoordinate:(CLLocationCoordinate2D)coordinate;
 - (NSArray*) mostUsefulTripsLimit:(NSUInteger)limit;
 - (NSArray*) tripsWithStartRegion:(ParkingRegion*)region tripLimit:(NSInteger)limit;
+- (NSArray*) mostUsedParkingRegionLimit:(NSUInteger)limit;
 
 - (DaySummary*) daySummaryByDay:(NSDate*)dateDay;
 - (WeekSummary*) weekSummaryByDay:(NSDate*)dateDay;

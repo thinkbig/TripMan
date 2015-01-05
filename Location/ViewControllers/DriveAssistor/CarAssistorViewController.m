@@ -53,8 +53,8 @@
     _searchBar.searchTextPositionAdjustment = UIOffsetMake(8, 0);
     [[UILabel appearanceWhenContainedIn:[UISearchBar class], nil] setTextColor:UIColorFromRGB(0xaaaaaa)];
     [[UITextField appearanceWhenContainedIn:[UISearchBar class], nil] setDefaultTextAttributes:@{
-                                                                                                 NSFontAttributeName: [UIFont boldSystemFontOfSize:16],
-                                                                                                 NSForegroundColorAttributeName: [UIColor whiteColor]
+                                                                                                 NSFontAttributeName: [UIFont boldSystemFontOfSize:14],
+                                                                                                 NSForegroundColorAttributeName: [UIColor colorWithWhite:1.0 alpha:0.2]
                                                                                                  }];
     [self reloadContent];
 }

@@ -29,7 +29,7 @@
 - (UIColor *)normalTextColor
 {
     if (nil == _normalTextColor) {
-        _normalTextColor = UIColorFromRGB(0xbbbbbb);
+        _normalTextColor = [UIColor colorWithWhite:1.0 alpha:0.2];
     }
     return _normalTextColor;
 }

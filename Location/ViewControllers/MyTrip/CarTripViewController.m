@@ -547,10 +547,10 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
         realView.layer.cornerRadius = 5;
         
         view = [[UIView alloc] initWithFrame:realView.bounds];
-        view.layer.shadowColor = [UIColor darkGrayColor].CGColor;
-        view.layer.shadowOffset = CGSizeMake(0, -3);
-        view.layer.shadowOpacity = 0.6f;
-        view.layer.shadowRadius = 3.0f;
+        view.layer.shadowColor = [UIColor blackColor].CGColor;
+        view.layer.shadowOffset = CGSizeMake(0, 0);
+        view.layer.shadowOpacity = 0.5f;
+        view.layer.shadowRadius = 5.0f;
         [view addSubview:realView];
     }
     

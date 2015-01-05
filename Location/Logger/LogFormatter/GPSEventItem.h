@@ -24,7 +24,8 @@ typedef NS_ENUM(NSInteger, eGPSEvent) {
     eGPSEventMonitorFail,
     
     eGPSEventDriveStart = 1000,
-    eGPSEventDriveEnd = 1001
+    eGPSEventDriveEnd = 1001,
+    eGPSEventDriveIgnore = 1002          // ignore this trip, replacement of eGPSEventDriveEnd if we find it is a mistake of eGPSEventDriveStart some time before
 };
 
 @interface GPSEventItem : NSObject

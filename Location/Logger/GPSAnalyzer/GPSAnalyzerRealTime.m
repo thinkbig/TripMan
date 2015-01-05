@@ -31,6 +31,10 @@
     NSDictionary *      _lastGoodGPS;
     NSDate *            _lastExitReagionDate;
     
+    GPSLogItem *        _driveStart;
+    GPSLogItem *        _maxDistItem;
+    CGFloat             _maxDist;
+    
 }
 
 @property (nonatomic, strong) NSTimer *                 lostGPSTimer;
@@ -104,7 +108,9 @@
             [self.logArr removeAllObjects];
             [self setEStat:eMotionStatGPSLost];
         }
-        [self setLastGoodGPS:gps];
+        if ([gps.horizontalAccuracy doubleValue] < 200) {
+            [self setLastGoodGPS:gps];
+        }
     }
     
     [self.lostGPSTimer invalidate];
@@ -124,6 +130,18 @@
     }
     
     eMotionStat stat = [self checkStatus];
+    
+    if ([_isInTrip boolValue]) {
+        if ([gps.timestamp timeIntervalSinceDate:_driveStart.timestamp] > 5*60) {
+            // the car should drive at least 600 meter after start drive 5 min
+            CGFloat distFromStart = [gps distanceFrom:_driveStart];
+            _maxDist = MAX(distFromStart, _maxDist);
+            if (_maxDist < 600) {
+                stat = eMotionStatStationary;
+            }
+        }
+    }
+    
     [self removeOldData:([self eStat]!=stat)];
     [self setEStat:stat];
     
@@ -228,18 +246,33 @@
         [[NSUserDefaults standardUserDefaults] setObject:_isInTrip forKey:kMotionIsInTrip];
         
         __block GPSLogItem * item = nil;
+        BOOL dropTrip = NO;
         if (inTrip) {
             if (_startMoveTraceIdx < self.logArr.count) {
                 item = ((GPSLogItem*)(self.logArr[_startMoveTraceIdx]));
+                _driveStart = item;
+                _maxDist = 0;
+                _maxDistItem = nil;
             }
         } else {
             if (_endSpeedTraceIdx < self.logArr.count) {
                 item = ((GPSLogItem*)(self.logArr[_endSpeedTraceIdx]));
+                if (_maxDist < 600) {
+                    dropTrip = YES;
+                }
+                _maxDist = 0;
+                _driveStart = _maxDistItem = nil;
             }
         }
         dispatch_async(dispatch_get_main_queue(), ^{
             //[[BussinessDataProvider sharedInstance] updateWeatherToday:[item location]];
-            [[NSNotificationCenter defaultCenter] postNotificationName:kNotifyTripStatChange object:nil userInfo:(item ? @{@"date":item.timestamp, @"inTrip":_isInTrip, @"lat":item.latitude, @"lon":item.longitude} : @{@"inTrip":_isInTrip})];
+            NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:_isInTrip, @"inTrip", @(dropTrip), @"dropTrip", nil];
+            if (item) {
+                dict[@"date"] = item.timestamp;
+                dict[@"lat"] = item.latitude;
+                dict[@"lon"] = item.longitude;
+            }
+            [[NSNotificationCenter defaultCenter] postNotificationName:kNotifyTripStatChange object:nil userInfo:dict];
         });
 
         DDLogWarn(@"!!!!!!!!!!!!!!!!!!!!!!!! notify is driving %d at %@", inTrip, item.timestamp);
@@ -304,13 +337,13 @@
         // fast deside using M7 chrip
         if (_lastestNormalSpeed && [[NSDate date] timeIntervalSinceDate:_lastestNormalSpeed] >= 20) {
             LocationTracker * tracker = ((AppDelegate*)([UIApplication sharedApplication].delegate)).locationTracker;
-            NSTimeInterval driveDuring = [tracker duringForAutomationWithin:40];
+            NSTimeInterval driveDuring = [tracker duringForAutomationWithin:60];
             if (driveDuring > 5) {
                 _endSpeedTrace = 0;
                 _endSpeedTraceCnt = 0;
                 _endSpeedTraceIdx = self.logArr.count-1;
                 return eMotionStatDriving;
-            } else if (driveDuring < 1 && [tracker duringForWalkRunWithin:40] > 8) {
+            } else if (driveDuring < 1 && [tracker duringForWalkRunWithin:60] > 20) {
                 DDLogWarn(@"&&&&&&&&&&&&& motion regard as drive stop &&&&&&&&&&&&& ");
                 _endSpeedTrace = 0;
                 _endSpeedTraceCnt = 0;

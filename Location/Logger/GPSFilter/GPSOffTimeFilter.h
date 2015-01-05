@@ -42,4 +42,8 @@ typedef NS_ENUM(NSUInteger, eTurningStat) {
 - (NSArray*) featurePoints;
 - (NSArray*) turningParams;
 
+// useful function
++ (CGFloat)checkPotinAngle:(CGPoint)pt1 antPt:(CGPoint)pt2 antPt:(CGPoint)pt3;
++ (CGPoint)coor2Point:(CLLocationCoordinate2D)coor;
+
 @end

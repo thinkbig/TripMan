@@ -10,11 +10,13 @@
 #import "AppDelegate.h"
 #import "BackgroundTaskManager.h"
 #import "GPSAnalyzerRealTime.h"
+#import "GPSOffTimeFilter.h"
 #import <Parse/Parse.h>
 #import <CoreMotion/CoreMotion.h>
 #import "TSPair.h"
 
-#define kLocationUpdateInterval     10
+#define kLocationUpdateInterval         7
+#define kLocationUpdateLongInterval     15
 
 #define kWakeUpBySystem             @"kWakeUpBySystem"
 #define kLocationAccu               kCLLocationAccuracyBest
@@ -41,6 +43,7 @@ typedef enum
     BOOL                          _locationStarted;
     BOOL                          _setShoudlStop;
     
+    CLLocation *                  _lastLastLoc;
     CLLocation *                  _lastLoc;
 }
 
@@ -258,6 +261,7 @@ typedef enum
 - (void)tripStatChange:(NSNotification *)notification
 {
     NSNumber * inTrip = notification.userInfo[@"inTrip"];
+    NSNumber * dropTrip = notification.userInfo[@"dropTrip"];
     if (inTrip)
     {
         NSDate * statDate = notification.userInfo[@"date"];
@@ -279,7 +283,11 @@ typedef enum
             }
         } else {
             if (!DEBUG_MODE) {
-                GPSEvent5(statDate, eGPSEventDriveEnd, theRegion, @"tripStEd", nil);
+                if (dropTrip && [dropTrip boolValue]) {
+                    GPSEvent5(statDate, eGPSEventDriveIgnore, theRegion, @"tripStEd", nil);
+                } else {
+                    GPSEvent5(statDate, eGPSEventDriveEnd, theRegion, @"tripStEd", nil);
+                }
             }
             if (lat && lon) {
                 CLLocation * stopLoc = [[CLLocation alloc] initWithLatitude:[lat doubleValue] longitude:[lon doubleValue]];
@@ -293,10 +301,12 @@ typedef enum
 {
     DDLogWarn(@"startLocationTracking");
     
-    [self setKeepMonitor];
-    [self startAcceleratorChecker];
-    [self startMotionChecker];
-    [self runBackgroundTask:1];
+    if (!IS_UPDATING) {
+        [self setKeepMonitor];
+        [self startAcceleratorChecker];
+        [self startMotionChecker];
+        [self runBackgroundTask:1];
+    }
 }
 
 - (void)realStop
@@ -308,6 +318,7 @@ typedef enum
         return;
     }
     _setShoudlStop = YES;
+    _lastLoc = _lastLastLoc = nil;
     
     DDLogWarn(@"realStopLocationTracking");
     
@@ -436,12 +447,6 @@ typedef enum
 
 #pragma mark - CLLocationManagerDelegate Methods
 
-- (void)__locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
-{
-    if (status > kCLAuthorizationStatusDenied) {
-        [self startLocationTracking];
-    }
-}
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
 {
     if (status > kCLAuthorizationStatusDenied) {
@@ -488,6 +493,8 @@ typedef enum
 {
     NSLog(@"locationManager didUpdateLocations");
     
+    BOOL isDriving = [[[NSUserDefaults standardUserDefaults] objectForKey:kMotionIsInTrip] boolValue];
+    
     NSNumber * wakeupBySys = [[NSUserDefaults standardUserDefaults] objectForKey:kWakeUpBySystem];
     if (nil == wakeupBySys || [wakeupBySys boolValue]) {
         [self setKeepMonitor];
@@ -510,7 +517,7 @@ typedef enum
         }
         
         //Select only valid location and also location with good accuracy
-        if(newLocation!=nil && theAccuracy>0 && theAccuracy<500 && (!(theLocation.latitude==0.0 && theLocation.longitude==0.0)))
+        if(newLocation!=nil && theAccuracy>0 && theAccuracy<400 && (!(theLocation.latitude==0.0 && theLocation.longitude==0.0)))
         {
             BOOL isMost = NO;
             if (mostAccuracy > theAccuracy) {
@@ -523,17 +530,29 @@ typedef enum
             CGFloat speed = newLocation.speed;
             if (newLocation.speed < 0 && _lastLoc) {
                 NSTimeInterval interval = [newLocation.timestamp timeIntervalSinceDate:_lastLoc.timestamp];
-                CGFloat dist = [newLocation distanceFromLocation:_lastLoc];
-                if (interval > 2 && dist > 5) {
-                    CGFloat tmpSpeed = dist/interval;
-                    if (speed < cAvgNoiceSpeed) {
-                        speed = tmpSpeed;
+                CGFloat dist1 = [newLocation distanceFromLocation:_lastLoc];
+                if (interval > 2 && dist1 > 5 && newLocation.horizontalAccuracy < 200 && _lastLoc.horizontalAccuracy < 200) {
+                    // if the gps signal is too low, we can not cal the speed
+                    CGFloat tmpSpeed = dist1/interval;
+                    if (tmpSpeed < cAvgNoiceSpeed) {
+                        if (!isDriving) {
+                            if (_lastLastLoc) {
+                                CGFloat angle = [GPSOffTimeFilter checkPotinAngle:[GPSOffTimeFilter coor2Point:_lastLastLoc.coordinate] antPt:[GPSOffTimeFilter coor2Point:_lastLoc.coordinate] antPt:[GPSOffTimeFilter coor2Point:newLocation.coordinate]];
+                                if (angle < 90) {
+                                    // filter the wrong gps
+                                    speed = tmpSpeed;
+                                }
+                            }
+                        } else {
+                            speed = tmpSpeed;
+                        }
                         if (isMost) {
                             calSpeed = speed;
                         }
                     }
                 }
             }
+            _lastLastLoc = _lastLoc;
             _lastLoc = newLocation;
             
             GPSLog2(newLocation, self.lastAcceleraion, speed);
@@ -555,10 +574,8 @@ typedef enum
         }
         return;
     }
-    
+
     BOOL isWarming = [self isGPSWarning:mostAccuracyLocation];
-    BOOL isDriving = [[[NSUserDefaults standardUserDefaults] objectForKey:kMotionIsInTrip] boolValue];
-    
     if (self.isDriving != isDriving) {
         DDLogWarn(@"drive stat change to: %d", isDriving);
         self.isDriving = isDriving;
@@ -607,7 +624,10 @@ typedef enum
     }
     
     if (![wakeupBySys boolValue] && mostAccuracyLocation && !isWarming) {
-        NSTimeInterval interval = calSpeed > cInsDrivingSpeed ? kLocationUpdateInterval : kLocationUpdateInterval*1.5;
+        NSTimeInterval interval = kLocationUpdateLongInterval;
+        if (calSpeed > cInsDrivingSpeed || isDriving) {
+            interval = kLocationUpdateInterval;
+        }
         if (isDriving) {
             [self __realPauseLocationWithRestartDuring:interval];
         } else {

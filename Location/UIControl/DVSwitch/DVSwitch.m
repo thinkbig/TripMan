@@ -181,8 +181,8 @@
     if (self.sliderImage) {
         self.sliderView.clipsToBounds = NO;
         self.sliderView.layer.shadowOffset = CGSizeMake(0, 3);
-        self.sliderView.layer.shadowColor = [UIColor darkGrayColor].CGColor;
-        self.sliderView.layer.shadowOpacity = 0.3f;
+        self.sliderView.layer.shadowColor = [UIColor blackColor].CGColor;
+        self.sliderView.layer.shadowOpacity = 0.5f;
         self.sliderView.layer.shadowRadius = 3.0f;
     } else {
         self.sliderView.clipsToBounds = YES;

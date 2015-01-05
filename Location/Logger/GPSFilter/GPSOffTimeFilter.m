@@ -193,17 +193,25 @@
     return angle;
 }
 
-- (CGFloat)checkPotinAngle:(CGPoint)pt1 antPt:(CGPoint)pt2 antPt:(CGPoint)pt3
++ (CGFloat)checkPotinAngle:(CGPoint)pt1 antPt:(CGPoint)pt2 antPt:(CGPoint)pt3
+{
+    return [GPSOffTimeFilter checkPotinAngle:pt1 antPt:pt2 antPt:pt2 andPt:pt3];
+}
+
++ (CGFloat)checkPotinAngle:(CGPoint)pt1 antPt:(CGPoint)pt2 antPt:(CGPoint)pt3 andPt:(CGPoint)pt4;
 {
     CGFloat angle1 = [GPSOffTimeFilter angleFromPoint:pt1 toPoint:pt2];
-    CGFloat angle2 = [GPSOffTimeFilter angleFromPoint:pt2 toPoint:pt3];
+    CGFloat angle2 = [GPSOffTimeFilter angleFromPoint:pt3 toPoint:pt4];
     
     CGFloat angleD = fabs(angle2 - angle1);
     angleD = angleD > 180 ? 360-angleD : angleD;
     
-    //NSLog(@"angle1 = %f, angle2 = %f, angleD = %f", angle1, angle2, angleD);
-    
     return angleD;
+}
+
++ (CGPoint)coor2Point:(CLLocationCoordinate2D)coor
+{
+    return CGPointMake(coor.latitude*1000000, coor.longitude*1000000);
 }
 
 // >0 means left turn, <0 means right turn, 0 means no turn
@@ -255,7 +263,7 @@
         if (dist1 < 100 && dist2 < 100) {
             // if all distance is less than 100m, remove the angle point
             featureIdx = -1;
-        } else if ((dist1 < 200 && dist2 < 200) && [self checkPotinAngle:firstPt antPt:maxPt antPt:secondPt] < 60) {
+        } else if ((dist1 < 200 && dist2 < 200) && [GPSOffTimeFilter checkPotinAngle:firstPt antPt:maxPt antPt:secondPt] < 60) {
             // if all distance is less than 200m, check the angle
             featureIdx = -1;
         } else if (dist1 < 20 || dist2 < 20) {
@@ -264,7 +272,7 @@
         } else if ((dist1*5 < dist2 || dist2*5 < dist1) && (dist1 < 60 || dist2 < 60)) {
             // the distance is within 5 times, and the shortest is less than 60m
             featureIdx = -1;
-        } else if ([self checkPotinAngle:firstPt antPt:maxPt antPt:secondPt] < 10) {
+        } else if ([GPSOffTimeFilter checkPotinAngle:firstPt antPt:maxPt antPt:secondPt] < 10) {
             // all else if the angle is less than 10 degree
             featureIdx = -1;
         }
@@ -306,13 +314,63 @@
         NSInteger idx2 = [self.anglePointIdx[idx+1] integerValue];
         NSInteger idx3 = [self.anglePointIdx[idx+2] integerValue];
         
+        CGPoint pt1 = [GPSOffTimeFilter item2Point:self.smoothData[idx1]];
+        CGPoint pt2 = [GPSOffTimeFilter item2Point:self.smoothData[idx2]];
+        CGPoint pt3 = [GPSOffTimeFilter item2Point:self.smoothData[idx3]];
+        
+        NSInteger delIdx = -1;
+        NSInteger nextIdx = idx+1;
         // 二次筛选拐点，如果相邻拐点的角度小于15度，则认为不是拐点，删除改拐点，递归查找下一个
-        if ([self checkPotinAngle:[GPSOffTimeFilter item2Point:self.smoothData[idx1]] antPt:[GPSOffTimeFilter item2Point:self.smoothData[idx2]] antPt:[GPSOffTimeFilter item2Point:self.smoothData[idx3]]] > 15) {
-            [self _filterFeaturePointsAtIdx:idx+1];
-        } else {
-            [self.anglePointIdx removeObjectAtIndex:idx+1];
-            [self _filterFeaturePointsAtIdx:idx];
+        if ([GPSOffTimeFilter checkPotinAngle:pt1 antPt:pt2 antPt:pt3] < 15) {
+            delIdx = idx+1;
+            nextIdx = idx;
         }
+        
+        if (delIdx > 0) {
+            [self.anglePointIdx removeObjectAtIndex:delIdx];
+        }
+        [self _filterFeaturePointsAtIdx:nextIdx];
+    }
+}
+
+- (void)_filterFeaturePoints2AtIdx:(NSInteger)idx
+{
+    if (idx+2 < self.anglePointIdx.count)
+    {
+        NSInteger idx1 = [self.anglePointIdx[idx] integerValue];
+        NSInteger idx2 = [self.anglePointIdx[idx+1] integerValue];
+        NSInteger idx3 = [self.anglePointIdx[idx+2] integerValue];
+        
+        CGPoint pt1 = [GPSOffTimeFilter item2Point:self.smoothData[idx1]];
+        CGPoint pt2 = [GPSOffTimeFilter item2Point:self.smoothData[idx2]];
+        CGPoint pt3 = [GPSOffTimeFilter item2Point:self.smoothData[idx3]];
+        
+        NSInteger delIdx = -1;
+        NSInteger nextIdx = idx+1;
+
+        // 一个拐点有可能会被识别出多个拐点，因为采样精度的原因，合并距离相近的拐点
+        if (delIdx < 0 && idx+3 < self.anglePointIdx.count) {
+            CGFloat dist = [self.smoothData[idx2] distanceFrom:self.smoothData[idx3]];
+            if (dist < 260) {
+                NSInteger idx4 = [self.anglePointIdx[idx+3] integerValue];
+                CGPoint pt4 = [GPSOffTimeFilter item2Point:self.smoothData[idx4]];
+                CGFloat angle123 = [GPSOffTimeFilter checkPotinAngle:pt1 antPt:pt2 antPt:pt3];
+                CGFloat angle234 = [GPSOffTimeFilter checkPotinAngle:pt2 antPt:pt3 antPt:pt4];
+                CGFloat angle1234 = [GPSOffTimeFilter checkPotinAngle:pt1 antPt:pt2 antPt:pt3 andPt:pt4];
+                if (angle1234 > 70 && angle1234 < 110) {
+                    if (angle123 > angle234) {
+                        delIdx = idx+2;
+                    } else {
+                        delIdx = idx+1;
+                    }
+                }
+            }
+        }
+        
+        if (delIdx > 0) {
+            [self.anglePointIdx removeObjectAtIndex:delIdx];
+        }
+        [self _filterFeaturePoints2AtIdx:nextIdx];
     }
 }
 
@@ -337,6 +395,7 @@
         
         // 验证筛选拐点
         [self _filterFeaturePointsAtIdx:0];
+        [self _filterFeaturePoints2AtIdx:0];
     }
 }
 
@@ -389,7 +448,7 @@
         GPSTurningItem * turning = [[GPSTurningItem alloc] initWithInstSpeed:[item.speed doubleValue]];
         turning.duringAfterTurning = [nextItem.timestamp timeIntervalSinceDate:item.timestamp];
         turning.distAfterTurning = [item distanceFrom:nextItem];
-        turning.angle = [self checkPotinAngle:[GPSOffTimeFilter item2Point:prevItem] antPt:[GPSOffTimeFilter item2Point:item] antPt:[GPSOffTimeFilter item2Point:nextItem]];
+        turning.angle = [GPSOffTimeFilter checkPotinAngle:[GPSOffTimeFilter item2Point:prevItem] antPt:[GPSOffTimeFilter item2Point:item] antPt:[GPSOffTimeFilter item2Point:nextItem]];
         turning.instSpeed = [item.speed doubleValue] < 0 ? 0 : [item.speed doubleValue];
         NSInteger turnDir = [self checkTurningDir:[GPSOffTimeFilter item2Point:prevItem] antPt:[GPSOffTimeFilter item2Point:item] antPt:[GPSOffTimeFilter item2Point:nextItem]];
         if (turning.angle > 170 || turnDir == 0) {

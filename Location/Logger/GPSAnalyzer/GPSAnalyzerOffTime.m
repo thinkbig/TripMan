@@ -46,6 +46,7 @@
 {
     NSLog(@"################# recieve drive stat change = %@", notification.userInfo);
     NSNumber * inTrip = notification.userInfo[@"inTrip"];
+    NSNumber * dropTrip = notification.userInfo[@"dropTrip"];
     NSDate * statDate = notification.userInfo[@"date"];
     if (nil == statDate) {
         statDate = [NSDate date];
@@ -60,6 +61,9 @@
         }
         if (isDriving) {
             [manger newTripAt:statDate];
+        }
+        if (dropTrip && [dropTrip boolValue]) {
+            [unfinishedSum delete];
         }
         [manger commit];
     }
