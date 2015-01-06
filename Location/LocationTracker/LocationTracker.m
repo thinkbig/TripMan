@@ -15,7 +15,7 @@
 #import <CoreMotion/CoreMotion.h>
 #import "TSPair.h"
 
-#define kLocationUpdateInterval         7
+#define kLocationUpdateInterval         8
 #define kLocationUpdateLongInterval     15
 
 #define kWakeUpBySystem             @"kWakeUpBySystem"
@@ -126,7 +126,7 @@ typedef enum
     
     __block NSTimeInterval during = 0;
     __block NSDate * lastDate = toDate;
-    NSArray * copyArr = [self.motionArray copy];
+    NSArray * copyArr = [NSArray arrayWithArray:_motionArray];
     [copyArr enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(TSPair * obj, NSUInteger idx, BOOL *stop) {
         if ([fromDate compare:obj.first] == NSOrderedAscending) {
             if (MotionTypeAutomotive == (LTMotionType)[obj.second integerValue]) {
@@ -158,7 +158,7 @@ typedef enum
     
     __block NSTimeInterval during = 0;
     __block NSDate * lastDate = toDate;
-    NSArray * copyArr = [self.motionArray copy];
+    NSArray * copyArr = [NSArray arrayWithArray:_motionArray];
     [copyArr enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(TSPair * obj, NSUInteger idx, BOOL *stop) {
         if ([fromDate compare:obj.first] == NSOrderedAscending) {
             if (MotionTypeWalking == (LTMotionType)[obj.second integerValue] || MotionTypeRunning == (LTMotionType)[obj.second integerValue]) {
@@ -459,6 +459,10 @@ typedef enum
     DDLogWarn(@"locationManager didEnterRegion: %@", region.identifier);
     
     [self recordEvent:eGPSEventEnterRegion forReagion:region];
+    
+    if (!self.isDriving && [region.identifier hasSuffix:REGION_GROUP_MOST_STAY]) {
+        [self runBackgroundTask:1];
+    }
 }
 
 - (void)locationManager:(CLLocationManager *)manager didExitRegion:(CLCircularRegion *)region
@@ -528,17 +532,18 @@ typedef enum
             }
             
             CGFloat speed = newLocation.speed;
-            if (newLocation.speed < 0 && _lastLoc) {
-                NSTimeInterval interval = [newLocation.timestamp timeIntervalSinceDate:_lastLoc.timestamp];
-                CGFloat dist1 = [newLocation distanceFromLocation:_lastLoc];
-                if (interval > 2 && dist1 > 5 && newLocation.horizontalAccuracy < 200 && _lastLoc.horizontalAccuracy < 200) {
+            NSTimeInterval interval = 0;
+            if (speed < 0 && _lastLoc) {
+                interval = [newLocation.timestamp timeIntervalSinceDate:_lastLoc.timestamp];
+                CGFloat dist = [newLocation distanceFromLocation:_lastLoc];
+                if (interval > 2 && newLocation.horizontalAccuracy < 200 && _lastLoc.horizontalAccuracy < 200) {
                     // if the gps signal is too low, we can not cal the speed
-                    CGFloat tmpSpeed = dist1/interval;
+                    CGFloat tmpSpeed = dist/interval;
                     if (tmpSpeed < cAvgNoiceSpeed) {
                         if (!isDriving) {
                             if (_lastLastLoc) {
                                 CGFloat angle = [GPSOffTimeFilter checkPotinAngle:[GPSOffTimeFilter coor2Point:_lastLastLoc.coordinate] antPt:[GPSOffTimeFilter coor2Point:_lastLoc.coordinate] antPt:[GPSOffTimeFilter coor2Point:newLocation.coordinate]];
-                                if (angle < 90) {
+                                if (angle < 100) {
                                     // filter the wrong gps
                                     speed = tmpSpeed;
                                 }
@@ -552,10 +557,13 @@ typedef enum
                     }
                 }
             }
-            _lastLastLoc = _lastLoc;
-            _lastLoc = newLocation;
             
-            GPSLog2(newLocation, self.lastAcceleraion, speed);
+            if (nil == _lastLoc || speed >= 0 || interval >= 1) {
+                _lastLastLoc = _lastLoc;
+                _lastLoc = newLocation;
+                
+                GPSLog2(newLocation, self.lastAcceleraion, speed);
+            }
         }
     }
     
@@ -613,7 +621,6 @@ typedef enum
         //The location manager will only operate for 10 seconds to save battery
         //if the instant speed is -1, means the gps module has just be waken
         if (!_keepMonitoring) {
-            [self setStillLocation:mostAccuracyLocation force:NO];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [self realStop];
             });
@@ -681,7 +688,32 @@ typedef enum
     {
         DDLogWarn(@"&&&&&&&&&&&&&& add parking reagion monitor for location = %@", loc);
         [self registerNotificationForLocation:loc withRadius:@(cReagionRadius) assignIdentifier:REGION_ID_LAST_PARKING group:REGION_GROUP_LAST_PARKING];
+        
+        NSInteger idCnt = 1;
+        TripSummary * lastTrip = [[TripsCoreDataManager sharedManager] lastTrip];
+        ParkingRegion * lastSt = lastTrip.region_group.start_region;
+        if (lastSt) {
+            CLLocation * lastStLoc = [[CLLocation alloc] initWithLatitude:[lastSt.center_lat doubleValue] longitude:[lastSt.center_lon doubleValue]];
+            if ([lastStLoc distanceFromLocation:loc] > 500) {
+                [self registerNotificationForLocation:lastStLoc withRadius:@(2*cReagionRadius) assignIdentifier:REGION_ID_MOST_PARKING(idCnt++) group:REGION_GROUP_MOST_STAY];
+            }
+        }
+        
+        NSArray * mostUsedLoc = [[TripsCoreDataManager sharedManager] mostUsedParkingRegionLimit:5];
+        for (ParkingRegionDetail * region in mostUsedLoc) {
+            if (region.coreDataItem != lastSt) {
+                CLLocation * curLoc = [[CLLocation alloc] initWithLatitude:region.region.center.latitude longitude:region.region.center.longitude];
+                if ([curLoc distanceFromLocation:loc] > 500) {
+                    [self registerNotificationForLocation:curLoc withRadius:@(2*cReagionRadius) assignIdentifier:REGION_ID_MOST_PARKING(idCnt++) group:REGION_GROUP_MOST_STAY];
+                }
+            }
+        }
     }
+}
+
+- (void) test
+{
+
 }
 
 @end

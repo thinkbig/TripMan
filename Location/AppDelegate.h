@@ -19,7 +19,7 @@
 }
 
 @property (strong, nonatomic) UIWindow *window;
-@property LocationTracker * locationTracker;
+@property (strong, nonatomic) LocationTracker * locationTracker;
 @property (strong, nonatomic) AFNetworkActivityLogger *afNetworkLogger;
 @property (strong, nonatomic) BMKMapManager *  baiduMapManager;
 @property (nonatomic) BOOL  isUpdating;

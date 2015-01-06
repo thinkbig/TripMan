@@ -33,6 +33,7 @@
 #define ROOT_VIEW_CONTROLLER        ((TSTabBarViewController*)(MAIN_WINDOW.rootViewController))
 #define MAIN_VIEW_CONTROLLER        (ROOT_VIEW_CONTROLLER.selectedViewController)
 #define PRESENT_VIEW_CONTROLLER     ([MAIN_VIEW_CONTROLLER isKindOfClass:[UINavigationController class]] ? ((UINavigationController*)MAIN_VIEW_CONTROLLER).topViewController : MAIN_VIEW_CONTROLLER)
+#define LOCATION_TRACKER            (((AppDelegate*)([UIApplication sharedApplication].delegate)).locationTracker)
 
 #define IS_UPDATING                 (((AppDelegate*)([UIApplication sharedApplication].delegate)).isUpdating)
 

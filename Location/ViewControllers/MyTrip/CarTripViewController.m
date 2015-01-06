@@ -57,6 +57,18 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
     self.dateFormatter = [[NSDateFormatter alloc] init];
     [self.dateFormatter setDateFormat: @"MM.dd"];
     [self.dateFormatter setTimeZone:[NSTimeZone localTimeZone]];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tripEnd) name:kNotifyTripDidEnd object:nil];
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void) tripEnd
+{
+    [self rebuildContent:NO];
 }
 
 - (NSDate *)currentWeekDate {

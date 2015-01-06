@@ -11,9 +11,11 @@
 
 #define REGION_ID_LAST_STILL               @"idStill"
 #define REGION_ID_LAST_PARKING             @"idPark"
+#define REGION_ID_MOST_PARKING(num_)       [NSString stringWithFormat:@"idPark%ld", (num_)]
 
 #define REGION_GROUP_LAST_STILL            @"groupStill"
 #define REGION_GROUP_LAST_PARKING          @"groupPark"
+#define REGION_GROUP_MOST_STAY             @"groupMost"
 
 
 @interface LocationTracker : NSObject <CLLocationManagerDelegate>
@@ -29,5 +31,7 @@
 - (void)stopMotionChecker;
 - (NSTimeInterval) duringForWalkRunWithin:(NSTimeInterval)within;
 - (NSTimeInterval) duringForAutomationWithin:(NSTimeInterval)within;
+
+- (void) test;
 
 @end

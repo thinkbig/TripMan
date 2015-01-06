@@ -169,6 +169,7 @@
 		A3BD72AC1A14F2B00007ECA1 /* BaiduRoadMarkFacade.m in Sources */ = {isa = PBXBuildFile; fileRef = A3BD72AB1A14F2B00007ECA1 /* BaiduRoadMarkFacade.m */; };
 		A3BD72AF1A15A9950007ECA1 /* BaiduMarkModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A3BD72AE1A15A9950007ECA1 /* BaiduMarkModel.m */; };
 		A3BD72B21A15BC2E0007ECA1 /* BussinessDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = A3BD72B11A15BC2E0007ECA1 /* BussinessDataProvider.m */; };
+		A3BED01C1A5A769B008FC6A7 /* CarSettingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A3BED01B1A5A769B008FC6A7 /* CarSettingCell.m */; };
 		A3CD35EC19C6A1A70039F6E1 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3CD35EB19C6A1A70039F6E1 /* CoreMotion.framework */; };
 		A3CD35FD19C6DCC00039F6E1 /* GPSFMDBLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = A3CD35FA19C6DCC00039F6E1 /* GPSFMDBLogger.m */; };
 		A3CD360219C6DCC80039F6E1 /* GPSAnalyzerRealTime.m in Sources */ = {isa = PBXBuildFile; fileRef = A3CD360119C6DCC80039F6E1 /* GPSAnalyzerRealTime.m */; };
@@ -574,6 +575,8 @@
 		A3BD72AE1A15A9950007ECA1 /* BaiduMarkModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaiduMarkModel.m; sourceTree = "<group>"; };
 		A3BD72B01A15BC2E0007ECA1 /* BussinessDataProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BussinessDataProvider.h; sourceTree = "<group>"; };
 		A3BD72B11A15BC2E0007ECA1 /* BussinessDataProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BussinessDataProvider.m; sourceTree = "<group>"; };
+		A3BED01A1A5A769B008FC6A7 /* CarSettingCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CarSettingCell.h; sourceTree = "<group>"; };
+		A3BED01B1A5A769B008FC6A7 /* CarSettingCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CarSettingCell.m; sourceTree = "<group>"; };
 		A3CD35EB19C6A1A70039F6E1 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		A3CD35F919C6DCC00039F6E1 /* GPSFMDBLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPSFMDBLogger.h; sourceTree = "<group>"; };
 		A3CD35FA19C6DCC00039F6E1 /* GPSFMDBLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPSFMDBLogger.m; sourceTree = "<group>"; };
@@ -1992,6 +1995,8 @@
 				A34F00FF1A03D0CB00F58C17 /* CarSetting.storyboard */,
 				A34F00ED1A03C8F800F58C17 /* CarSettingViewController.h */,
 				A34F00EE1A03C8F800F58C17 /* CarSettingViewController.m */,
+				A3BED01A1A5A769B008FC6A7 /* CarSettingCell.h */,
+				A3BED01B1A5A769B008FC6A7 /* CarSettingCell.m */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -2303,6 +2308,7 @@
 				A35C264C1A426F4B005F6658 /* RZDispatch.m in Sources */,
 				A318CEEB1A2618DE00320E8F /* NSAttributedString+Style.m in Sources */,
 				A35C26351A426F4B005F6658 /* UIView+RZAutoLayoutHelpers.m in Sources */,
+				A3BED01C1A5A769B008FC6A7 /* CarSettingCell.m in Sources */,
 				A35C26531A42FD8A005F6658 /* TurningInfo.m in Sources */,
 				A35C26831A48FCE2005F6658 /* CTPOICategoryFacade.m in Sources */,
 				A34F01271A04F22400F58C17 /* BaiduWeatherFacade.m in Sources */,

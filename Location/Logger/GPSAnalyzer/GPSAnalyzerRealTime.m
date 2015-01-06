@@ -117,6 +117,15 @@
     self.lostGPSTimer = nil;
     
     CGFloat speed = [gps.speed floatValue] < 0 ? 0 : [gps.speed floatValue];
+    if (speed > cInsDrivingSpeed && [gps.horizontalAccuracy doubleValue] > 100 && ![_isInTrip boolValue] && _startMoveTraceIdx < self.logArr.count) {
+        GPSLogItem * firstItem = self.logArr[_startMoveTraceIdx];
+        // lower the speed if it is a low accuracy and near the start move point
+        if ([gps distanceFrom:firstItem] < 500) {
+            speed /= 2.0;
+            gps.speed = @(speed);
+        }
+    }
+    
     _startSpeedTrace += speed;
     _startSpeedTraceCnt++;
     _endSpeedTrace += speed;

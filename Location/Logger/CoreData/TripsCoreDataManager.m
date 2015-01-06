@@ -185,6 +185,15 @@
     return nil;
 }
 
+- (TripSummary*) lastTrip
+{
+    NSArray * trips = [TripSummary where:@"start_date!=nil" inContext:self.tripAnalyzerContent order:@{@"start_date": @"DESC"} limit:@(1)];
+    if (trips.count > 0) {
+        return trips[0];
+    }
+    return nil;
+}
+
 - (NSArray*) allTrips
 {
     return [TripSummary where:@"start_date!=nil" inContext:self.tripAnalyzerContent order:@{@"start_date": @"DESC"}];
@@ -282,7 +291,11 @@
         }
         return (NSComparisonResult)NSOrderedSame;
     }];
-    return sortArr;
+    
+    if (limit >= sortArr.count) {
+        return sortArr;
+    }
+    return [sortArr subarrayWithRange:NSMakeRange(0, limit)];
 }
 
 - (void) setNeedAnalyzeForDay:(NSDate*)dateDay

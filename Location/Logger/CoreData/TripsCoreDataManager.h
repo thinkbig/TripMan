@@ -35,12 +35,14 @@
 
 - (TripSummary*) unfinishedTrip;
 - (TripSummary*) prevTripBy:(TripSummary*)curTrip;
+- (TripSummary*) lastTrip;
 - (NSArray*) allTrips;
 - (NSArray*) unAnalyzedTrips;
 - (NSArray*) tripStartFrom:(NSDate*)fromDate toDate:(NSDate*)toDate;
-- (ParkingRegionDetail*) parkingDetailForCoordinate:(CLLocationCoordinate2D)coordinate;
 - (NSArray*) mostUsefulTripsLimit:(NSUInteger)limit;
 - (NSArray*) tripsWithStartRegion:(ParkingRegion*)region tripLimit:(NSInteger)limit;
+
+- (ParkingRegionDetail*) parkingDetailForCoordinate:(CLLocationCoordinate2D)coordinate;
 - (NSArray*) mostUsedParkingRegionLimit:(NSUInteger)limit;
 
 - (DaySummary*) daySummaryByDay:(NSDate*)dateDay;

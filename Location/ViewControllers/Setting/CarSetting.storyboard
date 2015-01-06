@@ -46,13 +46,17 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="1R4-MM-eNg">
+                                    <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CarSettingCellId" id="1R4-MM-eNg" customClass="CarSettingCell">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="221"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
+                                                <view userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="U9m-nR-kTd">
+                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="300"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                </view>
                                                 <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tHD-Ea-3HP">
                                                     <rect key="frame" x="160" y="0.0" width="1" height="221"/>
                                                     <color key="backgroundColor" white="1" alpha="0.20000000000000001" colorSpace="calibratedWhite"/>
@@ -85,12 +89,27 @@
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                 </button>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="shadow" translatesAutoresizingMaskIntoConstraints="NO" id="d9b-bm-Syb">
+                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="5"/>
+                                                </imageView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                         <size key="customSize" width="320" height="221"/>
+                                        <connections>
+                                            <outlet property="backgroundColorView" destination="U9m-nR-kTd" id="KFX-QK-NLe"/>
+                                            <outlet property="btn1" destination="so8-c5-tUL" id="7sX-n0-NEF"/>
+                                            <outlet property="btn2" destination="tIY-N6-rva" id="ofQ-BI-l8v"/>
+                                            <outlet property="btn3" destination="a4Y-sR-d5y" id="zFZ-Us-wUy"/>
+                                            <outlet property="btn4" destination="tRR-EK-SME" id="1jh-uU-3WF"/>
+                                            <outlet property="shadowImage" destination="d9b-bm-Syb" id="otm-PO-vFd"/>
+                                        </connections>
                                     </collectionViewCell>
                                 </cells>
+                                <connections>
+                                    <outlet property="dataSource" destination="qLt-gF-1r7" id="QNq-Lr-AQW"/>
+                                    <outlet property="delegate" destination="qLt-gF-1r7" id="INs-qP-IT3"/>
+                                </connections>
                             </collectionView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -98,6 +117,9 @@
                     <extendedEdge key="edgesForExtendedLayout" top="YES"/>
                     <navigationItem key="navigationItem" id="ys6-bt-sRW"/>
                     <nil key="simulatedTopBarMetrics"/>
+                    <connections>
+                        <outlet property="settingCollection" destination="c2J-1g-yxy" id="wqh-KK-Fa4"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sbs-Hy-C3o" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -126,6 +148,7 @@
     <resources>
         <image name="main_bg" width="320" height="568"/>
         <image name="mycar_profile" width="115" height="110"/>
+        <image name="shadow" width="266" height="6"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

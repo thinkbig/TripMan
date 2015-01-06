@@ -73,6 +73,7 @@
 
 #define kNotifyExitReagion              @"kNotifyExitReagion"
 #define kNotifyTripStatChange           @"kNotifyTripStatChange"
+#define kNotifyTripDidEnd               @"kNotifyTripDidEnd"    // did end one trip (get the end date)
 
 #define kLastestGoodGPSData             @"kLastestGoodGPSData"  //@{@"lat":lat, @"lon":lon, @"timestamp":timestamp}
 

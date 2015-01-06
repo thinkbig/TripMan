@@ -58,6 +58,9 @@
         TripSummary * unfinishedSum = [manger unfinishedTrip];
         if (unfinishedSum) {
             unfinishedSum.end_date = statDate;
+            unfinishedSum.region_group = nil;
+            // the region is expired
+            unfinishedSum.is_analyzed = @NO;
         }
         if (isDriving) {
             [manger newTripAt:statDate];
@@ -66,6 +69,10 @@
             [unfinishedSum delete];
         }
         [manger commit];
+        
+        if (unfinishedSum) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:kNotifyTripDidEnd object:nil];
+        }
     }
 }
 
@@ -437,7 +444,11 @@
     [manager startRegionCenter:[stLogItem locationCoordinate] toRegionCenter:[endLogItem locationCoordinate] forTrip:tripSum];
     
     // MUST after all analyze process, THEN set the analyzed flag
-    tripSum.is_analyzed = @YES;
+    if ([tripSum.region_group.is_temp boolValue]) {
+        tripSum.is_analyzed = @NO;
+    } else {
+        tripSum.is_analyzed = @YES;
+    }
     
     [manager commit];
 }

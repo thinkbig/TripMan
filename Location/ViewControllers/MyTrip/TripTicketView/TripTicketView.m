@@ -38,7 +38,7 @@
         self.toPoi.text = [self safeText:sum.region_group.end_region.nearby_poi withDefault:@"未知"];
         self.toStreet.text = [self safeText:sum.region_group.end_region.street withDefault:@"未知街道"];
         self.toDate.text = [formatter stringFromDate:sum.end_date];
-    } else if ([sum.region_group.end_region.is_temp boolValue]) {
+    } else if (sum) {
         self.toPoi.text = @"行驶中";
         self.toDate.text = [formatter stringFromDate:[NSDate date]];
     } else {
