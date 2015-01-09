@@ -2,8 +2,8 @@
 //  TripSummary.m
 //  TripMan
 //
-//  Created by taq on 12/18/14.
-//  Copyright (c) 2014 Location. All rights reserved.
+//  Created by taq on 1/7/15.
+//  Copyright (c) 2015 Location. All rights reserved.
 //
 
 #import "TripSummary.h"
@@ -35,6 +35,9 @@
 @dynamic traffic_light_tol_cnt;
 @dynamic traffic_light_waiting;
 @dynamic trip_id;
+@dynamic traffic_jam_max_during;
+@dynamic is_uploaded;
+@dynamic should_update;
 @dynamic day_summary;
 @dynamic driving_info;
 @dynamic environment;

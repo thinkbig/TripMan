@@ -17,10 +17,23 @@
 #define REGION_GROUP_LAST_PARKING          @"groupPark"
 #define REGION_GROUP_MOST_STAY             @"groupMost"
 
+#define kGoodHorizontalAccuracy          90
+#define kLowHorizontalAccuracy             160
+#define kPoorHorizontalAccuracy            210
+
+typedef NS_ENUM(NSUInteger, eGPSSignalStrength) {
+    eGPSSignalStrengthUnknow = 0,       // default
+    eGPSSignalStrengthInvalid,          // accu < 0
+    eGPSSignalStrengthPoor,             // > kPoorHorizontalAccuracy
+    eGPSSignalStrengthWeak,             // kLowHorizontalAccuracy ~ kPoorHorizontalAccuracy
+    eGPSSignalStrengthGood,             // kGoodHorizontalAccuracy ~ kLowHorizontalAccuracy
+    eGPSSignalStrengthStrong,           // < kGoodHorizontalAccuracy
+};
 
 @interface LocationTracker : NSObject <CLLocationManagerDelegate>
 
 @property (nonatomic, strong) CLLocationManager *   locationManager;
+@property (nonatomic) eGPSSignalStrength            signalStrength;
 
 - (void)setKeepMonitor;
 - (void)startLocationTracking;

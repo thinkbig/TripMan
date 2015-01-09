@@ -108,15 +108,10 @@
     } else if (2 == indexPath.row) {
         TicketJamDetailCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"JamDetailCell" forIndexPath:indexPath];
         realCell.cellTitle.text = @"红绿灯数据";
-        
-        CGFloat maxJamDuring = 0;
-        for (TrafficJam * jam in _tripSum.traffic_jams) {
-            maxJamDuring = MAX(maxJamDuring, [jam.traffic_jam_during floatValue]);
-        }
         [realCell setLabel11Str:@"通过红绿灯数" withValue:[NSString stringWithFormat:@"%ld", (long)[_tripSum.traffic_light_tol_cnt integerValue]] andUnit:@"个"];
         [realCell setLabel21Str:@"等待个数" withValue:[NSString stringWithFormat:@"%ld", (long)[_tripSum.traffic_light_jam_cnt floatValue]] andUnit:@"个"];
         [realCell setLabel22Str:@"等待耗时" withValue:[NSString stringWithFormat:@"%.f", (long)[_tripSum.traffic_light_waiting floatValue]/60.0] andUnit:@"min"];
-        [realCell setLabel23Str:@"单次最长等待" withValue:[NSString stringWithFormat:@"%.1f", maxJamDuring/60.0] andUnit:@"min"];
+        [realCell setLabel23Str:@"单次最长等待" withValue:[NSString stringWithFormat:@"%.1f", [_tripSum.traffic_jam_max_during floatValue]/60.0] andUnit:@"min"];
         
         cell = realCell;
     } else if (3 == indexPath.row) {

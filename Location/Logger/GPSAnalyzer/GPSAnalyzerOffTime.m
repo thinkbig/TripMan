@@ -342,6 +342,7 @@
     NSArray * oldJams = [tripSum.traffic_jams allObjects];
     NSArray * jamArr = [oneTripAna getTrafficJams];
     __block NSInteger heavy_jam_cnt = 0;
+    __block CGFloat traffic_jam_max_during = 0;
     [jamArr enumerateObjectsUsingBlock:^(TSPair * pair, NSUInteger idx, BOOL *stop) {
         TrafficJam * jam = nil;
         if (idx < oldJams.count) {
@@ -366,12 +367,14 @@
         
         if ([jam.traffic_jam_during floatValue] > cHeavyTrafficJamThreshold && [endLogItem distanceFrom:endLog] > 100 && [stLogItem distanceFrom:startLog] > 100) {
             heavy_jam_cnt++;
+            traffic_jam_max_during = MAX(traffic_jam_max_during, [jam.traffic_jam_during floatValue]);
         }
     }];
     for (NSInteger i = jamArr.count; i < oldJams.count; i++) {
         TrafficJam * removeJam = oldJams[i];
         [tripSum removeTraffic_jamsObject:removeJam];
     }
+    tripSum.traffic_jam_max_during = @(traffic_jam_max_during);
     tripSum.traffic_heavy_jam_cnt = @(heavy_jam_cnt);
     
     // update analyze environment info

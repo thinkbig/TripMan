@@ -108,16 +108,17 @@
             [self.logArr removeAllObjects];
             [self setEStat:eMotionStatGPSLost];
         }
-        if ([gps.horizontalAccuracy doubleValue] < 200) {
+        if ([gps.horizontalAccuracy doubleValue] < kPoorHorizontalAccuracy) {
             [self setLastGoodGPS:gps];
         }
     }
     
     [self.lostGPSTimer invalidate];
     self.lostGPSTimer = nil;
+    CGFloat accu = [gps.horizontalAccuracy doubleValue];
     
     CGFloat speed = [gps.speed floatValue] < 0 ? 0 : [gps.speed floatValue];
-    if (speed > cInsDrivingSpeed && [gps.horizontalAccuracy doubleValue] > 100 && ![_isInTrip boolValue] && _startMoveTraceIdx < self.logArr.count) {
+    if (speed > cInsDrivingSpeed && accu > kLowHorizontalAccuracy && ![_isInTrip boolValue] && _startMoveTraceIdx < self.logArr.count) {
         GPSLogItem * firstItem = self.logArr[_startMoveTraceIdx];
         // lower the speed if it is a low accuracy and near the start move point
         if ([gps distanceFrom:firstItem] < 500) {
@@ -126,26 +127,35 @@
         }
     }
     
-    _startSpeedTrace += speed;
-    _startSpeedTraceCnt++;
-    _endSpeedTrace += speed;
-    _endSpeedTraceCnt++;
+    BOOL validSpeed = YES;
+    if (self.lastLogItem && speed == 0 && accu > kGoodHorizontalAccuracy && [gps.timestamp timeIntervalSinceDate:self.lastLogItem.timestamp] < 1) {
+        validSpeed = NO;
+    }
     
-    self.lastLogItem = gps;
-    [self.logArr addObject:gps];
-    
-    if (speed > cInsTrafficJamSpeed) {
-        _lastestNormalSpeed = gps.timestamp;
+    if (validSpeed) {
+        _startSpeedTrace += speed;
+        _startSpeedTraceCnt++;
+        _endSpeedTrace += speed;
+        _endSpeedTraceCnt++;
+        
+        self.lastLogItem = gps;
+        [self.logArr addObject:gps];
+        
+        if (speed > cInsTrafficJamSpeed) {
+            _lastestNormalSpeed = gps.timestamp;
+        }
     }
     
     eMotionStat stat = [self checkStatus];
     
-    if ([_isInTrip boolValue]) {
-        if ([gps.timestamp timeIntervalSinceDate:_driveStart.timestamp] > 5*60) {
-            // the car should drive at least 600 meter after start drive 5 min
-            CGFloat distFromStart = [gps distanceFrom:_driveStart];
-            _maxDist = MAX(distFromStart, _maxDist);
-            if (_maxDist < 600) {
+    if (_driveStart) {
+        CGFloat distFromStart = [gps distanceFrom:_driveStart];
+        _maxDist = MAX(distFromStart, _maxDist);
+    }
+    if ([_isInTrip boolValue] && [gps.horizontalAccuracy doubleValue] > kLowHorizontalAccuracy) {
+        if ([gps.timestamp timeIntervalSinceDate:_driveStart.timestamp] > 10*60) {
+            // the car should drive at least 600 meter after start drive 10 min
+            if (_maxDist > 0 && _maxDist < 400) {
                 stat = eMotionStatStationary;
             }
         }
@@ -266,7 +276,7 @@
         } else {
             if (_endSpeedTraceIdx < self.logArr.count) {
                 item = ((GPSLogItem*)(self.logArr[_endSpeedTraceIdx]));
-                if (_maxDist < 600) {
+                if (_maxDist < 400) {
                     dropTrip = YES;
                 }
                 _maxDist = 0;
@@ -284,7 +294,7 @@
             [[NSNotificationCenter defaultCenter] postNotificationName:kNotifyTripStatChange object:nil userInfo:dict];
         });
 
-        DDLogWarn(@"!!!!!!!!!!!!!!!!!!!!!!!! notify is driving %d at %@", inTrip, item.timestamp);
+        DDLogWarn(@"!!!!!!!!!!!!!!!!!!!!!!!! notify is driving %d at %@, if drop %d, maxDist %f", inTrip, item.timestamp, dropTrip, _maxDist);
     }
 }
 

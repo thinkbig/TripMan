@@ -45,6 +45,9 @@ typedef enum
     
     CLLocation *                  _lastLastLoc;
     CLLocation *                  _lastLoc;
+    
+    NSDate *                      _resumeGpsDate;      // each time call start location update, use to check if the gps is warn up
+    NSDate *                      _maylostGpsDate;     // the date not getting good gps
 }
 
 @property (nonatomic, strong) CMAccelerometerData *         lastAcceleraion;
@@ -99,6 +102,7 @@ typedef enum
     self = [super init];
 	if (self)
     {
+        self.signalStrength = eGPSSignalStrengthUnknow;
         _locationStarted = NO;
         [self setKeepMonitor];
         [self preload];
@@ -232,6 +236,8 @@ typedef enum
 
 - (void)setKeepMonitor
 {
+    _maylostGpsDate = nil;
+    _resumeGpsDate = nil;
     _setShoudlStop = NO;
     _keepMonitoring = YES;
     _lastStationaryDate = nil;
@@ -317,6 +323,9 @@ typedef enum
     if (_setShoudlStop) {
         return;
     }
+    _maylostGpsDate = nil;
+    _resumeGpsDate = nil;
+    self.signalStrength = eGPSSignalStrengthUnknow;
     _setShoudlStop = YES;
     _lastLoc = _lastLastLoc = nil;
     
@@ -425,6 +434,7 @@ typedef enum
 {
     NSLog(@"&&&&&&&&&&&&&&&&&&&&&& start &&&&&&&&&&&&&&&&&&&&&&");
     
+    _resumeGpsDate = nil;
     CLLocationManager *locationManager = self.locationManager;
     locationManager.desiredAccuracy = self.isDriving ? kLocationAccu : kLocationAccuNotDriving;
     [locationManager startUpdatingLocation];
@@ -488,11 +498,6 @@ typedef enum
     DDLogWarn(@"------------- DeferredLocationUpdates End %@ -------------- ", error);
 }
 
-- (BOOL) isGPSWarning:(CLLocation*)loc
-{
-    return (loc.speed < 0 && loc.horizontalAccuracy > 100);
-}
-
 -(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
     NSLog(@"locationManager didUpdateLocations");
@@ -536,7 +541,7 @@ typedef enum
             if (speed < 0 && _lastLoc) {
                 interval = [newLocation.timestamp timeIntervalSinceDate:_lastLoc.timestamp];
                 CGFloat dist = [newLocation distanceFromLocation:_lastLoc];
-                if (interval > 2 && newLocation.horizontalAccuracy < 200 && _lastLoc.horizontalAccuracy < 200) {
+                if (interval > 2 && newLocation.horizontalAccuracy < kPoorHorizontalAccuracy && _lastLoc.horizontalAccuracy < kPoorHorizontalAccuracy) {
                     // if the gps signal is too low, we can not cal the speed
                     CGFloat tmpSpeed = dist/interval;
                     if (tmpSpeed < cAvgNoiceSpeed) {
@@ -563,36 +568,71 @@ typedef enum
                 _lastLoc = newLocation;
                 
                 GPSLog2(newLocation, self.lastAcceleraion, speed);
+                DDLogWarn(@"location is: <%f, %f>, speed=%f, accuracy=%f", newLocation.coordinate.latitude, newLocation.coordinate.longitude, speed, newLocation.horizontalAccuracy);
             }
         }
     }
     
-    if (nil == mostAccuracyLocation) {
+    if (nil == mostAccuracyLocation)
+    {
+        BOOL didLostGps = NO;
+        if (nil == _maylostGpsDate) {
+            _maylostGpsDate = [NSDate date];
+        } else {
+            NSTimeInterval lostGpsDuring = [[NSDate date] timeIntervalSinceDate:_maylostGpsDate];
+            if ((isDriving && lostGpsDuring > 30 * 60) || (!isDriving && lostGpsDuring > 5 * 60)) {
+                didLostGps = YES;
+            }
+        }
         DDLogWarn(@"good location is not valid, keep start");
-        UIApplication * app = [UIApplication sharedApplication];
-        if (app.applicationState != UIApplicationStateActive) {
-            NSTimeInterval backgroundRemain = [UIApplication sharedApplication].backgroundTimeRemaining;
-            if (backgroundRemain > 0 && backgroundRemain < 20) {
-                DDLogWarn(@"backgroundRemain is low %f", backgroundRemain);
-                __block UIBackgroundTaskIdentifier bgTask = [app beginBackgroundTaskWithExpirationHandler:^{
-                    [app endBackgroundTask:bgTask];
-                    bgTask = UIBackgroundTaskInvalid;
-                }];
+        self.signalStrength = eGPSSignalStrengthInvalid;
+        if (didLostGps) {
+            DDLogWarn(@"didLostGps ###########");
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self realStop];
+            });
+        } else {
+            UIApplication * app = [UIApplication sharedApplication];
+            if (app.applicationState != UIApplicationStateActive) {
+                NSTimeInterval backgroundRemain = [UIApplication sharedApplication].backgroundTimeRemaining;
+                if (backgroundRemain > 0 && backgroundRemain < 20) {
+                    DDLogWarn(@"backgroundRemain is low %f", backgroundRemain);
+                    __block UIBackgroundTaskIdentifier bgTask = [app beginBackgroundTaskWithExpirationHandler:^{
+                        [app endBackgroundTask:bgTask];
+                        bgTask = UIBackgroundTaskInvalid;
+                    }];
+                }
             }
         }
         return;
+    } else {
+        _maylostGpsDate = nil;
+    }
+    
+    if (nil == _resumeGpsDate) {
+        _resumeGpsDate = mostAccuracyLocation.timestamp;
+    }
+    
+    if (mostAccuracyLocation.horizontalAccuracy > kPoorHorizontalAccuracy) {
+        self.signalStrength = eGPSSignalStrengthPoor;
+    } else if (mostAccuracyLocation.horizontalAccuracy > kLowHorizontalAccuracy) {
+        self.signalStrength = eGPSSignalStrengthWeak;
+    } else if (mostAccuracyLocation.horizontalAccuracy > kGoodHorizontalAccuracy) {
+        self.signalStrength = eGPSSignalStrengthGood;
+    } else if (mostAccuracyLocation.horizontalAccuracy > 0) {
+        self.signalStrength = eGPSSignalStrengthStrong;
     }
 
-    BOOL isWarming = [self isGPSWarning:mostAccuracyLocation];
+    BOOL isWarming = (mostAccuracyLocation.speed < 0 && self.signalStrength <= eGPSSignalStrengthWeak && [mostAccuracyLocation.timestamp timeIntervalSinceDate:_resumeGpsDate] < 4);
     if (self.isDriving != isDriving) {
         DDLogWarn(@"drive stat change to: %d", isDriving);
         self.isDriving = isDriving;
         _recordCnt = 20;
     }
-    static NSInteger recordInterval = 0;
-    if (_recordCnt-- > 0 || recordInterval++%5 == 0) {
-        DDLogWarn(@"location is: <%f, %f>, speed=%f, accuracy=%f, altitude=%f", mostAccuracyLocation.coordinate.latitude, mostAccuracyLocation.coordinate.longitude, calSpeed, mostAccuracyLocation.horizontalAccuracy, mostAccuracyLocation.altitude);
-    }
+//    static NSInteger recordInterval = 0;
+//    if (_recordCnt-- > 0 || recordInterval++%5 == 0) {
+//        DDLogWarn(@"location is: <%f, %f>, speed=%f, accuracy=%f, altitude=%f", mostAccuracyLocation.coordinate.latitude, mostAccuracyLocation.coordinate.longitude, calSpeed, mostAccuracyLocation.horizontalAccuracy, mostAccuracyLocation.altitude);
+//    }
     
     if (!isDriving)
     {

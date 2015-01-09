@@ -2,8 +2,8 @@
 //  ParkingRegion.m
 //  TripMan
 //
-//  Created by taq on 12/18/14.
-//  Copyright (c) 2014 Location. All rights reserved.
+//  Created by taq on 1/7/15.
+//  Copyright (c) 2015 Location. All rights reserved.
 //
 
 #import "ParkingRegion.h"
