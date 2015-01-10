@@ -12,7 +12,7 @@
 #import "TSPair.h"
 #import "GPSOffTimeFilter.h"
 
-#define OVER_HEADER_HEIGHT      90
+#define OVER_HEADER_HEIGHT      114
 
 @interface SuggestDetailViewController ()
 
@@ -36,7 +36,6 @@
     // Do any additional setup after loading the view.
 
     CGRect scrollFrame = self.rootScrollView.bounds;
-    scrollFrame.origin.y = -64;
     // add header and content
     if (nil == self.mapView) {
         self.mapView = [[MKMapView alloc] initWithFrame:scrollFrame];
@@ -49,7 +48,6 @@
     
     if (nil == self.overLayerVC) {
         self.overLayerVC = [self.storyboard instantiateViewControllerWithIdentifier:@"SuggestOverLay"];
-        scrollFrame.size.height -= 64;
         scrollFrame.origin.y = (scrollFrame.size.height - OVER_HEADER_HEIGHT);
         self.overLayerVC.view.frame = scrollFrame;
         self.overLayerVC.collectionView.backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"main_bg"]];
@@ -245,7 +243,7 @@
         
         CGSize contentSize = self.rootScrollView.contentSize;
         CGRect scrollFrame = self.rootScrollView.bounds;
-        contentSize.height = (scrollFrame.size.height - OVER_HEADER_HEIGHT) + oldRect.size.height - 64;
+        contentSize.height = (scrollFrame.size.height - OVER_HEADER_HEIGHT) + oldRect.size.height;
         self.rootScrollView.contentSize = contentSize;
     }
 }
