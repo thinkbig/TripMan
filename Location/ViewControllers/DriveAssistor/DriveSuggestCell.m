@@ -11,6 +11,7 @@
 #import "RegionGroup.h"
 #import "ParkingRegion.h"
 #import "NSAttributedString+Style.h"
+#import "ParkingRegion+Helper.h"
 
 @implementation DriveSuggestCell
 
@@ -24,7 +25,7 @@
     NSDateFormatter * formatter = [[BussinessDataProvider sharedInstance] dateFormatterForFormatStr:@"HH:mm"];
     
     self.toStreet.text = [self safeText:sum.region_group.end_region.street withDefault:@"未知地点"];
-    self.toLabel.text = [self safeText:sum.region_group.end_region.nearby_poi withDefault:@"未知地点"];
+    self.toLabel.text = [sum.region_group.end_region prettyPOINameWithDefault:@"未知地点"];
     
     self.suggestLabel.attributedText = [NSAttributedString stringWithNumber:[formatter stringFromDate:sum.start_date] font:DigitalFontSize(17) color:[UIColor whiteColor] andUnit:@"建议出行" font:[UIFont boldSystemFontOfSize:11] color:COLOR_UNIT_GRAY];
     self.jamCntLabel.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%@", sum.traffic_heavy_jam_cnt] font:DigitalFontSize(17) color:[UIColor whiteColor] andUnit:@"处拥堵" font:[UIFont boldSystemFontOfSize:11] color:COLOR_UNIT_GRAY];

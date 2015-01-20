@@ -17,4 +17,6 @@
 
 + (NSString *)createUUID;
 
++ (NSString *)deviceId;
+
 @end

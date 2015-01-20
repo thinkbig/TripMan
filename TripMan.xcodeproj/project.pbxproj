@@ -56,6 +56,7 @@
 		A342849B19C42081002DB0FD /* GPSLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = A342849A19C42081002DB0FD /* GPSLogger.m */; };
 		A34284A019C6770A002DB0FD /* GPSFileLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = A342849F19C6770A002DB0FD /* GPSFileLogFormatter.m */; };
 		A342AD441A0C6CF000C92849 /* DataDebugPrinter.m in Sources */ = {isa = PBXBuildFile; fileRef = A342AD431A0C6CF000C92849 /* DataDebugPrinter.m */; };
+		A347A4AC1A675802002908C2 /* ParkingRegion+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = A347A4AB1A675802002908C2 /* ParkingRegion+Helper.m */; };
 		A34890571A3FC600002DE948 /* AFgzipRequestSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = A34890561A3FC600002DE948 /* AFgzipRequestSerializer.m */; };
 		A34890671A3FCB6F002DE948 /* AJClassHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = A348905A1A3FCB6F002DE948 /* AJClassHelper.m */; };
 		A34890681A3FCB6F002DE948 /* AJJson2ObjectSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = A348905C1A3FCB6F002DE948 /* AJJson2ObjectSerializer.m */; };
@@ -352,6 +353,8 @@
 		A34284A119C677C0002DB0FD /* GPSDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPSDefine.h; sourceTree = "<group>"; };
 		A342AD421A0C6CF000C92849 /* DataDebugPrinter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataDebugPrinter.h; sourceTree = "<group>"; };
 		A342AD431A0C6CF000C92849 /* DataDebugPrinter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataDebugPrinter.m; sourceTree = "<group>"; };
+		A347A4AA1A675802002908C2 /* ParkingRegion+Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "ParkingRegion+Helper.h"; path = "../../../../../../../../../Documents/ParkingRegion+Helper.h"; sourceTree = "<group>"; };
+		A347A4AB1A675802002908C2 /* ParkingRegion+Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "ParkingRegion+Helper.m"; path = "../../../../../../../../../Documents/ParkingRegion+Helper.m"; sourceTree = "<group>"; };
 		A34890551A3FC5FF002DE948 /* AFgzipRequestSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFgzipRequestSerializer.h; sourceTree = "<group>"; };
 		A34890561A3FC600002DE948 /* AFgzipRequestSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFgzipRequestSerializer.m; sourceTree = "<group>"; };
 		A34890591A3FCB6F002DE948 /* AJClassHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AJClassHelper.h; sourceTree = "<group>"; };
@@ -759,6 +762,7 @@
 		A31411661A0A4CCD0019F557 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
+				A347A4A61A675764002908C2 /* HelperCategory */,
 				A31411671A0A4CCD0019F557 /* DataModel */,
 				A31411681A0A4CCD0019F557 /* TripMan.xcdatamodeld */,
 				A314116A1A0A4CCD0019F557 /* TripsCoreDataManager.h */,
@@ -1036,6 +1040,15 @@
 				A342849F19C6770A002DB0FD /* GPSFileLogFormatter.m */,
 			);
 			path = LogFormatter;
+			sourceTree = "<group>";
+		};
+		A347A4A61A675764002908C2 /* HelperCategory */ = {
+			isa = PBXGroup;
+			children = (
+				A347A4AA1A675802002908C2 /* ParkingRegion+Helper.h */,
+				A347A4AB1A675802002908C2 /* ParkingRegion+Helper.m */,
+			);
+			path = HelperCategory;
 			sourceTree = "<group>";
 		};
 		A34890541A3FC5FF002DE948 /* AFgzipRequestSerializer */ = {
@@ -2184,6 +2197,7 @@
 				A34890681A3FCB6F002DE948 /* AJJson2ObjectSerializer.m in Sources */,
 				A3BED02F1A5D60EF008FC6A7 /* ParkingRegion.m in Sources */,
 				A35C26261A426F4B005F6658 /* NSDate+RZExtensions.m in Sources */,
+				A347A4AC1A675802002908C2 /* ParkingRegion+Helper.m in Sources */,
 				A35C26411A426F4B005F6658 /* RZProgressView.m in Sources */,
 				A35C26861A490F5F005F6658 /* HomeTripCell.m in Sources */,
 				A342849B19C42081002DB0FD /* GPSLogger.m in Sources */,

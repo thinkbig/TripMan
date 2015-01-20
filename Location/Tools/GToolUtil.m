@@ -11,6 +11,7 @@
 #import "JGProgressHUDFadeZoomAnimation.h"
 #import "JGProgressHUDPieIndicatorView.h"
 #import "JGProgressHUDSuccessIndicatorView.h"
+#import "FXKeychain.h"
 
 @interface GToolUtil ()
 
@@ -107,6 +108,17 @@ static GToolUtil * _sharedUtil = nil;
     NSString *uuidStr = (NSString *)CFBridgingRelease(CFUUIDCreateString(kCFAllocatorDefault, uuidObject));
     CFRelease(uuidObject);
     return uuidStr;
+}
+
++ (NSString *)deviceId
+{
+    static NSString * kTripManDeviceIdKey = @"kTripManDeviceIdKey";
+    NSString * oldId = [[FXKeychain defaultKeychain] objectForKey:kTripManDeviceIdKey];
+    if (nil == oldId) {
+        oldId = [self createUUID];
+        [[FXKeychain defaultKeychain] setObject:oldId forKey:kTripManDeviceIdKey];
+    }
+    return oldId;
 }
 
 @end
