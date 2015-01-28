@@ -2,7 +2,7 @@
 //  WeekSummary.m
 //  TripMan
 //
-//  Created by taq on 1/7/15.
+//  Created by taq on 1/27/15.
 //  Copyright (c) 2015 Location. All rights reserved.
 //
 

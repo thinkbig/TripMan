@@ -54,7 +54,7 @@
 - (NSArray*)allTripsEvent
 {
     NSMutableArray * trips = [NSMutableArray array];
-    FMResultSet *rs = [database executeQuery:@"select * from gps_event where eventType between 1000 and 1002 order by timestamp asc"];
+    FMResultSet *rs = [database executeQuery:@"select * from gps_event where eventType in (1000, 1001, 1002, 300, 301, 302) order by timestamp asc"];
     while ([rs next]) {
         GPSEventItem * item = [[GPSEventItem alloc] initWithDBResultSet:rs];
         [trips addObject:item];

@@ -10,7 +10,7 @@
 #define Location_GPSDefine_h
 
 #import "GPSLogger.h"
-#import "TripsCoreDataManager.h"
+#import "AnaDbManager.h"
 
 //#define NSLog(frmt, ...)   DDLogDebug(frmt, ##__VA_ARGS__)
 

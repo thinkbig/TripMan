@@ -12,11 +12,11 @@
 #import "GPSLogger.h"
 #import <Parse/Parse.h>
 #import <Crashlytics/Crashlytics.h>
-//#import <Cintric/Cintric.h>
+#import "UserWrapper.h"
 #import "NSString+MD5.h"
 
 static NSString * rebuildKey = @"kLocationForceRebuildKey";
-static NSString * rebuildVal = @"value_0000000000006"; // make sure it is different if this version should rebuild db
+static NSString * rebuildVal = @"value_0000000000005"; // make sure it is different if this version should rebuild db
 
 @implementation AppDelegate
 
@@ -52,6 +52,8 @@ static NSString * rebuildVal = @"value_0000000000006"; // make sure it is differ
                                                            }];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
+    [[BussinessDataProvider sharedInstance] registerLoginLisener];
+    
     self.baiduMapManager = [[BMKMapManager alloc] init];
     
     // check if need rebuild db
@@ -62,7 +64,7 @@ static NSString * rebuildVal = @"value_0000000000006"; // make sure it is differ
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateComplete) name:kNotifyUpgradeComplete object:nil];
 
         // real rebuild db
-        [[TripsCoreDataManager sharedManager] dropDb];
+        [[AnaDbManager sharedInst] dropDbAll];
         [[BussinessDataProvider sharedInstance] reCreateCoreDataDb];
     } else {
         [self updateComplete];
@@ -178,7 +180,7 @@ static NSString * rebuildVal = @"value_0000000000006"; // make sure it is differ
 {
     if (!IS_UPDATING) {
         [DDLog flushLog];
-        [[TripsCoreDataManager sharedManager] commit];
+        [[AnaDbManager deviceDb] commit];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
     DDLogWarn(@"@@@@@@@@@@@@@ applicationWillResignActive @@@@@@@@@@@@@");
@@ -214,7 +216,7 @@ static NSString * rebuildVal = @"value_0000000000006"; // make sure it is differ
     [[NSUserDefaults standardUserDefaults] synchronize];
     if (!IS_UPDATING) {
         [DDLog flushLog];
-        [[TripsCoreDataManager sharedManager] commit];
+        [[AnaDbManager deviceDb] commit];
         [self.locationTracker startLocationTracking];
     }
 }

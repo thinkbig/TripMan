@@ -15,4 +15,6 @@
 @property (nonatomic, strong) CLCircularRegion *    region;
 @property (nonatomic) NSUInteger                    parkingCnt;
 
+- (void) copyInfoFromAnother:(ParkingRegionDetail*)detail;
+
 @end

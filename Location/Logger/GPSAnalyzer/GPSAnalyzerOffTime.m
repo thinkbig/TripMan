@@ -21,7 +21,7 @@
 #import "EnvInfo.h"
 #import "TrafficJam.h"
 #import "TurningInfo.h"
-#import "DaySummary.h"
+#import "DaySummary+Fetcher.h"
 #import "ParkingRegion.h"
 #import "NSDate+Utilities.h"
 #import "TSPair.h"
@@ -42,6 +42,14 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+- (TripsCoreDataManager *)manager
+{
+    if (nil == _manager) {
+        return [AnaDbManager deviceDb];
+    }
+    return _manager;
+}
+
 - (void)tripStatChange:(NSNotification *)notification
 {
     NSLog(@"################# recieve drive stat change = %@", notification.userInfo);
@@ -54,7 +62,7 @@
     if (nil != inTrip) {
         BOOL isDriving = [inTrip boolValue];
         
-        TripsCoreDataManager * manger = [TripsCoreDataManager sharedManager];
+        TripsCoreDataManager * manger = self.manager;
         TripSummary * unfinishedSum = [manger unfinishedTrip];
         if (unfinishedSum) {
             unfinishedSum.end_date = statDate;
@@ -82,7 +90,7 @@
     BOOL isDriving = [[[NSUserDefaults standardUserDefaults] objectForKey:kMotionIsInTrip] boolValue];
     if (!isDriving)
     {
-        TripsCoreDataManager * manager = [TripsCoreDataManager sharedManager];
+        TripsCoreDataManager * manager = self.manager;
         TripSummary * unfinishedTrip = [manager unfinishedTrip];
         
         if (unfinishedTrip) {
@@ -127,7 +135,7 @@
     if (nil == daySum) {
         return;
     }
-    TripsCoreDataManager * manager = [TripsCoreDataManager sharedManager];
+    TripsCoreDataManager * manager = self.manager;
     
     CGFloat total_dist = 0;
     CGFloat total_during = 0;
@@ -137,8 +145,11 @@
     NSInteger traffic_light_jam_cnt = 0;
     CGFloat traffic_light_waiting = 0;
     CGFloat max_speed = 0;
-    NSArray * tripSums = [daySum.all_trips allObjects];
+    NSArray * tripSums = [daySum validTrips];
     for (TripSummary * sum in tripSums) {
+        if (![sum.is_valid boolValue]) {
+            continue;
+        }
         if (![sum.is_analyzed boolValue]) {
             [self analyzeTripForSum:sum withAnalyzer:nil];
         }
@@ -170,7 +181,7 @@
     if (nil == weekSum) {
         return;
     }
-    TripsCoreDataManager * manager = [TripsCoreDataManager sharedManager];
+    TripsCoreDataManager * manager = self.manager;
 
     CGFloat total_dist = 0;
     CGFloat total_during = 0;
@@ -193,7 +204,7 @@
         traffic_light_jam_cnt += [sum.traffic_light_jam_cnt integerValue];
         traffic_light_waiting += [sum.traffic_light_waiting floatValue];
         max_speed = MAX(max_speed, [sum.max_speed floatValue]);
-        trip_cnt += [sum.all_trips count];
+        trip_cnt += [sum validTripCount];
         heavy_jam_cnt += [sum.traffic_heavy_jam_cnt integerValue];
     }
     weekSum.total_dist = @(total_dist);
@@ -215,7 +226,6 @@
     if (nil == monthSum) {
         return;
     }
-    TripsCoreDataManager * manager = [TripsCoreDataManager sharedManager];
     
     CGFloat total_dist = 0;
     CGFloat total_during = 0;
@@ -238,8 +248,8 @@
         jam_during += [sum.jam_during floatValue];
         heavy_jam_cnt += [sum.traffic_heavy_jam_cnt integerValue];
         max_speed = MAX(max_speed, [sum.max_speed floatValue]);
-        trip_cnt += [sum.all_trips count];
-        for (TripSummary * realTrip in sum.all_trips) {
+        trip_cnt += [sum validTripCount];
+        for (TripSummary * realTrip in [sum validTrips]) {
             if ([trip_most_dist.total_dist floatValue] < [realTrip.total_dist floatValue]) {
                 trip_most_dist = realTrip;
             }
@@ -263,7 +273,7 @@
     monthSum.trip_most_jam_during = trip_most_jam_during;
     monthSum.is_analyzed = @(YES);
     
-    [manager commit];
+    [self.manager commit];
 }
 
 - (void)analyzeTripForSum:(TripSummary*)tripSum withAnalyzer:(NSDictionary*)anaDict
@@ -282,7 +292,7 @@
         return;
     }
     
-    GPSLogItem * stLogItem = [GPSAnalyzerOffTime modifyStartPoint:tripSum firstGPSLog:logArr[0]];
+    GPSLogItem * stLogItem = [self modifyStartPoint:tripSum firstGPSLog:logArr[0]];
     if (stLogItem) {
         // check the modified start point is valid
         GPSLogItem * logItem = logArr[0];
@@ -323,7 +333,7 @@
         tripSum.end_date = endLogItem.timestamp;
     }
     
-    TripsCoreDataManager * manager = [TripsCoreDataManager sharedManager];
+    TripsCoreDataManager * manager = self.manager;
     
     NSArray * smoothData = [GPSOffTimeFilter smoothGPSData:[rawData subarrayWithRange:NSMakeRange(0, realEndIdx)] iteratorCnt:3];
     
@@ -460,7 +470,7 @@
 {
     [self rollOutOfDateTrip];
     
-    TripsCoreDataManager * manager = [TripsCoreDataManager sharedManager];
+    TripsCoreDataManager * manager = self.manager;
     NSArray * trips = force ? [manager allTrips] : [manager unAnalyzedTrips];
     for (TripSummary * item in trips)
     {
@@ -471,7 +481,7 @@
 {
     [self rollOutOfDateTrip];
     
-    TripSummary * unfinishedTrip = [[TripsCoreDataManager sharedManager] unfinishedTrip];
+    TripSummary * unfinishedTrip = [self.manager unfinishedTrip];
     [self analyzeTripForSum:unfinishedTrip withAnalyzer:nil];
     
     return unfinishedTrip;
@@ -483,7 +493,7 @@
     
     if (update) [[GToolUtil sharedInstance] showPieHUDWithText:@"升级中..." andProgress:10];
     
-    NSArray * returnTrips = [[TripsCoreDataManager sharedManager] tripStartFrom:fromDate toDate:toDate];
+    NSArray * returnTrips = [self.manager tripStartFrom:fromDate toDate:toDate];
     NSEnumerator * enumerator = [returnTrips reverseObjectEnumerator];
     
     if (update) [[GToolUtil sharedInstance] showPieHUDWithText:@"升级中..." andProgress:20];
@@ -520,13 +530,13 @@
 }
 
 
-+ (GPSLogItem*)modifyStartPoint:(TripSummary*)sum firstGPSLog:(GPSLogItem*)firstLog
+- (GPSLogItem*)modifyStartPoint:(TripSummary*)sum firstGPSLog:(GPSLogItem*)firstLog
 {
     GPSEventItem * stRegion = [[GPSLogger sharedLogger].dbLogger selectLatestEventBefore:sum.start_date ofType:eGPSEventDriveEnd];
     if (nil == stRegion || ![stRegion isValidLocation]) {
         // if do not have the last end drive point, or do not have the lat lon
         // try get the last end driving point by trip sum
-        TripSummary * prevTrip = [[TripsCoreDataManager sharedManager] prevTripBy:sum];
+        TripSummary * prevTrip = [self.manager prevTripBy:sum];
         if (prevTrip) {
             stRegion = [[GPSEventItem alloc] init];
             stRegion.timestamp = prevTrip.end_date;

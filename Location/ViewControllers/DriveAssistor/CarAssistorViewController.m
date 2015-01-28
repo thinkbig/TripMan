@@ -71,8 +71,8 @@
 {
     CLLocation * curLoc = [BussinessDataProvider lastGoodLocation];
     if (curLoc) {
-        ParkingRegionDetail * parkingDetail = [[TripsCoreDataManager sharedManager] parkingDetailForCoordinate:curLoc.coordinate];
-        self.topNMostUsedTrips = [[TripsCoreDataManager sharedManager] tripsWithStartRegion:parkingDetail.coreDataItem tripLimit:3];
+        ParkingRegionDetail * parkingDetail = [[AnaDbManager sharedInst] parkingDetailForCoordinate:curLoc.coordinate];
+        self.topNMostUsedTrips = [[AnaDbManager sharedInst] tripsWithStartRegion:parkingDetail.coreDataItem tripLimit:3];
     }
     
     [self.suggestCollectionView reloadData];

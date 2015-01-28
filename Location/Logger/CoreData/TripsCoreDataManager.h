@@ -22,12 +22,14 @@
 
 @interface TripsCoreDataManager : CoreDataManager
 
+@property (nonatomic, strong) NSString *        dbNamePrefix;            // seperate sqlite file name;
+@property (nonatomic, strong) NSManagedObjectContext *          tripAnalyzerContent;
+
 // db operation api
 
-- (NSManagedObjectContext *)tripAnalyzerContent;
+- (BOOL) dbExist;
 - (void) dropDb;
 - (void) commit;
-
 
 // analyze info quary api
 
@@ -40,7 +42,6 @@
 - (NSArray*) unAnalyzedTrips;
 - (NSArray*) tripStartFrom:(NSDate*)fromDate toDate:(NSDate*)toDate;
 - (NSArray*) mostUsefulTripsLimit:(NSUInteger)limit;
-- (NSArray*) tripsWithStartRegion:(ParkingRegion*)region tripLimit:(NSInteger)limit;
 
 - (ParkingRegionDetail*) parkingDetailForCoordinate:(CLLocationCoordinate2D)coordinate;
 - (NSArray*) mostUsedParkingRegionLimit:(NSUInteger)limit;

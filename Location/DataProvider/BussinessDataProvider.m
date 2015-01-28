@@ -15,7 +15,8 @@
 #import "TSPair.h"
 #import "TSCache.h"
 #import "BaiduRoadMarkFacade.h"
-
+#import "UserWrapper.h"
+#import "AnaDbManager.h"
 
 #define kLastestCityAndDate         @"kLastestCityAndDate"
 
@@ -52,12 +53,22 @@ static BussinessDataProvider * _sharedProvider = nil;
     return self;
 }
 
+- (void) registerLoginLisener
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidLogin) name:KEY_USER_LOGIN_SUCCESS object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidLogout) name:KEY_USER_LOGOUT object:nil];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void) reCreateCoreDataDb
 {
     [[GToolUtil sharedInstance] showPieHUDWithText:@"升级中..." andProgress:0];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        TripsCoreDataManager * manager = [TripsCoreDataManager sharedManager];
+        TripsCoreDataManager * manager = [AnaDbManager deviceDb];
         
         NSArray * tripEvents = [[GPSLogger sharedLogger].dbLogger allTripsEvent];
         NSMutableArray * finishedTrips = [NSMutableArray arrayWithCapacity:tripEvents.count/2];
@@ -102,6 +113,11 @@ static BussinessDataProvider * _sharedProvider = nil;
     });
 }
 
+- (void) asyncUserHistory
+{
+    
+}
+
 - (NSString *)currentCity
 {
     return _latestCityDate[@"city"];
@@ -141,12 +157,12 @@ static BussinessDataProvider * _sharedProvider = nil;
 - (void) updateWeatherTodayForCity:(NSString*)city
 {
     NSDate * dateDay = [[NSDate date] dateAtStartOfDay];
-    NSArray * existInfos = [WeatherInfo where:@{@"city": city, @"date_day": dateDay} inContext:[TripsCoreDataManager sharedManager].tripAnalyzerContent];
+    NSArray * existInfos = [WeatherInfo where:@{@"city": city, @"date_day": dateDay} inContext:[AnaDbManager deviceDb].tripAnalyzerContent];
     if (existInfos.count == 0 || ![((WeatherInfo*)existInfos[0]).is_analyzed doubleValue]) {
         BaiduWeatherFacade * facade = [BaiduWeatherFacade new];
         facade.city = city;
         [facade requestWithSuccess:^(BaiduWeatherModel * model) {
-            WeatherInfo * info = [WeatherInfo create:@{@"city": city, @"date_day": [[NSDate date] dateAtStartOfDay]} inContext:[TripsCoreDataManager sharedManager].tripAnalyzerContent];
+            WeatherInfo * info = [WeatherInfo create:@{@"city": city, @"date_day": [[NSDate date] dateAtStartOfDay]} inContext:[AnaDbManager deviceDb].tripAnalyzerContent];
             info.city = city;
             info.date_day = dateDay;
             info.pm25 = model.pm25;
@@ -157,7 +173,7 @@ static BussinessDataProvider * _sharedProvider = nil;
                 info.temperature = detailWeather.temperature;
             }
             info.is_analyzed = @YES;
-            [[TripsCoreDataManager sharedManager] commit];
+            [[AnaDbManager deviceDb] commit];
             _isWeatherUpdating = NO;
         } failure:^(NSError * err) {
             _isWeatherUpdating = NO;
@@ -168,7 +184,7 @@ static BussinessDataProvider * _sharedProvider = nil;
 
 - (void) updateAllRegionInfo:(BOOL)force
 {
-    NSArray * regions = [[TripsCoreDataManager sharedManager] allParkingDetails];
+    NSArray * regions = [[AnaDbManager deviceDb] allParkingDetails];
     if (regions.count == 0) {
         return;
     }
@@ -193,7 +209,7 @@ static BussinessDataProvider * _sharedProvider = nil;
                     break;
                 }
                 coreRegion.is_analyzed = @YES;
-                [[TripsCoreDataManager sharedManager] commit];
+                [[AnaDbManager deviceDb] commit];
             } failure:^(NSError * err) {
                 NSLog(@"update region info fail: %@", err);
             }];
@@ -221,7 +237,7 @@ static BussinessDataProvider * _sharedProvider = nil;
                 break;
             }
             region.is_analyzed = @YES;
-            [[TripsCoreDataManager sharedManager] commit];
+            [[AnaDbManager deviceDb] commit];
             if (success) {
                 success(region);
             }
@@ -301,7 +317,7 @@ static BussinessDataProvider * _sharedProvider = nil;
                 [[GPSLogger sharedLogger].offTimeAnalyzer analyzeDaySum:sum.day_summary];
                 [[GPSLogger sharedLogger].offTimeAnalyzer analyzeWeekSum:sum.day_summary.week_summary];
                 
-                [[TripsCoreDataManager sharedManager] commit];
+                [[AnaDbManager deviceDb] commit];
             }
             if (success) {
                 success(@(trafficLightCnt));
@@ -355,15 +371,26 @@ static BussinessDataProvider * _sharedProvider = nil;
     return formater;
 }
 
-
-- (NSDate*) latestUpdatedTripDate
+- (void) userDidLogin
 {
-    return [[TSCache sharedInst] keychainCacheForKey:@"latestUpdatedTripDate"];
+//    if ([[UserWrapper sharedInst] isLogin]) {
+//        UserSecret * secret = [UserWrapper sharedInst].userSecret;
+//        TripsCoreDataManager * manager = [TripsCoreDataManager sharedManager];
+//        if (secret.userId && ![secret.userId isEqualToString:manager.uid]) {
+//            [manager reset];
+//            manager.uid = secret.userId;
+//            manager.carNumber = secret.curCarNumber;
+//        }
+//    }
 }
 
-- (NSDate*) latestUpdatedRawTripDate
+- (void) userDidLogout
 {
-    return [[TSCache sharedInst] keychainCacheForKey:@"latestUpdatedRawTripDate"];
+//    [[TripsCoreDataManager sharedManager] reset];
+}
+
+- (CLLocationCoordinate2D) coorFromRegion:(ParkingRegion*)regrion {
+    return CLLocationCoordinate2DMake([regrion.center_lat doubleValue], [regrion.center_lon doubleValue]);
 }
 
 @end

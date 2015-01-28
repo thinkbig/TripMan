@@ -14,7 +14,7 @@
 #import "GPSTurningAnalyzer.h"
 #import "DVSwitch.h"
 #import "TicketDetailViewController.h"
-#import "DaySummary.h"
+#import "DaySummary+Fetcher.h"
 #import "WeekSummary.h"
 #import "MonthSummary.h"
 #import "CarTripCell.h"
@@ -264,7 +264,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
 
 - (void)updateDaySumInfo:(DaySummary*)daySum
 {
-    for (TripSummary * sum in daySum.all_trips)
+    for (TripSummary * sum in [daySum validTrips])
     {
         // update region info
         [[BussinessDataProvider sharedInstance] updateRegionInfo:sum.region_group.start_region force:NO success:^(id) {
@@ -319,7 +319,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
         dateDay = self.currentDate;
     }
 
-    DaySummary * daySum = [[TripsCoreDataManager sharedManager] daySummaryByDay:dateDay];
+    DaySummary * daySum = [[AnaDbManager deviceDb] daySummaryByDay:dateDay];
     [self updateDaySumInfo:daySum];
     [[GPSLogger sharedLogger].offTimeAnalyzer analyzeDaySum:daySum];
     return daySum;
@@ -331,7 +331,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
         dateDay = self.currentWeekDate;
     }
     
-    WeekSummary * weekSum = [[TripsCoreDataManager sharedManager] weekSummaryByDay:dateDay];
+    WeekSummary * weekSum = [[AnaDbManager deviceDb] weekSummaryByDay:dateDay];
     for (DaySummary * daySum in weekSum.all_days)
     {
         [self updateDaySumInfo:daySum];
@@ -346,7 +346,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
         dateDay = self.currentMonthDate;
     }
     
-    MonthSummary * monthSum = [[TripsCoreDataManager sharedManager] monthSummaryByDay:dateDay];
+    MonthSummary * monthSum = [[AnaDbManager deviceDb] monthSummaryByDay:dateDay];
     for (DaySummary * daySum in monthSum.all_days)
     {
         [self updateDaySumInfo:daySum];
@@ -424,7 +424,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
 {
     [self.carousel reloadData];
     [self.carousel scrollToItemAtIndex:0 animated:NO];
-    NSArray * tripsToday = [self.sumToday.all_trips allObjects];
+    NSArray * tripsToday = [self.sumToday validTrips];
     if (tripsToday > 0) {
         [self.carousel scrollToItemAtIndex:tripsToday.count-1 duration:MIN(MAX(tripsToday.count/2.0, 0.5), 2.5)];
     }
@@ -548,7 +548,8 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
 
 - (NSInteger)numberOfItemsInCarousel:(iCarousel *)carousel
 {
-    return self.sumToday.all_trips.count;
+    DaySummary * userSum = [[AnaDbManager sharedInst] userDaySumForDeviceDaySum:self.sumToday];
+    return [self.sumToday validTripCount] + [userSum validTripCount];
 }
 
 - (UIView *)carousel:(iCarousel *)carousel viewForItemAtIndex:(NSInteger)index reusingView:(UIView *)view
@@ -566,7 +567,12 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
         [view addSubview:realView];
     }
     
-    NSArray * tripsToday = [[self.sumToday.all_trips allObjects] sortedArrayUsingComparator:^NSComparisonResult(TripSummary * obj1, TripSummary * obj2) {
+    NSArray * allArr = [self.sumToday validTrips];
+    DaySummary * userSum = [[AnaDbManager sharedInst] userDaySumForDeviceDaySum:self.sumToday];
+    if (userSum) {
+        allArr = [allArr arrayByAddingObjectsFromArray:[userSum validTrips]];
+    }
+    NSArray * tripsToday = [allArr sortedArrayUsingComparator:^NSComparisonResult(TripSummary * obj1, TripSummary * obj2) {
         return [obj1.start_date compare:obj2.start_date];
     }];
     [realView updateWithTripSummary:tripsToday[index]];
@@ -616,7 +622,12 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
 - (void)carousel:(iCarousel *)carousel didSelectItemAtIndex:(NSInteger)index
 {
     TicketDetailViewController * detailVC = [self.storyboard instantiateViewControllerWithIdentifier:@"TicketDetailId"];
-    NSArray * tripsToday = [[self.sumToday.all_trips allObjects] sortedArrayUsingComparator:^NSComparisonResult(TripSummary * obj1, TripSummary * obj2) {
+    NSArray * allArr = [self.sumToday validTrips];
+    DaySummary * userSum = [[AnaDbManager sharedInst] userDaySumForDeviceDaySum:self.sumToday];
+    if (userSum) {
+        allArr = [allArr arrayByAddingObjectsFromArray:[userSum validTrips]];
+    }
+    NSArray * tripsToday = [allArr sortedArrayUsingComparator:^NSComparisonResult(TripSummary * obj1, TripSummary * obj2) {
         return [obj1.start_date compare:obj2.start_date];
     }];
     detailVC.tripSum = tripsToday[index];
@@ -662,7 +673,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
         } else if (1 == indexPath.row) {
             CarTripCarouselCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"iCarouselId" forIndexPath:indexPath];
             [realCell setCarouselView:self.carousel];
-            [realCell showNoResult:(0 == self.sumToday.all_trips.count)];
+            [realCell showNoResult:(0 == [self.sumToday validTripCount])];
             
             cell = realCell;
         }
@@ -679,12 +690,20 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
             
             cell = realCell;
         } else if (1 == indexPath.row) {
-            NSArray * weekArr = [self.sumThisWeek.all_days allObjects];
             NSMutableDictionary * distDict = [NSMutableDictionary dictionary];
             NSMutableDictionary * duringDict = [NSMutableDictionary dictionary];
-            for (DaySummary * daySum in weekArr) {
-                [distDict setObject:daySum.total_dist forKey:@([daySum.date_day weekday])];
-                [duringDict setObject:daySum.total_during forKey:@([daySum.date_day weekday])];
+            for (DaySummary * daySum in self.sumThisWeek.all_days) {
+                NSNumber * weekDay = @([daySum.date_day weekday]);
+                [distDict setObject:daySum.total_dist forKey:weekDay];
+                [duringDict setObject:daySum.total_during forKey:weekDay];
+            }
+            WeekSummary * userSum = [[AnaDbManager sharedInst] userWeekSumForDeviceWeekSum:self.sumThisWeek];
+            for (DaySummary * daySum in userSum.all_days) {
+                NSNumber * weekDay = @([daySum.date_day weekday]);
+                CGFloat oldDist = [distDict[weekDay] floatValue] + [daySum.total_dist floatValue];
+                CGFloat oldDuring = [duringDict[weekDay] floatValue] + [daySum.total_during floatValue];
+                distDict[weekDay] = @(oldDist);
+                duringDict[weekDay] = @(oldDuring);
             }
             
             WeekSumCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"weekSumCellId" forIndexPath:indexPath];
@@ -708,15 +727,30 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
 
             cell = realCell;
         } else if (2 == indexPath.row) {
-            NSArray * weekArr = [self.sumThisWeek.all_days allObjects];
             NSMutableDictionary * avgDict = [NSMutableDictionary dictionary];
             NSMutableDictionary * maxDict = [NSMutableDictionary dictionary];
             CGFloat maxSpeed = 0;
-            for (DaySummary * daySum in weekArr) {
-                [maxDict setObject:daySum.max_speed forKey:@([daySum.date_day weekday])];
-                [avgDict setObject:daySum.avg_speed forKey:@([daySum.date_day weekday])];
+            for (DaySummary * daySum in self.sumThisWeek.all_days) {
+                NSNumber * weekDay = @([daySum.date_day weekday]);
+                [maxDict setObject:daySum.max_speed forKey:weekDay];
+                [avgDict setObject:daySum.avg_speed forKey:weekDay];
                 maxSpeed = MAX(maxSpeed, [daySum.max_speed floatValue]);
             }
+            WeekSummary * userSum = [[AnaDbManager sharedInst] userWeekSumForDeviceWeekSum:self.sumThisWeek];
+            for (DaySummary * daySum in userSum.all_days) {
+                NSNumber * weekDay = @([daySum.date_day weekday]);
+                CGFloat oldMaxSpeed = MAX([maxDict[weekDay] floatValue], [daySum.max_speed floatValue]);
+                CGFloat oldAvgSpeed = [avgDict[weekDay] floatValue];
+                if (avgDict[weekDay]) {
+                    oldAvgSpeed = ([avgDict[weekDay] floatValue] + [daySum.avg_speed floatValue])/2.0;
+                } else {
+                    oldAvgSpeed = [daySum.avg_speed floatValue];
+                }
+                maxDict[weekDay] = @(oldMaxSpeed);
+                avgDict[weekDay] = @(oldAvgSpeed);
+                maxSpeed = MAX(maxSpeed, oldMaxSpeed);
+            }
+            
             maxSpeed *= 3.6;
             if (0 == maxSpeed) {
                 maxSpeed = 1;
@@ -745,12 +779,20 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
             
             cell = realCell;
         } else if (3 == indexPath.row) {
-            NSArray * weekArr = [self.sumThisWeek.all_days allObjects];
             NSMutableDictionary * jamDuringDict = [NSMutableDictionary dictionary];
             NSMutableDictionary * secondDict = [NSMutableDictionary dictionary];
-            for (DaySummary * daySum in weekArr) {
-                [jamDuringDict setObject:daySum.jam_during forKey:@([daySum.date_day weekday])];
-                [secondDict setObject:daySum.traffic_heavy_jam_cnt forKey:@([daySum.date_day weekday])];
+            for (DaySummary * daySum in self.sumThisWeek.all_days) {
+                NSNumber * weekDay = @([daySum.date_day weekday]);
+                [jamDuringDict setObject:daySum.jam_during forKey:weekDay];
+                [secondDict setObject:daySum.traffic_heavy_jam_cnt forKey:weekDay];
+            }
+            WeekSummary * userSum = [[AnaDbManager sharedInst] userWeekSumForDeviceWeekSum:self.sumThisWeek];
+            for (DaySummary * daySum in userSum.all_days) {
+                NSNumber * weekDay = @([daySum.date_day weekday]);
+                CGFloat oldJamDuring = [jamDuringDict[weekDay] floatValue] + [daySum.jam_during floatValue];
+                NSInteger oldJamCnt = [secondDict[weekDay] integerValue] + [daySum.traffic_heavy_jam_cnt integerValue];
+                jamDuringDict[weekDay] = @(oldJamDuring);
+                secondDict[weekDay] = @(oldJamCnt);
             }
             
             WeekJamCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"weekJamCellId" forIndexPath:indexPath];
@@ -772,12 +814,20 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
             
             cell = realCell;
         } else if (4 == indexPath.row) {
-            NSArray * weekArr = [self.sumThisWeek.all_days allObjects];
             NSMutableDictionary * waitingDict = [NSMutableDictionary dictionary];
             NSMutableDictionary * lightCntDict = [NSMutableDictionary dictionary];
-            for (DaySummary * daySum in weekArr) {
-                [waitingDict setObject:daySum.traffic_light_waiting forKey:@([daySum.date_day weekday])];
-                [lightCntDict setObject:daySum.traffic_light_jam_cnt forKey:@([daySum.date_day weekday])];
+            for (DaySummary * daySum in self.sumThisWeek.all_days) {
+                NSNumber * weekDay = @([daySum.date_day weekday]);
+                [waitingDict setObject:daySum.traffic_light_waiting forKey:weekDay];
+                [lightCntDict setObject:daySum.traffic_light_jam_cnt forKey:weekDay];
+            }
+            WeekSummary * userSum = [[AnaDbManager sharedInst] userWeekSumForDeviceWeekSum:self.sumThisWeek];
+            for (DaySummary * daySum in userSum.all_days) {
+                NSNumber * weekDay = @([daySum.date_day weekday]);
+                CGFloat oldWait = [waitingDict[weekDay] floatValue] + [daySum.traffic_light_waiting floatValue];
+                NSInteger oldLightCnt = [lightCntDict[weekDay] integerValue] + [daySum.traffic_light_jam_cnt integerValue];
+                waitingDict[weekDay] = @(oldWait);
+                lightCntDict[weekDay] = @(oldLightCnt);
             }
             
             WeekTrafficLightCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"weekTrafficLightCellId" forIndexPath:indexPath];
@@ -815,7 +865,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
             realCell.titlePrev.text = @"本月最长行驶：";
             NSString * valStr = [NSString stringWithFormat:@"%.f", [self.sumThisMonth.trip_most_dist.total_dist floatValue]/1000.0];
             realCell.titleContent.attributedText = [NSAttributedString stringWithNumber:valStr font:[UIFont boldSystemFontOfSize:24] color:[UIColor whiteColor] andUnit:@"km" font:[UIFont boldSystemFontOfSize:12] color:[UIColor whiteColor]];
-            [realCell updateWithTripSum:self.sumThisMonth.trip_most_dist];
+            [realCell updateWithTripSum:[[AnaDbManager sharedInst] tripMostDistForMonthSum:self.sumThisMonth]];
             
             cell = realCell;
         } else if (2 == indexPath.row) {
@@ -823,7 +873,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
             realCell.titlePrev.text = @"本月最久行驶：";
             NSString * valStr = [NSString stringWithFormat:@"%.f", [self.sumThisMonth.trip_most_during.total_during floatValue]/60.0];
             realCell.titleContent.attributedText = [NSAttributedString stringWithNumber:valStr font:[UIFont boldSystemFontOfSize:24] color:[UIColor whiteColor] andUnit:@"min" font:[UIFont boldSystemFontOfSize:12] color:[UIColor whiteColor]];
-            [realCell updateWithTripSum:self.sumThisMonth.trip_most_during];
+            [realCell updateWithTripSum:[[AnaDbManager sharedInst] tripMostDuringForMonthSum:self.sumThisMonth]];
             
             cell = realCell;
         } else if (3 == indexPath.row) {
@@ -831,7 +881,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
             realCell.titlePrev.text = @"本月最久拥堵：";
             NSString * valStr = [NSString stringWithFormat:@"%.f", [self.sumThisMonth.trip_most_jam_during.traffic_jam_during floatValue]/60.0];
             realCell.titleContent.attributedText = [NSAttributedString stringWithNumber:valStr font:[UIFont boldSystemFontOfSize:24] color:[UIColor whiteColor] andUnit:@"min" font:[UIFont boldSystemFontOfSize:12] color:[UIColor whiteColor]];
-            [realCell updateWithTripSum:self.sumThisMonth.trip_most_jam_during];
+            [realCell updateWithTripSum:[[AnaDbManager sharedInst] tripMostJamDuringForMonthSum:self.sumThisMonth]];
             
             cell = realCell;
         }

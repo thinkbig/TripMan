@@ -11,9 +11,16 @@
 #import "NSDate+Utilities.h"
 #import "GToolUtil.h"
 
+//@interface TripsCoreDataManager (Private)
+//
+//- (NSPersistentStoreCoordinator *)persistentStoreCoordinatorWithStoreType:(NSString *const)storeType
+//                                                                 storeURL:(NSURL *)storeURL;
+//- (NSURL *)sqliteStoreURL;
+//
+//@end
+
 @interface TripsCoreDataManager ()
 
-@property (nonatomic, strong) NSManagedObjectContext *          tripAnalyzerContent;
 @property (nonatomic, strong) NSMutableArray *                  parkingDetails;
 
 @end
@@ -29,6 +36,11 @@
     return _tripAnalyzerContent;
 }
 
+- (NSURL *)applicationDocumentsDirectory {
+    NSURL * url = [super applicationDocumentsDirectory];
+    return [url URLByAppendingPathComponent:@"TripDb" isDirectory:YES];
+}
+
 - (instancetype)init
 {
     self = [super init];
@@ -38,11 +50,44 @@
     return self;
 }
 
+- (NSString *)databaseName
+{
+    NSString * name = [super databaseName];
+    if (self.dbNamePrefix.length > 0) {
+        name = [name stringByAppendingFormat:@"%@_", self.dbNamePrefix];
+    }
+    return name;
+}
+
+- (BOOL) dbExist
+{
+    NSURL *databaseDir = [self.applicationDocumentsDirectory URLByAppendingPathComponent:[self databaseName]];
+    return [[[NSFileManager alloc] init] fileExistsAtPath:[databaseDir absoluteString]];
+}
+
 - (void) dropDb
 {
     NSURL *databaseDir = [self.applicationDocumentsDirectory URLByAppendingPathComponent:[self databaseName]];
     [[[NSFileManager alloc] init] removeItemAtURL:databaseDir error:nil];
 }
+
+//- (void) dropDbAll
+//{
+//    NSFileManager* fm = [NSFileManager defaultManager];
+//    NSDirectoryEnumerator *dirEnumerator = [fm enumeratorAtURL:self.applicationDocumentsDirectory
+//                                    includingPropertiesForKeys:@[NSURLNameKey, NSURLIsDirectoryKey]
+//                                                       options:NSDirectoryEnumerationSkipsHiddenFiles
+//                                                  errorHandler:nil];
+//    
+//    for (NSURL *url in dirEnumerator) {
+//        NSNumber *isDirectory;
+//        [url getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:NULL];
+//        if (![isDirectory boolValue]) {
+//            // This is a file - remove it
+//            [fm removeItemAtURL:url error:NULL];
+//        }
+//    }
+//}
 
 - (CLCircularRegion*)circularRegionForCenter:(CLLocationCoordinate2D)center {
     return [[CLCircularRegion alloc] initWithCenter:center radius:cParkingRegionRadius identifier:@"parkingSpot"];
@@ -125,8 +170,7 @@
     }
     
     // insert a new record
-    NSString * parkingId = [GToolUtil createUUID];
-    ParkingRegion * newDbRegion = [ParkingRegion create:@{@"parking_id": parkingId, @"center_lat":@(coordinate.latitude), @"center_lon":@(coordinate.longitude), @"is_temp":@NO} inContext:self.tripAnalyzerContent];
+    ParkingRegion * newDbRegion = [ParkingRegion create:@{@"center_lat":@(coordinate.latitude), @"center_lon":@(coordinate.longitude), @"is_temp":@NO} inContext:self.tripAnalyzerContent];
     
     CLCircularRegion * region = [self circularRegionForCenter:coordinate];
     ParkingRegionDetail * detail = [ParkingRegionDetail new];
@@ -243,35 +287,6 @@
     return bestTrips;
 }
 
-- (NSArray*) tripsWithStartRegion:(ParkingRegion*)region tripLimit:(NSInteger)limit
-{
-    NSArray * allGroups = [region.group_owner_st allObjects];
-    NSArray * sortArr = [allGroups sortedArrayWithOptions:NSSortStable usingComparator:^NSComparisonResult(RegionGroup * obj1, RegionGroup * obj2) {
-        if (obj1.trips.count < obj2.trips.count) return NSOrderedDescending;
-        else return NSOrderedAscending;
-    }];
-    
-    NSMutableArray * bestTrips = [NSMutableArray array];
-    [sortArr enumerateObjectsUsingBlock:^(RegionGroup * group, NSUInteger idx, BOOL *stop) {
-        if (limit > 0 && idx >= limit) {
-            *stop = YES;
-        } else {
-            CGFloat minDuring = MAXFLOAT;
-            TripSummary * bestTrip = nil;
-            for (TripSummary * sum in group.trips) {
-                if (sum.end_date && minDuring > [sum.total_during floatValue]) {
-                    minDuring = [sum.total_during floatValue];
-                    bestTrip = sum;
-                }
-            }
-            if (bestTrip) {
-                [bestTrips addObject:bestTrip];
-            }
-        }
-    }];
-    return bestTrips;
-}
-
 - (NSArray*) mostUsedParkingRegionLimit:(NSUInteger)limit
 {
     for (ParkingRegionDetail * parkLoc in self.parkingDetails) {
@@ -375,12 +390,11 @@
     if (nil == beginDate) {
         return nil;
     }
-    NSString * tripId = [GToolUtil createUUID];
-    TripSummary * newTrip = [TripSummary create:@{@"trip_id": tripId, @"start_date": beginDate, @"is_analyzed":@NO} inContext:self.tripAnalyzerContent];
+    TripSummary * newTrip = [TripSummary create:@{@"start_date": beginDate, @"is_analyzed":@NO} inContext:self.tripAnalyzerContent];
     if (endDate) {
         newTrip.end_date = endDate;
     }
-    
+        
     DaySummary * daySum = [self daySumForTrip:newTrip];
     [self weekSumForDay:daySum];
     [self monthSumForDay:daySum];

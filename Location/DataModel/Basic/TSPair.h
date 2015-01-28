@@ -13,6 +13,7 @@
 @property (nonatomic, strong) id            first;
 @property (nonatomic, strong) id            second;
 @property (nonatomic, strong) NSString *    desp;
+@property (nonatomic, strong) NSString *    exInfo;
 
 @end
 

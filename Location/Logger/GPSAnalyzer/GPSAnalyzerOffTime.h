@@ -12,10 +12,12 @@
 #import "TripSummary.h"
 #import "WeekSummary.h"
 #import "MonthSummary.h"
+#import "TripsCoreDataManager.h"
 
 @interface GPSAnalyzerOffTime : NSObject
 
 @property (nonatomic, strong) GPSFMDBLogger *                   dbLogger;           // must set the fmdbLogger for analyze
+@property (nonatomic, strong) TripsCoreDataManager *            manager;
 
 - (void)analyzeAllFinishedTrip:(BOOL)force;
 - (void)rollOutOfDateTrip;

@@ -10,6 +10,7 @@
 #import "NSDate+Utilities.h"
 #import "HomeTripCell.h"
 #import "NSAttributedString+Style.h"
+#import "DaySummary+Fetcher.h"
 
 @interface CarHomeViewController ()
 
@@ -48,8 +49,8 @@
     }
     CLLocation * curLoc = [BussinessDataProvider lastGoodLocation];
     if (curLoc) {
-        ParkingRegionDetail * parkingDetail = [[TripsCoreDataManager sharedManager] parkingDetailForCoordinate:curLoc.coordinate];
-        NSArray * mostTrips = [[TripsCoreDataManager sharedManager] tripsWithStartRegion:parkingDetail.coreDataItem tripLimit:1];
+        ParkingRegionDetail * parkingDetail = [[AnaDbManager sharedInst] parkingDetailForCoordinate:curLoc.coordinate];
+        NSArray * mostTrips = [[AnaDbManager sharedInst] tripsWithStartRegion:parkingDetail.coreDataItem tripLimit:1];
         if (mostTrips.count > 0) {
             self.mostTrip = mostTrips[0];
         }
@@ -116,11 +117,16 @@
         return;
     }
     // update today trip summary
-    DaySummary * daySum = [[TripsCoreDataManager sharedManager] daySummaryByDay:nil];
+    DaySummary * daySum = [[AnaDbManager deviceDb] daySummaryByDay:nil];
     [[GPSLogger sharedLogger].offTimeAnalyzer analyzeDaySum:daySum];
-
     CGFloat totalDist = [daySum.total_dist floatValue];
     CGFloat totalDuring = [daySum.total_during floatValue];
+    
+    DaySummary * histDaySum = [[AnaDbManager sharedInst] userDaySumForDeviceDaySum:daySum];
+    if (histDaySum) {
+        totalDist += [histDaySum.total_dist floatValue];
+        totalDuring += [histDaySum.total_during floatValue];
+    }
     
     NSString * rawStr = [NSString stringWithFormat:@"%.1f km  %.f min", totalDist/1000.0, totalDuring/60.0];
     NSRange kmRange = [rawStr rangeOfString:@" km "];

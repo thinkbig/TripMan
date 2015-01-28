@@ -40,7 +40,7 @@
         self.longitude = [resultSet objectForColumnName:@"longitude"];
         self.radius = [resultSet objectForColumnName:@"radius"];
         self.identifier = [resultSet objectForColumnName:@"identifier"];
-        self.groupName = [resultSet objectForColumnName:@"group"];
+        self.groupName = [resultSet objectForColumnName:@"groupName"];
         self.message = [resultSet objectForColumnName:@"message"];
 
 		self.timestamp = [resultSet dateForColumn:@"timestamp"];

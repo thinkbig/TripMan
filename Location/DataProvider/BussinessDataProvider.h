@@ -17,7 +17,9 @@
 
 + (instancetype)sharedInstance;
 
+- (void) registerLoginLisener;
 - (void) reCreateCoreDataDb;
+- (void) asyncUserHistory;      // should call when user login, OR user manully async
 
 - (void) updateWeatherToday:(CLLocation*)loc;
 - (void) updateAllRegionInfo:(BOOL)force;
@@ -29,7 +31,5 @@
 
 - (NSDateFormatter*) dateFormatterForFormatStr:(NSString*)format;
 
-- (NSDate*) latestUpdatedTripDate;
-- (NSDate*) latestUpdatedRawTripDate;
 
 @end

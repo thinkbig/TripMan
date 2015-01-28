@@ -28,6 +28,12 @@
     CGFloat totalDuring = [self.monthSum.total_during floatValue];
     NSUInteger tripCnt = [self.monthSum.trip_cnt integerValue];
     
+    MonthSummary * userSum = [[AnaDbManager sharedInst] userMonthSumForDeviceMonthSum:self.monthSum];
+    if (userSum) {
+        totalDist += [userSum.total_dist floatValue];
+        totalDuring += [userSum.total_during floatValue];
+        tripCnt += [userSum.trip_cnt integerValue];
+    }
     
     NSString * distStr = [NSString stringWithFormat:@"%.f", totalDist/1000.0];
     self.tolDistLabel.attributedText = [NSAttributedString stringWithNumber:distStr font:[self.tolDistLabel.font fontWithSize:50] color:self.tolDistLabel.textColor andUnit:@"km" font:[self.tolDistLabel.font fontWithSize:17] color:self.tolDistLabel.textColor];

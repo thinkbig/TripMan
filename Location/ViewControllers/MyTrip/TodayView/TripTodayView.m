@@ -8,6 +8,7 @@
 
 #import "TripTodayView.h"
 #import "TripSummary.h"
+#import "DaySummary+Fetcher.h"
 #import "NSAttributedString+Style.h"
 
 @interface TripTodayView () {
@@ -58,6 +59,7 @@
     if (![self.weekSum.is_analyzed boolValue] || [self.weekSum.traffic_light_waiting integerValue] == 0) {
         [[GPSLogger sharedLogger].offTimeAnalyzer analyzeWeekSum:self.weekSum];
     }
+    
     _totalDistF = [self.weekSum.total_dist floatValue];
     _totalDuringF = [self.weekSum.total_during floatValue];
     _jamDistF = [self.weekSum.jam_dist floatValue];
@@ -66,6 +68,18 @@
     _jamInTrafficLightN = [self.weekSum.traffic_light_jam_cnt integerValue];
     _trafficLightWaitingF = [self.weekSum.traffic_light_waiting floatValue];
     _tripCntN = [self.weekSum.trip_cnt integerValue];
+    
+    WeekSummary * userSum = [[AnaDbManager sharedInst] userWeekSumForDeviceWeekSum:self.weekSum];
+    if (userSum) {
+        _totalDistF += [userSum.total_dist floatValue];
+        _totalDuringF += [userSum.total_during floatValue];
+        _jamDistF += [userSum.jam_dist floatValue];
+        _jamDuringF += [userSum.jam_during floatValue];
+        _maxSpeedF = MAX(_maxSpeedF, [userSum.max_speed floatValue]);
+        _jamInTrafficLightN += [userSum.traffic_light_jam_cnt integerValue];
+        _trafficLightWaitingF += [userSum.traffic_light_waiting floatValue];
+        _tripCntN += [userSum.trip_cnt integerValue];
+    }
     
     [self __updateContent];
 }
@@ -82,7 +96,19 @@
     _maxSpeedF = [self.daySum.max_speed floatValue];
     _jamInTrafficLightN = [self.daySum.traffic_light_jam_cnt integerValue];
     _trafficLightWaitingF = [self.daySum.traffic_light_waiting floatValue];
-    _tripCntN = self.daySum.all_trips.count;
+    _tripCntN = [self.daySum validTripCount];
+    
+    DaySummary * userSum = [[AnaDbManager sharedInst] userDaySumForDeviceDaySum:self.daySum];
+    if (userSum) {
+        _totalDistF += [userSum.total_dist floatValue];
+        _totalDuringF += [userSum.total_during floatValue];
+        _jamDistF += [userSum.jam_dist floatValue];
+        _jamDuringF += [userSum.jam_during floatValue];
+        _maxSpeedF = MAX(_maxSpeedF, [userSum.max_speed floatValue]);
+        _jamInTrafficLightN += [userSum.traffic_light_jam_cnt integerValue];
+        _trafficLightWaitingF += [userSum.traffic_light_waiting floatValue];
+        _tripCntN += [userSum validTripCount];
+    }
     
     [self __updateContent];
 }

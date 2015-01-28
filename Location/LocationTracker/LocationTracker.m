@@ -14,6 +14,7 @@
 #import <Parse/Parse.h>
 #import <CoreMotion/CoreMotion.h>
 #import "TSPair.h"
+#import "AnaDbManager.h"
 
 #define kLocationUpdateInterval         8
 #define kLocationUpdateLongInterval     15
@@ -730,7 +731,7 @@ typedef enum
         [self registerNotificationForLocation:loc withRadius:@(cReagionRadius) assignIdentifier:REGION_ID_LAST_PARKING group:REGION_GROUP_LAST_PARKING];
         
         NSInteger idCnt = 1;
-        TripSummary * lastTrip = [[TripsCoreDataManager sharedManager] lastTrip];
+        TripSummary * lastTrip = [[AnaDbManager sharedInst] lastTrip];
         ParkingRegion * lastSt = lastTrip.region_group.start_region;
         if (lastSt) {
             CLLocation * lastStLoc = [[CLLocation alloc] initWithLatitude:[lastSt.center_lat doubleValue] longitude:[lastSt.center_lon doubleValue]];
@@ -739,7 +740,7 @@ typedef enum
             }
         }
         
-        NSArray * mostUsedLoc = [[TripsCoreDataManager sharedManager] mostUsedParkingRegionLimit:5];
+        NSArray * mostUsedLoc = [[AnaDbManager sharedInst] mostUsedParkingRegionLimit:5];
         for (ParkingRegionDetail * region in mostUsedLoc) {
             if (region.coreDataItem != lastSt) {
                 CLLocation * curLoc = [[CLLocation alloc] initWithLatitude:region.region.center.latitude longitude:region.region.center.longitude];
