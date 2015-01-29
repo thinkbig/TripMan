@@ -9,6 +9,18 @@
 #import <UIKit/UIKit.h>
 #import "XYPieChart.h"
 
+#define ST_ADDRESS_TAG          10001
+#define ED_ADDRESS_TAG          10002
+
+@interface AddressEditCell : UICollectionViewCell
+
+@property (weak, nonatomic) IBOutlet UITextField *stAddress;
+@property (weak, nonatomic) IBOutlet UITextField *edAddress;
+
+@end
+
+//////////////////////////////////////////////////////////////////////////////////
+
 @interface TicketDetailCell : UICollectionViewCell <XYPieChartDataSource>
 
 @property (weak, nonatomic) IBOutlet XYPieChart *   pieChart;

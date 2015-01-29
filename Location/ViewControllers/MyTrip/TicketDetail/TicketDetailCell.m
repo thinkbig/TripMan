@@ -9,6 +9,18 @@
 #import "TicketDetailCell.h"
 #import "NSAttributedString+Style.h"
 
+@implementation AddressEditCell
+
+- (void)awakeFromNib
+{
+    self.stAddress.tag = ST_ADDRESS_TAG;
+    self.edAddress.tag = ED_ADDRESS_TAG;
+}
+
+@end
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
 @interface TicketDetailCell ()
 
 @property (nonatomic, strong) NSArray *     colorArr;

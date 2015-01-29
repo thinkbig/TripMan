@@ -10,7 +10,7 @@
 #import "ParkingRegion.h"
 #import "RegionGroup.h"
 #import "NSAttributedString+Style.h"
-#import "ParkingRegion+Helper.h"
+#import "ParkingRegion+Fetcher.h"
 
 @implementation TripTicketView
 
@@ -31,12 +31,12 @@
 {
     NSDateFormatter * formatter = [[BussinessDataProvider sharedInstance] dateFormatterForFormatStr:@"HH:mm"];
     
-    self.fromPoi.text = [sum.region_group.start_region prettyPOINameWithDefault:@"未知"];
+    self.fromPoi.text = [sum.region_group.start_region nameWithDefault:@"未知"];
     self.fromStreet.text = [self safeText:sum.region_group.start_region.street withDefault:@"未知街道"];
     self.fromDate.text = sum.start_date ? [formatter stringFromDate:sum.start_date] : @"未知";
     
     if (sum.end_date) {
-        self.toPoi.text = [sum.region_group.end_region prettyPOINameWithDefault:@"未知"];
+        self.toPoi.text = [sum.region_group.end_region nameWithDefault:@"未知"];
         self.toStreet.text = [self safeText:sum.region_group.end_region.street withDefault:@"未知街道"];
         self.toDate.text = [formatter stringFromDate:sum.end_date];
     } else if (sum) {

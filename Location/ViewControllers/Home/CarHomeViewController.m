@@ -11,6 +11,7 @@
 #import "HomeTripCell.h"
 #import "NSAttributedString+Style.h"
 #import "DaySummary+Fetcher.h"
+#import "ParkingRegion+Fetcher.h"
 
 @interface CarHomeViewController ()
 
@@ -79,7 +80,7 @@
     if (IS_UPDATING) {
         return;
     }
-    NSString * destStr = _mostTrip.region_group.end_region.nearby_poi;
+    NSString * destStr = [_mostTrip.region_group.end_region nameWithDefault:nil];
     if (_mostTrip.region_group.end_region.street) {
         if (destStr) {
             destStr = [NSString stringWithFormat:@"%@ %@", _mostTrip.region_group.end_region.street, destStr];

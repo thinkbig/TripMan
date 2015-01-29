@@ -9,8 +9,11 @@
 #import "GViewController.h"
 #import "TripSummary.h"
 
-@interface TicketDetailViewController : GViewController
+@interface TicketDetailViewController : GViewController <UITextFieldDelegate>
 
 @property (nonatomic, strong) TripSummary *     tripSum;
+
+@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *saveBtn;
 
 @end

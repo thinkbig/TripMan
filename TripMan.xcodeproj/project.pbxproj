@@ -56,7 +56,6 @@
 		A342849B19C42081002DB0FD /* GPSLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = A342849A19C42081002DB0FD /* GPSLogger.m */; };
 		A34284A019C6770A002DB0FD /* GPSFileLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = A342849F19C6770A002DB0FD /* GPSFileLogFormatter.m */; };
 		A342AD441A0C6CF000C92849 /* DataDebugPrinter.m in Sources */ = {isa = PBXBuildFile; fileRef = A342AD431A0C6CF000C92849 /* DataDebugPrinter.m */; };
-		A347A4AC1A675802002908C2 /* ParkingRegion+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = A347A4AB1A675802002908C2 /* ParkingRegion+Helper.m */; };
 		A34890571A3FC600002DE948 /* AFgzipRequestSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = A34890561A3FC600002DE948 /* AFgzipRequestSerializer.m */; };
 		A34890671A3FCB6F002DE948 /* AJClassHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = A348905A1A3FCB6F002DE948 /* AJClassHelper.m */; };
 		A34890681A3FCB6F002DE948 /* AJJson2ObjectSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = A348905C1A3FCB6F002DE948 /* AJJson2ObjectSerializer.m */; };
@@ -174,6 +173,8 @@
 		A3BD72AF1A15A9950007ECA1 /* BaiduMarkModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A3BD72AE1A15A9950007ECA1 /* BaiduMarkModel.m */; };
 		A3BD72B21A15BC2E0007ECA1 /* BussinessDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = A3BD72B11A15BC2E0007ECA1 /* BussinessDataProvider.m */; };
 		A3BED01C1A5A769B008FC6A7 /* CarSettingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A3BED01B1A5A769B008FC6A7 /* CarSettingCell.m */; };
+		A3C69B781A79C437001F3192 /* DaySummary+Fetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = A3C69B771A79C437001F3192 /* DaySummary+Fetcher.m */; };
+		A3C69B7B1A79C46B001F3192 /* ParkingRegion+Fetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = A3C69B7A1A79C46B001F3192 /* ParkingRegion+Fetcher.m */; };
 		A3CD35EC19C6A1A70039F6E1 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3CD35EB19C6A1A70039F6E1 /* CoreMotion.framework */; };
 		A3CD35FD19C6DCC00039F6E1 /* GPSFMDBLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = A3CD35FA19C6DCC00039F6E1 /* GPSFMDBLogger.m */; };
 		A3CD360219C6DCC80039F6E1 /* GPSAnalyzerRealTime.m in Sources */ = {isa = PBXBuildFile; fileRef = A3CD360119C6DCC80039F6E1 /* GPSAnalyzerRealTime.m */; };
@@ -356,8 +357,6 @@
 		A34284A119C677C0002DB0FD /* GPSDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPSDefine.h; sourceTree = "<group>"; };
 		A342AD421A0C6CF000C92849 /* DataDebugPrinter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataDebugPrinter.h; sourceTree = "<group>"; };
 		A342AD431A0C6CF000C92849 /* DataDebugPrinter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataDebugPrinter.m; sourceTree = "<group>"; };
-		A347A4AA1A675802002908C2 /* ParkingRegion+Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "ParkingRegion+Helper.h"; path = "../../../../../../../../../Documents/ParkingRegion+Helper.h"; sourceTree = "<group>"; };
-		A347A4AB1A675802002908C2 /* ParkingRegion+Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "ParkingRegion+Helper.m"; path = "../../../../../../../../../Documents/ParkingRegion+Helper.m"; sourceTree = "<group>"; };
 		A34890551A3FC5FF002DE948 /* AFgzipRequestSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFgzipRequestSerializer.h; sourceTree = "<group>"; };
 		A34890561A3FC600002DE948 /* AFgzipRequestSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFgzipRequestSerializer.m; sourceTree = "<group>"; };
 		A34890591A3FCB6F002DE948 /* AJClassHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AJClassHelper.h; sourceTree = "<group>"; };
@@ -589,6 +588,10 @@
 		A3BD72B11A15BC2E0007ECA1 /* BussinessDataProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BussinessDataProvider.m; sourceTree = "<group>"; };
 		A3BED01A1A5A769B008FC6A7 /* CarSettingCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CarSettingCell.h; sourceTree = "<group>"; };
 		A3BED01B1A5A769B008FC6A7 /* CarSettingCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CarSettingCell.m; sourceTree = "<group>"; };
+		A3C69B761A79C437001F3192 /* DaySummary+Fetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DaySummary+Fetcher.h"; sourceTree = "<group>"; };
+		A3C69B771A79C437001F3192 /* DaySummary+Fetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "DaySummary+Fetcher.m"; sourceTree = "<group>"; };
+		A3C69B791A79C46B001F3192 /* ParkingRegion+Fetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ParkingRegion+Fetcher.h"; sourceTree = "<group>"; };
+		A3C69B7A1A79C46B001F3192 /* ParkingRegion+Fetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ParkingRegion+Fetcher.m"; sourceTree = "<group>"; };
 		A3CD35EB19C6A1A70039F6E1 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		A3CD35F919C6DCC00039F6E1 /* GPSFMDBLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPSFMDBLogger.h; sourceTree = "<group>"; };
 		A3CD35FA19C6DCC00039F6E1 /* GPSFMDBLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPSFMDBLogger.m; sourceTree = "<group>"; };
@@ -771,7 +774,7 @@
 		A31411661A0A4CCD0019F557 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
-				A347A4A61A675764002908C2 /* HelperCategory */,
+				A3C69B751A79C437001F3192 /* ModelCategory */,
 				A31411671A0A4CCD0019F557 /* DataModel */,
 				A31411681A0A4CCD0019F557 /* TripMan.xcdatamodeld */,
 				A314116A1A0A4CCD0019F557 /* TripsCoreDataManager.h */,
@@ -1052,15 +1055,6 @@
 				A342849F19C6770A002DB0FD /* GPSFileLogFormatter.m */,
 			);
 			path = LogFormatter;
-			sourceTree = "<group>";
-		};
-		A347A4A61A675764002908C2 /* HelperCategory */ = {
-			isa = PBXGroup;
-			children = (
-				A347A4AA1A675802002908C2 /* ParkingRegion+Helper.h */,
-				A347A4AB1A675802002908C2 /* ParkingRegion+Helper.m */,
-			);
-			path = HelperCategory;
 			sourceTree = "<group>";
 		};
 		A34890541A3FC5FF002DE948 /* AFgzipRequestSerializer */ = {
@@ -1862,6 +1856,18 @@
 			path = RoadMark;
 			sourceTree = "<group>";
 		};
+		A3C69B751A79C437001F3192 /* ModelCategory */ = {
+			isa = PBXGroup;
+			children = (
+				A3C69B761A79C437001F3192 /* DaySummary+Fetcher.h */,
+				A3C69B771A79C437001F3192 /* DaySummary+Fetcher.m */,
+				A3C69B791A79C46B001F3192 /* ParkingRegion+Fetcher.h */,
+				A3C69B7A1A79C46B001F3192 /* ParkingRegion+Fetcher.m */,
+			);
+			name = ModelCategory;
+			path = DataModel/ModelCategory;
+			sourceTree = "<group>";
+		};
 		A3CD35F819C6DCC00039F6E1 /* GPSLogger */ = {
 			isa = PBXGroup;
 			children = (
@@ -2214,6 +2220,7 @@
 			files = (
 				A35C26341A426F4B005F6658 /* UIImageView+RZAXMaintainImageColors.m in Sources */,
 				A3A2092F1A771F8700C17DF3 /* TurningInfo.m in Sources */,
+				A3C69B7B1A79C46B001F3192 /* ParkingRegion+Fetcher.m in Sources */,
 				A340E8F419EEC7610014C14B /* GPSEndTraceAnalyzer.m in Sources */,
 				A3A209441A771F8800C17DF3 /* TripSummary.m in Sources */,
 				A35495B21A2F4745000D9311 /* TripMonthView.m in Sources */,
@@ -2221,7 +2228,6 @@
 				A3BD72AF1A15A9950007ECA1 /* BaiduMarkModel.m in Sources */,
 				A34890681A3FCB6F002DE948 /* AJJson2ObjectSerializer.m in Sources */,
 				A35C26261A426F4B005F6658 /* NSDate+RZExtensions.m in Sources */,
-				A347A4AC1A675802002908C2 /* ParkingRegion+Helper.m in Sources */,
 				A35C26411A426F4B005F6658 /* RZProgressView.m in Sources */,
 				A35C26861A490F5F005F6658 /* HomeTripCell.m in Sources */,
 				A342849B19C42081002DB0FD /* GPSLogger.m in Sources */,
@@ -2231,6 +2237,7 @@
 				A3CD360E19C9767F0039F6E1 /* GPSAnalyzerOffTime.m in Sources */,
 				A35C26421A426F4B005F6658 /* RZRevealViewController.m in Sources */,
 				A3FDD17A1A028A6B007B3C65 /* GViewController.m in Sources */,
+				A3C69B781A79C437001F3192 /* DaySummary+Fetcher.m in Sources */,
 				A34F01141A03D78900F58C17 /* MapDisplayViewController.m in Sources */,
 				A34890691A3FCB6F002DE948 /* AJObject2JsonSerializer.m in Sources */,
 				A32CF4001A24C380008EA051 /* XYPieChart.m in Sources */,

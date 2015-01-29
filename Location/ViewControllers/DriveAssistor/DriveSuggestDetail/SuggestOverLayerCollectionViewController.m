@@ -8,7 +8,7 @@
 
 #import "SuggestOverLayerCollectionViewController.h"
 #import "SuggestDetailCell.h"
-#import "ParkingRegion+Helper.h"
+#import "ParkingRegion+Fetcher.h"
 
 @interface SuggestOverLayerCollectionViewController ()
 
@@ -91,7 +91,7 @@
     UICollectionReusableView* reusableView = nil;
     if (kind == UICollectionElementKindSectionHeader) {
         SuggestDetailHeader* header = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"SuggestHeader" forIndexPath:indexPath];
-        header.destLabel.text = [self.tripSum.region_group.end_region prettyPOINameWithDefault:@"未知地点"];
+        header.destLabel.text = [self.tripSum.region_group.end_region nameWithDefault:@"未知地点"];
         header.totalDistLabel.text = [NSString stringWithFormat:@"%.1f",[self.tripSum.total_dist floatValue]/1000.0];
         header.estimateDuringLabel.text = [NSString stringWithFormat:@"%.f",[self.tripSum.total_during floatValue]/60.0];
         NSDateFormatter * formatter = [[BussinessDataProvider sharedInstance] dateFormatterForFormatStr:@"HH:mm"];
