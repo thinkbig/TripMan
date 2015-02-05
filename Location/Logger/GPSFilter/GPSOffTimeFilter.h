@@ -45,5 +45,6 @@ typedef NS_ENUM(NSUInteger, eTurningStat) {
 // useful function
 + (CGFloat)checkPotinAngle:(CGPoint)pt1 antPt:(CGPoint)pt2 antPt:(CGPoint)pt3;
 + (CGPoint)coor2Point:(CLLocationCoordinate2D)coor;
++ (CGFloat) angleFromPoint:(CGPoint)fromPt toPoint:(CGPoint)toPt;
 
 @end

@@ -49,6 +49,16 @@
     self.duringStatusLabel.textColor = COLOR_STAT_GREEN;
 }
 
+- (void) updateWithLocation:(ParkingRegionDetail*)loc
+{
+    self.destPOILabel.text = [loc.coreDataItem nameWithDefault:@"未知位置"];
+    self.destStreetLabel.text = loc.coreDataItem.street.length > 0 ? loc.coreDataItem.street : @"未知街道";
+    
+    NSTimeInterval during = 800.0;
+    self.estimateDuringLabel.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%d", (int)(during/60)] font:DigitalFontSize(24) color:[UIColor whiteColor] andUnit:@"min" font:DigitalFontSize(14) color:COLOR_UNIT_GRAY];
+    self.duringStatusLabel.textColor = COLOR_STAT_GREEN;
+}
+
 @end
 
 /////////////////////////////////////////////////////////////////////////////////

@@ -173,6 +173,7 @@
 		A3BD72AF1A15A9950007ECA1 /* BaiduMarkModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A3BD72AE1A15A9950007ECA1 /* BaiduMarkModel.m */; };
 		A3BD72B21A15BC2E0007ECA1 /* BussinessDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = A3BD72B11A15BC2E0007ECA1 /* BussinessDataProvider.m */; };
 		A3BED01C1A5A769B008FC6A7 /* CarSettingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A3BED01B1A5A769B008FC6A7 /* CarSettingCell.m */; };
+		A3C453EB1A81B01900D53342 /* TripSummary+Fetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = A3C453EA1A81B01900D53342 /* TripSummary+Fetcher.m */; };
 		A3C69B781A79C437001F3192 /* DaySummary+Fetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = A3C69B771A79C437001F3192 /* DaySummary+Fetcher.m */; };
 		A3C69B7B1A79C46B001F3192 /* ParkingRegion+Fetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = A3C69B7A1A79C46B001F3192 /* ParkingRegion+Fetcher.m */; };
 		A3CD35EC19C6A1A70039F6E1 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3CD35EB19C6A1A70039F6E1 /* CoreMotion.framework */; };
@@ -588,6 +589,8 @@
 		A3BD72B11A15BC2E0007ECA1 /* BussinessDataProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BussinessDataProvider.m; sourceTree = "<group>"; };
 		A3BED01A1A5A769B008FC6A7 /* CarSettingCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CarSettingCell.h; sourceTree = "<group>"; };
 		A3BED01B1A5A769B008FC6A7 /* CarSettingCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CarSettingCell.m; sourceTree = "<group>"; };
+		A3C453E91A81B01900D53342 /* TripSummary+Fetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TripSummary+Fetcher.h"; sourceTree = "<group>"; };
+		A3C453EA1A81B01900D53342 /* TripSummary+Fetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TripSummary+Fetcher.m"; sourceTree = "<group>"; };
 		A3C69B761A79C437001F3192 /* DaySummary+Fetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DaySummary+Fetcher.h"; sourceTree = "<group>"; };
 		A3C69B771A79C437001F3192 /* DaySummary+Fetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "DaySummary+Fetcher.m"; sourceTree = "<group>"; };
 		A3C69B791A79C46B001F3192 /* ParkingRegion+Fetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ParkingRegion+Fetcher.h"; sourceTree = "<group>"; };
@@ -1863,6 +1866,8 @@
 				A3C69B771A79C437001F3192 /* DaySummary+Fetcher.m */,
 				A3C69B791A79C46B001F3192 /* ParkingRegion+Fetcher.h */,
 				A3C69B7A1A79C46B001F3192 /* ParkingRegion+Fetcher.m */,
+				A3C453E91A81B01900D53342 /* TripSummary+Fetcher.h */,
+				A3C453EA1A81B01900D53342 /* TripSummary+Fetcher.m */,
 			);
 			name = ModelCategory;
 			path = DataModel/ModelCategory;
@@ -2251,6 +2256,7 @@
 				A331F5BB1A1CC5DB001F4DE3 /* A3ParallaxScrollView.m in Sources */,
 				A34F00EF1A03C8F800F58C17 /* CarSettingViewController.m in Sources */,
 				A37E03F21A0DE19B00B0B0EC /* TripTicketView.m in Sources */,
+				A3C453EB1A81B01900D53342 /* TripSummary+Fetcher.m in Sources */,
 				A378ABE31A164664006A3B68 /* DVSwitch.m in Sources */,
 				A3CD728A19D14430005F84E2 /* GeoTransformer.m in Sources */,
 				A35C264A1A426F4B005F6658 /* RZWaiter.m in Sources */,

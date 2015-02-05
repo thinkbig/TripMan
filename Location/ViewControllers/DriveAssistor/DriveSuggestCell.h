@@ -57,6 +57,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *duringStatusLabel;
 
 - (void) useMockData;
+- (void) updateWithLocation:(ParkingRegionDetail*)loc;
 
 @end
 

@@ -20,8 +20,10 @@
 }
 
 @property (nonatomic, strong) NSArray *                         topNMostUsedTrips;
+@property (nonatomic, strong) NSArray *                         topNMostParkingLoc;
 @property (nonatomic, strong) SearchPOIHeader*                  header;
 @property (nonatomic, strong) NSArray *                         categories;
+@property (nonatomic) NSUInteger                                selCategoryIdx;
 
 @end
 
@@ -74,6 +76,7 @@
         ParkingRegionDetail * parkingDetail = [[AnaDbManager sharedInst] parkingDetailForCoordinate:curLoc.coordinate];
         self.topNMostUsedTrips = [[AnaDbManager sharedInst] tripsWithStartRegion:parkingDetail.coreDataItem tripLimit:3];
     }
+    self.topNMostParkingLoc = [[AnaDbManager sharedInst] mostUsedParkingRegionLimit:20];
     
     [self.suggestCollectionView reloadData];
 }
@@ -124,7 +127,10 @@
     if (0 == section) {
         return 3;
     } else if (1 == section) {
-        return 5;
+        if (0 == _selCategoryIdx) {
+            return self.topNMostParkingLoc.count + 1;
+        }
+        return 4;
     }
     return 0;
 }
@@ -156,10 +162,22 @@
                 [strArr addObject:cat.disp_name];
             }
             realCell.scrollSeg.segStrings = strArr;
+            realCell.scrollSeg.selIdx = _selCategoryIdx;
+            
+            __block CarAssistorViewController * weakSelf = self;
+            [realCell.scrollSeg setSelBlock:^(NSUInteger selIdx) {
+                weakSelf.selCategoryIdx = selIdx;
+                [weakSelf.suggestCollectionView reloadSections:[NSIndexSet indexSetWithIndex:1]];
+            }];
+            
             cell = realCell;
         } else {
             DriveSuggestPOICell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"SuggestPOICell" forIndexPath:indexPath];
-            [realCell useMockData];
+            if (0 == _selCategoryIdx) {
+                [realCell updateWithLocation:self.topNMostParkingLoc[indexPath.row-1]];
+            } else {
+                [realCell useMockData];
+            }
             cell = realCell;
         }
     }

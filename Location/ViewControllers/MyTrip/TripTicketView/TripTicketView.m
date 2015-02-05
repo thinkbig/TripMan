@@ -11,6 +11,7 @@
 #import "RegionGroup.h"
 #import "NSAttributedString+Style.h"
 #import "ParkingRegion+Fetcher.h"
+#import "TripSummary+Fetcher.h"
 
 @implementation TripTicketView
 
@@ -51,6 +52,15 @@
     self.speedLabel.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%.1f", [sum.max_speed floatValue]*3.6] font:[self.speedLabel.font fontWithSize:17] color:self.speedLabel.textColor andUnit:@"km/h" font:[self.speedLabel.font fontWithSize:14] color:self.speedLabel.textColor];
     self.duringLabel.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%.f", [sum.total_during floatValue]/60.0] font:[self.duringLabel.font fontWithSize:17] color:self.duringLabel.textColor andUnit:@"min" font:[self.duringLabel.font fontWithSize:14] color:self.duringLabel.textColor];
     self.trafficLightLabel.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%ld", (long)[sum.traffic_light_jam_cnt integerValue]] font:[self.trafficLightLabel.font fontWithSize:17] color:self.trafficLightLabel.textColor andUnit:@"处" font:[self.trafficLightLabel.font fontWithSize:14] color:self.trafficLightLabel.textColor];
+    
+    eTrafficStatus status = [sum trafficStatus];
+    if (eTrafficRed == status) {
+        self.statusBackground.image = [UIImage imageNamed:@"ticketred"];
+    } else if (eTrafficYellow == status) {
+        self.statusBackground.image = [UIImage imageNamed:@"ticketyellow"];
+    } else {
+        self.statusBackground.image = [UIImage imageNamed:@"ticketgreen"];
+    }
 }
 
 @end

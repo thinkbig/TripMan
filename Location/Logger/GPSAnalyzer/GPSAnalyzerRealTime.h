@@ -15,4 +15,6 @@
 
 @interface GPSAnalyzerRealTime : DDAbstractLogger <DDLogger>
 
+- (void)didLostGPS;
+
 @end

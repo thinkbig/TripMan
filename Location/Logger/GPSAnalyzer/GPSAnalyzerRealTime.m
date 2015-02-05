@@ -9,6 +9,7 @@
 #import "GPSAnalyzerRealTime.h"
 #import <CoreMotion/CoreMotion.h>
 #import "LocationTracker.h"
+#import "GPSOffTimeFilter.h"
 
 @interface GPSAnalyzerRealTime () {
     
@@ -41,6 +42,8 @@
 
 @property (nonatomic, strong) NSMutableArray *          logArr;
 @property (nonatomic, strong) GPSLogItem *              lastLogItem;
+@property (nonatomic, strong) GPSLogItem *              locChangeLogItem;
+@property (nonatomic, strong) NSMutableArray *          angleArr;
 @property (nonatomic) NSInteger                         removeThreshold;
 
 @end
@@ -56,9 +59,12 @@
         _startSpeedTraceIdx = 0;
         _endSpeedTraceIdx = 0;
         self.removeThreshold = 20;
+        self.locChangeLogItem = nil;
+        self.angleArr = [NSMutableArray arrayWithCapacity:128];
         self.logArr = [NSMutableArray arrayWithCapacity:128];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didExitReagion:) name:kNotifyExitReagion object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didLostGPS) name:kNotifyGpsLost object:nil];
     }
     return self;
 }
@@ -132,6 +138,7 @@
         validSpeed = NO;
     }
     
+    GPSLogItem * lastGps = self.lastLogItem;
     if (validSpeed) {
         _startSpeedTrace += speed;
         _startSpeedTraceCnt++;
@@ -154,18 +161,55 @@
     }
     if ([_isInTrip boolValue] && [gps.horizontalAccuracy doubleValue] > kLowHorizontalAccuracy) {
         if ([gps.timestamp timeIntervalSinceDate:_driveStart.timestamp] > 10*60) {
-            // the car should drive at least 600 meter after start drive 10 min
+            // the car should drive at least 420 meter after start drive 10 min
             if (_maxDist > 0 && _maxDist < 400) {
                 stat = eMotionStatStationary;
             }
         }
     }
     
+    if (nil == self.locChangeLogItem) {
+        self.locChangeLogItem = gps;
+    } else if (validSpeed) {
+        CGFloat dist = [self.locChangeLogItem distanceFrom:gps];
+        if (dist > 400) {
+            self.locChangeLogItem = gps;
+            [self.angleArr removeAllObjects];
+        } else {
+            if (self.lastLogItem && stat > eMotionStatStationary) {
+                CGFloat angle = [GPSOffTimeFilter angleFromPoint:[GPSOffTimeFilter coor2Point:lastGps.locationCoordinate] toPoint:[GPSOffTimeFilter coor2Point:gps.locationCoordinate]];
+                [self.angleArr addObject:@(angle)];
+                NSTimeInterval during = [gps.timestamp timeIntervalSinceDate:self.locChangeLogItem.timestamp];
+                // the car should drive at least 420 meter after start drive 10 min
+                if (during > 10*60 && self.angleArr.count > 0) {
+                    // check if the angle is in a line
+                    CGFloat tolAngle = 0;
+                    for (NSNumber * angle in self.angleArr) {
+                        tolAngle += [angle floatValue];
+                    }
+                    CGFloat avgAngle = tolAngle/self.angleArr.count;
+                    CGFloat diff = 0;
+                    for (NSNumber * angle in self.angleArr) {
+                        diff += fabsf([angle floatValue]-avgAngle);
+                    }
+                    diff /= self.angleArr.count;
+                    if (diff > 60) {
+                        // move less than 400 in 10 min, and the direction is jumping
+                        stat = eMotionStatStationary;
+                    }
+                    self.locChangeLogItem = gps;
+                    [self.angleArr removeAllObjects];
+                }
+            }
+            
+        }
+    }
+
     [self removeOldData:([self eStat]!=stat)];
     [self setEStat:stat];
     
     if (eMotionStatDriving == stat) {
-        self.lostGPSTimer = [NSTimer timerWithTimeInterval:cDriveEndThreshold target:self selector:@selector(didLostGPS) userInfo:nil repeats:NO];
+        self.lostGPSTimer = [NSTimer timerWithTimeInterval:20*60 target:self selector:@selector(didLostGPS) userInfo:nil repeats:NO];
         [[NSRunLoop mainRunLoop] addTimer:self.lostGPSTimer forMode:NSDefaultRunLoopMode];
     }
 }
@@ -175,7 +219,7 @@
     if (!force && _removeThreshold-- > 0) {
         return;
     }
-    self.removeThreshold = 20;
+    self.removeThreshold = 7;
     
     GPSLogItem * lastItem = self.lastLogItem;
     if (lastItem) {
@@ -225,13 +269,14 @@
             _endSpeedTraceIdx = cnt-1;
         } else {
             NSDate * thresDateEd = [lastItem.timestamp dateByAddingTimeInterval:-cDriveEndThreshold];
-            for (NSInteger i = _endSpeedTraceIdx; i < cnt; i++) {
+            for (NSInteger i = _endSpeedTraceIdx; i < cnt-cDirveEndSamplePoint; i++) {
                 GPSLogItem * item = tmpArr[i];
                 if ([thresDateEd compare:item.timestamp] == NSOrderedDescending) {
                     _endSpeedTrace -= ([item.speed floatValue] < 0 ? 0 : [item.speed floatValue]);
                     _endSpeedTraceCnt--;
+                    _endSpeedTraceIdx = i+1;
                 } else {
-                    _endSpeedTraceIdx = i;
+                    _endSpeedTraceIdx = i+1;
                     break;
                 }
             }
@@ -317,15 +362,22 @@
     }
     
     BOOL isInTrip = [self isInTrip];
-    if (!isInTrip && eStat == eMotionStatDriving) {
+    if (!isInTrip && eStat == eMotionStatDriving)
+    {
         [self setIsInTrip:YES];
-    } else if (isInTrip && (eStat < eMotionStatWalking)) {
+        [self.angleArr removeAllObjects];
+        self.locChangeLogItem = nil;
+    }
+    else if (isInTrip && (eStat < eMotionStatWalking))
+    {
         [self setIsInTrip:NO];
         
         // if the trip change from drive to stationary, reset all data to prevent cumulate error
         _startSpeedTrace = _endSpeedTrace = 0;
         _startSpeedTraceCnt = _endSpeedTraceCnt = 0;
         _startSpeedTraceIdx = _endSpeedTraceIdx = _startMoveTraceIdx = 0;
+        [self.angleArr removeAllObjects];
+        self.locChangeLogItem = nil;
         [self.logArr removeAllObjects];
     }
 }

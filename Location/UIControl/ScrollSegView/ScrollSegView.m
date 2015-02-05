@@ -68,6 +68,7 @@
         oldFrame.size.width += 8;
         btn.frame = oldFrame;
         btn.tag = idx;
+        btn.selected = (idx == _selIdx);
         [btn addTarget:self action:@selector(selItem:) forControlEvents:UIControlEventTouchUpInside];
         [self.segViews addObject:btn];
         [self addSubview:btn];

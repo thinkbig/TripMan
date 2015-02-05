@@ -155,6 +155,7 @@
                 <outlet property="fromPoi" destination="2XK-Ib-iPR" id="N1A-C7-JWk"/>
                 <outlet property="fromStreet" destination="fMF-5h-3Wr" id="PsV-ce-Ohf"/>
                 <outlet property="speedLabel" destination="r81-oT-yIF" id="5Fb-HI-tRf"/>
+                <outlet property="statusBackground" destination="MxH-Ye-X3h" id="hzn-ju-7r6"/>
                 <outlet property="toDate" destination="8ff-wf-LNB" id="2rH-xa-tHq"/>
                 <outlet property="toPoi" destination="UYs-Ii-LKN" id="a6Z-cP-ZKE"/>
                 <outlet property="toStreet" destination="9MA-9o-TIG" id="P3f-ak-20U"/>

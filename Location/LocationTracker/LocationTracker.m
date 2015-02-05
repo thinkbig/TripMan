@@ -569,7 +569,7 @@ typedef enum
                 _lastLoc = newLocation;
                 
                 GPSLog2(newLocation, self.lastAcceleraion, speed);
-                DDLogWarn(@"location is: <%f, %f>, speed=%f, accuracy=%f", newLocation.coordinate.latitude, newLocation.coordinate.longitude, speed, newLocation.horizontalAccuracy);
+                DDLogWarn(@"location is: <%f, %f>, speed=%f, accuracy=%f, origSpeed=%f", newLocation.coordinate.latitude, newLocation.coordinate.longitude, speed, newLocation.horizontalAccuracy, newLocation.speed);
             }
         }
     }
@@ -581,7 +581,7 @@ typedef enum
             _maylostGpsDate = [NSDate date];
         } else {
             NSTimeInterval lostGpsDuring = [[NSDate date] timeIntervalSinceDate:_maylostGpsDate];
-            if ((isDriving && lostGpsDuring > 30 * 60) || (!isDriving && lostGpsDuring > 5 * 60)) {
+            if ((isDriving && lostGpsDuring > 20 * 60) || (!isDriving && lostGpsDuring > 5 * 60)) {
                 didLostGps = YES;
             }
         }
@@ -590,6 +590,7 @@ typedef enum
         if (didLostGps) {
             DDLogWarn(@"didLostGps ###########");
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [[NSNotificationCenter defaultCenter] postNotificationName:kNotifyGpsLost object:nil];
                 [self realStop];
             });
         } else {
