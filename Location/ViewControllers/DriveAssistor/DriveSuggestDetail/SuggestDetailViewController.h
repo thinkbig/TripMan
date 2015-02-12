@@ -7,14 +7,14 @@
 //
 
 #import "GViewController.h"
-#import <MapKit/MapKit.h>
+#import "BMapKit.h"
 #import "A3ParallaxScrollView.h"
 
-@interface SuggestDetailViewController : GViewController <MKMapViewDelegate>
+@interface SuggestDetailViewController : GViewController <BMKMapViewDelegate>
 
 @property (weak, nonatomic) IBOutlet A3ParallaxScrollView *rootScrollView;
 
-@property (strong, nonatomic) MKMapView *mapView;
+@property (strong, nonatomic) BMKMapView *mapView;
 
 @property (nonatomic, strong) TripSummary *     tripSum;
 

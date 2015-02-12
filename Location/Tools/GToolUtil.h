@@ -19,4 +19,6 @@
 
 + (NSString *)deviceId;
 
++ (CGFloat) distFrom:(CLLocationCoordinate2D)from toCoor:(CLLocationCoordinate2D)to;
+
 @end

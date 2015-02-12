@@ -16,8 +16,7 @@
 @interface TicketDetailViewController ()
 
 @property (nonatomic, strong) NSArray *         speedSegs;
-@property (nonatomic, strong) NSString *        stAddress;
-@property (nonatomic, strong) NSString *        edAddress;
+@property (nonatomic, strong) AddressEditCell * editCell;
 
 @end
 
@@ -42,8 +41,6 @@
 - (void)setTripSum:(TripSummary *)tripSum
 {
     _tripSum = tripSum;
-    self.stAddress = _tripSum.region_group.start_region.user_mark;
-    self.edAddress = _tripSum.region_group.end_region.user_mark;
     
     DrivingInfo * info = tripSum.driving_info;
     CGFloat allDuring = [info.during_0_30 floatValue] + [info.during_30_60 floatValue] + [info.during_60_100 floatValue] + [info.during_100_NA floatValue];
@@ -57,10 +54,14 @@
 
 - (BOOL)addressModified
 {
-    NSString * stMark = _tripSum.region_group.start_region.user_mark;
-    NSString * edMark = _tripSum.region_group.end_region.user_mark;
-    if ((self.stAddress != stMark && ![self.stAddress isEqualToString:stMark]) ||
-        (self.edAddress != edMark && ![self.edAddress isEqualToString:edMark])) {
+    NSString * newUserSt = self.editCell.stAddress.text;
+    NSString * newUsered = self.editCell.edAddress.text;
+    if ((![newUserSt isEqualToString:_tripSum.region_group.start_region.nearby_poi]) &&
+        (![newUserSt isEqualToString:_tripSum.region_group.start_region.user_mark])) {
+        return YES;
+    }
+    if ((![newUsered isEqualToString:_tripSum.region_group.end_region.nearby_poi]) &&
+        (![newUsered isEqualToString:_tripSum.region_group.end_region.user_mark])) {
         return YES;
     }
     return NO;
@@ -68,8 +69,17 @@
 
 - (void)saveNewUserMark
 {
-    _tripSum.region_group.start_region.user_mark = self.stAddress;
-    _tripSum.region_group.end_region.user_mark = self.edAddress;
+    NSString * newUserSt = self.editCell.stAddress.text;
+    NSString * newUsered = self.editCell.edAddress.text;
+    if ((![newUserSt isEqualToString:_tripSum.region_group.start_region.nearby_poi]) &&
+        (![newUserSt isEqualToString:_tripSum.region_group.start_region.user_mark])) {
+        _tripSum.region_group.start_region.user_mark = newUserSt;
+    }
+    if ((![newUsered isEqualToString:_tripSum.region_group.end_region.nearby_poi]) &&
+        (![newUsered isEqualToString:_tripSum.region_group.end_region.user_mark])) {
+        _tripSum.region_group.end_region.user_mark = newUsered;
+    }
+    
     [_tripSum save];
     
     [self.collectionView performBatchUpdates:^{
@@ -101,18 +111,21 @@
     }
 }
 
-
-#pragma mark - UITextFieldDelegate
-
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
-    NSString* text = [textField.text stringByReplacingCharactersInRange:range withString:string];
+- (void) textFieldDidChange:(UITextField*) textField {
+    BOOL isSameLoc = NO;
+    if (_tripSum.region_group.start_region && _tripSum.region_group.start_region == _tripSum.region_group.end_region) {
+        isSameLoc = YES;
+    }
     if (ST_ADDRESS_TAG == textField.tag) {
-        self.stAddress = text;
+        if (isSameLoc) {
+            self.editCell.edAddress.text = textField.text;
+        }
     } else if (ED_ADDRESS_TAG == textField.tag) {
-        self.edAddress = text;
+        if (isSameLoc) {
+            self.editCell.stAddress.text = textField.text;
+        }
     }
     self.saveBtn.enabled = [self addressModified];
-    return YES;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
@@ -146,12 +159,14 @@
     UICollectionViewCell *cell = nil;
     
     if (0 == indexPath.row) {
-        AddressEditCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"AddressEditCellId" forIndexPath:indexPath];
-        realCell.stAddress.delegate = self;
-        realCell.edAddress.delegate = self;
-        realCell.stAddress.text = [_tripSum.region_group.start_region nameWithDefault:@"未知地点"];
-        realCell.edAddress.text = [_tripSum.region_group.end_region nameWithDefault:@"未知地点"];
-        cell = realCell;
+        if (nil == self.editCell) {
+            self.editCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"AddressEditCellId" forIndexPath:indexPath];
+            [self.editCell.stAddress addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
+            [self.editCell.edAddress addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
+        }
+        self.editCell.stAddress.text = [_tripSum.region_group.start_region nameWithDefault:@"未知地点"];
+        self.editCell.edAddress.text = [_tripSum.region_group.end_region nameWithDefault:@"未知地点"];
+        cell = self.editCell;
     } else if (1 == indexPath.row) {
         TicketDetailCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"DetailSummaryCell" forIndexPath:indexPath];
         realCell.chartArr = self.speedSegs;

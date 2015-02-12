@@ -9,6 +9,7 @@
 
 #import <UIKit/UIKit.h>
 #import "CommonDefine.h"
+#import "UIView+Common.h"
 
 @interface GViewController : UIViewController <UIGestureRecognizerDelegate>
 

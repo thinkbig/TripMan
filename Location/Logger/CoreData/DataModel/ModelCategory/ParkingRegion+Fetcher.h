@@ -11,5 +11,6 @@
 @interface ParkingRegion (Fetcher)
 
 - (NSString*) nameWithDefault:(NSString*)defaultName;
+- (CLLocation*) centerLocation;
 
 @end

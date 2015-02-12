@@ -16,7 +16,7 @@
 #import "NSString+MD5.h"
 
 static NSString * rebuildKey = @"kLocationForceRebuildKey";
-static NSString * rebuildVal = @"value_0000000000009"; // make sure it is different if this version should rebuild db
+static NSString * rebuildVal = @"value_0000000000003"; // make sure it is different if this version should rebuild db
 
 @implementation AppDelegate
 
@@ -163,7 +163,6 @@ static NSString * rebuildVal = @"value_0000000000009"; // make sure it is differ
         if (DEBUG_MODE) {
             self.forceDriving = YES;
         }
-        [self.locationTracker setKeepMonitor];
         [self.locationTracker startLocationTracking];
         completionHandler(UIBackgroundFetchResultNewData);
         return;
@@ -190,7 +189,7 @@ static NSString * rebuildVal = @"value_0000000000009"; // make sure it is differ
 {
     DDLogWarn(@"@@@@@@@@@@@@@ applicationDidEnterBackground @@@@@@@@@@@@@");
     if (!IS_UPDATING) {
-        [self.locationTracker startLocationTracking];
+        [self.locationTracker updateCurrentLocation];
     }
 }
 
@@ -217,7 +216,7 @@ static NSString * rebuildVal = @"value_0000000000009"; // make sure it is differ
     if (!IS_UPDATING) {
         [DDLog flushLog];
         [[AnaDbManager deviceDb] commit];
-        [self.locationTracker startLocationTracking];
+        [self.locationTracker updateCurrentLocation];
     }
 }
 

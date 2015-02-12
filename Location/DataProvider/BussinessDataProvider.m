@@ -17,6 +17,7 @@
 #import "BaiduRoadMarkFacade.h"
 #import "UserWrapper.h"
 #import "AnaDbManager.h"
+#import "ParkingRegion+Fetcher.h"
 
 #define kLastestCityAndDate         @"kLastestCityAndDate"
 
@@ -190,30 +191,7 @@ static BussinessDataProvider * _sharedProvider = nil;
     }
 
     for (ParkingRegionDetail * region in regions) {
-        if ([region.coreDataItem.is_temp boolValue]) {
-            continue;
-        }
-        if (force || ![region.coreDataItem.is_analyzed boolValue]) {
-            BaiduReverseGeocodingWrapper * wrapper = [BaiduReverseGeocodingWrapper new];
-            wrapper.coordinate = [GeoTransformer earth2Baidu:region.region.center];
-            [wrapper requestWithSuccess:^(BMKReverseGeoCodeResult* result) {
-                ParkingRegion * coreRegion = region.coreDataItem;
-                coreRegion.city = result.addressDetail.city;
-                coreRegion.province = result.addressDetail.province;
-                coreRegion.district = result.addressDetail.district;
-                coreRegion.street = result.addressDetail.streetName;
-                coreRegion.street_num = result.addressDetail.streetNumber;
-                coreRegion.address = result.address;
-                for (BMKPoiInfo * info in result.poiList) {
-                    coreRegion.nearby_poi = info.name;
-                    break;
-                }
-                coreRegion.is_analyzed = @YES;
-                [[AnaDbManager deviceDb] commit];
-            } failure:^(NSError * err) {
-                NSLog(@"update region info fail: %@", err);
-            }];
-        }
+        [self updateRegionInfo:region.coreDataItem force:force success:nil failure:nil];
     }
 }
 
@@ -222,7 +200,34 @@ static BussinessDataProvider * _sharedProvider = nil;
     if ([region.is_temp boolValue]) {
         return;
     }
-    if (force || ![region.is_analyzed boolValue]) {
+    if (force || ![region.is_analyzed boolValue])
+    {
+//        CLGeocoder *geocoder=[[CLGeocoder alloc] init];
+//        [geocoder reverseGeocodeLocation:[region centerLocation]
+//                       completionHandler:^(NSArray *placemarks,
+//                                           NSError *error) 
+//        {
+//            if (error) {
+//                if (failure) {
+//                    failure(error);
+//                }
+//            } else {
+//                CLPlacemark *placemark=[placemarks objectAtIndex:0];
+//                region.city = placemark.locality;
+//                region.province = placemark.administrativeArea;
+//                region.district = placemark.subLocality;
+//                region.street = placemark.thoroughfare;
+//                region.street_num = placemark.subThoroughfare;
+//                region.address = [NSString stringWithFormat:@"%@, %@, %@", placemark.locality, placemark.thoroughfare, placemark.name];
+//                region.nearby_poi = placemark.name;
+//                region.is_analyzed = @YES;
+//                [[AnaDbManager deviceDb] commit];
+//                if (success) {
+//                    success(region);
+//                }
+//            }
+//        }];
+        
         BaiduReverseGeocodingWrapper * wrapper = [BaiduReverseGeocodingWrapper new];
         wrapper.coordinate = [GeoTransformer earth2Baidu:CLLocationCoordinate2DMake([region.center_lat doubleValue], [region.center_lon doubleValue])];
         [wrapper requestWithSuccess:^(BMKReverseGeoCodeResult* result) {
@@ -232,8 +237,13 @@ static BussinessDataProvider * _sharedProvider = nil;
             region.street = result.addressDetail.streetName;
             region.street_num = result.addressDetail.streetNumber;
             region.address = result.address;
+            CGFloat dist = MAXFLOAT;
             for (BMKPoiInfo * info in result.poiList) {
-                region.nearby_poi = info.name;
+                CGFloat thisDist = [GToolUtil distFrom:wrapper.coordinate toCoor:info.pt];
+                if (thisDist < dist) {
+                    dist = thisDist;
+                    region.nearby_poi = info.name;
+                }
                 break;
             }
             region.is_analyzed = @YES;

@@ -36,6 +36,7 @@ typedef enum
     CLCircularRegion *            _lastParkingRegion;
     CLCircularRegion *            _lastStillRegion;
     BOOL                          _keepMonitoring;
+    BOOL                          _shortUpdate;
     
     NSDate *                      _lastStationaryDate;
     
@@ -103,6 +104,7 @@ typedef enum
     self = [super init];
 	if (self)
     {
+        _shortUpdate = NO;
         self.signalStrength = eGPSSignalStrengthUnknow;
         _locationStarted = NO;
         [self setKeepMonitor];
@@ -112,7 +114,7 @@ typedef enum
         
         //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
         //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startSignificantMonitor) name:UIApplicationDidFinishLaunchingNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startLocationTracking) name:UIApplicationWillEnterForegroundNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateCurrentLocation) name:UIApplicationWillEnterForegroundNotification object:nil];
 	}
 	return self;
 }
@@ -237,6 +239,7 @@ typedef enum
 
 - (void)setKeepMonitor
 {
+    _shortUpdate = NO;
     _maylostGpsDate = nil;
     _resumeGpsDate = nil;
     _setShoudlStop = NO;
@@ -316,6 +319,19 @@ typedef enum
     }
 }
 
+- (void)updateCurrentLocation
+{
+    if (!IS_UPDATING && !_keepMonitoring && !_isDriving) {
+        NSNumber * wakeupBySys = [[NSUserDefaults standardUserDefaults] objectForKey:kWakeUpBySystem];
+        if (nil == wakeupBySys || [wakeupBySys boolValue]) {
+            DDLogWarn(@"updateCurrentLocation");
+            _shortUpdate = YES;
+            _setShoudlStop = NO;
+            [self runBackgroundTask:1];
+        }
+    }
+}
+
 - (void)realStop
 {
     [self.restartTimer invalidate];
@@ -324,7 +340,9 @@ typedef enum
     if (_setShoudlStop) {
         return;
     }
+    _shortUpdate = NO;
     _maylostGpsDate = nil;
+    _keepMonitoring = NO;
     _resumeGpsDate = nil;
     self.signalStrength = eGPSSignalStrengthUnknow;
     _setShoudlStop = YES;
@@ -506,7 +524,7 @@ typedef enum
     BOOL isDriving = [[[NSUserDefaults standardUserDefaults] objectForKey:kMotionIsInTrip] boolValue];
     
     NSNumber * wakeupBySys = [[NSUserDefaults standardUserDefaults] objectForKey:kWakeUpBySystem];
-    if (nil == wakeupBySys || [wakeupBySys boolValue]) {
+    if (!_shortUpdate && (nil == wakeupBySys || [wakeupBySys boolValue])) {
         [self setKeepMonitor];
         [[NSUserDefaults standardUserDefaults] setObject:@(NO) forKey:kWakeUpBySystem];
         [self startLocationTracking];
@@ -659,10 +677,7 @@ typedef enum
             }
         }
         
-        //Will only stop the locationManager after 10 seconds, so that we can get some accurate locations
-        //The location manager will only operate for 10 seconds to save battery
-        //if the instant speed is -1, means the gps module has just be waken
-        if (!_keepMonitoring) {
+        if (!_keepMonitoring || _shortUpdate) {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [self realStop];
             });

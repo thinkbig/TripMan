@@ -121,4 +121,11 @@ static GToolUtil * _sharedUtil = nil;
     return oldId;
 }
 
++ (CGFloat) distFrom:(CLLocationCoordinate2D)from toCoor:(CLLocationCoordinate2D)to
+{
+    CLLocation * loc1 = [[CLLocation alloc] initWithLatitude:from.latitude longitude:from.longitude];
+    CLLocation * loc2 = [[CLLocation alloc] initWithLatitude:to.latitude longitude:to.longitude];
+    return [loc1 distanceFromLocation:loc2];
+}
+
 @end

@@ -13,5 +13,6 @@
 
 + (CLLocationCoordinate2D)earth2Mars:(CLLocationCoordinate2D)location;
 + (CLLocationCoordinate2D)earth2Baidu:(CLLocationCoordinate2D)location;
++ (BMKMapPoint)earth2BaiduProjection:(CLLocationCoordinate2D)location;
 
 @end

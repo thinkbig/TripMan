@@ -19,4 +19,9 @@
     return defaultName;
 }
 
+- (CLLocation*) centerLocation
+{
+    return [[CLLocation alloc] initWithLatitude:[self.center_lat doubleValue] longitude:[self.center_lon doubleValue]];
+}
+
 @end

@@ -61,4 +61,9 @@ const double ee = 0.00669342162296594323;
     return BMKCoorDictionaryDecode(BMKConvertBaiduCoorFrom(location, BMK_COORDTYPE_GPS));
 }
 
++ (BMKMapPoint)earth2BaiduProjection:(CLLocationCoordinate2D)location
+{
+    return BMKMapPointForCoordinate([self earth2Baidu:location]);
+}
+
 @end
