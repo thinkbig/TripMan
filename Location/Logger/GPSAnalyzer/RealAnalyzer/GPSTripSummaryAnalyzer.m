@@ -94,6 +94,14 @@
         during = distance/cAvgDrivingSpeed;
     }
     CGFloat curSpeed = ([item.speed floatValue] < 0 ? 0 : [item.speed floatValue]);
+    
+    // filter the speed for noise
+    if (curSpeed > 30) {
+        if ([item.horizontalAccuracy doubleValue] > 100 || [self.lastItem.horizontalAccuracy doubleValue] > 100 || [item.timestamp timeIntervalSinceDate:self.lastItem.timestamp] > 60) {
+            curSpeed = 10;
+        }
+    }
+    
     _max_speed = MAX(_max_speed, curSpeed);
     if (_total_dist <= 0) {
         // first point

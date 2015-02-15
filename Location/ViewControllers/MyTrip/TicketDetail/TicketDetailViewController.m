@@ -40,6 +40,7 @@
 
 - (void)setTripSum:(TripSummary *)tripSum
 {
+    [[GPSLogger sharedLogger].offTimeAnalyzer analyzeTripForSum:tripSum withAnalyzer:nil];
     _tripSum = tripSum;
     
     DrivingInfo * info = tripSum.driving_info;

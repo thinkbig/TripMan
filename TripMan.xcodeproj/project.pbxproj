@@ -171,7 +171,6 @@
 		A3BD72B21A15BC2E0007ECA1 /* BussinessDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = A3BD72B11A15BC2E0007ECA1 /* BussinessDataProvider.m */; };
 		A3BED01C1A5A769B008FC6A7 /* CarSettingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A3BED01B1A5A769B008FC6A7 /* CarSettingCell.m */; };
 		A3C453EB1A81B01900D53342 /* TripSummary+Fetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = A3C453EA1A81B01900D53342 /* TripSummary+Fetcher.m */; };
-		A3C453FC1A8B412C00D53342 /* UIView+Common.m in Sources */ = {isa = PBXBuildFile; fileRef = A3C453FB1A8B412C00D53342 /* UIView+Common.m */; };
 		A3C454431A8B515800D53342 /* libbaidumapapi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A3C4543E1A8B515800D53342 /* libbaidumapapi.a */; };
 		A3C454441A8B515800D53342 /* libbaidumapapi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A3C454401A8B515800D53342 /* libbaidumapapi.a */; };
 		A3C454451A8B515800D53342 /* mapapi.bundle in Resources */ = {isa = PBXBuildFile; fileRef = A3C454411A8B515800D53342 /* mapapi.bundle */; };
@@ -531,8 +530,6 @@
 		A3BED01B1A5A769B008FC6A7 /* CarSettingCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CarSettingCell.m; sourceTree = "<group>"; };
 		A3C453E91A81B01900D53342 /* TripSummary+Fetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TripSummary+Fetcher.h"; sourceTree = "<group>"; };
 		A3C453EA1A81B01900D53342 /* TripSummary+Fetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TripSummary+Fetcher.m"; sourceTree = "<group>"; };
-		A3C453FA1A8B412C00D53342 /* UIView+Common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Common.h"; sourceTree = "<group>"; };
-		A3C453FB1A8B412C00D53342 /* UIView+Common.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Common.m"; sourceTree = "<group>"; };
 		A3C453FF1A8B515800D53342 /* BMapKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMapKit.h; sourceTree = "<group>"; };
 		A3C454001A8B515800D53342 /* BMKActionPaopaoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKActionPaopaoView.h; sourceTree = "<group>"; };
 		A3C454011A8B515800D53342 /* BMKAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKAnnotation.h; sourceTree = "<group>"; };
@@ -1650,7 +1647,6 @@
 			isa = PBXGroup;
 			children = (
 				A3C4544A1A8B774500D53342 /* UIImage */,
-				A3C453F91A8B412C00D53342 /* UIView */,
 				A318CEE81A2617EA00320E8F /* ViewStyle */,
 				A314A6E11A0BBD9A00C12040 /* NSDate */,
 				A3171A8B1A090666003EA8CE /* Encoding */,
@@ -1769,15 +1765,6 @@
 				A3BD72AB1A14F2B00007ECA1 /* BaiduRoadMarkFacade.m */,
 			);
 			path = RoadMark;
-			sourceTree = "<group>";
-		};
-		A3C453F91A8B412C00D53342 /* UIView */ = {
-			isa = PBXGroup;
-			children = (
-				A3C453FA1A8B412C00D53342 /* UIView+Common.h */,
-				A3C453FB1A8B412C00D53342 /* UIView+Common.m */,
-			);
-			path = UIView;
 			sourceTree = "<group>";
 		};
 		A3C453FD1A8B515800D53342 /* BaiduMapSDK */ = {
@@ -2411,7 +2398,6 @@
 				5C9090A018B3A66A00510153 /* AppDelegate.m in Sources */,
 				A34890741A3FCCAF002DE948 /* NSFileManager+Godzippa.m in Sources */,
 				A35C26471A426F4B005F6658 /* RZTelprompt.m in Sources */,
-				A3C453FC1A8B412C00D53342 /* UIView+Common.m in Sources */,
 				A35C263F1A426F4B005F6658 /* RZDelayedOperation.m in Sources */,
 				A35C26381A426F4B005F6658 /* UIViewController+RZKeyboardWatcher.m in Sources */,
 				A34F01461A06699300F58C17 /* iCarousel.m in Sources */,
