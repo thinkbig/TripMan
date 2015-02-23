@@ -12,6 +12,7 @@
 #import <CoreLocation/CoreLocation.h>
 #import "GPSDefine.h"
 #import "CommonDefine.h"
+#import "UrlDefine.h"
 #import "ErrorDefine.h"
 #import "BussinessDataProvider.h"
 #import "CacheKit.h"

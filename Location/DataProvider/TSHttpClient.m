@@ -145,9 +145,10 @@ static TSHttpClient * _sharedClient = nil;
         
         if (eSerializationJsonType == config.respSerialType) {
             client.responseSerializer = [AFJSONResponseSerializer serializer];
+            [client.responseSerializer.acceptableContentTypes setByAddingObject:@"text/html"];
         } else {
             client.responseSerializer = [AFHTTPResponseSerializer serializer];
-        }
+        }        
         
         [[TSHttpClient sharedClient] setNetworkManager:client forKey:[config clientKey]];
     }

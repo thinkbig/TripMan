@@ -15,12 +15,12 @@
 }
 
 - (NSString *)baseUrl {
-    return @"http://myhost/";
+    return kChetuBaseUrl;
 }
 
-- (NSString *)getPath{
-    return @"%@?uid=someUserId";
-}
+//- (NSString *)getPath{
+//    return @"%@?uid=someUserId";
+//}
 
 - (NSArray*) processingOrigResult:(NSDictionary*)origResult error:(NSError **)err
 {

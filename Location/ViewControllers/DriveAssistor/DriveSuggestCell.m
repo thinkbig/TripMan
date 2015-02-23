@@ -12,6 +12,8 @@
 #import "ParkingRegion.h"
 #import "NSAttributedString+Style.h"
 #import "ParkingRegion+Fetcher.h"
+#import "CTTrafficAbstractFacade.h"
+#import "GeoTransformer.h"
 
 @implementation DriveSuggestCell
 
@@ -37,6 +39,12 @@
 
 /////////////////////////////////////////////////////////////////////////////////
 
+@interface DriveSuggestPOICell ()
+
+@property (nonatomic, strong) ParkingRegionDetail * location;
+
+@end
+
 @implementation DriveSuggestPOICell
 
 - (void) useMockData
@@ -51,12 +59,39 @@
 
 - (void) updateWithLocation:(ParkingRegionDetail*)loc
 {
-    self.destPOILabel.text = [loc.coreDataItem nameWithDefault:@"未知位置"];
-    self.destStreetLabel.text = loc.coreDataItem.street.length > 0 ? loc.coreDataItem.street : @"未知街道";
+    if (self.location != loc) {
+        self.location = loc;
+        self.destPOILabel.text = [loc.coreDataItem nameWithDefault:@"未知位置"];
+        self.destStreetLabel.text = loc.coreDataItem.street.length > 0 ? loc.coreDataItem.street : @"未知街道";
+        
+        [self updateTimeDuring:@"- -"];
+        self.duringStatusLabel.textColor = COLOR_STAT_GREEN;
+    }
     
-    NSTimeInterval during = 800.0;
-    self.estimateDuringLabel.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%d", (int)(during/60)] font:DigitalFontSize(24) color:[UIColor whiteColor] andUnit:@"min" font:DigitalFontSize(14) color:COLOR_UNIT_GRAY];
-    self.duringStatusLabel.textColor = COLOR_STAT_GREEN;
+    
+    CLLocation * mLoc = [BussinessDataProvider lastGoodLocation];
+    CGFloat dist = [GToolUtil distFrom:mLoc.coordinate toCoor:loc.region.center];
+    
+    if (dist > 500) {
+        CTTrafficAbstractFacade * facade = [[CTTrafficAbstractFacade alloc] init];
+        facade.fromCoorBaidu = [GeoTransformer earth2Baidu:mLoc.coordinate];
+        facade.toCoorBaidu = [GeoTransformer earth2Baidu:loc.region.center];
+        [facade requestWithSuccess:^(id result) {
+            if (loc == self.location) {
+                NSNumber * during = result[@"duration"];
+                [self updateTimeDuring:[NSString stringWithFormat:@"%d", (int)([during floatValue]/60)]];
+            }
+        } failure:^(NSError * err) {
+            //NSLog(@"asdfasdf = %@", err);
+        }];
+    } else {
+        [self updateTimeDuring:@"1"];
+    }
+}
+
+- (void) updateTimeDuring:(NSString*)timeStr
+{
+    self.estimateDuringLabel.attributedText = [NSAttributedString stringWithNumber:timeStr font:DigitalFontSize(24) color:[UIColor whiteColor] andUnit:@"min" font:DigitalFontSize(14) color:COLOR_UNIT_GRAY];
 }
 
 @end

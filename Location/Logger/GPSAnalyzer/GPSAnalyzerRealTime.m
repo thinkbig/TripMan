@@ -406,8 +406,8 @@
         }
     } else {
         // fast deside using M7 chrip
+        LocationTracker * tracker = ((AppDelegate*)([UIApplication sharedApplication].delegate)).locationTracker;
         if (_lastestNormalSpeed && [[NSDate date] timeIntervalSinceDate:_lastestNormalSpeed] >= 20) {
-            LocationTracker * tracker = ((AppDelegate*)([UIApplication sharedApplication].delegate)).locationTracker;
             NSTimeInterval driveDuring = [tracker duringForAutomationWithin:60];
             if (driveDuring > 5) {
                 _endSpeedTrace = 0;
@@ -426,7 +426,7 @@
             GPSLogItem * item = ((GPSLogItem*)(self.logArr[_endSpeedTraceIdx]));
             if ([[NSDate date] timeIntervalSinceDate:item.timestamp] >= cDriveEndThreshold*0.6) {
                 CGFloat avgSpeed = _endSpeedTrace/_endSpeedTraceCnt;
-                if (avgSpeed  < cAvgStationarySpeed) {
+                if (avgSpeed  < cAvgStationarySpeed && [tracker duringForAutomationWithin:60] < 30) {
                     newStat = eMotionStatStationary;
                 } else if (avgSpeed  < cAvgWalkingSpeed) {
                     newStat = eMotionStatWalking;

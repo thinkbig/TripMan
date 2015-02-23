@@ -77,6 +77,9 @@
         if (param && [param isKindOfClass:[NSDictionary class]]) {
             [realParam addEntriesFromDictionary:param];
         }
+        if (((NSDictionary*)realParam).count == 0) {
+            realParam = nil;
+        }
     }
     
     void (^failureBlock)(NSError *) = ^(NSError *error) {

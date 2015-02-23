@@ -74,7 +74,6 @@ typedef NS_ENUM(NSUInteger, eCallbackStrategy) {
 - (id) cachedResultForKey:(NSString*)key;
 - (void) cacheObject:(id)obj forKey:(NSString*)key;
 
-
 // helper functin
 + (id) fromJsonString:(NSString*)str;
 
