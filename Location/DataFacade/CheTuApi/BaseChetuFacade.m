@@ -22,7 +22,7 @@
 //    return @"%@?uid=someUserId";
 //}
 
-- (NSArray*) processingOrigResult:(NSDictionary*)origResult error:(NSError **)err
+- (id) processingOrigResult:(NSDictionary*)origResult error:(NSError **)err
 {
     NSInteger code = [origResult[@"code"] integerValue];
     if ([origResult isKindOfClass:[NSDictionary class]] && (code == 0)) {
@@ -32,7 +32,7 @@
     } else {
         *err = ERR_MAKE(eBussinessError, @"数据异常");
     }
-    return nil;
+    return origResult;
 }
 
 @end

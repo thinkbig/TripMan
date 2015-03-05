@@ -36,6 +36,8 @@
 #define LOCATION_TRACKER            (((AppDelegate*)([UIApplication sharedApplication].delegate)).locationTracker)
 
 #define IS_UPDATING                 (((AppDelegate*)([UIApplication sharedApplication].delegate)).isUpdating)
+#define IS_WIFI                     (((AppDelegate*)([UIApplication sharedApplication].delegate)).netStat == AFNetworkReachabilityStatusReachableViaWiFi)
+#define IS_REACHABLE                (((AppDelegate*)([UIApplication sharedApplication].delegate)).netStat == AFNetworkReachabilityStatusReachableViaWiFi)
 
 // directory define
 #define DocumentDirectory           [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject]
@@ -57,5 +59,13 @@
 
 // debug define
 #define IS_FORCE_DRIVING             (((AppDelegate*)([UIApplication sharedApplication].delegate)).forceDriving)
+
+#if TARGET_IPHONE_SIMULATOR
+#define gDeviceType @"iosSimulator"
+#elif TARGET_OS_IPHONE
+#define gDeviceType @"iosDevice"
+#else
+#define gDeviceType @"iosUnknow"
+#endif
 
 #endif

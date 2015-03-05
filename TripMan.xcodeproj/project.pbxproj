@@ -91,6 +91,9 @@
 		A34F019A1A07289C00F58C17 /* CommonWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = A34F01991A07289C00F58C17 /* CommonWrapper.m */; };
 		A35495AF1A2F472C000D9311 /* TripMonthView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A35495AE1A2F472C000D9311 /* TripMonthView.xib */; };
 		A35495B21A2F4745000D9311 /* TripMonthView.m in Sources */ = {isa = PBXBuildFile; fileRef = A35495B11A2F4745000D9311 /* TripMonthView.m */; };
+		A35BC7251AA2E98900D726D4 /* CTWakeupFacade.m in Sources */ = {isa = PBXBuildFile; fileRef = A35BC7241AA2E98900D726D4 /* CTWakeupFacade.m */; };
+		A35BC7291AA35B7D00D726D4 /* NSString+ShiftEncode.m in Sources */ = {isa = PBXBuildFile; fileRef = A35BC7281AA35B7D00D726D4 /* NSString+ShiftEncode.m */; };
+		A35BC72F1AA4244C00D726D4 /* DataReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = A35BC72E1AA4244C00D726D4 /* DataReporter.m */; };
 		A35C26241A426F4B005F6658 /* CAAnimation+RZBlocks.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C25B11A426F4B005F6658 /* CAAnimation+RZBlocks.m */; };
 		A35C26251A426F4B005F6658 /* NSObject+RZBlockKVO.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C25B41A426F4B005F6658 /* NSObject+RZBlockKVO.m */; };
 		A35C26261A426F4B005F6658 /* NSDate+RZExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C25B71A426F4B005F6658 /* NSDate+RZExtensions.m */; };
@@ -374,6 +377,12 @@
 		A35495B01A2F4745000D9311 /* TripMonthView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TripMonthView.h; sourceTree = "<group>"; };
 		A35495B11A2F4745000D9311 /* TripMonthView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripMonthView.m; sourceTree = "<group>"; };
 		A35BC7201A9AE34500D726D4 /* UrlDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UrlDefine.h; sourceTree = "<group>"; };
+		A35BC7231AA2E98900D726D4 /* CTWakeupFacade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTWakeupFacade.h; sourceTree = "<group>"; };
+		A35BC7241AA2E98900D726D4 /* CTWakeupFacade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTWakeupFacade.m; sourceTree = "<group>"; };
+		A35BC7271AA35B7D00D726D4 /* NSString+ShiftEncode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+ShiftEncode.h"; sourceTree = "<group>"; };
+		A35BC7281AA35B7D00D726D4 /* NSString+ShiftEncode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+ShiftEncode.m"; sourceTree = "<group>"; };
+		A35BC72D1AA4244C00D726D4 /* DataReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataReporter.h; sourceTree = "<group>"; };
+		A35BC72E1AA4244C00D726D4 /* DataReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataReporter.m; sourceTree = "<group>"; };
 		A35C25B01A426F4B005F6658 /* CAAnimation+RZBlocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CAAnimation+RZBlocks.h"; sourceTree = "<group>"; };
 		A35C25B11A426F4B005F6658 /* CAAnimation+RZBlocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CAAnimation+RZBlocks.m"; sourceTree = "<group>"; };
 		A35C25B31A426F4B005F6658 /* NSObject+RZBlockKVO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+RZBlockKVO.h"; sourceTree = "<group>"; };
@@ -943,6 +952,7 @@
 		A342849719C42081002DB0FD /* Logger */ = {
 			isa = PBXGroup;
 			children = (
+				A35BC72C1AA4242E00D726D4 /* Reporter */,
 				A31411661A0A4CCD0019F557 /* CoreData */,
 				A31FCA8919EBC1D400A3BB4C /* Helper */,
 				A31FCA6019D9402200A3BB4C /* GPSFilter */,
@@ -1241,6 +1251,24 @@
 				A37A1C811A0B6C6C00633E25 /* BaiduReverseGeocodingWrapper.m */,
 			);
 			path = geocoding;
+			sourceTree = "<group>";
+		};
+		A35BC7221AA2E94800D726D4 /* CTReport */ = {
+			isa = PBXGroup;
+			children = (
+				A35BC7231AA2E98900D726D4 /* CTWakeupFacade.h */,
+				A35BC7241AA2E98900D726D4 /* CTWakeupFacade.m */,
+			);
+			path = CTReport;
+			sourceTree = "<group>";
+		};
+		A35BC72C1AA4242E00D726D4 /* Reporter */ = {
+			isa = PBXGroup;
+			children = (
+				A35BC72D1AA4244C00D726D4 /* DataReporter.h */,
+				A35BC72E1AA4244C00D726D4 /* DataReporter.m */,
+			);
+			path = Reporter;
 			sourceTree = "<group>";
 		};
 		A35C25AD1A426F4B005F6658 /* RZUtils */ = {
@@ -1632,6 +1660,7 @@
 		A35C267C1A48FC56005F6658 /* CheTuApi */ = {
 			isa = PBXGroup;
 			children = (
+				A35BC7221AA2E94800D726D4 /* CTReport */,
 				A3C454511A930B4300D53342 /* CTTraffic */,
 				A35C26801A48FCE2005F6658 /* CTPOI */,
 				A35C267D1A48FC70005F6658 /* BaseChetuFacade.h */,
@@ -1664,6 +1693,8 @@
 		A377B42C19F5532400DDB5EE /* NSString */ = {
 			isa = PBXGroup;
 			children = (
+				A35BC7271AA35B7D00D726D4 /* NSString+ShiftEncode.h */,
+				A35BC7281AA35B7D00D726D4 /* NSString+ShiftEncode.m */,
 				A377B42D19F5537900DDB5EE /* NSString+MD5.h */,
 				A377B42E19F5537900DDB5EE /* NSString+MD5.m */,
 			);
@@ -2277,6 +2308,7 @@
 				A3A209411A771F8800C17DF3 /* RegionGroup.m in Sources */,
 				A34F01221A04D98E00F58C17 /* BaseBaiduFacade.m in Sources */,
 				A3CD360E19C9767F0039F6E1 /* GPSAnalyzerOffTime.m in Sources */,
+				A35BC7251AA2E98900D726D4 /* CTWakeupFacade.m in Sources */,
 				A35C26421A426F4B005F6658 /* RZRevealViewController.m in Sources */,
 				A3FDD17A1A028A6B007B3C65 /* GViewController.m in Sources */,
 				A3C69B781A79C437001F3192 /* DaySummary+Fetcher.m in Sources */,
@@ -2295,6 +2327,7 @@
 				A331F5BB1A1CC5DB001F4DE3 /* A3ParallaxScrollView.m in Sources */,
 				A34F00EF1A03C8F800F58C17 /* CarSettingViewController.m in Sources */,
 				A37E03F21A0DE19B00B0B0EC /* TripTicketView.m in Sources */,
+				A35BC7291AA35B7D00D726D4 /* NSString+ShiftEncode.m in Sources */,
 				A3C453EB1A81B01900D53342 /* TripSummary+Fetcher.m in Sources */,
 				A378ABE31A164664006A3B68 /* DVSwitch.m in Sources */,
 				A3CD728A19D14430005F84E2 /* GeoTransformer.m in Sources */,
@@ -2421,6 +2454,7 @@
 				A377B42F19F5537900DDB5EE /* NSString+MD5.m in Sources */,
 				A342AD441A0C6CF000C92849 /* DataDebugPrinter.m in Sources */,
 				A3C454541A930E0000D53342 /* CTTrafficAbstractFacade.m in Sources */,
+				A35BC72F1AA4244C00D726D4 /* DataReporter.m in Sources */,
 				A34F00E61A03C8BE00F58C17 /* CarHealthViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

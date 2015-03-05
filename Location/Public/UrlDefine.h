@@ -9,7 +9,13 @@
 #ifndef TripMan_UrlDefine_h
 #define TripMan_UrlDefine_h
 
-#define kChetuBaseUrl       @"http://121.40.193.34:8000/"
-//#define kChetuBaseUrl       @"http://localhost:8000/"
+//#define kChetuBaseUrl       @"http://121.40.193.34:80/"    //
+#define kChetuBaseUrl       @"http://localhost:8000/"
+
+
+#define ENV_DEVICE_TYPE_IOS     @"1"        // 0=unknow, 1=iOS, 2=Android, 3=OBD
+#define ENV_APP_SOURCE          @"0"        // 0=内测推广，1=apple商店，2=googlePlay
+#define ENV_COUNTRY_CODE        @"CN"
+#define kDeviceToken            @"device_token"
 
 #endif

@@ -25,6 +25,10 @@
     return self;
 }
 
+- (void)dealloc {
+    self.geocodesearch.delegate = nil;
+}
+
 - (void)realSendRequest
 {
     if (self.city.length == 0 || self.address.length == 0) {

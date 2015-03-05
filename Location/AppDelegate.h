@@ -11,6 +11,8 @@
 #import "AFNetworkActivityLogger.h"
 #import "BMKGeneralDelegate.h"
 #import "BMKMapManager.h"
+#import "AFNetworkReachabilityManager.h"
+
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, BMKGeneralDelegate> {
     
@@ -23,6 +25,7 @@
 @property (strong, nonatomic) AFNetworkActivityLogger *afNetworkLogger;
 @property (strong, nonatomic) BMKMapManager *  baiduMapManager;
 @property (nonatomic) BOOL  isUpdating;
+@property (nonatomic) AFNetworkReachabilityStatus   netStat;
 
 // debug mode
 @property (nonatomic) BOOL  forceDriving;

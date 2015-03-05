@@ -10,6 +10,8 @@
 
 @interface BaiduReverseGeocodingWrapper ()
 
+@property (nonatomic, strong) BMKGeoCodeSearch *        geocodesearch;
+
 @end
 
 @implementation BaiduReverseGeocodingWrapper
@@ -17,8 +19,14 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
+        self.geocodesearch = [[BMKGeoCodeSearch alloc] init];
+        self.geocodesearch.delegate = self;
     }
     return self;
+}
+
+- (void)dealloc {
+    self.geocodesearch.delegate = nil;
 }
 
 - (void)realSendRequest
@@ -29,19 +37,15 @@
         }
         return;
     }
-
-    BMKGeoCodeSearch *  geocodesearch = [[BMKGeoCodeSearch alloc] init];
-    geocodesearch.delegate = self;
     
     BMKReverseGeoCodeOption *reverseGeocodeSearchOption = [[BMKReverseGeoCodeOption alloc] init];
     reverseGeocodeSearchOption.reverseGeoPoint = self.coordinate;
-    if (![geocodesearch reverseGeoCode:reverseGeocodeSearchOption]) {
+    if (![_geocodesearch reverseGeoCode:reverseGeocodeSearchOption]) {
         if (self.failureBlock) {
             self.failureBlock(ERR_MAKE(eInvalidInputError, @"查询失败"));
         }
-        geocodesearch.delegate = nil;
     } else {
-        [[BussinessDataProvider sharedInstance].fuckBaidu addObject:geocodesearch];
+        [[BussinessDataProvider sharedInstance].fuckBaidu addObject:_geocodesearch];
     }
 }
 
@@ -55,7 +59,6 @@
     } else if (self.failureBlock) {
         self.failureBlock(ERR_MAKE(error, @"查询地理位置名称失败"));
     }
-    searcher.delegate = nil;
     [[BussinessDataProvider sharedInstance].fuckBaidu removeObject:searcher];
 }
 

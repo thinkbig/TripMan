@@ -18,7 +18,7 @@
     return eRequestTypeGet;
 }
 
-//- (NSDictionary *)requestParam {
+//- (NSDictionary*)requestParam {
 //    return @{@"from": [NSString stringWithFormat:@"%f,%f", self.fromCoorBaidu.longitude, self.fromCoorBaidu.latitude],
 //             @"to": [NSString stringWithFormat:@"%f,%f", self.toCoorBaidu.longitude, self.toCoorBaidu.latitude]};
 //}

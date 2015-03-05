@@ -69,7 +69,7 @@
     if (param && ![param isKindOfClass:[NSDictionary class]]) {
         realParam = param;
     } else {
-        NSDictionary * commomParam = [self requestParam];
+        id commomParam = [self requestParam];
         realParam = [NSMutableDictionary dictionary];
         if (commomParam && [commomParam isKindOfClass:[NSDictionary class]]) {
             [realParam addEntriesFromDictionary:commomParam];
@@ -78,7 +78,7 @@
             [realParam addEntriesFromDictionary:param];
         }
         if (((NSDictionary*)realParam).count == 0) {
-            realParam = nil;
+            realParam = commomParam;
         }
     }
     
@@ -179,7 +179,7 @@
     }
 }
 
-- (NSDictionary *) processingOrigResult:(id)origResult error:(NSError **)err
+- (id) processingOrigResult:(id)origResult error:(NSError **)err
 {
     return origResult;
 }
@@ -298,6 +298,21 @@
         json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
     }
     return json;
+}
+
++ (NSString*) toJsonString:(NSDictionary*)dict prettyPrint:(BOOL)prettyPrint
+{
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict
+                                                       options:(NSJSONWritingOptions)(prettyPrint ? NSJSONWritingPrettyPrinted : 0)
+                                                         error:&error];
+    
+    if (!jsonData) {
+        NSLog(@"bv_jsonStringWithPrettyPrint: error: %@", error.localizedDescription);
+        return nil;
+    } else {
+        return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    }
 }
 
 @end

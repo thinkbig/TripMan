@@ -12,6 +12,8 @@
 #import "JGProgressHUDPieIndicatorView.h"
 #import "JGProgressHUDSuccessIndicatorView.h"
 #import "FXKeychain.h"
+#import "NSString+ShiftEncode.h"
+#import "NSString+MD5.h"
 
 @interface GToolUtil ()
 
@@ -119,6 +121,28 @@ static GToolUtil * _sharedUtil = nil;
         [[FXKeychain defaultKeychain] setObject:oldId forKey:kTripManDeviceIdKey];
     }
     return oldId;
+}
+
++ (NSString*)secretKey
+{
+    NSString * str = [NSString stringWithFormat:@"%@", @"chetu"];
+    NSNumber * h = [NSNumber numberWithDouble:6.6260693];
+    NSString * sourceKey = [NSString stringWithFormat:@"%@%@", str, h];
+    
+    NSMutableArray * shiftArr = [NSMutableArray arrayWithCapacity:sourceKey.length];
+    double shift = M_E;
+    for (int i = 0; i < sourceKey.length; i++) {
+        NSInteger oneShift = shift;
+        [shiftArr addObject:[NSNumber numberWithInteger:(oneShift)]];
+        shift = (shift - oneShift)*10;
+    }
+    
+    return [sourceKey shiftEachDigit:shiftArr];
+}
+
++ (NSString*)verifyKey:(NSString*)origKey
+{
+    return [[NSString stringWithFormat:@"%@&%@", origKey, [self secretKey]] MD5];
 }
 
 + (CGFloat) distFrom:(CLLocationCoordinate2D)from toCoor:(CLLocationCoordinate2D)to

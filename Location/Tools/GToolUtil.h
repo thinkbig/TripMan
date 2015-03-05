@@ -16,8 +16,8 @@
 - (void)showPieHUDWithText:(NSString*)str andProgress:(NSInteger)progress;
 
 + (NSString *)createUUID;
-
 + (NSString *)deviceId;
++ (NSString*)verifyKey:(NSString*)origKey;
 
 + (CGFloat) distFrom:(CLLocationCoordinate2D)from toCoor:(CLLocationCoordinate2D)to;
 

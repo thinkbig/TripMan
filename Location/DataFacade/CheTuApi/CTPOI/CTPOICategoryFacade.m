@@ -17,7 +17,7 @@
     return basePath;
 }
 
-- (NSDictionary*)requestParam
+- (id)requestParam
 {
     NSString * city = [BussinessDataProvider sharedInstance].currentCity;
     if (city) {

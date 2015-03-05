@@ -76,5 +76,6 @@ typedef NS_ENUM(NSUInteger, eCallbackStrategy) {
 
 // helper functin
 + (id) fromJsonString:(NSString*)str;
++ (NSString*) toJsonString:(NSDictionary*)dict prettyPrint:(BOOL)prettyPrint;
 
 @end

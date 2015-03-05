@@ -14,6 +14,7 @@
 #import <Crashlytics/Crashlytics.h>
 #import "UserWrapper.h"
 #import "NSString+MD5.h"
+#import "DataReporter.h"
 
 static NSString * rebuildKey = @"kLocationForceRebuildKey";
 static NSString * rebuildVal = @"value_0000000000002"; // make sure it is different if this version should rebuild db
@@ -29,6 +30,12 @@ static NSString * rebuildVal = @"value_0000000000002"; // make sure it is differ
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [Crashlytics startWithAPIKey:@"329c7a7f380b233aa478f78c8ccb5edf5ab72278"];
+    
+    self.netStat = AFNetworkReachabilityStatusUnknown;
+    [[AFNetworkReachabilityManager sharedManager] startMonitoring];
+    [[AFNetworkReachabilityManager sharedManager] setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
+        self.netStat = status;
+    }];
     
     // Sign up for a developer account at: https://www.cintric.com/register
     //[CintricFind initWithApiKey:@"3c601eda17508279e5fcda88bc314061" andSecret:@"66d480af63780e19b4448f9eae7829e9"];
@@ -132,7 +139,12 @@ static NSString * rebuildVal = @"value_0000000000002"; // make sure it is differ
     }
 }
 
-- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
+    NSString * dt = [[[deviceToken description] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]] stringByReplacingOccurrencesOfString:@" " withString:@""];
+    [[NSUserDefaults standardUserDefaults] setValue:dt forKey:kDeviceToken];
+    [DataReporter asyncUserDeviceInfo];
+    
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     [currentInstallation setDeviceTokenFromData:deviceToken];
     currentInstallation.channels = @[@"global"];
@@ -207,6 +219,8 @@ static NSString * rebuildVal = @"value_0000000000002"; // make sure it is differ
         [[BussinessDataProvider sharedInstance] updateWeatherToday:nil];
         [[BussinessDataProvider sharedInstance] updateAllRegionInfo:YES];
     }
+    
+    [DataReporter asyncUserDeviceInfo];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
