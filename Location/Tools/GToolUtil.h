@@ -17,6 +17,7 @@
 
 + (NSString *)createUUID;
 + (NSString *)deviceId;
++ (NSString*)userId;
 + (NSString*)verifyKey:(NSString*)origKey;
 
 + (CGFloat) distFrom:(CLLocationCoordinate2D)from toCoor:(CLLocationCoordinate2D)to;

@@ -20,5 +20,6 @@ typedef NS_ENUM(NSUInteger, eTrafficStatus) {
 @interface TripSummary (Fetcher)
 
 - (eTrafficStatus) trafficStatus;
+- (NSDictionary*) toJsonDict;
 
 @end

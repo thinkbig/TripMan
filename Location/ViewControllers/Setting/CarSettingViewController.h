@@ -12,6 +12,4 @@
 
 @property (weak, nonatomic) IBOutlet UICollectionView *settingCollection;
 
-- (IBAction)showDebug:(id)sender;
-
 @end

@@ -46,10 +46,6 @@
 }
 */
 
-- (IBAction)showDebug:(id)sender {
-    [self.navigationController pushViewController:InstVC(@"Debug", @"LogDisplayList") animated:YES];
-}
-
 - (IBAction)reInstall:(id)sender {
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://fir.im/y764"]];
 }
@@ -57,7 +53,7 @@
 - (void) clickBtn:(UIButton*)btn
 {
     if (btn.tag == 12) {
-        [self.navigationController pushViewController:InstVC(@"Debug", @"LogDisplayList") animated:YES];
+        [self presentViewController:InstFirstVC(@"Debug") animated:YES completion:nil];
     } else {
         [self showToast:@"改功能尚在开发中..."];
     }

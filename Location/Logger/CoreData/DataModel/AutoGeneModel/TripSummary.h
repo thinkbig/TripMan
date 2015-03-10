@@ -2,7 +2,7 @@
 //  TripSummary.h
 //  TripMan
 //
-//  Created by taq on 1/27/15.
+//  Created by taq on 3/7/15.
 //  Copyright (c) 2015 Location. All rights reserved.
 //
 
@@ -19,7 +19,9 @@
 @property (nonatomic, retain) NSDate * end_date;
 @property (nonatomic, retain) NSNumber * is_analyzed;
 @property (nonatomic, retain) NSNumber * is_uploaded;
+@property (nonatomic, retain) NSNumber * is_valid;
 @property (nonatomic, retain) NSNumber * max_speed;
+@property (nonatomic, retain) NSString * owner;
 @property (nonatomic, retain) NSNumber * should_update;
 @property (nonatomic, retain) NSDate * start_date;
 @property (nonatomic, retain) NSNumber * total_dist;
@@ -33,8 +35,6 @@
 @property (nonatomic, retain) NSNumber * traffic_light_tol_cnt;
 @property (nonatomic, retain) NSNumber * traffic_light_waiting;
 @property (nonatomic, retain) NSString * trip_id;
-@property (nonatomic, retain) NSNumber * is_valid;
-@property (nonatomic, retain) NSString * owner;
 @property (nonatomic, retain) DaySummary *day_summary;
 @property (nonatomic, retain) DrivingInfo *driving_info;
 @property (nonatomic, retain) EnvInfo *environment;

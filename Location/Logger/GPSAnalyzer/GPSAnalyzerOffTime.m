@@ -79,6 +79,9 @@
         [manger commit];
         
         if (unfinishedSum) {
+            if (![dropTrip boolValue]) {
+                [self analyzeTripForSum:unfinishedSum withAnalyzer:nil];
+            }
             [[NSNotificationCenter defaultCenter] postNotificationName:kNotifyTripDidEnd object:nil];
         }
     }

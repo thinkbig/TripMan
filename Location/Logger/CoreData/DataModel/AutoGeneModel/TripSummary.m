@@ -2,7 +2,7 @@
 //  TripSummary.m
 //  TripMan
 //
-//  Created by taq on 1/27/15.
+//  Created by taq on 3/7/15.
 //  Copyright (c) 2015 Location. All rights reserved.
 //
 
@@ -24,7 +24,9 @@
 @dynamic end_date;
 @dynamic is_analyzed;
 @dynamic is_uploaded;
+@dynamic is_valid;
 @dynamic max_speed;
+@dynamic owner;
 @dynamic should_update;
 @dynamic start_date;
 @dynamic total_dist;
@@ -38,8 +40,6 @@
 @dynamic traffic_light_tol_cnt;
 @dynamic traffic_light_waiting;
 @dynamic trip_id;
-@dynamic is_valid;
-@dynamic owner;
 @dynamic day_summary;
 @dynamic driving_info;
 @dynamic environment;

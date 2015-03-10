@@ -8,10 +8,24 @@
 
 #import <Foundation/Foundation.h>
 
+typedef NS_ENUM(NSUInteger, eReportReslut) {
+    eReportReslutComplete = 0,
+    eReportReslutHalt,
+    eReportReslutFail
+};
+
+typedef void (^ReportCompleteBlock)(eReportReslut);
+
 @interface DataReporter : NSObject
+
+@property (nonatomic) BOOL  onlyWifiReport;     
 
 + (instancetype) sharedInst;
 
-+ (void) asyncUserDeviceInfo;
+- (void) asyncUserDeviceInfo;
+
+- (void)forceAsync;
+- (void)aliveAsync;
+- (void)asyncFromBackgroundFetch:(ReportCompleteBlock)block;
 
 @end

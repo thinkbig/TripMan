@@ -6,13 +6,14 @@
 //  Copyright (c) 2014 Location. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "GViewController.h"
 
-@interface LocationViewController : UIViewController
+@interface LocationViewController : GViewController
 
-@property (weak, nonatomic) IBOutlet UITableView *contentTable;
+@property (weak, nonatomic) IBOutlet UILabel *uidLabel;
+@property (weak, nonatomic) IBOutlet UILabel *udidLabel;
+@property (weak, nonatomic) IBOutlet UILabel *envLabel;
 
-- (IBAction)refresh:(id)sender;
-- (IBAction)closeDebug:(id)sender;
+- (IBAction)forceReport:(id)sender;
 
 @end

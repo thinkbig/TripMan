@@ -123,6 +123,11 @@ static GToolUtil * _sharedUtil = nil;
     return oldId;
 }
 
++ (NSString*)userId
+{
+    return nil;
+}
+
 + (NSString*)secretKey
 {
     NSString * str = [NSString stringWithFormat:@"%@", @"chetu"];

@@ -26,7 +26,7 @@
 {
     NSDictionary * plistDict = [[NSBundle mainBundle] infoDictionary];
     NSString * udid = [GToolUtil deviceId];
-    NSString * uid = nil;
+    NSString * uid = [GToolUtil userId];
     NSString * deviceInfo = [NSString stringWithFormat:@"name=%@,model=%@", [UIDevice currentDevice].name, gDeviceType];
     NSString* deviceToken = [[NSUserDefaults standardUserDefaults] stringForKey:kDeviceToken];
     NSMutableDictionary * param = [NSMutableDictionary dictionaryWithDictionary:@{@"udid": udid,

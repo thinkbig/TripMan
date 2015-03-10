@@ -77,10 +77,6 @@
     [_userDbMgr commit];
     _latestTripInUserDb = nil;
     _userDbMgr = nil;
-    NSArray * deviceParkings = [self.deviceDbMgr allParkingDetails];
-    for (ParkingRegionDetail * detail in deviceParkings) {
-        detail.coreDataItem.parking_id = nil;
-    }
     
     // then login with another user
     if (uid) {

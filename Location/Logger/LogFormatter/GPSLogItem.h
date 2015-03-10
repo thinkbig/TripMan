@@ -38,4 +38,6 @@
 - (double) safeSpeed;
 - (CLLocationDistance) distanceFrom:(GPSLogItem*)item;
 
+- (NSArray*) toArray;
+
 @end

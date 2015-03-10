@@ -78,12 +78,14 @@
         <attribute name="center_lon" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="city" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="district" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="is_analyzed" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="is_analyzed" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="is_temp" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="is_uploaded" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="nearby_poi" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="parking_id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="province" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="rate" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="should_update" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="street" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="street_num" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="user_mark" optional="YES" attributeType="String" syncable="YES"/>
@@ -127,12 +129,12 @@
         <attribute name="addi_info" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="avg_speed" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="end_date" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="is_analyzed" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="is_uploaded" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="is_analyzed" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="is_uploaded" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="is_valid" optional="YES" attributeType="Boolean" defaultValueString="YES" syncable="YES"/>
         <attribute name="max_speed" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="owner" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="should_update" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="should_update" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="start_date" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="total_dist" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="total_during" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
@@ -203,7 +205,7 @@
         <element name="DrivingInfo" positionX="27" positionY="153" width="128" height="328"/>
         <element name="EnvInfo" positionX="-9" positionY="135" width="128" height="223"/>
         <element name="MonthSummary" positionX="-18" positionY="135" width="128" height="270"/>
-        <element name="ParkingRegion" positionX="-63" positionY="-18" width="128" height="313"/>
+        <element name="ParkingRegion" positionX="-63" positionY="-18" width="128" height="343"/>
         <element name="RegionGroup" positionX="-18" positionY="135" width="128" height="253"/>
         <element name="TrafficJam" positionX="-27" positionY="126" width="128" height="253"/>
         <element name="TripSummary" positionX="-45" positionY="72" width="128" height="478"/>

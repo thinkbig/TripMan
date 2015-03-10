@@ -24,4 +24,20 @@
     return [[CLLocation alloc] initWithLatitude:[self.center_lat doubleValue] longitude:[self.center_lon doubleValue]];
 }
 
+- (NSDictionary*) toJsonDict
+{
+    NSMutableDictionary * mutableDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:self.center_lat, @"gps_lat", self.center_lon, @"gps_lon", nil];
+    
+    if (self.parking_id.length > 0) mutableDict[@"pid"] = self.parking_id;
+    if (self.nearby_poi.length > 0) mutableDict[@"nearby_poi"] = self.nearby_poi;
+    if (self.user_mark.length > 0) mutableDict[@"user_mark"] = self.user_mark;
+    if (self.province.length > 0) mutableDict[@"province"] = self.province;
+    if (self.city.length > 0) mutableDict[@"city"] = self.city;
+    if (self.district.length > 0) mutableDict[@"district"] = self.district;
+    if (self.street.length > 0) mutableDict[@"street"] = self.street;
+    if (self.street_num.length > 0) mutableDict[@"street_num"] = self.street_num;
+
+    return mutableDict;
+}
+
 @end

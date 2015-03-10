@@ -213,7 +213,7 @@
     return nil;
 }
 
-- (NSDictionary*)requestParam {
+- (id)requestParam {
     return nil;
 }
 

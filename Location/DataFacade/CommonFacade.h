@@ -56,7 +56,7 @@ typedef NS_ENUM(NSUInteger, eCallbackStrategy) {
 - (eRequestType)requestType;
 - (NSString *)getPath;
 - (NSDictionary*)requestHeader;
-- (NSDictionary*)requestParam;
+- (id)requestParam;
 
 - (id)parseRespData:(id)data error:(NSError **)err;
 

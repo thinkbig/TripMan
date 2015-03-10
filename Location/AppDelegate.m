@@ -17,7 +17,7 @@
 #import "DataReporter.h"
 
 static NSString * rebuildKey = @"kLocationForceRebuildKey";
-static NSString * rebuildVal = @"value_0000000000002"; // make sure it is different if this version should rebuild db
+static NSString * rebuildVal = @"value_0000000000008"; // make sure it is different if this version should rebuild db
 
 @implementation AppDelegate
 
@@ -36,6 +36,9 @@ static NSString * rebuildVal = @"value_0000000000002"; // make sure it is differ
     [[AFNetworkReachabilityManager sharedManager] setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
         self.netStat = status;
     }];
+    
+    [application setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
+    
     
     // Sign up for a developer account at: https://www.cintric.com/register
     //[CintricFind initWithApiKey:@"3c601eda17508279e5fcda88bc314061" andSecret:@"66d480af63780e19b4448f9eae7829e9"];
@@ -143,7 +146,7 @@ static NSString * rebuildVal = @"value_0000000000002"; // make sure it is differ
 {
     NSString * dt = [[[deviceToken description] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]] stringByReplacingOccurrencesOfString:@" " withString:@""];
     [[NSUserDefaults standardUserDefaults] setValue:dt forKey:kDeviceToken];
-    [DataReporter asyncUserDeviceInfo];
+    [[DataReporter sharedInst] asyncUserDeviceInfo];
     
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     [currentInstallation setDeviceTokenFromData:deviceToken];
@@ -213,14 +216,16 @@ static NSString * rebuildVal = @"value_0000000000002"; // make sure it is differ
 {
     DDLogWarn(@"@@@@@@@@@@@@@ applicationDidBecomeActive @@@@@@@@@@@@@");
     
+    [[DataReporter sharedInst] asyncUserDeviceInfo];
+    
     if (!IS_UPDATING) {
         [[GPSLogger sharedLogger].offTimeAnalyzer rollOutOfDateTrip];
         
         [[BussinessDataProvider sharedInstance] updateWeatherToday:nil];
         [[BussinessDataProvider sharedInstance] updateAllRegionInfo:YES];
+        
+        [[DataReporter sharedInst] aliveAsync];
     }
-    
-    [DataReporter asyncUserDeviceInfo];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -231,6 +236,25 @@ static NSString * rebuildVal = @"value_0000000000002"; // make sure it is differ
         [DDLog flushLog];
         [[AnaDbManager deviceDb] commit];
         [self.locationTracker updateCurrentLocation];
+    }
+}
+
+- (void)application:(UIApplication *)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
+{
+    DDLogWarn(@"############## Background fetch started... #############");
+    
+    //---do background fetch here---
+    // You have up to 30 seconds to perform the fetch
+    
+    if (!IS_UPDATING) {
+        [[DataReporter sharedInst] asyncFromBackgroundFetch:^(eReportReslut result) {
+            DDLogWarn(@"############## Background fetch result (%lu) ... #############", result);
+            if (eReportReslutComplete == result) {
+                completionHandler(UIBackgroundFetchResultNewData);
+            } else {
+                completionHandler(UIBackgroundFetchResultFailed);
+            }
+        }];
     }
 }
 

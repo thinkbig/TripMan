@@ -13,4 +13,6 @@
 - (NSString*) nameWithDefault:(NSString*)defaultName;
 - (CLLocation*) centerLocation;
 
+- (NSDictionary*) toJsonDict;
+
 @end

@@ -35,11 +35,18 @@
 
 - (NSArray*) allParkingDetails;
 
+// trip data for report
+- (NSArray*) parkingRegionsToReport:(BOOL)forceAll;
+- (NSArray*) tripsReadyToReport:(BOOL)forceAll;
+- (NSArray*) tripRawsReadyToReport;
+
+// trips for display
 - (TripSummary*) unfinishedTrip;
 - (TripSummary*) prevTripBy:(TripSummary*)curTrip;
 - (TripSummary*) lastTrip;
 - (NSArray*) allTrips;
 - (NSArray*) unAnalyzedTrips;
+- (NSArray*) allFinishedTrips;
 - (NSArray*) tripStartFrom:(NSDate*)fromDate toDate:(NSDate*)toDate;
 - (NSArray*) mostUsefulTripsLimit:(NSUInteger)limit;
 

@@ -106,4 +106,9 @@
     return [self.speed doubleValue] > 0 ? [self.speed doubleValue] : 0;
 }
 
+- (NSArray*) toArray
+{
+    return @[@([_timestamp timeIntervalSince1970]), _latitude, _longitude, _altitude, _horizontalAccuracy, _verticalAccuracy, _course, _speed, _accelerationX, _accelerationY, _accelerationZ];
+}
+
 @end

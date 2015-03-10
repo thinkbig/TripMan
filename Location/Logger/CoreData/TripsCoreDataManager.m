@@ -133,6 +133,35 @@
     return [self.parkingDetails copy];
 }
 
+- (NSArray*) parkingRegionsToReport:(BOOL)forceAll
+{
+    if (forceAll) {
+        return [ParkingRegion where:@"is_temp==NO" inContext:self.tripAnalyzerContent];
+    }
+    // 不管是否获得了poi名称，先把gps位置上传
+    NSArray * all = [ParkingRegion where:@"parking_id==nil && is_temp==NO" inContext:self.tripAnalyzerContent];
+    if (0 == all.count) {
+        // is_uploaded=NO表示poi名称没有上传，is_analyzed==YES表示poi名称已经获得了
+        all = [ParkingRegion where:@"is_analyzed==YES && is_uploaded==NO && is_temp==NO" inContext:self.tripAnalyzerContent];
+    }
+    return all;
+}
+
+- (NSArray*) tripsReadyToReport:(BOOL)forceAll
+{
+    if (forceAll) {
+        return [TripSummary where:@"end_date!=nil && is_analyzed==YES" inContext:self.tripAnalyzerContent order:@{@"start_date": @"DESC"}];
+    }
+    // 已经结束并且分析完成，但还没有上传过的旅程（没有trip_id）
+    return [TripSummary where:@"end_date!=nil && is_analyzed==YES && trip_id==nil" inContext:self.tripAnalyzerContent order:@{@"start_date": @"DESC"}];
+}
+
+- (NSArray*) tripRawsReadyToReport
+{
+    // 已经结束并且获得了trip_id，但还没有上传原始gps数据（is_uploaded==NO）的旅程
+    return [TripSummary where:@"end_date!=nil && trip_id!=nil && is_uploaded==NO" inContext:self.tripAnalyzerContent order:@{@"start_date": @"DESC"}];
+}
+
 - (ParkingRegionDetail*) parkingDetailForCoordinate:(CLLocationCoordinate2D)coordinate
 {
     if (!CLLocationCoordinate2DIsValid(coordinate)) {
@@ -212,7 +241,7 @@
 
 - (TripSummary*) unfinishedTrip
 {
-    NSArray * trips = [TripSummary where:@"start_date!=nil AND end_date==nil" inContext:self.tripAnalyzerContent order:@{@"start_date": @"DESC"} limit:@(1)];
+    NSArray * trips = [TripSummary where:@"start_date!=nil && end_date==nil" inContext:self.tripAnalyzerContent order:@{@"start_date": @"DESC"} limit:@(1)];
     if (trips.count > 0) {
         return trips[0];
     }
@@ -245,7 +274,12 @@
 
 - (NSArray*) unAnalyzedTrips
 {
-    return [TripSummary where:@"start_date!=nil AND is_analyzed!=YES" inContext:self.tripAnalyzerContent order:@{@"start_date": @"DESC"}];
+    return [TripSummary where:@"start_date!=nil && is_analyzed!=YES" inContext:self.tripAnalyzerContent order:@{@"start_date": @"DESC"}];
+}
+
+- (NSArray*) allFinishedTrips
+{
+    return [TripSummary where:@"end_date!=nil" inContext:self.tripAnalyzerContent order:@{@"start_date": @"DESC"}];
 }
 
 - (NSArray*) tripStartFrom:(NSDate*)fromDate toDate:(NSDate*)toDate
@@ -256,7 +290,7 @@
     if (nil == toDate) {
         toDate = [NSDate distantFuture];
     }
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(start_date >= %@) AND (start_date <= %@)", fromDate, toDate];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(start_date >= %@) && (start_date <= %@)", fromDate, toDate];
     return [TripSummary where:predicate inContext:self.tripAnalyzerContent order:@{@"start_date": @"DESC"}];
 }
 
