@@ -19,7 +19,7 @@
 }
 
 - (eSerializationType)requestSerializationType {
-    return eSerializationJsonType;
+    return eSerializationJsonGzipType;
 }
 
 - (id)requestParam

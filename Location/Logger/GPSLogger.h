@@ -10,6 +10,7 @@
 #import "GPSDefine.h"
 #import "GPSFMDBLogger.h"
 #import "DDFileLogger.h"
+#import "GPSAnalyzerRealTime.h"
 #import "GPSAnalyzerOffTime.h"
 #import "GPSEventItem.h"
 #import "DDLog+CustomTime.h"
@@ -25,6 +26,7 @@ typedef NS_ENUM(NSUInteger, eMotionStat) {
 @interface GPSLogger : NSObject
 
 @property (nonatomic, strong) GPSFMDBLogger *                   dbLogger;
+@property (nonatomic, strong) GPSAnalyzerRealTime *             gpsAnalyzer;
 @property (nonatomic, strong) GPSAnalyzerOffTime *              offTimeAnalyzer;
 @property (nonatomic, strong) DDFileLogger *                    fileLogger;
 

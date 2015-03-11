@@ -28,6 +28,10 @@
 @property (nonatomic, strong) NSNumber   *          accelerationY;
 @property (nonatomic, strong) NSNumber   *          accelerationZ;
 
+// helper property
+@property (nonatomic) float angle;      // 和上一个点的矢量方向
+@property (nonatomic) float angleDiff;  // 和上一个点矢量方向的差
+
 - (id)initWithLogMessage:(DDLogMessage *)logMessage;
 - (id)initWithDBResultSet:(FMResultSet*)resultSet;
 - (id)initWithEventItem:(GPSEventItem*)event;

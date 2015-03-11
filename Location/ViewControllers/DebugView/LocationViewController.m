@@ -26,6 +26,11 @@
     
     UITapGestureRecognizer * tapUdid = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapUdid)];
     [self.udidLabel addGestureRecognizer:tapUdid];
+    
+    UITapGestureRecognizer * tapReport = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(updateReport)];
+    [self.reportLabel addGestureRecognizer:tapReport];
+    
+    [self updateReport];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -52,6 +57,12 @@
 
 - (IBAction)forceReport:(id)sender {
     [[DataReporter sharedInst] forceAsync];
+}
+
+- (void) updateReport {
+    TripsCoreDataManager * manager = [AnaDbManager deviceDb];
+    NSString * report = [NSString stringWithFormat:@"尚未上报：停车位置(%ld)  旅程详情(%ld)  原始gps(%ld)", [manager parkingRegionsToReport:NO].count, [manager tripsReadyToReport:NO].count, [manager tripRawsReadyToReport].count];
+    self.reportLabel.text = report;
 }
 
 - (void) tapUid {

@@ -29,7 +29,7 @@
 }
 
 - (eSerializationType)requestSerializationType {
-    return eSerializationJsonType;
+    return eSerializationJsonGzipType;
 }
 
 - (NSDictionary*)requestParam

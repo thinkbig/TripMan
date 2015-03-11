@@ -120,7 +120,7 @@ static NSString * rebuildVal = @"value_0000000000008"; // make sure it is differ
         self.afNetworkLogger = [[AFNetworkActivityLogger alloc] init];
         self.afNetworkLogger.level = AFLoggerLevelDebug;
     }
-    [self.afNetworkLogger startLogging];
+    //[self.afNetworkLogger startLogging];
     
     [DDLog addLogger:[DDASLLogger sharedInstance]];
     [DDLog addLogger:[DDTTYLogger sharedInstance]];

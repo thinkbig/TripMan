@@ -36,6 +36,9 @@
     GPSLogItem *        _maxDistItem;
     CGFloat             _maxDist;
     
+    CGFloat             _angleDiffTol;
+    NSInteger           _angleDiffCnt;          // 用于计算最近10个gps点的轨迹，是否近似线性，是否是跳变
+    
 }
 
 @property (nonatomic, strong) NSTimer *                 lostGPSTimer;
@@ -43,7 +46,6 @@
 @property (nonatomic, strong) NSMutableArray *          logArr;
 @property (nonatomic, strong) GPSLogItem *              lastLogItem;
 @property (nonatomic, strong) GPSLogItem *              locChangeLogItem;
-@property (nonatomic, strong) NSMutableArray *          angleArr;
 @property (nonatomic) NSInteger                         removeThreshold;
 
 @end
@@ -60,7 +62,6 @@
         _endSpeedTraceIdx = 0;
         self.removeThreshold = 20;
         self.locChangeLogItem = nil;
-        self.angleArr = [NSMutableArray arrayWithCapacity:128];
         self.logArr = [NSMutableArray arrayWithCapacity:128];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didExitReagion:) name:kNotifyExitReagion object:nil];
@@ -146,6 +147,31 @@
         _endSpeedTraceCnt++;
         
         self.lastLogItem = gps;
+        if (lastGps) {
+            // 计算轨迹夹角，用于判断是否是正常行驶（还是gps跳变）
+            gps.angle = [GPSOffTimeFilter angleFromPoint:[GPSOffTimeFilter coor2Point:lastGps.locationCoordinate] toPoint:[GPSOffTimeFilter coor2Point:gps.locationCoordinate]];
+            if (self.logArr.count > 1) {
+                gps.angleDiff = fabsf(gps.angle - lastGps.angle);
+                
+                if (self.logArr.count > 10) {
+                    CGFloat maxAngle = gps.angleDiff;   // 去掉一个最大值
+                    CGFloat angleDiff = gps.angleDiff;
+                    NSInteger angleCnt = 10;
+                    NSArray * subArr = [self.logArr subarrayWithRange:NSMakeRange(self.logArr.count-angleCnt, angleCnt)];
+                    for (GPSLogItem * item in subArr) {
+                        maxAngle = MAX(maxAngle, item.angleDiff);
+                        angleDiff += item.angleDiff;
+                    }
+                    CGFloat avgAngle = (angleDiff-maxAngle)/angleCnt;
+                    self.moveStat = (avgAngle < 60 && maxAngle > 0) ? eMoveStatLine : eMoveStatJump;
+                } else {
+                    self.moveStat = eMoveStatUnknow;
+                }
+            } else {
+                self.moveStat = eMoveStatUnknow;
+            }
+        }
+
         [self.logArr addObject:gps];
         
         if (speed > cInsTrafficJamSpeed) {
@@ -161,7 +187,7 @@
     }
     if ([_isInTrip boolValue] && [gps.horizontalAccuracy doubleValue] > kLowHorizontalAccuracy) {
         if ([gps.timestamp timeIntervalSinceDate:_driveStart.timestamp] > 10*60) {
-            // the car should drive at least 420 meter after start drive 10 min
+            // the car should drive at least 400 meter after start drive 10 min
             if (_maxDist > 0 && _maxDist < 400) {
                 stat = eMotionStatStationary;
             }
@@ -174,31 +200,15 @@
         CGFloat dist = [self.locChangeLogItem distanceFrom:gps];
         if (dist > 400) {
             self.locChangeLogItem = gps;
-            [self.angleArr removeAllObjects];
         } else {
             if (self.lastLogItem && stat > eMotionStatStationary) {
-                CGFloat angle = [GPSOffTimeFilter angleFromPoint:[GPSOffTimeFilter coor2Point:lastGps.locationCoordinate] toPoint:[GPSOffTimeFilter coor2Point:gps.locationCoordinate]];
-                [self.angleArr addObject:@(angle)];
                 NSTimeInterval during = [gps.timestamp timeIntervalSinceDate:self.locChangeLogItem.timestamp];
-                // the car should drive at least 420 meter after start drive 10 min
-                if (during > 10*60 && self.angleArr.count > 0) {
-                    // check if the angle is in a line
-                    CGFloat tolAngle = 0;
-                    for (NSNumber * angle in self.angleArr) {
-                        tolAngle += [angle floatValue];
-                    }
-                    CGFloat avgAngle = tolAngle/self.angleArr.count;
-                    CGFloat diff = 0;
-                    for (NSNumber * angle in self.angleArr) {
-                        diff += fabsf([angle floatValue]-avgAngle);
-                    }
-                    diff /= self.angleArr.count;
-                    if (diff > 60) {
-                        // move less than 400 in 10 min, and the direction is jumping
+                // the car should drive at least 400 meter after start drive 10 min
+                if (during > 10*60) {
+                    if (self.moveStat == eMoveStatJump) {
                         stat = eMotionStatStationary;
                     }
                     self.locChangeLogItem = gps;
-                    [self.angleArr removeAllObjects];
                 }
             }
             
@@ -276,7 +286,7 @@
                     _endSpeedTraceCnt--;
                     _endSpeedTraceIdx = i+1;
                 } else {
-                    _endSpeedTraceIdx = i+1;
+                    //_endSpeedTraceIdx = i+1;
                     break;
                 }
             }
@@ -365,7 +375,6 @@
     if (!isInTrip && eStat == eMotionStatDriving)
     {
         [self setIsInTrip:YES];
-        [self.angleArr removeAllObjects];
         self.locChangeLogItem = nil;
     }
     else if (isInTrip && (eStat < eMotionStatWalking))
@@ -376,7 +385,6 @@
         _startSpeedTrace = _endSpeedTrace = 0;
         _startSpeedTraceCnt = _endSpeedTraceCnt = 0;
         _startSpeedTraceIdx = _endSpeedTraceIdx = _startMoveTraceIdx = 0;
-        [self.angleArr removeAllObjects];
         self.locChangeLogItem = nil;
         [self.logArr removeAllObjects];
     }

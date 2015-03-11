@@ -45,8 +45,8 @@
         return nil;
     }
     NSMutableDictionary * mutableDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                         @([self.start_date timeIntervalSince1970]), @"start_date",
-                                         @([self.end_date timeIntervalSince1970]), @"end_date",
+                                         @((unsigned long long)[self.start_date timeIntervalSince1970]), @"start_date",
+                                         @((unsigned long long)[self.end_date timeIntervalSince1970]), @"end_date",
                                          self.region_group.start_region.parking_id, @"st_parkingId",
                                          self.region_group.end_region.parking_id, @"ed_parkingId", nil];
     

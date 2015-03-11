@@ -9,7 +9,6 @@
 #import "GPSLogger.h"
 #import "GPSFileLogFormatter.h"
 #import "DDFileLogger.h"
-#import "GPSAnalyzerRealTime.h"
 
 @interface GPSLogger () {
     
@@ -17,7 +16,6 @@
     
 }
 
-@property (nonatomic, strong) GPSAnalyzerRealTime *             gpsAnalyzer;
 @property (nonatomic, strong) NSDate *                          driveStartDate;
 @property (nonatomic, strong) NSDate *                          driveEndDate;
 

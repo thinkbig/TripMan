@@ -12,12 +12,9 @@
 #import "CTTripReportFacade.h"
 #import "CTTripRawReportFacade.h"
 #import "NSDate+Utilities.h"
+#import "UIAlertView+RZCompletionBlocks.h"
 
-#define BG_ASYNC_DURING                 28
-
-#define LOC_ASYNC_PERSENTAGE            10
-#define TRIP_ASYNC_PERSENTAGE           40
-#define TRIP_RAW_ASYNC_PERSENTAGE       100
+#define BG_ASYNC_DURING                 29
 
 typedef NS_ENUM(NSUInteger, eReportType) {
     eReportTypeLocation = 1,
@@ -66,8 +63,9 @@ typedef NS_ENUM(NSUInteger, eReportType) {
 
 @property (nonatomic, strong)   NSDate *                asyncBefore;        // 设置一个时间阈值，超过这个时间，则停止同步
 @property (nonatomic, copy)     ReportCompleteBlock     bgFetchBlock;
-@property (nonatomic)           float                   persentage;
-@property (nonatomic)           BOOL                    showProgress;
+
+@property (nonatomic)           NSInteger               finishCnt;
+@property (nonatomic)           NSInteger               tolCnt;
 @property (nonatomic)           BOOL                    forceAsyncAll;      // 强制同步所有数据（会有一个模态的进度条）
 
 @end
@@ -108,7 +106,7 @@ typedef NS_ENUM(NSUInteger, eReportType) {
 }
 
 - (void) applicationEnterBackground {
-    self.showProgress = NO;
+    self.forceAsyncAll = NO;
     self.asyncBefore = [NSDate dateWithTimeIntervalSinceNow:BG_ASYNC_DURING];
 }
 
@@ -135,7 +133,6 @@ typedef NS_ENUM(NSUInteger, eReportType) {
 {
     [[GToolUtil sharedInstance] showPieHUDWithText:@"同步中..." andProgress:0];
     
-    self.persentage = 0;
     // check location reporter task
     NSArray * newLoc = [[AnaDbManager deviceDb] parkingRegionsToReport:YES];
     if (newLoc.count > 0) {
@@ -148,8 +145,9 @@ typedef NS_ENUM(NSUInteger, eReportType) {
         self.pendingTripsDetail = [NSMutableArray arrayWithArray:newTrip];
         self.pendingTripsRaw = [NSMutableArray arrayWithArray:newTrip];
     }
+    self.finishCnt = 0;
+    self.tolCnt = newLoc.count + newTrip.count*2;
     
-    self.showProgress = YES;
     self.forceAsyncAll = YES;
     [self runBackgroundTask:0];
 }
@@ -192,24 +190,29 @@ typedef NS_ENUM(NSUInteger, eReportType) {
 
 - (void) __autoAsync
 {
-    if (_asyncingReport || (self.onlyWifiReport && !IS_WIFI) || [[NSDate date] isLaterThanDate:self.asyncBefore]) {
+    if (_asyncingReport) {
+        return;
+    } else if ((self.onlyWifiReport && !IS_WIFI) || [[NSDate date] isLaterThanDate:self.asyncBefore]) {
         [self __setRportResult:eReportReslutHalt];
-        self.showProgress = NO;
-        self.forceAsyncAll = NO;
+        if (self.forceAsyncAll) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[GToolUtil sharedInstance] showPieHUDWithText:@"同步中断（可能不在wifi下）" andProgress:100];
+            });
+            self.forceAsyncAll = NO;
+        }
         return;
     }
     _asyncingReport = YES;
-    ReportTask * task = [self __getTask:5];
+    ReportTask * task = [self __getTask:3];
     if (nil == task) {
         _asyncingReport = NO;
         [self __setRportResult:eReportReslutComplete];
-        if (self.showProgress) {
+        if (self.forceAsyncAll) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [[GToolUtil sharedInstance] showPieHUDWithText:@"同步完成" andProgress:100];
             });
+            self.forceAsyncAll = NO;
         }
-        self.showProgress = NO;
-        self.forceAsyncAll = NO;
         return;
     }
     
@@ -217,7 +220,7 @@ typedef NS_ENUM(NSUInteger, eReportType) {
     
     NSArray * items = task.items;
     NSInteger tolCnt = items.count;
-    NSMutableArray * completeItems = [NSMutableArray arrayWithCapacity:16];
+    NSMutableArray * completeItems = [NSMutableArray arrayWithCapacity:8];
     
     dispatch_queue_t concurrent_queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_group_t downloadGroup = dispatch_group_create();
@@ -307,9 +310,19 @@ typedef NS_ENUM(NSUInteger, eReportType) {
         if (tolCnt > 1 && 0 == completeItems.count) {
             // all report failed
             [self __setRportResult:eReportReslutFail];
-            _asyncingReport = NO;
-            self.showProgress = NO;
-            self.forceAsyncAll = NO;
+            if (self.forceAsyncAll && self.tolCnt > 0) {
+                NSLog(@"fail reporting and choose retry");
+                _asyncingReport = NO;
+                UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"同步出错" message:@"是否继续" delegate:nil cancelButtonTitle:@"否" otherButtonTitles:@"继续", nil];
+                [alert rz_showWithCompletionBlock:^(NSInteger dismissalButtonIndex) {
+                    if (0 == dismissalButtonIndex) {
+                        self.forceAsyncAll = NO;
+                        [[GToolUtil sharedInstance] showPieHUDWithText:@"同步出错" andProgress:100];
+                    } else {
+                        [self runBackgroundTask:0];
+                    }
+                }];
+            }
             return;
         }
         for (id item in completeItems) {
@@ -324,8 +337,10 @@ typedef NS_ENUM(NSUInteger, eReportType) {
         
         _asyncingReport = NO;
         
-        if (self.showProgress) {
-            [[GToolUtil sharedInstance] showPieHUDWithText:@"同步中..." andProgress:self.persentage];
+        if (self.forceAsyncAll && self.tolCnt > 0) {
+            self.finishCnt += completeItems.count;
+            CGFloat progress = MAX(1, (100.0*self.finishCnt/self.tolCnt));
+            [[GToolUtil sharedInstance] showPieHUDWithText:@"同步中..." andProgress:progress];
         }
         
         [self runBackgroundTask:0];
@@ -340,21 +355,16 @@ typedef NS_ENUM(NSUInteger, eReportType) {
         parallel = 5;
     }
     
-    NSLog(@"report progress: %f", self.persentage);
-    
     // check location reporter task
     if (0 == self.pendingLocation.count && !self.forceAsyncAll) {
         NSArray * newLoc = [[AnaDbManager deviceDb] parkingRegionsToReport:NO];
         if (newLoc.count > 0) {
             self.pendingLocation = [NSMutableArray arrayWithArray:newLoc];
-            self.persentage = 0;
             _tolLocAyncCnt = newLoc.count;
         }
     }
     if (self.pendingLocation.count > 0) {
         NSInteger thisCnt = MIN(parallel, self.pendingLocation.count);
-        self.persentage += (thisCnt/_tolLocAyncCnt)*(LOC_ASYNC_PERSENTAGE-0);
-        self.persentage = MIN(self.persentage, LOC_ASYNC_PERSENTAGE);
         return [[ReportTask alloc] initWithType:eReportTypeLocation andItems:[self.pendingLocation subarrayWithRange:NSMakeRange(0, thisCnt)]];
     }
     
@@ -363,14 +373,11 @@ typedef NS_ENUM(NSUInteger, eReportType) {
         NSArray * newTrip = [[AnaDbManager deviceDb] tripsReadyToReport:NO];
         if (newTrip.count > 0) {
             self.pendingTripsDetail = [NSMutableArray arrayWithArray:newTrip];
-            self.persentage = LOC_ASYNC_PERSENTAGE;
             _tolTripAyncCnt = newTrip.count;
         }
     }
     if (self.pendingTripsDetail.count > 0) {
         NSInteger thisCnt = MIN(parallel, self.pendingTripsDetail.count);
-        self.persentage += (thisCnt/_tolTripAyncCnt)*(TRIP_ASYNC_PERSENTAGE-LOC_ASYNC_PERSENTAGE);
-        self.persentage = MIN(self.persentage, TRIP_ASYNC_PERSENTAGE);
         return [[ReportTask alloc] initWithType:eReportTypeTripDetail andItems:[self.pendingTripsDetail subarrayWithRange:NSMakeRange(0, thisCnt)]];
     }
     
@@ -379,14 +386,11 @@ typedef NS_ENUM(NSUInteger, eReportType) {
         NSArray * newTripRaw = [[AnaDbManager deviceDb] tripRawsReadyToReport];
         if (newTripRaw.count > 0) {
             self.pendingTripsRaw = [NSMutableArray arrayWithArray:newTripRaw];
-            self.persentage = TRIP_ASYNC_PERSENTAGE;
             _tolTripRawAyncCnt = newTripRaw.count;
         }
     }
     if (self.pendingTripsRaw.count > 0) {
         NSInteger thisCnt = MIN(parallel, self.pendingTripsRaw.count);
-        self.persentage += (thisCnt/_tolTripRawAyncCnt)*(TRIP_RAW_ASYNC_PERSENTAGE-TRIP_ASYNC_PERSENTAGE);
-        self.persentage = MIN(self.persentage, TRIP_RAW_ASYNC_PERSENTAGE);
         return [[ReportTask alloc] initWithType:eReportTypeTripRaw andItems:[self.pendingTripsRaw subarrayWithRange:NSMakeRange(0, thisCnt)]];
     }
     

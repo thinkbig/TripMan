@@ -13,6 +13,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *uidLabel;
 @property (weak, nonatomic) IBOutlet UILabel *udidLabel;
 @property (weak, nonatomic) IBOutlet UILabel *envLabel;
+@property (weak, nonatomic) IBOutlet UILabel *reportLabel;
 
 - (IBAction)forceReport:(id)sender;
 

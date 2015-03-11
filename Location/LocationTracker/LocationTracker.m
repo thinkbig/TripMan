@@ -501,7 +501,7 @@ typedef enum
         NSInteger exitCnt = [self.regionExitRecorder[region.identifier] integerValue];
         if (exitCnt > 0) {
             float theRadius = region.radius + 50;
-            if (theRadius < 600) {
+            if (theRadius < 500) {
                 CLLocationManager *locationManager = self.locationManager;
                 CLCircularRegion* theRegion = [[CLCircularRegion alloc] initWithCenter:region.center radius:theRadius identifier:region.identifier];
                 [locationManager startMonitoringForRegion:theRegion];
@@ -685,7 +685,15 @@ typedef enum
                 _lastStationaryDate = nil;
             }
             if (_lastStationaryDate && [mostAccuracyLocation.timestamp timeIntervalSinceDate:_lastStationaryDate] > cCanStopMonitoringThreshold) {
-                _keepMonitoring = NO;
+                NSTimeInterval timeGap = [mostAccuracyLocation.timestamp timeIntervalSinceDate:_lastStationaryDate];
+                eMoveStat moveStat = [GPSLogger sharedLogger].gpsAnalyzer.moveStat;
+                if (eMoveStatLine == moveStat) {
+                    if (timeGap > cCanStopMonitoringThreshold*2) {
+                        _keepMonitoring = NO;
+                    }
+                } else if (timeGap > cCanStopMonitoringThreshold) {
+                    _keepMonitoring = NO;
+                }
             }
             if (nil == _lastStationaryDate && calSpeed < cInsWalkingSpeed) {
                 _lastStationaryDate = mostAccuracyLocation.timestamp;

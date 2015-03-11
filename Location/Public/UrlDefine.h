@@ -9,10 +9,10 @@
 #ifndef TripMan_UrlDefine_h
 #define TripMan_UrlDefine_h
 
-//#define kChetuBaseUrl       @"http://121.40.193.34:80/"    // prod
+#define kChetuBaseUrl       @"http://121.40.193.34:80/"    // prod
 
 //#define kChetuBaseUrl       @"http://localhost:8000/"     //local
-#define kChetuBaseUrl       @"http://172.16.33.59:8000/"    //local ip
+//#define kChetuBaseUrl       @"http://172.16.33.59:8000/"    //local ip
 
 
 #define ENV_DEVICE_TYPE_IOS     @"1"        // 0=unknow, 1=iOS, 2=Android, 3=OBD

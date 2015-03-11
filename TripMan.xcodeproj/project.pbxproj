@@ -176,6 +176,7 @@
 		A399C9FB1A12E0CA00665917 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A399C9FA1A12E0CA00665917 /* Main.storyboard */; };
 		A399CA051A12F5EE00665917 /* TripManUnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A399CA041A12F5EE00665917 /* TripManUnitTests.m */; };
 		A39E30CE1AAC6B79004F0D95 /* TrafficJam+Fetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = A39E30CD1AAC6B79004F0D95 /* TrafficJam+Fetcher.m */; };
+		A39E30D11AAFE5CE004F0D95 /* CTGzipTestFacade.m in Sources */ = {isa = PBXBuildFile; fileRef = A39E30D01AAFE5CE004F0D95 /* CTGzipTestFacade.m */; };
 		A3A2092C1A7619A000C17DF3 /* DaySummary+Fetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = A3A2092B1A7619A000C17DF3 /* DaySummary+Fetcher.m */; };
 		A3B5DFC91A49200C00576F77 /* FXLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = A3B5DFC81A49200C00576F77 /* FXLabel.m */; };
 		A3BD72AC1A14F2B00007ECA1 /* BaiduRoadMarkFacade.m in Sources */ = {isa = PBXBuildFile; fileRef = A3BD72AB1A14F2B00007ECA1 /* BaiduRoadMarkFacade.m */; };
@@ -551,6 +552,8 @@
 		A399CA041A12F5EE00665917 /* TripManUnitTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TripManUnitTests.m; sourceTree = "<group>"; };
 		A39E30CC1AAC6B79004F0D95 /* TrafficJam+Fetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TrafficJam+Fetcher.h"; sourceTree = "<group>"; };
 		A39E30CD1AAC6B79004F0D95 /* TrafficJam+Fetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TrafficJam+Fetcher.m"; sourceTree = "<group>"; };
+		A39E30CF1AAFE5CE004F0D95 /* CTGzipTestFacade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTGzipTestFacade.h; sourceTree = "<group>"; };
+		A39E30D01AAFE5CE004F0D95 /* CTGzipTestFacade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTGzipTestFacade.m; sourceTree = "<group>"; };
 		A3A2092A1A7619A000C17DF3 /* DaySummary+Fetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DaySummary+Fetcher.h"; sourceTree = "<group>"; };
 		A3A2092B1A7619A000C17DF3 /* DaySummary+Fetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "DaySummary+Fetcher.m"; sourceTree = "<group>"; };
 		A3B5DFC71A49200C00576F77 /* FXLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXLabel.h; sourceTree = "<group>"; };
@@ -1688,6 +1691,8 @@
 				A35C26801A48FCE2005F6658 /* CTPOI */,
 				A35C267D1A48FC70005F6658 /* BaseChetuFacade.h */,
 				A35C267E1A48FC70005F6658 /* BaseChetuFacade.m */,
+				A39E30CF1AAFE5CE004F0D95 /* CTGzipTestFacade.h */,
+				A39E30D01AAFE5CE004F0D95 /* CTGzipTestFacade.m */,
 			);
 			path = CheTuApi;
 			sourceTree = "<group>";
@@ -2350,6 +2355,7 @@
 				A3CD728A19D14430005F84E2 /* GeoTransformer.m in Sources */,
 				A35C264A1A426F4B005F6658 /* RZWaiter.m in Sources */,
 				A35C262E1A426F4B005F6658 /* UIFont+RZExtensions.m in Sources */,
+				A39E30D11AAFE5CE004F0D95 /* CTGzipTestFacade.m in Sources */,
 				A35C26291A426F4B005F6658 /* NSString+RZStringFormatting.m in Sources */,
 				A35C26771A4808EC005F6658 /* POICategory.m in Sources */,
 				A35BC75E1AAB1CBE00D726D4 /* EnvInfo.m in Sources */,

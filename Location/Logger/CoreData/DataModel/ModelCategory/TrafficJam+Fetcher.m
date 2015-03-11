@@ -16,8 +16,8 @@
     
     NSMutableDictionary * mutableDict = [NSMutableDictionary dictionary];
     
-    mutableDict[@"st"] = @[@([self.start_date timeIntervalSince1970]), self.start_lat, self.start_lon];
-    mutableDict[@"ed"] = @[@([self.end_date timeIntervalSince1970]), self.end_lat, self.end_lon];
+    mutableDict[@"st"] = @[@((unsigned long long)[self.start_date timeIntervalSince1970]), self.start_lat, self.start_lon];
+    mutableDict[@"ed"] = @[@((unsigned long long)[self.end_date timeIntervalSince1970]), self.end_lat, self.end_lon];
     mutableDict[@"avg_speed"] = self.traffic_avg_speed;
     
     return mutableDict;

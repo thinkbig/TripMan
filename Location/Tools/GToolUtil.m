@@ -83,7 +83,7 @@ static GToolUtil * _sharedUtil = nil;
     } else if (progress >= 100) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self.sharedPitHUD setProgress:1.0f animated:YES];
-            self.sharedPitHUD.textLabel.text = @"完成";
+            self.sharedPitHUD.textLabel.text = str;
             self.sharedPitHUD.detailTextLabel.text = nil;
             
             self.sharedPitHUD.layoutChangeAnimationDuration = 0.3;
