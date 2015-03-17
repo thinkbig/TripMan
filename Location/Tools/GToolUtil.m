@@ -117,7 +117,10 @@ static GToolUtil * _sharedUtil = nil;
     static NSString * kTripManDeviceIdKey = @"kTripManDeviceIdKey";
     NSString * oldId = [[FXKeychain defaultKeychain] objectForKey:kTripManDeviceIdKey];
     if (nil == oldId) {
-        oldId = [self createUUID];
+        oldId = [UIDevice currentDevice].identifierForVendor.UUIDString;
+        if (nil == oldId) {
+            oldId = [self createUUID];
+        }
         [[FXKeychain defaultKeychain] setObject:oldId forKey:kTripManDeviceIdKey];
     }
     return oldId;
@@ -155,6 +158,15 @@ static GToolUtil * _sharedUtil = nil;
     CLLocation * loc1 = [[CLLocation alloc] initWithLatitude:from.latitude longitude:from.longitude];
     CLLocation * loc2 = [[CLLocation alloc] initWithLatitude:to.latitude longitude:to.longitude];
     return [loc1 distanceFromLocation:loc2];
+}
+
++ (CLLocation*) dictToLocation:(NSDictionary*)dict
+{
+    CLLocationCoordinate2D coor = CLLocationCoordinate2DMake([dict[@"lat"] doubleValue], [dict[@"lon"] doubleValue]);
+    if ((coor.latitude == 0 && coor.longitude == 0) || !CLLocationCoordinate2DIsValid(coor)) {
+        return nil;
+    }
+    return [[CLLocation alloc] initWithLatitude:coor.latitude longitude:coor.longitude];
 }
 
 @end

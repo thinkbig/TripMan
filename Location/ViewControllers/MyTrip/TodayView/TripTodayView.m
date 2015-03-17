@@ -42,7 +42,7 @@
     NSString * duringStr = [NSString stringWithFormat:@"%.f", _totalDuringF/60.0];
     self.todayDuring.attributedText = [NSAttributedString stringWithNumber:duringStr font:[self.todayDuring.font fontWithSize:30] color:self.todayDuring.textColor andUnit:@"min" font:[self.todayDuring.font fontWithSize:14] color:self.todayDuring.textColor];
     
-    NSString * maxSpeedStr = [NSString stringWithFormat:@"%.1f", _maxSpeedF*3.6];
+    NSString * maxSpeedStr = [NSString stringWithFormat:@"%.f", _maxSpeedF*3.6];
     self.todayMaxSpeed.attributedText = [NSAttributedString stringWithNumber:maxSpeedStr font:[self.todayMaxSpeed.font fontWithSize:30] color:self.todayMaxSpeed.textColor andUnit:@"km/h" font:[self.todayMaxSpeed.font fontWithSize:14] color:self.todayMaxSpeed.textColor];
     
     self.tripCount.text = [NSString stringWithFormat:@"%lu", (unsigned long)_tripCntN];

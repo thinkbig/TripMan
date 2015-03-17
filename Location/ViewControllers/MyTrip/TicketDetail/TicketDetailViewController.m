@@ -58,11 +58,13 @@
     NSString * newUserSt = self.editCell.stAddress.text;
     NSString * newUsered = self.editCell.edAddress.text;
     if ((![newUserSt isEqualToString:_tripSum.region_group.start_region.nearby_poi]) &&
-        (![newUserSt isEqualToString:_tripSum.region_group.start_region.user_mark])) {
+        (![newUserSt isEqualToString:_tripSum.region_group.start_region.user_mark]) &&
+        (![newUserSt isEqualToString:@"未知地点"])) {
         return YES;
     }
     if ((![newUsered isEqualToString:_tripSum.region_group.end_region.nearby_poi]) &&
-        (![newUsered isEqualToString:_tripSum.region_group.end_region.user_mark])) {
+        (![newUsered isEqualToString:_tripSum.region_group.end_region.user_mark]) &&
+        (![newUserSt isEqualToString:@"未知地点"])) {
         return YES;
     }
     return NO;

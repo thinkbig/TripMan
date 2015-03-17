@@ -14,10 +14,11 @@
 #import "GeoTransformer.h"
 #import "TSPair.h"
 #import "TSCache.h"
-#import "BaiduRoadMarkFacade.h"
+#import "CTTrafficLightFacade.h"
 #import "UserWrapper.h"
 #import "AnaDbManager.h"
 #import "ParkingRegion+Fetcher.h"
+#import "CTBaseLocation.h"
 
 #define kLastestCityAndDate         @"kLastestCityAndDate"
 
@@ -126,6 +127,9 @@ static BussinessDataProvider * _sharedProvider = nil;
 
 - (void) updateWeatherToday:(CLLocation*)loc
 {
+    // 暂时不需要天气信息
+    return;
+    
     if (_isWeatherUpdating) {
         return;
     }
@@ -265,26 +269,50 @@ static BussinessDataProvider * _sharedProvider = nil;
         return;
     }
     
+    //只把一个trip拆成2段，不拆过细是因为无法判断是否高架，而且因为gps点不能完全保证落在路上，拆分过细会导致误报非常多的红绿灯
+    NSArray * locArr = nil;
+    CLLocation * first = [GToolUtil dictToLocation:ptArr[0]];
+    CLLocation * lastLoc = [GToolUtil dictToLocation:[ptArr lastObject]];
+    if (ptArr.count > 2) {
+        CLLocation * maxLoc = nil;     // 距离最远的点
+        CGFloat maxDist = 0;
+        for (int i = 1; i < ptArr.count; i++) {
+            CLLocation * curLoc = [GToolUtil dictToLocation:ptArr[i]];
+            CGFloat curDist = [first distanceFromLocation:curLoc];
+            if (maxDist < curDist) {
+                maxLoc = curLoc;
+                maxDist = curDist;
+            }
+        }
+        // 看最远的点是不是就在终点附近
+        if ([maxLoc distanceFromLocation:lastLoc] < 500) {
+            maxLoc = [GToolUtil dictToLocation:ptArr[ptArr.count/2]];
+        }
+        
+        // 把ptArr筛选到只有3个点
+        locArr = @[first, maxLoc, lastLoc];
+    } else {
+        locArr = @[first, lastLoc];
+    }
+
     NSMutableArray * trafficLights = [NSMutableArray arrayWithCapacity:16];
-    __block NSInteger trafficLightCnt = 0;
     __block NSError *error;
     dispatch_queue_t concurrent_queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_group_t downloadGroup = dispatch_group_create();
     
-    for (int i = 0; i < ptArr.count-1; i++) {
-        NSDictionary * first = ptArr[i];
-        NSDictionary * second = ptArr[i+1];
+    for (int i = 0; i < locArr.count-1; i++) {
+        CLLocation * first = locArr[i];
+        CLLocation * second = locArr[i+1];
         
-        BaiduRoadMarkFacade * facade = [BaiduRoadMarkFacade new];
-        facade.fromCoor = CLLocationCoordinate2DMake([first[@"lat"] doubleValue], [first[@"lon"] doubleValue]);
-        facade.toCoor = CLLocationCoordinate2DMake([second[@"lat"] doubleValue], [second[@"lon"] doubleValue]);
+        CTTrafficLightFacade * facade = [CTTrafficLightFacade new];
+        facade.fromCoorBD = [GeoTransformer earth2Baidu:first.coordinate];
+        facade.toCoorBD = [GeoTransformer earth2Baidu:second.coordinate];
         
         dispatch_group_enter(downloadGroup);
-        [facade requestWithSuccess:^(BaiduMarkModel * model) {
+        [facade requestWithSuccess:^(NSArray * lights) {
             dispatch_barrier_async(concurrent_queue, ^{
-                if (model.trafficLight) {
-                    [trafficLights addObjectsFromArray:model.trafficLight];
-                    trafficLightCnt += model.trafficLight.count-1;
+                if (lights.count > 0) {
+                    [trafficLights addObjectsFromArray:lights];
                 }
                 dispatch_group_leave(downloadGroup);
             });
@@ -295,16 +323,15 @@ static BussinessDataProvider * _sharedProvider = nil;
     }
     
     dispatch_group_notify(downloadGroup, dispatch_get_main_queue(), ^{
-        if (trafficLightCnt > 0 || nil == error) {
+        if (trafficLights.count > 0 || nil == error) {
             if (sum) {
-                sum.traffic_light_tol_cnt = @(trafficLightCnt);
-                
                 NSMutableSet * lightSet = [NSMutableSet setWithArray:trafficLights];
                 NSMutableArray * lightLocArr = [NSMutableArray arrayWithCapacity:lightSet.count];
-                for (BaiduMarkItemModel * item in lightSet) {
+                for (CTBaseLocation * item in lightSet) {
                     [lightLocArr addObject:[item clLocation]];
                 }
                 
+                sum.traffic_light_tol_cnt = @(lightLocArr.count);
                 CGFloat traffic_light_waiting = 0;
                 NSUInteger jamInTrafficLight = 0;
                 for (TrafficJam * jam in sum.traffic_jams) {
@@ -330,7 +357,7 @@ static BussinessDataProvider * _sharedProvider = nil;
                 [[AnaDbManager deviceDb] commit];
             }
             if (success) {
-                success(@(trafficLightCnt));
+                success(sum.traffic_light_tol_cnt);
             }
         } else {
             if (failure) {

@@ -27,7 +27,7 @@
 
 - (NSArray*) processingOrigResult:(NSDictionary*)origResult error:(NSError **)err
 {
-    if ([origResult isKindOfClass:[NSDictionary class]] && (origResult[@"error"] == 0 || [@"success" isEqualToString:origResult[@"status"]])) {
+    if ([origResult isKindOfClass:[NSDictionary class]] && ((origResult[@"error"] && [origResult[@"error"] integerValue] == 0) || [@"success" isEqualToString:origResult[@"status"]])) {
         return origResult[@"results"];
     } else {
         *err = ERR_MAKE(eBussinessError, @"获取路标异常");

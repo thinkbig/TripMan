@@ -19,7 +19,7 @@
     
     self.uidLabel.text = [NSString stringWithFormat:@"uid: %@", [GToolUtil userId]];
     self.udidLabel.text = [NSString stringWithFormat:@"udid: %@", [GToolUtil deviceId]];
-    self.envLabel.text = [NSString stringWithFormat:@"env: %@", kChetuBaseUrl];
+    self.envLabel.text = [NSString stringWithFormat:@"env: %@ - isWifi(%d)", kChetuBaseUrl, IS_WIFI];
     
     UITapGestureRecognizer * tapUid = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapUid)];
     [self.uidLabel addGestureRecognizer:tapUid];
@@ -61,7 +61,7 @@
 
 - (void) updateReport {
     TripsCoreDataManager * manager = [AnaDbManager deviceDb];
-    NSString * report = [NSString stringWithFormat:@"尚未上报：停车位置(%ld)  旅程详情(%ld)  原始gps(%ld)", [manager parkingRegionsToReport:NO].count, [manager tripsReadyToReport:NO].count, [manager tripRawsReadyToReport].count];
+    NSString * report = [NSString stringWithFormat:@"尚未上报：停车位置(%ld)  旅程详情(%ld)  原始gps(%ld)", (unsigned long)[manager parkingRegionsToReport:NO].count, [manager tripsReadyToReport:NO].count, [manager tripRawsReadyToReport].count];
     self.reportLabel.text = report;
 }
 

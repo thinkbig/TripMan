@@ -12,6 +12,8 @@
 #import "MainTabViewController.h"
 #import "AppDelegate.h"
 
+#define COMMON_DEBUG                  1
+
 #define kNotifyUpgradeComplete        @"kNotifyUpgradeComplete"
 #define kNotifyNeedUpdate             @"kNotifyNeedUpdate"
 

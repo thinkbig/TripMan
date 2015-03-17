@@ -21,5 +21,6 @@
 + (NSString*)verifyKey:(NSString*)origKey;
 
 + (CGFloat) distFrom:(CLLocationCoordinate2D)from toCoor:(CLLocationCoordinate2D)to;
++ (CLLocation*) dictToLocation:(NSDictionary*)dict;
 
 @end

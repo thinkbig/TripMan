@@ -24,6 +24,16 @@
     return [[CLLocation alloc] initWithLatitude:[self.center_lat doubleValue] longitude:[self.center_lon doubleValue]];
 }
 
+- (CGFloat) distanseFrom:(ParkingRegion*)region
+{
+    if (nil == region) {
+        return -1;
+    } else if (self == region) {
+        return 0;
+    }
+    return [[self centerLocation] distanceFromLocation:[region centerLocation]];
+}
+
 - (NSDictionary*) toJsonDict
 {
     NSMutableDictionary * mutableDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:self.center_lat, @"gps_lat", self.center_lon, @"gps_lon", nil];

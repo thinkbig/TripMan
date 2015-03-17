@@ -10,6 +10,11 @@
 
 @implementation BaseChetuFacade
 
+- (NSString*)coor2String:(CLLocationCoordinate2D)coor
+{
+    return [NSString stringWithFormat:@"%f,%f", coor.longitude, coor.latitude];
+}
+
 - (eRequestType)requestType{
     return eRequestTypeGet;
 }

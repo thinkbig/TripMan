@@ -9,6 +9,7 @@
 #import "AnaDbManager.h"
 #import "DaySummary+Fetcher.h"
 #import "NSDate+Utilities.h"
+#import "ParkingRegion+Fetcher.h"
 
 @interface AnaDbManager ()
 
@@ -138,7 +139,17 @@
 
 - (NSArray*) tripsWithStartRegion:(ParkingRegion*)region tripLimit:(NSInteger)limit
 {
-    NSArray * allGroups = [region.group_owner_st allObjects];
+    NSArray * rawGroups = [region.group_owner_st allObjects];
+    
+    // 删除起点和终点过于接近的点，要求大于500米
+    NSMutableArray * allGroups = [NSMutableArray arrayWithCapacity:rawGroups.count];
+    for (RegionGroup * group in rawGroups) {
+        CGFloat dist = [region distanseFrom:group.end_region];
+        if (dist > 500) {
+            [allGroups addObject:group];
+        }
+    }
+    
     NSArray * sortArr = [allGroups sortedArrayWithOptions:NSSortStable usingComparator:^NSComparisonResult(RegionGroup * obj1, RegionGroup * obj2) {
         if (obj1.trips.count < obj2.trips.count) return NSOrderedDescending;
         else return NSOrderedAscending;

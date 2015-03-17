@@ -31,7 +31,7 @@
 }
 
 - (void)fetchDataWithPath:(NSString *)resPath requestType:(eRequestType)type param:(NSDictionary*)param constructBodyBlock:(void (^)(id <AFMultipartFormData> formData))block success:(successFacadeBlock)success failure:(failureFacadeBlock)failure
-{
+{    
     NSString * keyUrl = [self keyByUrl:[self baseUrl] resPath:resPath andParam:param];
     eCallbackStrategy cbStrategy = [self callbackStrategy];
     BOOL cacheCallBacked = NO;

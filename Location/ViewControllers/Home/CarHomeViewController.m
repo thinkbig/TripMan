@@ -12,6 +12,7 @@
 #import "NSAttributedString+Style.h"
 #import "DaySummary+Fetcher.h"
 #import "ParkingRegion+Fetcher.h"
+#import "TripFilter.h"
 
 @interface CarHomeViewController ()
 
@@ -48,12 +49,22 @@
     if (IS_UPDATING) {
         return;
     }
+    NSDate * now = [NSDate date];
     CLLocation * curLoc = [BussinessDataProvider lastGoodLocation];
     if (curLoc) {
         ParkingRegionDetail * parkingDetail = [[AnaDbManager sharedInst] parkingDetailForCoordinate:curLoc.coordinate];
         NSArray * mostTrips = [[AnaDbManager sharedInst] tripsWithStartRegion:parkingDetail.coreDataItem tripLimit:1];
         if (mostTrips.count > 0) {
-            self.mostTrip = mostTrips[0];
+            TripSummary * bestTrip = mostTrips[0];
+            NSArray * timeFilterArr = [TripFilter filterTrips:mostTrips byTime:now between:-10 toMinute:30];
+            if (timeFilterArr.count > 0) {
+                bestTrip = timeFilterArr[0];
+                NSArray * weekendFilterArr = [TripFilter filterTrips:mostTrips byDayType:[TripFilter dayTypeByDate:now]];
+                if (weekendFilterArr.count > 0) {
+                    bestTrip = weekendFilterArr[0];
+                }
+            }
+            self.mostTrip = bestTrip;
         }
     }
     

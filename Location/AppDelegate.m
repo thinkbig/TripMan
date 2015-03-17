@@ -17,7 +17,7 @@
 #import "DataReporter.h"
 
 static NSString * rebuildKey = @"kLocationForceRebuildKey";
-static NSString * rebuildVal = @"value_0000000000008"; // make sure it is different if this version should rebuild db
+static NSString * rebuildVal = @"value_0000000000000"; // make sure it is different if this version should rebuild db
 
 @implementation AppDelegate
 
@@ -101,7 +101,7 @@ static NSString * rebuildVal = @"value_0000000000008"; // make sure it is differ
         DDLogWarn(@"baidu mapmanager start failed!");
     }
     [[BussinessDataProvider sharedInstance] updateWeatherToday:nil];
-    [[BussinessDataProvider sharedInstance] updateAllRegionInfo:YES];
+    [[BussinessDataProvider sharedInstance] updateAllRegionInfo:NO];
     
     [self setupLogger];
     [self applicationDocumentsDirectory];
@@ -120,7 +120,7 @@ static NSString * rebuildVal = @"value_0000000000008"; // make sure it is differ
         self.afNetworkLogger = [[AFNetworkActivityLogger alloc] init];
         self.afNetworkLogger.level = AFLoggerLevelDebug;
     }
-    //[self.afNetworkLogger startLogging];
+    [self.afNetworkLogger startLogging];
     
     [DDLog addLogger:[DDASLLogger sharedInstance]];
     [DDLog addLogger:[DDTTYLogger sharedInstance]];
@@ -222,7 +222,7 @@ static NSString * rebuildVal = @"value_0000000000008"; // make sure it is differ
         [[GPSLogger sharedLogger].offTimeAnalyzer rollOutOfDateTrip];
         
         [[BussinessDataProvider sharedInstance] updateWeatherToday:nil];
-        [[BussinessDataProvider sharedInstance] updateAllRegionInfo:YES];
+        [[BussinessDataProvider sharedInstance] updateAllRegionInfo:NO];
         
         [[DataReporter sharedInst] aliveAsync];
     }

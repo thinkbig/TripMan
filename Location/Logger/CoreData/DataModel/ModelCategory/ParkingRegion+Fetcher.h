@@ -12,6 +12,7 @@
 
 - (NSString*) nameWithDefault:(NSString*)defaultName;
 - (CLLocation*) centerLocation;
+- (CGFloat) distanseFrom:(ParkingRegion*)region;
 
 - (NSDictionary*) toJsonDict;
 

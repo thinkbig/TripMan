@@ -203,7 +203,7 @@ typedef NS_ENUM(NSUInteger, eReportType) {
         return;
     }
     _asyncingReport = YES;
-    ReportTask * task = [self __getTask:3];
+    ReportTask * task = [self __getTask:4];
     if (nil == task) {
         _asyncingReport = NO;
         [self __setRportResult:eReportReslutComplete];

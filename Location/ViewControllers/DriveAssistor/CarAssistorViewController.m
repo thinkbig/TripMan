@@ -14,6 +14,7 @@
 #import "POICategory.h"
 #import "UIImage+RZSolidColor.h"
 #import "CTPOICategoryFacade.h"
+#import "ParkingRegion+Fetcher.h"
 
 @interface CarAssistorViewController () {
     ZBNSearchDisplayController *       searchDisplayController;
@@ -71,12 +72,26 @@
 
 - (void)reloadContent
 {
+    NSArray * rawRegions = [[AnaDbManager sharedInst] mostUsedParkingRegionLimit:20];
+    
     CLLocation * curLoc = [BussinessDataProvider lastGoodLocation];
     if (curLoc) {
         ParkingRegionDetail * parkingDetail = [[AnaDbManager sharedInst] parkingDetailForCoordinate:curLoc.coordinate];
         self.topNMostUsedTrips = [[AnaDbManager sharedInst] tripsWithStartRegion:parkingDetail.coreDataItem tripLimit:3];
+        
+        // 删除起点和终点过于接近的点，要求大于500米
+        NSMutableArray * allRegion = [NSMutableArray arrayWithCapacity:rawRegions.count];
+        for (ParkingRegionDetail * region in rawRegions) {
+            CGFloat dist = [parkingDetail.coreDataItem distanseFrom:region.coreDataItem];
+            if (dist > 500) {
+                [allRegion addObject:region];
+            }
+        }
+        self.topNMostParkingLoc = allRegion;
+
+    } else {
+        self.topNMostParkingLoc = rawRegions;
     }
-    self.topNMostParkingLoc = [[AnaDbManager sharedInst] mostUsedParkingRegionLimit:20];
     
     [self.suggestCollectionView reloadData];
 }

@@ -11,4 +11,6 @@
 
 @interface BaseChetuFacade : CommonFacade
 
+- (NSString*)coor2String:(CLLocationCoordinate2D)coor;
+
 @end

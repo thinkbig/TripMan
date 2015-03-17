@@ -483,6 +483,11 @@ static const unsigned componentFlags = (NSYearCalendarUnit| NSMonthCalendarUnit 
     return components.day;
 }
 
+- (NSInteger) minutesFromDateIgnoreDay:(NSDate *)anotherDate
+{
+    return D_MINUTE*(self.hour-anotherDate.hour) + (self.minute - anotherDate.minute);
+}
+
 #pragma mark - Decomposing Dates
 
 - (NSInteger) nearestHour

@@ -19,10 +19,18 @@
     eTrafficStatus status = eTrafficGreen;
     NSInteger heavyJam = [self.traffic_heavy_jam_cnt integerValue];
     if (heavyJam > 0) {
-        NSTimeInterval jamWithoutLight = [self.traffic_jam_during floatValue] - [self.traffic_light_jam_cnt integerValue]*30;
-        if (jamWithoutLight/heavyJam > TRAFFIC_YELLOW_THRESHOLD) {
+        NSArray * allJams = [self.traffic_jams allObjects];
+        CGFloat maxDuring = 0;
+        TrafficJam * maxJam = nil;
+        for (TrafficJam * jam in allJams) {
+            if (maxDuring < [jam.traffic_jam_during floatValue]) {
+                maxDuring = [jam.traffic_jam_during floatValue];
+                maxJam = jam;
+            }
+        }
+        if (maxDuring > 60*5) {
             status = eTrafficYellow;
-            if ((jamWithoutLight-TRAFFIC_YELLOW_THRESHOLD*(heavyJam-1)) > TRAFFIC_RED_THRESHOLD) {
+            if (maxDuring > 60*10 || [maxJam.traffic_jam_dist floatValue] < 300) {
                 status = eTrafficRed;
             }
         }
