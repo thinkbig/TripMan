@@ -25,8 +25,8 @@
 - (NSDictionary*)requestParam
 {
     NSDictionary * plistDict = [[NSBundle mainBundle] infoDictionary];
-    NSString * udid = [GToolUtil deviceId];
-    NSString * uid = [GToolUtil userId];
+    NSString * udid = [[GToolUtil sharedInstance] deviceId];
+    NSString * uid = [[GToolUtil sharedInstance] userId];
     NSString * deviceInfo = [NSString stringWithFormat:@"name=%@,model=%@", [UIDevice currentDevice].name, gDeviceType];
     NSString* deviceToken = [[NSUserDefaults standardUserDefaults] stringForKey:kDeviceToken];
     NSMutableDictionary * param = [NSMutableDictionary dictionaryWithDictionary:@{@"udid": udid,

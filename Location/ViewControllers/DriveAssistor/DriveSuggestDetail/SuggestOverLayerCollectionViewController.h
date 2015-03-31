@@ -7,11 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CTRoute.h"
 
 @interface SuggestOverLayerCollectionViewController : UICollectionViewController
 
 @property (strong, nonatomic) IBOutlet UICollectionView *collectionView;
 
 @property (nonatomic, strong) TripSummary *     tripSum;
+@property (nonatomic, strong) CTRoute *         route;
 
 @end

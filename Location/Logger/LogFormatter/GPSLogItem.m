@@ -57,9 +57,15 @@
 	return self;
 }
 
+- (BOOL) isEqual:(GPSLogItem*)object
+{
+    return [self.latitude floatValue] == [object.latitude floatValue] && [self.longitude floatValue] == [object.longitude floatValue]
+        && [self.timestamp isEqualToDate:object.timestamp];
+}
+
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<%@, %@>, horizontalAccuracy=%@, speed=%@", self.latitude, self.longitude, self.horizontalAccuracy, self.speed];
+    return [NSString stringWithFormat:@"%@, <%@, %@>, horizontalAccuracy=%@, speed=%@", self.timestamp, self.latitude, self.longitude, self.horizontalAccuracy, self.speed];
 }
 
 - (id)initWithEventItem:(GPSEventItem*)event
@@ -88,10 +94,10 @@
 
 - (CLLocation*) location
 {
-    return [[CLLocation alloc] initWithCoordinate:[self locationCoordinate] altitude:[self.altitude doubleValue] horizontalAccuracy:[self.horizontalAccuracy doubleValue] verticalAccuracy:[self.verticalAccuracy doubleValue] course:[self.course doubleValue] speed:[self.speed doubleValue] timestamp:self.timestamp];
+    return [[CLLocation alloc] initWithCoordinate:[self coordinate] altitude:[self.altitude doubleValue] horizontalAccuracy:[self.horizontalAccuracy doubleValue] verticalAccuracy:[self.verticalAccuracy doubleValue] course:[self.course doubleValue] speed:[self.speed doubleValue] timestamp:self.timestamp];
 }
 
-- (CLLocationCoordinate2D) locationCoordinate
+- (CLLocationCoordinate2D) coordinate
 {
     return CLLocationCoordinate2DMake([self.latitude doubleValue], [self.longitude doubleValue]);
 }
@@ -99,6 +105,15 @@
 - (CLLocationDistance) distanceFrom:(GPSLogItem*)item
 {
     return [[self location] distanceFromLocation:[item location]];
+}
+
+- (CLLocationDistance) distanceFromDict:(NSDictionary*)dict
+{
+    CLLocation * dictLoc = [[CLLocation alloc] initWithLatitude:[dict[@"lat"] doubleValue] longitude:[dict[@"lon"] doubleValue]];
+    if (CLLocationCoordinate2DIsValid(dictLoc.coordinate)) {
+        return [dictLoc distanceFromLocation:[self location]];
+    }
+    return -1;
 }
 
 - (double) safeSpeed

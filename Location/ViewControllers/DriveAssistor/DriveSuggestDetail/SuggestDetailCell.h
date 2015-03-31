@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CTRoute.h"
 
 @interface SuggestDetailCell : UICollectionViewCell
 
@@ -20,5 +21,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *endDateLabel;
 @property (weak, nonatomic) IBOutlet UILabel *totalDistLabel;
 @property (weak, nonatomic) IBOutlet UILabel *estimateDuringLabel;
+
+- (void) updateWithRoute:(CTRoute*)route;
+- (void) updateWithTrip:(TripSummary*)sum;
 
 @end

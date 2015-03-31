@@ -33,6 +33,23 @@ static GToolUtil * _sharedUtil = nil;
     return _sharedUtil;
 }
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        static NSString * kTripManDeviceIdKey = @"kTripManDeviceIdKey";
+        _deviceId = [[FXKeychain defaultKeychain] objectForKey:kTripManDeviceIdKey];
+        if (nil == _deviceId) {
+            _deviceId = [UIDevice currentDevice].identifierForVendor.UUIDString;
+            if (nil == _deviceId) {
+                _deviceId = [GToolUtil createUUID];
+            }
+            [[FXKeychain defaultKeychain] setObject:_deviceId forKey:kTripManDeviceIdKey];
+        }
+    }
+    return self;
+}
+
 + (void)showToast:(NSString*)msg
 {
     JGProgressHUD *HUD = [[JGProgressHUD alloc] initWithStyle:JGProgressHUDStyleDark];
@@ -110,25 +127,6 @@ static GToolUtil * _sharedUtil = nil;
     NSString *uuidStr = (NSString *)CFBridgingRelease(CFUUIDCreateString(kCFAllocatorDefault, uuidObject));
     CFRelease(uuidObject);
     return uuidStr;
-}
-
-+ (NSString *)deviceId
-{
-    static NSString * kTripManDeviceIdKey = @"kTripManDeviceIdKey";
-    NSString * oldId = [[FXKeychain defaultKeychain] objectForKey:kTripManDeviceIdKey];
-    if (nil == oldId) {
-        oldId = [UIDevice currentDevice].identifierForVendor.UUIDString;
-        if (nil == oldId) {
-            oldId = [self createUUID];
-        }
-        [[FXKeychain defaultKeychain] setObject:oldId forKey:kTripManDeviceIdKey];
-    }
-    return oldId;
-}
-
-+ (NSString*)userId
-{
-    return nil;
 }
 
 + (NSString*)secretKey

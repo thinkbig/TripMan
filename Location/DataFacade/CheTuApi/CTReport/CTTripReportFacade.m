@@ -15,8 +15,8 @@
 }
 
 - (NSString *)getPath {
-    NSString * udid = [GToolUtil deviceId];
-    NSString * uid = [GToolUtil userId];
+    NSString * udid = [[GToolUtil sharedInstance] deviceId];
+    NSString * uid = [[GToolUtil sharedInstance] userId];
     NSString * tid = self.sum.trip_id;
     NSMutableString * path = [NSMutableString stringWithFormat:@"trip/detail?udid=%@", udid];
     if (uid) {
@@ -24,6 +24,9 @@
     }
     if (tid) {
         [path appendFormat:@"&tid=%@", tid];
+    }
+    if (self.force) {
+        [path appendString:@"&force=1"];
     }
     return path;
 }

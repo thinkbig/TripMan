@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="02J-oe-V3C">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="02J-oe-V3C">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
         <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -72,7 +72,7 @@
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="该天没有行车记录噢" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zbz-m7-53e">
                                                             <rect key="frame" x="10" y="41" width="300" height="40"/>
                                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                                            <color key="textColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
+                                                            <color key="textColor" red="0.43529411764705883" green="0.44313725490196076" blue="0.47450980392156861" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="nodrive" translatesAutoresizingMaskIntoConstraints="NO" id="kbz-sK-YUs">
@@ -653,7 +653,7 @@
                     <nil key="simulatedTopBarMetrics"/>
                     <connections>
                         <outlet property="detailCollection" destination="WZJ-Pf-ADp" id="W0u-Gn-01T"/>
-                        <segue destination="Xiq-El-4It" kind="push" id="YXG-Qt-Gdk"/>
+                        <segue destination="Xiq-El-4It" kind="push" identifier="detailSegue" id="YXG-Qt-Gdk"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dcb-5K-UD5" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1401,7 +1401,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="车票详情" id="W2W-kV-rz8">
-                        <barButtonItem key="leftBarButtonItem" title="返回" style="plain" id="Zjo-0q-eBn">
+                        <barButtonItem key="leftBarButtonItem" title="返回" id="Zjo-0q-eBn">
                             <connections>
                                 <action selector="goBack:" destination="Xiq-El-4It" id="Yul-e1-FcW"/>
                             </connections>
@@ -1416,11 +1416,31 @@
                     <connections>
                         <outlet property="collectionView" destination="wza-8c-ylf" id="1mc-3r-W53"/>
                         <outlet property="saveBtn" destination="1cj-lP-EPM" id="EsG-BM-uls"/>
+                        <segue destination="8Or-Gb-HzZ" kind="push" identifier="mapSegue" id="3a4-VN-R8b"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ktZ-ru-6oR" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="714" y="159"/>
+            <point key="canvasLocation" x="746" y="159"/>
+        </scene>
+        <!--车图-->
+        <scene sceneID="sBG-wJ-iRJ">
+            <objects>
+                <viewController storyboardIdentifier="baiduMapVC" hidesBottomBarWhenPushed="YES" id="8Or-Gb-HzZ" customClass="BaiduMapViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="OYu-IH-YBK"/>
+                        <viewControllerLayoutGuide type="bottom" id="Yhv-72-nZc"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="FaV-QQ-Xas">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="车图" id="kTf-SP-BZg"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ET8-zs-VdR" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1156" y="159"/>
         </scene>
     </scenes>
     <resources>

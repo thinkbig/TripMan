@@ -11,5 +11,6 @@
 @interface TurningInfo (Fetcher)
 
 - (NSDictionary*) toJsonDict;
+- (NSArray*) turningPts;
 
 @end

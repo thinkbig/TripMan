@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "RZCollectionTableViewCell.h"
 #import "ScrollSegView.h"
+#import "CTFavLocation.h"
 
 @interface SearchPOIHeader : UICollectionReusableView
 
@@ -31,7 +32,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *bgStatusImage;
 @property (weak, nonatomic) IBOutlet UILabel *duringStatusLabel;
 
-- (void) updateWithTripSummary:(TripSummary*)sum;
+- (void) updateWithFavLoc:(CTFavLocation*)favLoc;
 
 @end
 

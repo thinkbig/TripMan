@@ -16,5 +16,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *reportLabel;
 
 - (IBAction)forceReport:(id)sender;
+- (IBAction)reAnalyzeTrip:(id)sender;
 
 @end

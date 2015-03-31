@@ -12,7 +12,7 @@
 #define kChetuBaseUrl       @"http://121.40.193.34:80/"    // prod
 
 //#define kChetuBaseUrl       @"http://localhost:8000/"     //local
-//#define kChetuBaseUrl       @"http://172.16.33.202:8000/"    //local ip
+//#define kChetuBaseUrl       @"http://192.168.1.105:8000/"    //local ip
 
 
 #define ENV_DEVICE_TYPE_IOS     @"1"        // 0=unknow, 1=iOS, 2=Android, 3=OBD

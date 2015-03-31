@@ -149,7 +149,7 @@
         self.lastLogItem = gps;
         if (lastGps) {
             // 计算轨迹夹角，用于判断是否是正常行驶（还是gps跳变）
-            gps.angle = [GPSOffTimeFilter angleFromPoint:[GPSOffTimeFilter coor2Point:lastGps.locationCoordinate] toPoint:[GPSOffTimeFilter coor2Point:gps.locationCoordinate]];
+            gps.angle = [GPSOffTimeFilter angleFromPoint:[GPSOffTimeFilter coor2Point:lastGps.coordinate] toPoint:[GPSOffTimeFilter coor2Point:gps.coordinate]];
             if (self.logArr.count > 1) {
                 gps.angleDiff = fabsf(gps.angle - lastGps.angle);
                 
@@ -413,7 +413,7 @@
             NSLog(@"$$$$$$$$$$$$$$$$$$$$$ start speed = %f", avgSpeed);
         }
     } else {
-        // fast deside using M7 chrip
+        // fast decide using M7 chrip
         LocationTracker * tracker = ((AppDelegate*)([UIApplication sharedApplication].delegate)).locationTracker;
         if (_lastestNormalSpeed && [[NSDate date] timeIntervalSinceDate:_lastestNormalSpeed] >= 20) {
             NSTimeInterval driveDuring = [tracker duringForAutomationWithin:60];
@@ -422,7 +422,7 @@
                 _endSpeedTraceCnt = 0;
                 _endSpeedTraceIdx = self.logArr.count-1;
                 return eMotionStatDriving;
-            } else if (driveDuring < 1 && [tracker duringForWalkRunWithin:60] > 20) {
+            } else if (driveDuring < 1 && [tracker duringForWalkRunWithin:60] > 30 && !tracker.rawMotionActivity.automotive) {
                 DDLogWarn(@"&&&&&&&&&&&&& motion regard as drive stop &&&&&&&&&&&&& ");
                 _endSpeedTrace = 0;
                 _endSpeedTraceCnt = 0;

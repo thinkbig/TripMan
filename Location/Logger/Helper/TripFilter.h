@@ -19,5 +19,6 @@ typedef NS_ENUM(NSUInteger, eDayType) {
 + (eDayType) dayTypeByDate:(NSDate*)date;
 + (NSArray*) filterTrips:(NSArray*)rawArr byTime:(NSDate*)refTime between:(NSTimeInterval)fromMinute toMinute:(NSTimeInterval)toMinute;
 + (NSArray*) filterTrips:(NSArray*)rawArr byDayType:(eDayType)type;
++ (NSArray*) filterRegion:(NSArray *)rawRegions byStartRegion:(CLLocation*)loc byDist:(CGFloat)dist;
 
 @end

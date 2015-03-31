@@ -10,6 +10,7 @@
 #import "TicketDetailCell.h"
 #import "DrivingInfo.h"
 #import "MapDisplayViewController.h"
+#import "BaiduMapViewController.h"
 #import "ParkingRegion+Fetcher.h"
 #import "UIAlertView+RZCompletionBlocks.h"
 
@@ -64,7 +65,7 @@
     }
     if ((![newUsered isEqualToString:_tripSum.region_group.end_region.nearby_poi]) &&
         (![newUsered isEqualToString:_tripSum.region_group.end_region.user_mark]) &&
-        (![newUserSt isEqualToString:@"未知地点"])) {
+        (![newUsered isEqualToString:@"未知地点"])) {
         return YES;
     }
     return NO;
@@ -75,11 +76,13 @@
     NSString * newUserSt = self.editCell.stAddress.text;
     NSString * newUsered = self.editCell.edAddress.text;
     if ((![newUserSt isEqualToString:_tripSum.region_group.start_region.nearby_poi]) &&
-        (![newUserSt isEqualToString:_tripSum.region_group.start_region.user_mark])) {
+        (![newUserSt isEqualToString:_tripSum.region_group.start_region.user_mark]) &&
+        (![newUserSt isEqualToString:@"未知地点"])) {
         _tripSum.region_group.start_region.user_mark = newUserSt;
     }
     if ((![newUsered isEqualToString:_tripSum.region_group.end_region.nearby_poi]) &&
-        (![newUsered isEqualToString:_tripSum.region_group.end_region.user_mark])) {
+        (![newUsered isEqualToString:_tripSum.region_group.end_region.user_mark]) &&
+        (![newUsered isEqualToString:@"未知地点"])) {
         _tripSum.region_group.end_region.user_mark = newUsered;
     }
     
@@ -265,9 +268,9 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if (1 == indexPath.row) {
-        MapDisplayViewController * mapVC = [[UIStoryboard storyboardWithName:@"Debug" bundle:nil] instantiateViewControllerWithIdentifier:@"MapDisplayView"];
+        BaiduMapViewController * mapVC = [self.storyboard instantiateViewControllerWithIdentifier:@"baiduMapVC"];
         mapVC.tripSum = self.tripSum;
-        [self.navigationController presentViewController:mapVC animated:YES completion:nil];
+        [self.navigationController pushViewController:mapVC animated:YES];
     }
 }
 

@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 #import "BaiduWeatherFacade.h"
+#import "CTFavLocation.h"
 
 @interface BussinessDataProvider : NSObject
 
@@ -31,5 +32,8 @@
 
 - (NSDateFormatter*) dateFormatterForFormatStr:(NSString*)format;
 
+// some bussiness data storage
+- (NSArray*) favLocations;
+- (void) putFavLocations:(NSArray*)favLoc;
 
 @end

@@ -65,26 +65,135 @@
 
 @implementation GPSOffTimeFilter
 
++ (NSArray*) filterWithTurning:(NSArray*)rawRoute
+{
+    NSMutableArray * route = [NSMutableArray array];
+    NSUInteger tolCnt = rawRoute.count;
+    if (tolCnt <= 3) {
+        rawRoute = rawRoute;
+    } else {
+        [route addObject:rawRoute[0]];
+        for (int i = 1; i < tolCnt-1; i++) {
+            GPSLogItem * objLast = [route lastObject];
+            GPSLogItem * obj = rawRoute[i];
+            GPSLogItem * objNext = rawRoute[i+1];
+            
+            CGPoint pt1 = [GPSOffTimeFilter item2Point:objLast];
+            CGPoint pt2 = [GPSOffTimeFilter item2Point:obj];
+            CGPoint pt3 = [GPSOffTimeFilter item2Point:objNext];
+            
+            CGFloat angle = [GPSOffTimeFilter checkPointAngle:pt1 antPt:pt2 antPt:pt3];
+            if (angle > 10) {
+                [route addObject:obj];
+            } else {
+                [route addObject:objNext];
+                i++;
+            }
+        }
+        [route addObject:[rawRoute lastObject]];
+    }
+    return route;
+}
+
++ (NSArray*) keyRouteFromGPS:(NSArray*)gpsData
+{
+    CGFloat gpsErrSmall = 30;
+    CGFloat gpsErrBig = 100;
+    CGFloat thresShort = 100;
+    CGFloat thresShortMax = 1000;
+    
+    if (gpsData.count <= 2) {
+        return gpsData;
+    }
+    
+    GPSLogItem * first = gpsData[0];
+    GPSLogItem * end = [gpsData lastObject];
+    
+    // 第一次筛选，使用thresShort
+    NSMutableArray * rawRoute1 = [NSMutableArray array];
+    NSUInteger tolCnt1 = gpsData.count;
+    [gpsData enumerateObjectsUsingBlock:^(GPSLogItem * obj, NSUInteger idx, BOOL *stop) {
+        if (idx == 0) {
+            [rawRoute1 addObject:obj];
+        } else if (idx == tolCnt1-1) {
+            GPSLogItem * lastGps = [rawRoute1 lastObject];
+            CGFloat dist = [lastGps distanceFrom:obj];
+            if (dist < thresShort) {
+                [rawRoute1 removeLastObject];
+            }
+            [rawRoute1 addObject:obj];
+        } else {
+            GPSLogItem * lastGps = [rawRoute1 lastObject];
+            CGFloat distToLast = [lastGps distanceFrom:obj];
+            
+            CGFloat distToSt = [first distanceFrom:obj];
+            CGFloat distToEnd = [end distanceFrom:obj];
+            CGFloat gpsErr = gpsErrSmall;
+            if (distToSt < 500 || distToEnd < 300) {
+                gpsErr = gpsErrBig;
+            }
+            if ((distToLast > thresShortMax && [obj.horizontalAccuracy doubleValue] < gpsErrBig*2) || (distToLast > thresShort && [obj.horizontalAccuracy doubleValue] < gpsErr)) {
+                [rawRoute1 addObject:obj];
+            }
+        }
+    }];
+    
+    // 第二次筛选，对于非起点终点，非拐点的位置，增加他的间隔
+    NSArray * rawRoute = rawRoute1;
+    NSArray * lastRoute = nil;
+    do {
+        lastRoute = rawRoute;
+        rawRoute = [GPSOffTimeFilter filterWithTurning:rawRoute];
+    } while (rawRoute.count != lastRoute.count);
+        
+    return rawRoute;
+}
+
++ (NSString*) routeToString:(NSArray*)route
+{
+    if (route.count > 0) {
+        NSString * seg = @"";
+        NSMutableString * wayStr = [[NSMutableString alloc] init];
+        for (GPSLogItem * item in route) {
+            CLLocationCoordinate2D coor = [item coordinate];
+            [wayStr appendFormat:@"%@%.5f,%.5f", seg, coor.latitude, coor.longitude];
+            seg = @"|";
+        }
+        return wayStr;
+    }
+    return nil;
+}
+
++ (NSArray*) stringToLocationRoute:(NSString*)routeStr
+{
+    NSArray * segments = [routeStr componentsSeparatedByString:@"|"];
+    NSMutableArray * ptArr = [NSMutableArray arrayWithCapacity:segments.count];
+    for (NSString * oneSeg in segments) {
+        NSArray * coorNum = [oneSeg componentsSeparatedByString:@","];
+        if (coorNum.count == 2) {
+            CLLocation * loc = [[CLLocation alloc] initWithLatitude:[coorNum[0] floatValue] longitude:[coorNum[1] floatValue]];
+            [ptArr addObject:loc];
+        }
+    }
+    return ptArr;
+}
+
 + (NSArray*) smoothGPSData:(NSArray*)gpsData iteratorCnt:(NSInteger)repeat
 {
     if (repeat <= 0) {
-        if ([gpsData isKindOfClass:[NSMutableArray class]]) {
-            NSMutableArray * modifyArr = (NSMutableArray*)gpsData;
-            if (modifyArr.count > 0) {
-                // 修复有重复起点的bug，如果起始2点距离为同一点，则删除一点
-                while (modifyArr.count > 1 && [(GPSLogItem*)modifyArr[0] distanceFrom:(GPSLogItem*)modifyArr[1]] < 0.01) {
-                    [modifyArr removeObjectAtIndex:0];
-                }
-            }
-            return modifyArr;
-        }
         return gpsData;
     }
     NSMutableArray * smoothData = [NSMutableArray arrayWithCapacity:gpsData.count];
     NSMutableArray * penddingData = [NSMutableArray arrayWithCapacity:8];
     
+    GPSLogItem * lastItem = nil;
     for (GPSLogItem * item in gpsData)
     {
+        if (lastItem && [lastItem isEqual:item]) {
+            continue;       //  忽略重复点
+        }
+        lastItem = item;
+        
         CGFloat accuracy = [item.horizontalAccuracy doubleValue];
         // 如果该gpslog的gps精度无效（<0）或者大于100米，则丢弃
         if (accuracy < 0 || accuracy > 100) {
@@ -193,12 +302,12 @@
     return angle;
 }
 
-+ (CGFloat)checkPotinAngle:(CGPoint)pt1 antPt:(CGPoint)pt2 antPt:(CGPoint)pt3
++ (CGFloat)checkPointAngle:(CGPoint)pt1 antPt:(CGPoint)pt2 antPt:(CGPoint)pt3
 {
-    return [GPSOffTimeFilter checkPotinAngle:pt1 antPt:pt2 antPt:pt2 andPt:pt3];
+    return [GPSOffTimeFilter checkPointAngle:pt1 antPt:pt2 antPt:pt2 andPt:pt3];
 }
 
-+ (CGFloat)checkPotinAngle:(CGPoint)pt1 antPt:(CGPoint)pt2 antPt:(CGPoint)pt3 andPt:(CGPoint)pt4;
++ (CGFloat)checkPointAngle:(CGPoint)pt1 antPt:(CGPoint)pt2 antPt:(CGPoint)pt3 andPt:(CGPoint)pt4;
 {
     CGFloat angle1 = [GPSOffTimeFilter angleFromPoint:pt1 toPoint:pt2];
     CGFloat angle2 = [GPSOffTimeFilter angleFromPoint:pt3 toPoint:pt4];
@@ -263,7 +372,7 @@
         if (dist1 < 100 && dist2 < 100) {
             // if all distance is less than 100m, remove the angle point
             featureIdx = -1;
-        } else if ((dist1 < 200 && dist2 < 200) && [GPSOffTimeFilter checkPotinAngle:firstPt antPt:maxPt antPt:secondPt] < 60) {
+        } else if ((dist1 < 200 && dist2 < 200) && [GPSOffTimeFilter checkPointAngle:firstPt antPt:maxPt antPt:secondPt] < 60) {
             // if all distance is less than 200m, check the angle
             featureIdx = -1;
         } else if (dist1 < 20 || dist2 < 20) {
@@ -272,7 +381,7 @@
         } else if ((dist1*5 < dist2 || dist2*5 < dist1) && (dist1 < 60 || dist2 < 60)) {
             // the distance is within 5 times, and the shortest is less than 60m
             featureIdx = -1;
-        } else if ([GPSOffTimeFilter checkPotinAngle:firstPt antPt:maxPt antPt:secondPt] < 10) {
+        } else if ([GPSOffTimeFilter checkPointAngle:firstPt antPt:maxPt antPt:secondPt] < 10) {
             // all else if the angle is less than 10 degree
             featureIdx = -1;
         }
@@ -321,7 +430,7 @@
         NSInteger delIdx = -1;
         NSInteger nextIdx = idx+1;
         // 二次筛选拐点，如果相邻拐点的角度小于15度，则认为不是拐点，删除改拐点，递归查找下一个
-        if ([GPSOffTimeFilter checkPotinAngle:pt1 antPt:pt2 antPt:pt3] < 15) {
+        if ([GPSOffTimeFilter checkPointAngle:pt1 antPt:pt2 antPt:pt3] < 15) {
             delIdx = idx+1;
             nextIdx = idx;
         }
@@ -354,9 +463,9 @@
             if (dist < 260) {
                 NSInteger idx4 = [self.anglePointIdx[idx+3] integerValue];
                 CGPoint pt4 = [GPSOffTimeFilter item2Point:self.smoothData[idx4]];
-                CGFloat angle123 = [GPSOffTimeFilter checkPotinAngle:pt1 antPt:pt2 antPt:pt3];
-                CGFloat angle234 = [GPSOffTimeFilter checkPotinAngle:pt2 antPt:pt3 antPt:pt4];
-                CGFloat angle1234 = [GPSOffTimeFilter checkPotinAngle:pt1 antPt:pt2 antPt:pt3 andPt:pt4];
+                CGFloat angle123 = [GPSOffTimeFilter checkPointAngle:pt1 antPt:pt2 antPt:pt3];
+                CGFloat angle234 = [GPSOffTimeFilter checkPointAngle:pt2 antPt:pt3 antPt:pt4];
+                CGFloat angle1234 = [GPSOffTimeFilter checkPointAngle:pt1 antPt:pt2 antPt:pt3 andPt:pt4];
                 if (angle1234 > 70 && angle1234 < 110) {
                     if (angle123 > angle234) {
                         delIdx = idx+2;
@@ -448,7 +557,7 @@
         GPSTurningItem * turning = [[GPSTurningItem alloc] initWithInstSpeed:[item.speed doubleValue]];
         turning.duringAfterTurning = [nextItem.timestamp timeIntervalSinceDate:item.timestamp];
         turning.distAfterTurning = [item distanceFrom:nextItem];
-        turning.angle = [GPSOffTimeFilter checkPotinAngle:[GPSOffTimeFilter item2Point:prevItem] antPt:[GPSOffTimeFilter item2Point:item] antPt:[GPSOffTimeFilter item2Point:nextItem]];
+        turning.angle = [GPSOffTimeFilter checkPointAngle:[GPSOffTimeFilter item2Point:prevItem] antPt:[GPSOffTimeFilter item2Point:item] antPt:[GPSOffTimeFilter item2Point:nextItem]];
         turning.instSpeed = [item.speed doubleValue] < 0 ? 0 : [item.speed doubleValue];
         NSInteger turnDir = [self checkTurningDir:[GPSOffTimeFilter item2Point:prevItem] antPt:[GPSOffTimeFilter item2Point:item] antPt:[GPSOffTimeFilter item2Point:nextItem]];
         if (turning.angle > 170 || turnDir == 0) {

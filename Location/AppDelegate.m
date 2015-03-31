@@ -17,7 +17,7 @@
 #import "DataReporter.h"
 
 static NSString * rebuildKey = @"kLocationForceRebuildKey";
-static NSString * rebuildVal = @"value_0000000000000"; // make sure it is different if this version should rebuild db
+static NSString * rebuildVal = @"value_0000000000002"; // make sure it is different if this version should rebuild db
 
 @implementation AppDelegate
 
@@ -116,6 +116,7 @@ static NSString * rebuildVal = @"value_0000000000000"; // make sure it is differ
 
 - (void) setupLogger
 {
+#ifdef COMMON_DEBUG
     if (nil == self.afNetworkLogger) {
         self.afNetworkLogger = [[AFNetworkActivityLogger alloc] init];
         self.afNetworkLogger.level = AFLoggerLevelDebug;
@@ -124,6 +125,7 @@ static NSString * rebuildVal = @"value_0000000000000"; // make sure it is differ
     
     [DDLog addLogger:[DDASLLogger sharedInstance]];
     [DDLog addLogger:[DDTTYLogger sharedInstance]];
+#endif
 }
 
 - (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings

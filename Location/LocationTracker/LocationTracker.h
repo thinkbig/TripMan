@@ -8,10 +8,11 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
+#import <CoreMotion/CoreMotion.h>
 
 #define REGION_ID_LAST_STILL               @"idStill"
 #define REGION_ID_LAST_PARKING             @"idPark"
-#define REGION_ID_MOST_PARKING(num_)       [NSString stringWithFormat:@"idPark%ld", (num_)]
+#define REGION_ID_MOST_PARKING(num_)       [NSString stringWithFormat:@"idPark%ld", (long)(num_)]
 
 #define REGION_GROUP_LAST_STILL            @"groupStill"
 #define REGION_GROUP_LAST_PARKING          @"groupPark"
@@ -32,8 +33,9 @@ typedef NS_ENUM(NSUInteger, eGPSSignalStrength) {
 
 @interface LocationTracker : NSObject <CLLocationManagerDelegate>
 
-@property (nonatomic, strong) CLLocationManager *   locationManager;
-@property (nonatomic) eGPSSignalStrength            signalStrength;
+@property (nonatomic, strong) CLLocationManager *           locationManager;
+@property (nonatomic, strong) CMMotionActivity *            rawMotionActivity;
+@property (nonatomic) eGPSSignalStrength                    signalStrength;
 
 - (void)startLocationTracking;
 - (void)updateCurrentLocation;

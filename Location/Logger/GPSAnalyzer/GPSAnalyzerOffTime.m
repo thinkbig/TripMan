@@ -337,8 +337,9 @@
     }
     
     TripsCoreDataManager * manager = self.manager;
-    
-    NSArray * smoothData = [GPSOffTimeFilter smoothGPSData:[rawData subarrayWithRange:NSMakeRange(0, realEndIdx)] iteratorCnt:3];
+    NSArray * rawRoute = [rawData subarrayWithRange:NSMakeRange(0, realEndIdx)];
+    NSArray * keyRoute = [GPSOffTimeFilter keyRouteFromGPS:rawRoute];
+    NSArray * smoothData = [GPSOffTimeFilter smoothGPSData:rawRoute iteratorCnt:3];
     
     // update analyze summary info
     GPSTripSummaryAnalyzer * oneTripAna = [GPSTripSummaryAnalyzer new];
@@ -351,6 +352,11 @@
     tripSum.traffic_jam_dist = @(oneTripAna.traffic_jam_dist);
     tripSum.traffic_jam_during = @(oneTripAna.traffic_jam_during);
     tripSum.traffic_avg_speed = @(oneTripAna.traffic_avg_speed);
+    
+    NSString * keyRouteStr = [GPSOffTimeFilter routeToString:keyRoute];
+    if (keyRouteStr.length > 0) {
+        tripSum.addi_info = keyRouteStr;
+    }
     
     NSArray * oldJams = [tripSum.traffic_jams allObjects];
     NSArray * jamArr = [oneTripAna getTrafficJams];
@@ -457,7 +463,7 @@
     }
     
     // update start and end location region
-    [manager startRegionCenter:[stLogItem locationCoordinate] toRegionCenter:[endLogItem locationCoordinate] forTrip:tripSum];
+    [manager startRegionCenter:[stLogItem coordinate] toRegionCenter:[endLogItem coordinate] forTrip:tripSum];
     
     // MUST after all analyze process, THEN set the analyzed flag
     if ([tripSum.region_group.is_temp boolValue]) {

@@ -38,9 +38,10 @@
 - (id)initWithParkingRegion:(ParkingRegion*)region;
 
 - (CLLocation*) location;
-- (CLLocationCoordinate2D) locationCoordinate;
+- (CLLocationCoordinate2D) coordinate;
 - (double) safeSpeed;
 - (CLLocationDistance) distanceFrom:(GPSLogItem*)item;
+- (CLLocationDistance) distanceFromDict:(NSDictionary*)dict;
 
 - (NSArray*) toArray;
 

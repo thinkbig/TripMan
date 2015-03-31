@@ -15,12 +15,17 @@
 #import "UIImage+RZSolidColor.h"
 #import "CTPOICategoryFacade.h"
 #import "ParkingRegion+Fetcher.h"
+#import "TripSummary+Fetcher.h"
+#import "TripFilter.h"
+#import "BussinessDataProvider.h"
+
+#define kMaxUserFavLocCnt           3
 
 @interface CarAssistorViewController () {
     ZBNSearchDisplayController *       searchDisplayController;
 }
 
-@property (nonatomic, strong) NSArray *                         topNMostUsedTrips;
+@property (nonatomic, strong) NSMutableArray *                  userFavLocs;
 @property (nonatomic, strong) NSArray *                         topNMostParkingLoc;
 @property (nonatomic, strong) SearchPOIHeader*                  header;
 @property (nonatomic, strong) NSArray *                         categories;
@@ -72,22 +77,19 @@
 
 - (void)reloadContent
 {
-    NSArray * rawRegions = [[AnaDbManager sharedInst] mostUsedParkingRegionLimit:20];
+    NSArray * userFav = [[BussinessDataProvider sharedInstance] favLocations];
+    if (userFav.count > 0) {
+        self.userFavLocs = [NSMutableArray arrayWithArray:[userFav subarrayWithRange:NSMakeRange(0, MIN(kMaxUserFavLocCnt, userFav.count))]];
+    } else {
+        self.userFavLocs = [NSMutableArray array];
+    }
     
+    NSArray * rawRegions = [[AnaDbManager sharedInst] mostUsedParkingRegionLimit:20];
     CLLocation * curLoc = [BussinessDataProvider lastGoodLocation];
     if (curLoc) {
-        ParkingRegionDetail * parkingDetail = [[AnaDbManager sharedInst] parkingDetailForCoordinate:curLoc.coordinate];
-        self.topNMostUsedTrips = [[AnaDbManager sharedInst] tripsWithStartRegion:parkingDetail.coreDataItem tripLimit:3];
-        
-        // 删除起点和终点过于接近的点，要求大于500米
-        NSMutableArray * allRegion = [NSMutableArray arrayWithCapacity:rawRegions.count];
-        for (ParkingRegionDetail * region in rawRegions) {
-            CGFloat dist = [parkingDetail.coreDataItem distanseFrom:region.coreDataItem];
-            if (dist > 500) {
-                [allRegion addObject:region];
-            }
-        }
-        self.topNMostParkingLoc = allRegion;
+        // 删除起点和终点过于接近的点，要求大于1500米
+        NSArray * filterRegions = [TripFilter filterRegion:rawRegions byStartRegion:curLoc byDist:1500];
+        self.topNMostParkingLoc = filterRegions;
 
     } else {
         self.topNMostParkingLoc = rawRegions;
@@ -138,9 +140,10 @@
     return 2;
 }
 
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
     if (0 == section) {
-        return 3;
+        return MIN(self.userFavLocs.count + 1, kMaxUserFavLocCnt);
     } else if (1 == section) {
         if (0 == _selCategoryIdx) {
             return self.topNMostParkingLoc.count + 1;
@@ -155,9 +158,9 @@
     UICollectionViewCell* cell = nil;
     if (0 == indexPath.section)
     {
-        if (indexPath.row < self.topNMostUsedTrips.count) {
+        if (indexPath.row < self.userFavLocs.count) {
             DriveSuggestCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"suggestUsefulCell" forIndexPath:indexPath];
-            [realCell updateWithTripSummary:self.topNMostUsedTrips[indexPath.row]];
+            [realCell updateWithFavLoc:self.userFavLocs[indexPath.row]];
             realCell._rz_parentCollectionTableView = self.suggestCollectionView;
             RZCollectionTableViewCellEditingItem * delItem = [RZCollectionTableViewCellEditingItem itemWithIcon:[UIImage imageNamed:@"deleteicon"] highlightedIcon:[UIImage imageNamed:@"deleteicon"] backgroundColor:[UIColor clearColor] hostBgImg:[UIImage imageNamed:@"deletetag"]];
             [realCell setRzEditingItems:@[delItem]];
@@ -218,7 +221,8 @@
         return CGSizeMake(300.f, 65.f);
     } else if (1 == indexPath.section) {
         if (0 == indexPath.row) {
-            return CGSizeMake(320, 40);
+            return CGSizeMake(320, 0);
+            //return CGSizeMake(320, 40);
         } else {
             return CGSizeMake(320, 70);
         }
@@ -254,24 +258,70 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    CLLocation * curLoc = [BussinessDataProvider lastGoodLocation];
+    if (nil == curLoc) {
+        [self showToast:@"当前gps不可用"];
+        return;
+    }
     if (0 == indexPath.section) {
-        if (indexPath.row < self.topNMostUsedTrips.count) {
+        if (indexPath.row < self.userFavLocs.count) {
+            CTFavLocation * locFav = self.userFavLocs[indexPath.row];
+            ParkingRegionDetail * startDetail = [[AnaDbManager deviceDb] parkingDetailForCoordinate:curLoc.coordinate minDist:500];
+            ParkingRegion * endRegion = [[AnaDbManager deviceDb] parkingRegioinForId:locFav.parking_id];
+            
+            CTRoute * route = [CTRoute new];
+            [route updateWithDestCoor:locFav.coordinate andDestName:locFav.name fromCurrentLocation:curLoc];
+            
             SuggestDetailViewController * suggestDetail = [self.storyboard instantiateViewControllerWithIdentifier:@"SuggestDetailID"];
-            suggestDetail.tripSum = self.topNMostUsedTrips[indexPath.row];
+            suggestDetail.route = route;
+            if (endRegion) {
+                TripSummary * bestSum = [[AnaDbManager sharedInst] bestTripWithStartRegion:startDetail.coreDataItem endRegion:endRegion];
+                suggestDetail.waypts = [bestSum wayPoints];
+            }
             [self.navigationController pushViewController:suggestDetail animated:YES];
         } else {
-            [self showToast:@"自定义添加功能尚在开发中"];
+            //[self showToast:@"自定义添加功能尚在开发中"];
+            // 这里暂时把top most parking loc 加进来，作为测试
+            NSInteger addIdx = self.userFavLocs.count;
+            if (addIdx < self.topNMostParkingLoc.count) {
+                ParkingRegionDetail * detail = self.topNMostParkingLoc[addIdx];
+                CTFavLocation * favLoc = [detail.coreDataItem toFavLocation];
+                [self.userFavLocs addObject:favLoc];
+                [[BussinessDataProvider sharedInstance] putFavLocations:self.userFavLocs];
+                
+                [collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
+            }
+            
         }
-        
-//        MapDisplayViewController * mapVC = [[UIStoryboard storyboardWithName:@"Debug" bundle:nil] instantiateViewControllerWithIdentifier:@"MapDisplayView"];
-//        mapVC.tripSum = self.topNMostUsedTrips[indexPath.row];
-//        [self presentViewController:mapVC animated:YES completion:nil];
+    } else if (1 == indexPath.section) {
+        if (indexPath.row > 0) {
+            if (0 == _selCategoryIdx) {
+                ParkingRegionDetail * selectRegion = self.topNMostParkingLoc[indexPath.row-1];
+                ParkingRegionDetail * startDetail = [[AnaDbManager deviceDb] parkingDetailForCoordinate:curLoc.coordinate minDist:500];
+                TripSummary * bestSum = [[AnaDbManager sharedInst] bestTripWithStartRegion:startDetail.coreDataItem endRegion:selectRegion.coreDataItem];
+
+                CTRoute * route = [CTRoute new];
+                [route updateWithDestRegion:selectRegion.coreDataItem fromCurrentLocation:curLoc];
+                
+                SuggestDetailViewController * suggestDetail = [self.storyboard instantiateViewControllerWithIdentifier:@"SuggestDetailID"];
+                suggestDetail.route = route;
+                suggestDetail.waypts = [bestSum wayPoints];
+                [self.navigationController pushViewController:suggestDetail animated:YES];
+            } else {
+                
+            }
+
+        }
     }
 }
 
 - (void)collectionView:(UICollectionView *)collectionView rzTableLayout:(RZCollectionTableViewLayout *)layout editingButtonPressedForIndex:(NSUInteger)buttonIndex forRowAtIndexPath:(NSIndexPath*)indexPath
 {
-    NSLog(@"delete butn idx = %ld", (long)indexPath.row);
+    if (indexPath.row < self.userFavLocs.count) {
+        [self.userFavLocs removeObjectAtIndex:indexPath.row];
+    }
+    [[BussinessDataProvider sharedInstance] putFavLocations:self.userFavLocs];
+    [collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
 }
 
 @end

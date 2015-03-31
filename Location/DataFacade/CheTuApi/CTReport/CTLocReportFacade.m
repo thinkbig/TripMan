@@ -15,8 +15,8 @@
 }
 
 - (NSString *)getPath {
-    NSString * udid = [GToolUtil deviceId];
-    NSString * uid = [GToolUtil userId];
+    NSString * udid = [[GToolUtil sharedInstance] deviceId];
+    NSString * uid = [[GToolUtil sharedInstance] userId];
     NSString * pid = self.aimRegion.parking_id;
     NSMutableString * path = [NSMutableString stringWithFormat:@"parking/detail?udid=%@", udid];
     if (uid) {
@@ -24,6 +24,9 @@
     }
     if (pid) {
         [path appendFormat:@"&pid=%@", pid];
+    }
+    if (self.force) {
+        [path appendString:@"&force=1"];
     }
     return path;
 }

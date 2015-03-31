@@ -17,8 +17,8 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
-    self.uidLabel.text = [NSString stringWithFormat:@"uid: %@", [GToolUtil userId]];
-    self.udidLabel.text = [NSString stringWithFormat:@"udid: %@", [GToolUtil deviceId]];
+    self.uidLabel.text = [NSString stringWithFormat:@"uid: %@", [[GToolUtil sharedInstance] userId]];
+    self.udidLabel.text = [NSString stringWithFormat:@"udid: %@", [[GToolUtil sharedInstance] deviceId]];
     self.envLabel.text = [NSString stringWithFormat:@"env: %@ - isWifi(%d)", kChetuBaseUrl, IS_WIFI];
     
     UITapGestureRecognizer * tapUid = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapUid)];
@@ -59,6 +59,11 @@
     [[DataReporter sharedInst] forceAsync];
 }
 
+- (IBAction)reAnalyzeTrip:(id)sender {
+    [self showToast:@"界面会卡一阵，请耐心等待！"];
+    [[GPSLogger sharedLogger].offTimeAnalyzer analyzeAllFinishedTrip:YES];
+}
+
 - (void) updateReport {
     TripsCoreDataManager * manager = [AnaDbManager deviceDb];
     NSString * report = [NSString stringWithFormat:@"尚未上报：停车位置(%ld)  旅程详情(%ld)  原始gps(%ld)", (unsigned long)[manager parkingRegionsToReport:NO].count, [manager tripsReadyToReport:NO].count, [manager tripRawsReadyToReport].count];
@@ -67,13 +72,13 @@
 
 - (void) tapUid {
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-    pasteboard.string = [GToolUtil userId];
+    pasteboard.string = [[GToolUtil sharedInstance] userId];
     [self showToast:@"uid 已经拷贝到剪切板"];
 }
 
 - (void) tapUdid {
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-    pasteboard.string = [GToolUtil deviceId];
+    pasteboard.string = [[GToolUtil sharedInstance] deviceId];
     [self showToast:@"udid 已经拷贝到剪切板"];
 }
 

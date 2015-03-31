@@ -18,11 +18,9 @@
     
     NSMutableDictionary * mutableDict = [NSMutableDictionary dictionary];
     
-    if (self.addi_data) {
-        NSArray * pts = [NSKeyedUnarchiver unarchiveObjectWithData:self.addi_data];
-        if (pts) {
-            mutableDict[@"points"] = pts;
-        }
+    NSArray * pts = [self turningPts];
+    if (pts) {
+        mutableDict[@"points"] = pts;
     }
     
     mutableDict[@"turn_round_cnt"] = self.turn_round_cnt;
@@ -36,6 +34,14 @@
     mutableDict[@"left_turn_max_speed"] = self.left_turn_max_speed;
     
     return mutableDict;
+}
+
+- (NSArray*) turningPts
+{
+    if (self.addi_data) {
+        return [NSKeyedUnarchiver unarchiveObjectWithData:self.addi_data];
+    }
+    return nil;
 }
 
 @end

@@ -8,6 +8,7 @@
 
 #import "TripFilter.h"
 #import "NSDate+Utilities.h"
+#import "ParkingRegion+Fetcher.h"
 
 @implementation TripFilter
 
@@ -46,6 +47,28 @@
         }
     }
     return backupSums;
+}
+
++ (NSArray*) filterRegion:(NSArray *)rawRegions byStartRegion:(CLLocation*)loc byDist:(CGFloat)dist
+{
+    if (nil == loc) {
+        return rawRegions;
+    }
+    NSMutableArray * allRegion = [NSMutableArray arrayWithCapacity:rawRegions.count];
+    for (id rawOne in rawRegions) {
+        CGFloat realDist = 0;
+        if ([rawOne isKindOfClass:[ParkingRegion class]]) {
+            ParkingRegion * oneRegion = rawOne;
+            realDist = [[oneRegion centerLocation] distanceFromLocation:loc];
+        } else if ([rawOne isKindOfClass:[ParkingRegionDetail class]]) {
+            ParkingRegion * oneRegion = ((ParkingRegionDetail*)rawOne).coreDataItem;
+            realDist = [[oneRegion centerLocation] distanceFromLocation:loc];
+        }
+        if (realDist > dist) {
+            [allRegion addObject:rawOne];
+        }
+    }
+    return allRegion;
 }
 
 @end

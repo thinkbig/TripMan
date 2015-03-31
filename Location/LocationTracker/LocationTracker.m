@@ -11,7 +11,6 @@
 #import "GPSAnalyzerRealTime.h"
 #import "GPSOffTimeFilter.h"
 #import <Parse/Parse.h>
-#import <CoreMotion/CoreMotion.h>
 #import "TSPair.h"
 #import "AnaDbManager.h"
 
@@ -206,6 +205,7 @@ typedef enum
         CMMotionActivityManager * activityManager = [LocationTracker sharedMotionActivityManager];
         [activityManager startActivityUpdatesToQueue:[NSOperationQueue mainQueue] withHandler:^(CMMotionActivity *activity) {
             dispatch_async(dispatch_get_main_queue(), ^{
+                self.rawMotionActivity = activity;
                 LTMotionType type = MotionTypeNotMoving;
                 if (activity.walking) {
                     type = MotionTypeWalking;
@@ -589,7 +589,7 @@ typedef enum
                     if (tmpSpeed < cAvgNoiceSpeed) {
                         if (!_isDriving) {
                             if (_lastLastLoc) {
-                                CGFloat angle = [GPSOffTimeFilter checkPotinAngle:[GPSOffTimeFilter coor2Point:_lastLastLoc.coordinate] antPt:[GPSOffTimeFilter coor2Point:_lastLoc.coordinate] antPt:[GPSOffTimeFilter coor2Point:newLocation.coordinate]];
+                                CGFloat angle = [GPSOffTimeFilter checkPointAngle:[GPSOffTimeFilter coor2Point:_lastLastLoc.coordinate] antPt:[GPSOffTimeFilter coor2Point:_lastLoc.coordinate] antPt:[GPSOffTimeFilter coor2Point:newLocation.coordinate]];
                                 if (angle < 100) {
                                     // filter the wrong gps
                                     speed = tmpSpeed;
@@ -605,7 +605,9 @@ typedef enum
                 }
             }
             
-            if (nil == _lastLoc || speed >= 0 || interval >= 1) {
+            if (_lastLoc && [_lastLoc.timestamp isEqualToDate:newLocation.timestamp] && [_lastLoc distanceFromLocation:newLocation] == 0) {
+                // 说明是重复点，忽略改点
+            } else if (nil == _lastLoc || speed >= 0 || interval >= 1) {
                 _lastLastLoc = _lastLoc;
                 _lastLoc = newLocation;
                 

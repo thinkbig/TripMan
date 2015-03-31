@@ -20,11 +20,11 @@
     UIViewController* homeVC = InstFirstVC(@"CarHome");
     UIViewController* tripVC = InstFirstVC(@"CarTrip");;
     UIViewController* assistorVC = InstFirstVC(@"CarAssistor");;
-    UIViewController* healthVC = InstFirstVC(@"CarHealth");
+    //UIViewController* healthVC = InstFirstVC(@"CarHealth");
     UIViewController* settingVC = InstFirstVC(@"CarSetting");
     
-    NSArray * itemIcons = @[@"tab01", @"tab02", @"tab03", @"tab04", @"tab05"];
-    NSArray * highlightIcons = @[@"tab01_active", @"tab02_active", @"tab03_active", @"tab04_active", @"tab05_active"];
+    NSArray * itemIcons = @[@"tab01", @"tab02", @"tab03", @"tab05"];
+    NSArray * highlightIcons = @[@"tab01_active", @"tab02_active", @"tab03_active", @"tab05_active"];
     //NSArray * itemTitles = @[@"首页", @"旅程", @"问路", @"健康", @"设置"];
     
     NSMutableArray * itemModels = [NSMutableArray array];
@@ -37,7 +37,7 @@
         [itemModels addObject:model];
     }];
     
-    [self setViewControllers:@[homeVC, tripVC, assistorVC, healthVC, settingVC] withTabBarItemModels:itemModels];
+    [self setViewControllers:@[homeVC, tripVC, assistorVC, settingVC] withTabBarItemModels:itemModels];
     
     [super loadView];
 }

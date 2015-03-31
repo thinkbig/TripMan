@@ -24,6 +24,22 @@
     return [[CLLocation alloc] initWithLatitude:[self.center_lat doubleValue] longitude:[self.center_lon doubleValue]];
 }
 
+- (CLLocationCoordinate2D) centerCoordinate
+{
+    return CLLocationCoordinate2DMake([self.center_lat doubleValue], [self.center_lon doubleValue]);
+}
+
+- (CTFavLocation*) toFavLocation
+{
+    CTFavLocation * loc = [[CTFavLocation alloc] init];
+    loc.lat = self.center_lat;
+    loc.lon = self.center_lon;
+    loc.name = [self nameWithDefault:@"未知地点"];
+    loc.street = self.street;
+    
+    return loc;
+}
+
 - (CGFloat) distanseFrom:(ParkingRegion*)region
 {
     if (nil == region) {

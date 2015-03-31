@@ -97,7 +97,7 @@
         NSArray * deviceParkings = [self.deviceDbMgr allParkingDetails];
         for (ParkingRegionDetail * detail in deviceParkings) {
             if ([detail.coreDataItem.is_temp boolValue] == NO) {
-                ParkingRegionDetail * duplicateDetail = [userDb parkingDetailForCoordinate:detail.region.center];
+                ParkingRegionDetail * duplicateDetail = [userDb parkingDetailForCoordinate:detail.region.center minDist:500];
                 if (duplicateDetail) {
                     [detail copyInfoFromAnother:duplicateDetail];
                 }
@@ -128,11 +128,11 @@
     return lastUserSum.start_date;
 }
 
-- (ParkingRegionDetail*) parkingDetailForCoordinate:(CLLocationCoordinate2D)coordinate
+- (ParkingRegionDetail*) parkingDetailForCoordinate:(CLLocationCoordinate2D)coordinate minDist:(CGFloat)minDist
 {
-    ParkingRegionDetail * deviceDetail = [self.deviceDbMgr parkingDetailForCoordinate:coordinate];
+    ParkingRegionDetail * deviceDetail = [self.deviceDbMgr parkingDetailForCoordinate:coordinate minDist:minDist];
     if (nil == deviceDetail) {
-        deviceDetail = [self.userDbMgr parkingDetailForCoordinate:coordinate];
+        deviceDetail = [self.userDbMgr parkingDetailForCoordinate:coordinate minDist:minDist];
     }
     return deviceDetail;
 }
@@ -141,11 +141,11 @@
 {
     NSArray * rawGroups = [region.group_owner_st allObjects];
     
-    // 删除起点和终点过于接近的点，要求大于500米
+    // 删除起点和终点过于接近的点，要求大于1500米
     NSMutableArray * allGroups = [NSMutableArray arrayWithCapacity:rawGroups.count];
     for (RegionGroup * group in rawGroups) {
         CGFloat dist = [region distanseFrom:group.end_region];
-        if (dist > 500) {
+        if (dist > 1500) {
             [allGroups addObject:group];
         }
     }
@@ -174,6 +174,28 @@
         }
     }];
     return bestTrips;
+}
+
+- (TripSummary*) bestTripWithStartRegion:(ParkingRegion*)stRegion endRegion:(ParkingRegion*)edRegion
+{
+    RegionGroup * group = nil;
+    for (RegionGroup * curGroup in stRegion.group_owner_st) {
+        if (curGroup.end_region == edRegion) {
+            group = curGroup;
+            break;
+        }
+    }
+    
+    TripSummary * bestTrip = nil;
+    CGFloat bestDuring = MAXFLOAT;
+    for (TripSummary * sum in group.trips) {
+        CGFloat curDuring = [sum.total_during floatValue];
+        if (curDuring > 0 && curDuring < bestDuring) {
+            bestDuring = curDuring;
+            bestTrip = sum;
+        }
+    }
+    return bestTrip;
 }
 
 - (NSArray*) mostUsedParkingRegionLimit:(NSUInteger)limit

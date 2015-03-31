@@ -13,21 +13,11 @@
 #import "GPSOffTimeFilter.h"
 #import "BaiduHelper.h"
 #import "UIImage+Rotate.h"
+#import "CTTrafficFullFacade.h"
+#import "GeoRectBound.h"
+#import "RouteAnnotation.h"
 
 #define OVER_HEADER_HEIGHT      114
-
-@interface RouteAnnotation : BMKPointAnnotation
-
-@property (nonatomic) int type;         // 0:起点 1：终点 2:节点 3:途经poi点
-@property (nonatomic) int degree;
-
-@end
-
-@implementation RouteAnnotation
-
-@end
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @interface SuggestDetailViewController ()
 
@@ -37,6 +27,7 @@
 @property (nonatomic) CGPoint                   lastTouchLoc;
 @property (nonatomic) BOOL                      isOpen;
 @property (nonatomic, strong) BaiduHelper *     bdHelper;
+@property (nonatomic) BOOL                      isBaiduRoute;
 
 @end
 
@@ -65,6 +56,8 @@
         self.mapView.delegate = self;
         self.mapView.zoomEnabled = YES;
         self.mapView.scrollEnabled = YES;
+        self.mapView.showsUserLocation = YES;
+        self.mapView.userTrackingMode = BMKUserTrackingModeFollow;
         [self.rootScrollView addSubview:self.mapView withAcceleration:CGPointMake(0.0, 0.5)];
     }
     self.mapView.showsUserLocation = YES;
@@ -82,9 +75,6 @@
     
     [self.overLayerVC.collectionView addObserver:self forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
     
-    [self updateTripInfo];
-    [self updateRouteView:[GPSOffTimeFilter smoothGPSData:_gpsLogs iteratorCnt:3]];
-    
     UIPanGestureRecognizer * panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panOverLayer:)];
     [self.overLayerVC.collectionView addGestureRecognizer:panGesture];
     
@@ -95,6 +85,8 @@
         offset.y = 0.f;
         [self.rootScrollView setContentOffset:offset animated:NO];
     } completion:nil];
+    
+    [self updateTripInfo];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -132,7 +124,31 @@
 
 - (void)updateTripInfo
 {
-    if (self.tripSum)
+    if (self.route.orig && self.route.dest)
+    {
+        if (self.route.steps.count == 0) {
+            self.isBaiduRoute = self.waypts.count == 0 ? YES : NO;
+            
+            CTTrafficFullFacade * facade = [[CTTrafficFullFacade alloc] init];
+            facade.fromCoorBaidu = [self.route.orig clLocation].coordinate;
+            facade.toCoorBaidu = [self.route.dest clLocation].coordinate;
+            [facade updateWithGpsWayPts:self.waypts];
+            [facade requestWithSuccess:^(CTRoute * result) {
+                self.mapView.userTrackingMode = BMKUserTrackingModeNone;
+                [self.route mergeFromAnother:result];
+                [self updateRouteViewWithRoute:self.route];
+                self.overLayerVC.route = self.route;
+                [self.overLayerVC.collectionView reloadData];
+            } failure:^(NSError * err) {
+                [self showToast:@"暂时无法获得交通数据"];
+            }];
+        } else {
+            [self updateRouteViewWithRoute:self.route];
+            self.overLayerVC.route = self.route;
+            [self.overLayerVC.collectionView reloadData];
+        }
+    }
+    else if (self.tripSum)
     {
         NSMutableArray * logs = [NSMutableArray array];
         
@@ -148,7 +164,91 @@
         
         self.overLayerVC.tripSum = self.tripSum;
         [self.overLayerVC.collectionView reloadInputViews];
+        
+        [self updateRouteView:[GPSOffTimeFilter smoothGPSData:_gpsLogs iteratorCnt:3]];
     }
+}
+
+- (void) updateRouteViewWithRoute:(CTRoute*)route
+{
+    [self.mapView removeOverlays:self.mapView.overlays];
+    
+    NSArray * steps = route.steps;
+    CTBaseLocation * startLoc = route.orig;
+    CTBaseLocation * endLoc = route.dest;
+    
+    GeoRectBound * regionBound = [GeoRectBound new];
+    
+    RouteAnnotation* itemSt = [[RouteAnnotation alloc] init];
+    itemSt.coordinate = [startLoc clLocation].coordinate;
+    itemSt.title = @"起点";
+    itemSt.type = 0;
+    [_mapView addAnnotation:itemSt];
+    [regionBound updateBoundsWithCoor:itemSt.coordinate];
+    
+    RouteAnnotation* itemEd = [[RouteAnnotation alloc] init];
+    itemEd.coordinate = [endLoc clLocation].coordinate;
+    itemEd.title = @"终点";
+    itemEd.type = 1;
+    [_mapView addAnnotation:itemEd];
+    [regionBound updateBoundsWithCoor:itemEd.coordinate];
+    
+    for (CTStep * oneStep in steps)
+    {
+        CLLocationCoordinate2D bdCoorFrom = [oneStep.from coordinate];
+        BMKMapPoint bdMapFrom = BMKMapPointForCoordinate(bdCoorFrom);
+        [regionBound updateBoundsWithCoor:bdCoorFrom];
+        
+        CLLocationCoordinate2D btCoorTo = [oneStep.to coordinate];
+        BMKMapPoint bdMapTo = BMKMapPointForCoordinate(btCoorTo);
+        [regionBound updateBoundsWithCoor:btCoorTo];
+        
+        NSArray * pathArr = [oneStep pathArray];
+        
+        BMKMapPoint * pointsToUse = new BMKMapPoint[pathArr.count+2];
+        pointsToUse[0] = bdMapFrom;
+        pointsToUse[pathArr.count+1] = bdMapTo;
+        eStepTraffic stat = [oneStep trafficStat];
+        
+        [pathArr enumerateObjectsUsingBlock:^(CTBaseLocation * obj, NSUInteger idx, BOOL *stop) {
+            CLLocationCoordinate2D btCoor = [obj coordinate];
+            BMKMapPoint bdMappt = BMKMapPointForCoordinate(btCoor);
+            pointsToUse[idx+1] = bdMappt;
+        }];
+        
+        BMKPolyline * lineOne = [BMKPolyline polylineWithPoints:pointsToUse count:pathArr.count+2];
+        [self.mapView addOverlay:lineOne];
+        
+        if (eStepTrafficSlow == stat) {
+            lineOne.title = @"yellow";
+        } else if (eStepTrafficVerySlow == stat) {
+            lineOne.title = @"red";
+        } else {
+            lineOne.title = @"green";
+        }
+        
+//        static BOOL isred = NO;
+//        if (isred) {
+//            lineOne.title = @"red";
+//        } else {
+//            lineOne.title = @"green";
+//        }
+//        isred = !isred;
+        
+        delete [] pointsToUse;
+    }
+    
+    for (CLLocation * loc in self.waypts) {
+        CLLocationCoordinate2D bdCoor = [GeoTransformer earth2Baidu:loc.coordinate];
+
+        BMKCircle * circle = nil;
+        circle = [BMKCircle circleWithCenterCoordinate:bdCoor radius:10];
+        [self.mapView addOverlay:circle];
+    }
+
+    [self.mapView setRegion:[regionBound baiduRegion] animated:YES];
+    
+    [self.mapView reloadInputViews];
 }
 
 -(void) updateRouteView:(NSArray*)gpsLog
@@ -262,7 +362,7 @@
             pointsToUse[realCnt++] = marsCoords;
             if (!isJam && i >= stJamIdx && i <= edJamIdx) {
                 BMKPolyline * lineOne = [BMKPolyline polylineWithPoints:pointsToUse count:realCnt];
-                lineOne.title = @"allLine";
+                lineOne.title = @"green";
                 [self.mapView addOverlay:lineOne];
                 realCnt = 0;
                 pointsToUse[realCnt++] = marsCoords;
@@ -271,9 +371,9 @@
                 BMKPolyline *lineOne = [BMKPolyline polylineWithPoints:pointsToUse count:realCnt];
                 TrafficJam * jamPair = jamArr[jamIdx];
                 if (jamPair.end_date && jamPair.start_date && [jamPair.end_date timeIntervalSinceDate:jamPair.start_date] > cHeavyTrafficJamThreshold) {
-                    lineOne.title = @"heavyJamLine";
+                    lineOne.title = @"red";
                 } else {
-                    lineOne.title = @"jamLine";
+                    lineOne.title = @"yellow";
                 }
                 [self.mapView addOverlay:lineOne];
                 realCnt = 0;
@@ -289,7 +389,7 @@
         }
         
         BMKPolyline *lineOne = [BMKPolyline polylineWithPoints:pointsToUse count:realCnt];
-        lineOne.title = isJam ? @"jamLine" : @"allLine";
+        lineOne.title = isJam ? @"yellow" : @"green";
         [self.mapView addOverlay:lineOne];
 
         
@@ -348,16 +448,23 @@
     {
         BMKPolyline * line = (BMKPolyline*)overlay;
         BMKPolylineView * routeLineView = [[BMKPolylineView alloc] initWithPolyline:line];
-        routeLineView.lineWidth = 3;
-        if ([line.title isEqualToString:@"allLine"]) {
-            routeLineView.strokeColor = [UIColor colorWithRed:69.0f/255.0f green:212.0f/255.0f blue:255.0f/255.0f alpha:0.9];
-        } else if ([line.title isEqualToString:@"jamLine"]) {
-            routeLineView.strokeColor = [UIColor colorWithRed:168.0f/255.0f green:12.0f/255.0f blue:155.0f/255.0f alpha:0.9];
-        } else if ([line.title isEqualToString:@"heavyJamLine"]) {
-            routeLineView.strokeColor = [UIColor colorWithRed:255.0f/255.0f green:12.0f/255.0f blue:55.0f/255.0f alpha:0.9];
+        routeLineView.lineWidth = 8;
+        if ([line.title isEqualToString:@"green"]) {
+            routeLineView.strokeColor = [UIColor colorWithRed:20.0f/255.0f green:220.0f/255.0f blue:255.0f/255.0f alpha:0.8];
+        } else if ([line.title isEqualToString:@"yellow"]) {
+            routeLineView.strokeColor = [UIColor colorWithRed:210.0f/255.0f green:225.0f/255.0f blue:15.0f/255.0f alpha:0.8];
+        } else if ([line.title isEqualToString:@"red"]) {
+            routeLineView.strokeColor = [UIColor colorWithRed:255.0f/255.0f green:12.0f/255.0f blue:55.0f/255.0f alpha:0.8];
         }
         
         overlayView = routeLineView;
+    }
+    else if ([overlay isKindOfClass:[BMKCircle class]])
+    {
+        BMKCircleView * circleRender=[[BMKCircleView alloc] initWithOverlay:overlay] ;
+        circleRender.strokeColor=[UIColor colorWithRed:255.0f/255.0f green:112.0f/255.0f blue:155.0f/255.0f alpha:0.9];
+        circleRender.lineWidth = 3.0;
+        return circleRender;
     }
     return overlayView;
 }
@@ -435,6 +542,30 @@
     }
     
     return view;
+}
+
+- (IBAction)switchRoute:(id)sender
+{
+    if (self.route.orig && self.route.dest)
+    {
+        BOOL isBaidu = self.isBaiduRoute;
+        CTTrafficFullFacade * facade = [[CTTrafficFullFacade alloc] init];
+        facade.fromCoorBaidu = [self.route.orig clLocation].coordinate;
+        facade.toCoorBaidu = [self.route.dest clLocation].coordinate;
+        if (isBaidu) {
+            [facade updateWithGpsWayPts:self.waypts];
+        }
+        [facade requestWithSuccess:^(CTRoute * result) {
+            self.mapView.userTrackingMode = BMKUserTrackingModeNone;
+            [self.route mergeFromAnother:result];
+            [self updateRouteViewWithRoute:self.route];
+            self.overLayerVC.route = self.route;
+            self.isBaiduRoute = !isBaidu;
+            [self.overLayerVC.collectionView reloadData];
+        } failure:^(NSError * err) {
+            [self showToast:@"暂时无法获得交通数据"];
+        }];
+    }
 }
 
 @end

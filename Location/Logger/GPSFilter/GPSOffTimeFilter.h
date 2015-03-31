@@ -33,6 +33,9 @@ typedef NS_ENUM(NSUInteger, eTurningStat) {
 
 @interface GPSOffTimeFilter : NSObject
 
+// 获得关键路径点，返回使用原始gps数据，不做去噪
++ (NSArray*) keyRouteFromGPS:(NSArray*)gpsData;
+
 // 用来去噪，一般repeat为3
 + (NSArray*) smoothGPSData:(NSArray*)gpsData iteratorCnt:(NSInteger)repeat;
 
@@ -43,8 +46,11 @@ typedef NS_ENUM(NSUInteger, eTurningStat) {
 - (NSArray*) turningParams;
 
 // useful function
-+ (CGFloat)checkPotinAngle:(CGPoint)pt1 antPt:(CGPoint)pt2 antPt:(CGPoint)pt3;
++ (CGFloat)checkPointAngle:(CGPoint)pt1 antPt:(CGPoint)pt2 antPt:(CGPoint)pt3;
 + (CGPoint)coor2Point:(CLLocationCoordinate2D)coor;
 + (CGFloat) angleFromPoint:(CGPoint)fromPt toPoint:(CGPoint)toPt;
+
++ (NSString*) routeToString:(NSArray*)route;    // lat,lon|lat,lon
++ (NSArray*) stringToLocationRoute:(NSString*)routeStr; // lat,lon|lat,lon -->  CLLocation
 
 @end

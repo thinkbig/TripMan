@@ -15,6 +15,12 @@
 #import "CTTrafficAbstractFacade.h"
 #import "GeoTransformer.h"
 
+@interface DriveSuggestCell ()
+
+@property (nonatomic, strong) CTFavLocation *   favLoc;
+
+@end
+
 @implementation DriveSuggestCell
 
 - (NSString*) safeText:(NSString*)str withDefault:(NSString*)defaultStr
@@ -22,17 +28,47 @@
     return str.length > 0 ? str : defaultStr;
 }
 
-- (void) updateWithTripSummary:(TripSummary*)sum
+- (void) updateWithFavLoc:(CTFavLocation*)favLoc;
 {
+    self.favLoc = favLoc;
+    
+    self.toStreet.text = [self safeText:favLoc.street withDefault:@"未知地点"];
+    self.toLabel.text = [self safeText:favLoc.name withDefault:@"未知地点"];
+    
+    CLLocation * mLoc = [BussinessDataProvider lastGoodLocation];
+    CGFloat dist = [GToolUtil distFrom:mLoc.coordinate toCoor:favLoc.coordinate];
+    
+    if (dist > 500) {
+        CTTrafficAbstractFacade * facade = [[CTTrafficAbstractFacade alloc] init];
+        facade.fromCoorBaidu = [GeoTransformer earth2Baidu:mLoc.coordinate];
+        facade.toCoorBaidu = [GeoTransformer earth2Baidu:favLoc.coordinate];
+        [facade requestWithSuccess:^(id result) {
+            if (favLoc == self.favLoc) {
+                NSNumber * during = result[@"duration"];
+                NSNumber * jamCnt = result[@"jamCnt"];
+                [self updateTimeDuring:[during floatValue] andJamCnt:[jamCnt floatValue]];
+            }
+        } failure:^(NSError * err) {
+            //NSLog(@"asdfasdf = %@", err);
+        }];
+    } else {
+        [self updateTimeDuring:0 andJamCnt:0];
+    }
+    
+    
+}
+
+- (void) updateTimeDuring:(NSTimeInterval)during andJamCnt:(NSInteger)jamCnt
+{
+    if (during < 60) {
+        during = 60;
+    }
     NSDateFormatter * formatter = [[BussinessDataProvider sharedInstance] dateFormatterForFormatStr:@"HH:mm"];
     
-    self.toStreet.text = [self safeText:sum.region_group.end_region.street withDefault:@"未知地点"];
-    self.toLabel.text = [sum.region_group.end_region nameWithDefault:@"未知地点"];
+    self.suggestLabel.attributedText = [NSAttributedString stringWithNumber:[formatter stringFromDate:[NSDate dateWithTimeIntervalSinceNow:during]] font:DigitalFontSize(17) color:[UIColor whiteColor] andUnit:@"建议出行" font:[UIFont boldSystemFontOfSize:11] color:COLOR_UNIT_GRAY];
+    self.jamCntLabel.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%ld", jamCnt] font:DigitalFontSize(17) color:[UIColor whiteColor] andUnit:@"处拥堵" font:[UIFont boldSystemFontOfSize:11] color:COLOR_UNIT_GRAY];
     
-    self.suggestLabel.attributedText = [NSAttributedString stringWithNumber:[formatter stringFromDate:sum.start_date] font:DigitalFontSize(17) color:[UIColor whiteColor] andUnit:@"建议出行" font:[UIFont boldSystemFontOfSize:11] color:COLOR_UNIT_GRAY];
-    self.jamCntLabel.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%@", sum.traffic_heavy_jam_cnt] font:DigitalFontSize(17) color:[UIColor whiteColor] andUnit:@"处拥堵" font:[UIFont boldSystemFontOfSize:11] color:COLOR_UNIT_GRAY];
-    
-    self.jamDuringLabel.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%d", [sum.total_during intValue]/60] font:DigitalFontSize(24) color:[UIColor blackColor] andUnit:@"min" font:DigitalFontSize(14) color:[UIColor blackColor]];
+    self.jamDuringLabel.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%d", (int)(during/60)] font:DigitalFontSize(24) color:[UIColor blackColor] andUnit:@"min" font:DigitalFontSize(14) color:[UIColor blackColor]];
 }
 
 @end

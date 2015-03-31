@@ -12,5 +12,6 @@
 @interface CTTripReportFacade : BaseChetuFacade
 
 @property (nonatomic, strong) TripSummary *     sum;
+@property (nonatomic) BOOL                      force;
 
 @end

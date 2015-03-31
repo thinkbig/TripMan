@@ -11,6 +11,9 @@
 #import "DrivingInfo+Fetcher.h"
 #import "EnvInfo+Fetcher.h"
 #import "TrafficJam+Fetcher.h"
+#import "ParkingRegion+Fetcher.h"
+#import "GeoTransformer.h"
+#import "GPSOffTimeFilter.h"
 
 @implementation TripSummary (Fetcher)
 
@@ -70,6 +73,9 @@
     mutableDict[@"traffic_light_waiting"] = self.traffic_light_waiting;
     mutableDict[@"traffic_heavy_jam_cnt"] = self.traffic_heavy_jam_cnt;
     mutableDict[@"traffic_jam_max_during"] = self.traffic_jam_max_during;
+    if (self.addi_info) {
+        mutableDict[@"addi_info"] = self.addi_info;
+    }
     
     NSDictionary * turning_info = [self.turning_info toJsonDict];
     if (turning_info) {
@@ -91,6 +97,12 @@
     mutableDict[@"traffic_jams"] = jams;
 
     return mutableDict;
+}
+
+- (NSArray*) wayPoints
+{
+    NSString * keyRouteStr = self.addi_info;
+    return [GPSOffTimeFilter stringToLocationRoute:keyRouteStr];    // gps坐标
 }
 
 @end

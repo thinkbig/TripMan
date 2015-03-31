@@ -12,5 +12,6 @@
 @interface CTLocReportFacade : BaseChetuFacade
 
 @property (nonatomic, strong) ParkingRegion *       aimRegion;
+@property (nonatomic) BOOL                          force;
 
 @end

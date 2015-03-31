@@ -22,4 +22,6 @@ typedef NS_ENUM(NSUInteger, eTrafficStatus) {
 - (eTrafficStatus) trafficStatus;
 - (NSDictionary*) toJsonDict;
 
+- (NSArray*) wayPoints;
+
 @end

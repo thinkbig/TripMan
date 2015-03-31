@@ -162,7 +162,7 @@
     return [TripSummary where:@"end_date!=nil && trip_id!=nil && is_uploaded==NO" inContext:self.tripAnalyzerContent order:@{@"start_date": @"DESC"}];
 }
 
-- (ParkingRegionDetail*) parkingDetailForCoordinate:(CLLocationCoordinate2D)coordinate
+- (ParkingRegionDetail*) parkingDetailForCoordinate:(CLLocationCoordinate2D)coordinate minDist:(CGFloat)minDist
 {
     if (!CLLocationCoordinate2DIsValid(coordinate)) {
         return nil;
@@ -176,17 +176,35 @@
             CLLocation * curLoc = [[CLLocation alloc] initWithLatitude:detail.region.center.latitude longitude:detail.region.center.longitude];
             CLLocationDistance dist = [curLoc distanceFromLocation:loc];
             if (dist < nearestDist) {
-                dist = nearestDist;
+                nearestDist = dist;
                 nearestRegion = detail;
             }
         }
     }
+    
+    if (minDist > 0 && nearestDist > minDist) {
+        return nil;
+    }
+    
     return nearestRegion;
+}
+
+- (ParkingRegion*) parkingRegioinForId:(NSString*)parkingId
+{
+    if (parkingId.length == 0) {
+        return nil;
+    }
+    for (ParkingRegionDetail * detail in self.parkingDetails) {
+        if (![detail.coreDataItem.is_temp boolValue] && [detail.coreDataItem.parking_id isEqualToString:parkingId]) {
+            return detail.coreDataItem;
+        }
+    }
+    return nil;
 }
 
 - (ParkingRegion*) addParkingLocation:(CLLocationCoordinate2D)coordinate modifyRegionCenter:(BOOL)ifModify
 {
-    ParkingRegionDetail * existDetail = [self parkingDetailForCoordinate:coordinate];
+    ParkingRegionDetail * existDetail = [self parkingDetailForCoordinate:coordinate minDist:500];
     if (existDetail) {
         if (ifModify) {
             CLLocationCoordinate2D newCoor = existDetail.region.center;
