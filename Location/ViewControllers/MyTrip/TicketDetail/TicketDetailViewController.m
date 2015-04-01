@@ -13,6 +13,7 @@
 #import "BaiduMapViewController.h"
 #import "ParkingRegion+Fetcher.h"
 #import "UIAlertView+RZCompletionBlocks.h"
+#import "GPSInstJamAnalyzer.h"
 
 @interface TicketDetailViewController ()
 
@@ -271,6 +272,12 @@
         BaiduMapViewController * mapVC = [self.storyboard instantiateViewControllerWithIdentifier:@"baiduMapVC"];
         mapVC.tripSum = self.tripSum;
         [self.navigationController pushViewController:mapVC animated:YES];
+    } else if (2 == indexPath.row) {
+        NSArray * logArr = [[GPSLogger sharedLogger].dbLogger selectLogFrom:self.tripSum.start_date toDate:self.tripSum.end_date offset:0 limit:0];
+        GPSInstJamAnalyzer * ana = [GPSInstJamAnalyzer new];
+        for (GPSLogItem * item in logArr) {
+            [ana appendGPSInfo:item];
+        }
     }
 }
 

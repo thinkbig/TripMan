@@ -43,6 +43,7 @@
 		A321E2921AC4526300CA9035 /* BaiduMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A321E2911AC4526300CA9035 /* BaiduMapViewController.m */; };
 		A321E2951AC4562800CA9035 /* RouteAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = A321E2941AC4562800CA9035 /* RouteAnnotation.m */; };
 		A321E2C61AC8344600CA9035 /* CTFavLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = A321E2C51AC8344600CA9035 /* CTFavLocation.m */; };
+		A321E2C91ACA7FAB00CA9035 /* GPSInstJamAnalyzer.m in Sources */ = {isa = PBXBuildFile; fileRef = A321E2C81ACA7FAB00CA9035 /* GPSInstJamAnalyzer.m */; };
 		A32CF4001A24C380008EA051 /* XYPieChart.m in Sources */ = {isa = PBXBuildFile; fileRef = A32CF3FF1A24C380008EA051 /* XYPieChart.m */; };
 		A32CF4041A24C4C0008EA051 /* TicketDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A32CF4031A24C4C0008EA051 /* TicketDetailViewController.m */; };
 		A32CF8A81A2BF97E006932F7 /* CarTripCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A32CF8A71A2BF97E006932F7 /* CarTripCell.m */; };
@@ -219,6 +220,8 @@
 		A3E0A3731ABC0A3000E7456C /* CTRoute.m in Sources */ = {isa = PBXBuildFile; fileRef = A3E0A3721ABC0A3000E7456C /* CTRoute.m */; };
 		A3E0A3761ABC176600E7456C /* CTTrafficFullFacade.m in Sources */ = {isa = PBXBuildFile; fileRef = A3E0A3751ABC176600E7456C /* CTTrafficFullFacade.m */; };
 		A3E0A3791ABE48C200E7456C /* GeoRectBound.m in Sources */ = {isa = PBXBuildFile; fileRef = A3E0A3781ABE48C200E7456C /* GeoRectBound.m */; };
+		A3E2891E1ACB98E10043F14C /* CTInstReportFacade.m in Sources */ = {isa = PBXBuildFile; fileRef = A3E2891D1ACB98E10043F14C /* CTInstReportFacade.m */; };
+		A3E289211ACB994A0043F14C /* CTInstReportModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A3E289201ACB994A0043F14C /* CTInstReportModel.m */; };
 		A3EF5A361A0F553100B38232 /* DriveSuggestCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A3EF5A351A0F553100B38232 /* DriveSuggestCell.m */; };
 		A3FDD15D1A027F64007B3C65 /* TSTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = A3FDD1551A027F64007B3C65 /* TSTabBar.m */; };
 		A3FDD15E1A027F64007B3C65 /* TSTabBarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = A3FDD1581A027F64007B3C65 /* TSTabBarItem.m */; };
@@ -299,6 +302,8 @@
 		A321E2941AC4562800CA9035 /* RouteAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RouteAnnotation.m; sourceTree = "<group>"; };
 		A321E2C41AC8344600CA9035 /* CTFavLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTFavLocation.h; sourceTree = "<group>"; };
 		A321E2C51AC8344600CA9035 /* CTFavLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTFavLocation.m; sourceTree = "<group>"; };
+		A321E2C71ACA7FAB00CA9035 /* GPSInstJamAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPSInstJamAnalyzer.h; sourceTree = "<group>"; };
+		A321E2C81ACA7FAB00CA9035 /* GPSInstJamAnalyzer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPSInstJamAnalyzer.m; sourceTree = "<group>"; };
 		A32CF3FE1A24C380008EA051 /* XYPieChart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XYPieChart.h; sourceTree = "<group>"; };
 		A32CF3FF1A24C380008EA051 /* XYPieChart.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XYPieChart.m; sourceTree = "<group>"; };
 		A32CF4021A24C4C0008EA051 /* TicketDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TicketDetailViewController.h; sourceTree = "<group>"; };
@@ -706,6 +711,10 @@
 		A3E0A3751ABC176600E7456C /* CTTrafficFullFacade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTTrafficFullFacade.m; sourceTree = "<group>"; };
 		A3E0A3771ABE48C200E7456C /* GeoRectBound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeoRectBound.h; sourceTree = "<group>"; };
 		A3E0A3781ABE48C200E7456C /* GeoRectBound.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeoRectBound.m; sourceTree = "<group>"; };
+		A3E2891C1ACB98E10043F14C /* CTInstReportFacade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTInstReportFacade.h; sourceTree = "<group>"; };
+		A3E2891D1ACB98E10043F14C /* CTInstReportFacade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTInstReportFacade.m; sourceTree = "<group>"; };
+		A3E2891F1ACB994A0043F14C /* CTInstReportModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTInstReportModel.h; sourceTree = "<group>"; };
+		A3E289201ACB994A0043F14C /* CTInstReportModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTInstReportModel.m; sourceTree = "<group>"; };
 		A3EF5A341A0F553100B38232 /* DriveSuggestCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DriveSuggestCell.h; sourceTree = "<group>"; };
 		A3EF5A351A0F553100B38232 /* DriveSuggestCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DriveSuggestCell.m; sourceTree = "<group>"; };
 		A3FDD1541A027F64007B3C65 /* TSTabBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSTabBar.h; sourceTree = "<group>"; };
@@ -1335,6 +1344,8 @@
 				A35BC73F1AA94BF800D726D4 /* CTTripReportFacade.m */,
 				A35BC7411AA94C1200D726D4 /* CTTripRawReportFacade.h */,
 				A35BC7421AA94C1200D726D4 /* CTTripRawReportFacade.m */,
+				A3E2891C1ACB98E10043F14C /* CTInstReportFacade.h */,
+				A3E2891D1ACB98E10043F14C /* CTInstReportFacade.m */,
 			);
 			path = CTReport;
 			sourceTree = "<group>";
@@ -2076,6 +2087,8 @@
 				A385C54619F6423300A0F7F6 /* GPSTurningAnalyzer.m */,
 				A340E8F219EEC7610014C14B /* GPSEndTraceAnalyzer.h */,
 				A340E8F319EEC7610014C14B /* GPSEndTraceAnalyzer.m */,
+				A321E2C71ACA7FAB00CA9035 /* GPSInstJamAnalyzer.h */,
+				A321E2C81ACA7FAB00CA9035 /* GPSInstJamAnalyzer.m */,
 			);
 			path = RealAnalyzer;
 			sourceTree = "<group>";
@@ -2141,6 +2154,8 @@
 				A3E0A3721ABC0A3000E7456C /* CTRoute.m */,
 				A321E2C41AC8344600CA9035 /* CTFavLocation.h */,
 				A321E2C51AC8344600CA9035 /* CTFavLocation.m */,
+				A3E2891F1ACB994A0043F14C /* CTInstReportModel.h */,
+				A3E289201ACB994A0043F14C /* CTInstReportModel.m */,
 			);
 			path = Chetu;
 			sourceTree = "<group>";
@@ -2430,6 +2445,7 @@
 				A34F01141A03D78900F58C17 /* MapDisplayViewController.m in Sources */,
 				A34890691A3FCB6F002DE948 /* AJObject2JsonSerializer.m in Sources */,
 				A32CF4001A24C380008EA051 /* XYPieChart.m in Sources */,
+				A321E2C91ACA7FAB00CA9035 /* GPSInstJamAnalyzer.m in Sources */,
 				A35C26461A426F4B005F6658 /* RZSplitViewController.m in Sources */,
 				A35BC73A1AA82D9B00D726D4 /* TripSummary+Fetcher.m in Sources */,
 				A35C26501A42C5BB005F6658 /* ScrollSegView.m in Sources */,
@@ -2505,6 +2521,7 @@
 				A331F5BF1A1CCA1E001F4DE3 /* SuggestDetailViewController.m in Sources */,
 				A35C262A1A426F4B005F6658 /* NSString+RZStringSize.m in Sources */,
 				A3D0B4BC1A2C64A80030B19E /* MPPlot.m in Sources */,
+				A3E289211ACB994A0043F14C /* CTInstReportModel.m in Sources */,
 				A33544141A23759F0023815B /* SuggestDetailCell.m in Sources */,
 				A3D0B4BD1A2C64A80030B19E /* UIBezierPath+curved.m in Sources */,
 				A348906B1A3FCB6F002DE948 /* AJSerializer.m in Sources */,
@@ -2546,6 +2563,7 @@
 				A3FDD16A1A028037007B3C65 /* CustomBadge.m in Sources */,
 				A348906A1A3FCB6F002DE948 /* AJPropertyDescriptor.m in Sources */,
 				A35C264B1A426F4B005F6658 /* RZCommonUtils.m in Sources */,
+				A3E2891E1ACB98E10043F14C /* CTInstReportFacade.m in Sources */,
 				A3D0B4BA1A2C64A80030B19E /* MPBarsGraphView.m in Sources */,
 				A318CEE71A26067900320E8F /* TicketDetailCell.m in Sources */,
 				A35BC73D1AA844FC00D726D4 /* CTLocReportFacade.m in Sources */,

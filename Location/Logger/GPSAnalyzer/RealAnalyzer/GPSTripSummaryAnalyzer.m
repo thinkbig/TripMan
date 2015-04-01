@@ -138,6 +138,15 @@
 
 #pragma mark - private method
 
+- (BOOL) isValidJam:(TSPair*)jamPair
+{
+    GPSLogItem * jamStart = jamPair.first;
+    GPSLogItem * jamEnd = jamPair.second;
+    CGFloat thisDuring = [jamEnd.timestamp timeIntervalSinceDate:jamStart.timestamp];
+    
+    return thisDuring > 10;
+}
+
 - (void) filterJamData
 {
     if (self.traffic_jams.count == 0) {
@@ -158,16 +167,15 @@
         if (jamDist < 100 || jamDuring < 10) {
             lastPair.second = curPair.second;
         } else {
-            GPSLogItem * jamStart = lastPair.first;
-            GPSLogItem * jamEnd = curPair.second;
-            CGFloat thisDuring = [jamEnd.timestamp timeIntervalSinceDate:jamStart.timestamp];
-            if (thisDuring >= 5) {
+            if ([self isValidJam:lastPair]) {
                 [filteredJams addObject:lastPair];
             }
             lastPair = curPair;
         }
     }
-    [filteredJams addObject:lastPair];
+    if ([self isValidJam:lastPair]) {
+        [filteredJams addObject:lastPair];
+    }
     self.traffic_jams = filteredJams;
 }
 

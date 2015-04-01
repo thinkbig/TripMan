@@ -63,6 +63,7 @@
         self.removeThreshold = 20;
         self.locChangeLogItem = nil;
         self.logArr = [NSMutableArray arrayWithCapacity:128];
+        self.jamAnalyzer = [GPSInstJamAnalyzer new];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didExitReagion:) name:kNotifyExitReagion object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didLostGPS) name:kNotifyGpsLost object:nil];
@@ -130,14 +131,15 @@
         // lower the speed if it is a low accuracy and near the start move point
         if ([gps distanceFrom:firstItem] < 500) {
             speed /= 2.0;
-            gps.speed = @(speed);
         }
     }
     
     BOOL validSpeed = YES;
     if (self.lastLogItem && speed == 0 && accu > kGoodHorizontalAccuracy && [gps.timestamp timeIntervalSinceDate:self.lastLogItem.timestamp] < 1) {
         validSpeed = NO;
+        gps.speed = @(-1);
     }
+    gps.speed = @(speed);
     
     GPSLogItem * lastGps = self.lastLogItem;
     if (validSpeed) {
@@ -172,6 +174,12 @@
             }
         }
 
+        if ([_isInTrip boolValue]) {
+            [self.jamAnalyzer appendGPSInfo:gps];
+        } else {
+            [self.jamAnalyzer reset];
+        }
+        
         [self.logArr addObject:gps];
         
         if (speed > cInsTrafficJamSpeed) {
@@ -300,6 +308,35 @@
         _startMoveTraceIdx -= oldestIdx;
         _endSpeedTraceIdx -= oldestIdx;
     }
+}
+
+- (CGFloat) avgSpeedFromDate:(NSDate*)fromDate minSampleCnt:(NSInteger)minCnt
+{
+    NSArray * tmpArr = self.logArr;
+    NSInteger tolCnt = tmpArr.count;
+    
+    if (tolCnt < minCnt) {
+        return -1;
+    }
+
+    __block NSInteger cnt = 0;
+    __block CGFloat tolSpeed = 0;
+    [tmpArr enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(GPSLogItem * obj, NSUInteger idx, BOOL *stop) {
+        if ([fromDate compare:obj.timestamp] == NSOrderedAscending) {
+            CGFloat speed = [obj.speed floatValue];
+            if (speed >= 0) {
+                tolSpeed += speed;
+                cnt++;
+            }
+        } else {
+            *stop = 0;
+        }
+    }];
+    
+    if (cnt < minCnt) {
+        return -1;
+    }
+    return tolSpeed/cnt;
 }
 
 - (BOOL)isInTrip

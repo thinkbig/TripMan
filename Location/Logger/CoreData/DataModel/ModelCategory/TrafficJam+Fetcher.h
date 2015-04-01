@@ -12,4 +12,7 @@
 
 - (NSDictionary*) toJsonDict;
 
+- (CLLocationCoordinate2D) stCoordinate;
+- (CLLocationCoordinate2D) edCoordinate;
+
 @end

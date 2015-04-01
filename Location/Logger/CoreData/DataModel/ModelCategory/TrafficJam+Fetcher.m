@@ -23,4 +23,14 @@
     return mutableDict;
 }
 
+- (CLLocationCoordinate2D) stCoordinate
+{
+    return CLLocationCoordinate2DMake([self.start_lat doubleValue], [self.start_lon doubleValue]);
+}
+
+- (CLLocationCoordinate2D) edCoordinate
+{
+    return CLLocationCoordinate2DMake([self.end_lat doubleValue], [self.end_lon doubleValue]);
+}
+
 @end

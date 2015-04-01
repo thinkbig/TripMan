@@ -14,6 +14,7 @@
 #import "GeoRectBound.h"
 #import "GeoTransformer.h"
 #import "GRoadSnapFacade.h"
+#import "TrafficJam+Fetcher.h"
 
 @interface BaiduMapViewController ()
 
@@ -43,9 +44,6 @@
         [self.view addSubview:self.mapView];
     }
     self.mapView.showsUserLocation = YES;
-    
-    // 这一行发布去掉
-    [[GPSLogger sharedLogger].offTimeAnalyzer analyzeTripForSum:self.tripSum withAnalyzer:nil];
     
     NSString * keyRouteStr = self.tripSum.addi_info;
     self.locationArr = [GPSOffTimeFilter stringToLocationRoute:keyRouteStr];    // gps坐标
@@ -118,6 +116,28 @@
     BMKPolyline * lineOne = [BMKPolyline polylineWithPoints:pointsToUse count:route.count];
     lineOne.title = @"green";
     [self.mapView addOverlay:lineOne];
+    
+    // draw traffic jam
+    NSArray * jamArr =  [self.tripSum.traffic_jams allObjects];
+    for (TrafficJam * jamPair in jamArr)
+    {
+        if (jamPair.end_date && jamPair.start_date && [jamPair.end_date timeIntervalSinceDate:jamPair.start_date] > cHeavyTrafficJamThreshold)
+        {
+            BMKMapPoint jamToUse[2];
+            
+            CLLocationCoordinate2D bdCoordsSt = [GeoTransformer earth2Baidu:[jamPair stCoordinate]];
+            BMKMapPoint bdMapCoorSt = BMKMapPointForCoordinate(bdCoordsSt);
+            jamToUse[0] = bdMapCoorSt;
+
+            CLLocationCoordinate2D bdCoordsEd = [GeoTransformer earth2Baidu:[jamPair edCoordinate]];
+            BMKMapPoint bdMapCoorEd = BMKMapPointForCoordinate(bdCoordsEd);
+            jamToUse[1] = bdMapCoorEd;
+            
+            BMKPolyline * jamLine = [BMKPolyline polylineWithPoints:jamToUse count:2];
+            jamLine.title = @"red";
+            [self.mapView addOverlay:jamLine];
+        }
+    }
     
     [self.mapView setRegion:[regionBound baiduRegion] animated:YES];
 }

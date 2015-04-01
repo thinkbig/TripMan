@@ -109,7 +109,7 @@ static NSString * rebuildVal = @"value_0000000000002"; // make sure it is differ
     if (nil == self.locationTracker) {
         self.locationTracker = [[LocationTracker alloc] init];
     }
-    [self.locationTracker startLocationTracking];
+    [self.locationTracker updateCurrentLocation];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kNotifyNeedUpdate object:nil];
 }
