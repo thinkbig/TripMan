@@ -92,7 +92,7 @@
     [self.collectionView performBatchUpdates:^{
         [self.collectionView reloadItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]]];
     } completion:^(BOOL finished) {
-        [self showToast:@"保存成功"];
+        [self showToast:@"保存成功" onDismiss:nil];
         self.saveBtn.enabled = NO;
     }];
 }

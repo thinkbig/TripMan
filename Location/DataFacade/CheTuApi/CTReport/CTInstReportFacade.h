@@ -12,5 +12,6 @@
 @interface CTInstReportFacade : BaseChetuFacade
 
 @property (nonatomic, strong) CTInstReportModel *       reportModel;
+@property (nonatomic) BOOL                              ignore;
 
 @end

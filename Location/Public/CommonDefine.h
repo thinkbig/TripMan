@@ -14,6 +14,9 @@
 
 #define COMMON_DEBUG                  1
 
+#define kMaxUserFavLocCnt           3
+#define kMostParkingShowCnt         20
+
 #define kNotifyUpgradeComplete        @"kNotifyUpgradeComplete"
 #define kNotifyNeedUpdate             @"kNotifyNeedUpdate"
 

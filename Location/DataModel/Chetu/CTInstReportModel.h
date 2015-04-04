@@ -11,6 +11,7 @@
 @interface CTInstReportModel : JSONModel
 
 @property (nonatomic, strong) NSString<Optional> * jam_id;
+@property (nonatomic, strong) NSString<Optional> * ignore;      // 如果发现这个不是拥堵，设置这个标记为忽略，并上报
 
 @property (nonatomic, strong) NSNumber<Optional> * st_date;
 @property (nonatomic, strong) NSNumber<Optional> * ed_date;

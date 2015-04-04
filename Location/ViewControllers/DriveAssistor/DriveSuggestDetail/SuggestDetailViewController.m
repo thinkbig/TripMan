@@ -36,10 +36,12 @@
 - (void)internalInit {
     [super internalInit];
     self.bdHelper = [BaiduHelper new];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateUserLocation) name:kNotifyGoodLocationUpdated object:nil];
 }
 
 - (void)dealloc
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self.overLayerVC.collectionView removeObserver:self forKeyPath:@"contentSize"];
 }
 
@@ -56,11 +58,15 @@
         self.mapView.delegate = self;
         self.mapView.zoomEnabled = YES;
         self.mapView.scrollEnabled = YES;
-        self.mapView.showsUserLocation = YES;
-        self.mapView.userTrackingMode = BMKUserTrackingModeFollow;
         [self.rootScrollView addSubview:self.mapView withAcceleration:CGPointMake(0.0, 0.5)];
     }
+    self.mapView.userTrackingMode = BMKUserTrackingModeNone;
     self.mapView.showsUserLocation = YES;
+    
+    [self updateUserLocation];
+    BMKCoordinateRegion viewRegion = BMKCoordinateRegionMake([BussinessDataProvider lastGoodLocation].coordinate, BMKCoordinateSpanMake(0.5, 0.5));
+    BMKCoordinateRegion adjustedRegion = [_mapView regionThatFits:viewRegion];
+    [_mapView setRegion:adjustedRegion animated:YES];
     
     if (nil == self.overLayerVC) {
         self.overLayerVC = [self.storyboard instantiateViewControllerWithIdentifier:@"SuggestOverLay"];
@@ -92,6 +98,17 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)updateUserLocation
+{
+    CLLocation * userLoc = [BussinessDataProvider lastGoodLocation];
+    if (userLoc) {
+        CLLocationCoordinate2D bdCoor = [GeoTransformer earth2Baidu:userLoc.coordinate];
+        BMKUserLocation * userLoc = [[BMKUserLocation alloc] init];
+        [userLoc setValue:[[CLLocation alloc] initWithLatitude:bdCoor.latitude longitude:bdCoor.longitude] forKey:@"location"];
+        [self.mapView updateLocationData:userLoc];
+    }
 }
 
 - (void)panOverLayer:(UIPanGestureRecognizer*)panGesture
@@ -129,18 +146,23 @@
         if (self.route.steps.count == 0) {
             self.isBaiduRoute = self.waypts.count == 0 ? YES : NO;
             
+            [self showLoading];
             CTTrafficFullFacade * facade = [[CTTrafficFullFacade alloc] init];
             facade.fromCoorBaidu = [self.route.orig clLocation].coordinate;
             facade.toCoorBaidu = [self.route.dest clLocation].coordinate;
             [facade updateWithGpsWayPts:self.waypts];
             [facade requestWithSuccess:^(CTRoute * result) {
+                [self hideLoading];
                 self.mapView.userTrackingMode = BMKUserTrackingModeNone;
                 [self.route mergeFromAnother:result];
                 [self updateRouteViewWithRoute:self.route];
                 self.overLayerVC.route = self.route;
                 [self.overLayerVC.collectionView reloadData];
             } failure:^(NSError * err) {
-                [self showToast:@"暂时无法获得交通数据"];
+                [self hideLoading];
+                [self showToast:@"暂时无法获得交通数据" onDismiss:^(id toast) {
+                    [self.navigationController popViewControllerAnimated:YES];
+                }];
             }];
         } else {
             [self updateRouteViewWithRoute:self.route];
@@ -212,6 +234,7 @@
         
         [pathArr enumerateObjectsUsingBlock:^(CTBaseLocation * obj, NSUInteger idx, BOOL *stop) {
             CLLocationCoordinate2D btCoor = [obj coordinate];
+            [regionBound updateBoundsWithCoor:btCoor];
             BMKMapPoint bdMappt = BMKMapPointForCoordinate(btCoor);
             pointsToUse[idx+1] = bdMappt;
         }];
@@ -241,11 +264,14 @@
     for (CLLocation * loc in self.waypts) {
         CLLocationCoordinate2D bdCoor = [GeoTransformer earth2Baidu:loc.coordinate];
 
+        [regionBound updateBoundsWithCoor:bdCoor];
         BMKCircle * circle = nil;
         circle = [BMKCircle circleWithCenterCoordinate:bdCoor radius:10];
         [self.mapView addOverlay:circle];
     }
 
+    regionBound.maxLat += 0.01;
+    regionBound.minLat -= 0.02;
     [self.mapView setRegion:[regionBound baiduRegion] animated:YES];
     
     [self.mapView reloadInputViews];
@@ -542,30 +568,6 @@
     }
     
     return view;
-}
-
-- (IBAction)switchRoute:(id)sender
-{
-    if (self.route.orig && self.route.dest)
-    {
-        BOOL isBaidu = self.isBaiduRoute;
-        CTTrafficFullFacade * facade = [[CTTrafficFullFacade alloc] init];
-        facade.fromCoorBaidu = [self.route.orig clLocation].coordinate;
-        facade.toCoorBaidu = [self.route.dest clLocation].coordinate;
-        if (isBaidu) {
-            [facade updateWithGpsWayPts:self.waypts];
-        }
-        [facade requestWithSuccess:^(CTRoute * result) {
-            self.mapView.userTrackingMode = BMKUserTrackingModeNone;
-            [self.route mergeFromAnother:result];
-            [self updateRouteViewWithRoute:self.route];
-            self.overLayerVC.route = self.route;
-            self.isBaiduRoute = !isBaidu;
-            [self.overLayerVC.collectionView reloadData];
-        } failure:^(NSError * err) {
-            [self showToast:@"暂时无法获得交通数据"];
-        }];
-    }
 }
 
 @end

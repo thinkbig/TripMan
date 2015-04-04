@@ -126,6 +126,10 @@
         detail.region = region;
         [_parkingDetails addObject:detail];
     }
+    
+    [_parkingDetails enumerateObjectsWithOptions:NSEnumerationConcurrent usingBlock:^(ParkingRegionDetail * obj, NSUInteger idx, BOOL *stop) {
+        [obj calculatePinyin];
+    }];
 }
 
 - (NSArray*) allParkingDetails
@@ -359,7 +363,7 @@
         return (NSComparisonResult)NSOrderedSame;
     }];
     
-    if (limit >= sortArr.count) {
+    if (0 == limit || limit >= sortArr.count) {
         return sortArr;
     }
     return [sortArr subarrayWithRange:NSMakeRange(0, limit)];

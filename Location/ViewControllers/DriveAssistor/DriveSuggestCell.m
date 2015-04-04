@@ -30,6 +30,9 @@
 
 - (void) updateWithFavLoc:(CTFavLocation*)favLoc;
 {
+    if (nil == self.favLoc) {
+        [self updateTimeDuring:-1 andJamCnt:0];
+    }
     self.favLoc = favLoc;
     
     self.toStreet.text = [self safeText:favLoc.street withDefault:@"未知地点"];
@@ -49,6 +52,7 @@
                 [self updateTimeDuring:[during floatValue] andJamCnt:[jamCnt floatValue]];
             }
         } failure:^(NSError * err) {
+            [self updateTimeDuring:-1 andJamCnt:0];
             //NSLog(@"asdfasdf = %@", err);
         }];
     } else {
@@ -60,15 +64,22 @@
 
 - (void) updateTimeDuring:(NSTimeInterval)during andJamCnt:(NSInteger)jamCnt
 {
-    if (during < 60) {
+    if (during >= 0 && during < 60) {
         during = 60;
     }
     NSDateFormatter * formatter = [[BussinessDataProvider sharedInstance] dateFormatterForFormatStr:@"HH:mm"];
     
-    self.suggestLabel.attributedText = [NSAttributedString stringWithNumber:[formatter stringFromDate:[NSDate dateWithTimeIntervalSinceNow:during]] font:DigitalFontSize(17) color:[UIColor whiteColor] andUnit:@"建议出行" font:[UIFont boldSystemFontOfSize:11] color:COLOR_UNIT_GRAY];
-    self.jamCntLabel.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%ld", jamCnt] font:DigitalFontSize(17) color:[UIColor whiteColor] andUnit:@"处拥堵" font:[UIFont boldSystemFontOfSize:11] color:COLOR_UNIT_GRAY];
-    
-    self.jamDuringLabel.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%d", (int)(during/60)] font:DigitalFontSize(24) color:[UIColor blackColor] andUnit:@"min" font:DigitalFontSize(14) color:[UIColor blackColor]];
+    if (during < 0) {
+        self.suggestLabel.attributedText = [NSAttributedString stringWithNumber:@"--:--" font:DigitalFontSize(17) color:[UIColor whiteColor] andUnit:@"建议出行" font:[UIFont boldSystemFontOfSize:11] color:COLOR_UNIT_GRAY];
+        self.jamCntLabel.attributedText = [NSAttributedString stringWithNumber:@"-" font:DigitalFontSize(17) color:[UIColor whiteColor] andUnit:@"处拥堵" font:[UIFont boldSystemFontOfSize:11] color:COLOR_UNIT_GRAY];
+        
+        self.jamDuringLabel.attributedText = [NSAttributedString stringWithNumber:@"-" font:DigitalFontSize(24) color:[UIColor blackColor] andUnit:@"min" font:DigitalFontSize(14) color:[UIColor blackColor]];
+    } else {
+        self.suggestLabel.attributedText = [NSAttributedString stringWithNumber:[formatter stringFromDate:[NSDate dateWithTimeIntervalSinceNow:during]] font:DigitalFontSize(17) color:[UIColor whiteColor] andUnit:@"建议出行" font:[UIFont boldSystemFontOfSize:11] color:COLOR_UNIT_GRAY];
+        self.jamCntLabel.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%ld", jamCnt] font:DigitalFontSize(17) color:[UIColor whiteColor] andUnit:@"处拥堵" font:[UIFont boldSystemFontOfSize:11] color:COLOR_UNIT_GRAY];
+        
+        self.jamDuringLabel.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%d", (int)(during/60)] font:DigitalFontSize(24) color:[UIColor blackColor] andUnit:@"min" font:DigitalFontSize(14) color:[UIColor blackColor]];
+    }
 }
 
 @end

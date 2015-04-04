@@ -29,7 +29,6 @@
     
     NSNumber *          _isInTrip;
     NSNumber *          _eStat;
-    NSDictionary *      _lastGoodGPS;
     NSDate *            _lastExitReagionDate;
     
     GPSLogItem *        _driveStart;
@@ -38,6 +37,8 @@
     
     CGFloat             _angleDiffTol;
     NSInteger           _angleDiffCnt;          // 用于计算最近10个gps点的轨迹，是否近似线性，是否是跳变
+    
+    CGFloat             _endThreshold;
     
 }
 
@@ -60,6 +61,7 @@
         _startMoveTraceIdx = 0;
         _startSpeedTraceIdx = 0;
         _endSpeedTraceIdx = 0;
+        _endThreshold = cDriveEndThreshold;
         self.removeThreshold = 20;
         self.locChangeLogItem = nil;
         self.logArr = [NSMutableArray arrayWithCapacity:128];
@@ -87,27 +89,11 @@
     }
 }
 
-- (NSDictionary*)lastGoodGPS
-{
-    if (nil == _lastGoodGPS) {
-        _lastGoodGPS = [[NSUserDefaults standardUserDefaults] objectForKey:kLastestGoodGPSData];
-    }
-    return _lastGoodGPS;
-}
-
-- (void)setLastGoodGPS:(GPSLogItem*)gps
-{
-    if (gps) {
-        _lastGoodGPS = @{@"timestamp":gps.timestamp, @"lat":gps.latitude, @"lon":gps.longitude};
-        [[NSUserDefaults standardUserDefaults] setObject:_lastGoodGPS forKey:kLastestGoodGPSData];
-    }
-}
-
 - (void) appendGPSInfo:(GPSLogItem*)gps
 {
     if (gps.timestamp)
     {
-        NSDictionary * lastDate = [self lastGoodGPS];
+        NSDictionary * lastDate = [[BussinessDataProvider sharedInstance] lastGoodGpsItem];
         if (lastDate && [gps.timestamp timeIntervalSinceDate:lastDate[@"timestamp"]] > cOntOfDateThreshold) {
             //[self removeOldData:YES];
             _startSpeedTrace = _endSpeedTrace = 0;
@@ -117,7 +103,7 @@
             [self setEStat:eMotionStatGPSLost];
         }
         if ([gps.horizontalAccuracy doubleValue] < kPoorHorizontalAccuracy) {
-            [self setLastGoodGPS:gps];
+            [[BussinessDataProvider sharedInstance] updateLastGoodGpsItem:gps];
         }
     }
     
@@ -179,6 +165,8 @@
         } else {
             [self.jamAnalyzer reset];
         }
+        // 如果靠近常用的停车位置，则把停车检测的时间阈值减少一半
+        //_endThreshold = ([self.jamAnalyzer nearParkingLoc:5] ? cDriveEndThreshold*0.5 : cDriveEndThreshold);
         
         [self.logArr addObject:gps];
         
@@ -286,7 +274,7 @@
             _endSpeedTraceCnt = 1;
             _endSpeedTraceIdx = cnt-1;
         } else {
-            NSDate * thresDateEd = [lastItem.timestamp dateByAddingTimeInterval:-cDriveEndThreshold];
+            NSDate * thresDateEd = [lastItem.timestamp dateByAddingTimeInterval:-_endThreshold];
             for (NSInteger i = _endSpeedTraceIdx; i < cnt-cDirveEndSamplePoint; i++) {
                 GPSLogItem * item = tmpArr[i];
                 if ([thresDateEd compare:item.timestamp] == NSOrderedDescending) {
@@ -469,7 +457,7 @@
         }
         if (_endSpeedTraceCnt > cDirveEndSamplePoint && _endSpeedTraceIdx < self.logArr.count) {
             GPSLogItem * item = ((GPSLogItem*)(self.logArr[_endSpeedTraceIdx]));
-            if ([[NSDate date] timeIntervalSinceDate:item.timestamp] >= cDriveEndThreshold*0.6) {
+            if ([[NSDate date] timeIntervalSinceDate:item.timestamp] >= _endThreshold*0.6) {
                 CGFloat avgSpeed = _endSpeedTrace/_endSpeedTraceCnt;
                 if (avgSpeed  < cAvgStationarySpeed && [tracker duringForAutomationWithin:60] < 30) {
                     newStat = eMotionStatStationary;

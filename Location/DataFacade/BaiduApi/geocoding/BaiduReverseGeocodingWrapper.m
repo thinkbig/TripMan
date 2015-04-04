@@ -45,7 +45,7 @@
             self.failureBlock(ERR_MAKE(eInvalidInputError, @"查询失败"));
         }
     } else {
-        [[BussinessDataProvider sharedInstance].fuckBaidu addObject:_geocodesearch];
+        [[BussinessDataProvider sharedInstance].fuckBaidu addObject:self];
     }
 }
 
@@ -59,7 +59,7 @@
     } else if (self.failureBlock) {
         self.failureBlock(ERR_MAKE(error, @"查询地理位置名称失败"));
     }
-    [[BussinessDataProvider sharedInstance].fuckBaidu removeObject:searcher];
+    [[BussinessDataProvider sharedInstance].fuckBaidu removeObject:self];
 }
 
 @end

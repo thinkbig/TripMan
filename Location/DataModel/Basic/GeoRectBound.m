@@ -38,8 +38,8 @@
     BMKCoordinateRegion bdRegion;
     bdRegion.center.latitude     = (self.maxLat + self.minLat) / 2.0 - 0.007;
     bdRegion.center.longitude    = (self.maxLon + self.minLon) / 2.0;
-    bdRegion.span.latitudeDelta  = (self.maxLat - self.minLat) / 2.0 + 0.018;
-    bdRegion.span.longitudeDelta = (self.maxLon - self.minLon) / 2.0 + 0.018;
+    bdRegion.span.latitudeDelta  = (self.maxLat - self.minLat) / 2.0 * 1.3;
+    bdRegion.span.longitudeDelta = (self.maxLon - self.minLon) / 2.0 * 1.4;
     
     return bdRegion;
 }

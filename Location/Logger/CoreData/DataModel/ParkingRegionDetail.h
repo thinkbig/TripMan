@@ -16,5 +16,7 @@
 @property (nonatomic) NSUInteger                    parkingCnt;
 
 - (void) copyInfoFromAnother:(ParkingRegionDetail*)detail;
+- (BOOL) matchString:(NSString*)str;
+- (void) calculatePinyin;
 
 @end

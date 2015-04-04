@@ -96,6 +96,17 @@
     }
 }
 
+- (void) updateLayout
+{
+    _hideContentNavBar = _searchContentsController.navigationController.navigationBarHidden;
+    _oldSearchFrame = self.searchBar.frame;
+    _oldSearchSupperFrame = self.searchBar.superview.frame;
+    
+    CGFloat y = CGRectGetMaxY(_oldSearchSupperFrame) + 15;
+    CGFloat height = _searchContentsController.view.frame.size.height - y;
+    _searchResultsTableView.frame = CGRectMake(0.0f, y, _searchContentsController.view.frame.size.width, height);
+}
+
 #pragma mark - UISearchBarDelegate
 
 - (void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope {
@@ -108,6 +119,13 @@
     if ([self.delegate respondsToSelector:@selector(textDidChange:)]) {
         [self.delegate textDidChange:searchText];
     }
+}
+
+- (BOOL)searchBar:(UISearchBar *)searchBar shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
+    if ([self.delegate respondsToSelector:@selector(searchBar:shouldChangeTextInRange:replacementText:)]) {
+        [self.delegate searchBar:searchBar shouldChangeTextInRange:range replacementText:text];
+    }
+    return YES;
 }
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
@@ -126,24 +144,24 @@
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
+    if ([self.delegate respondsToSelector:@selector(searchDisplayControllerDidBeginSearch:)]) {
+        [self.delegate searchDisplayControllerDidBeginSearch:self];
+    }
     [_searchResultsTableView reloadData];
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
     //_searchBar.tintColor = [UIColor clearColor];
+    if ([self.delegate respondsToSelector:@selector(searchBarCancelButtonClicked:)]) {
+        [self.delegate searchBarCancelButtonClicked:searchBar];
+    }
     [self setActive:NO animated:YES];
     [self.searchResultsTableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
 }
 
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar
 {
-    _hideContentNavBar = _searchContentsController.navigationController.navigationBarHidden;
-    _oldSearchFrame = self.searchBar.frame;
-    _oldSearchSupperFrame = self.searchBar.superview.frame;
-    
-    CGFloat y = CGRectGetMaxY(_oldSearchSupperFrame) + 10;
-    CGFloat height = _searchContentsController.view.frame.size.height - y;
-    _searchResultsTableView.frame = CGRectMake(0.0f, y, _searchContentsController.view.frame.size.width, height);
+    [self updateLayout];
     
     //_searchBar.tintColor = UIColorFromRGB(0x20a0e9);
     return YES;

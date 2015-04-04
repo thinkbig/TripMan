@@ -14,8 +14,8 @@
 #import "TSPair.h"
 #import "AnaDbManager.h"
 
-#define kLocationUpdateInterval         8
-#define kLocationUpdateLongInterval     15
+#define kLocationUpdateInterval         11
+#define kLocationUpdateLongInterval     20
 
 #define kWakeUpBySystem             @"kWakeUpBySystem"
 #define kLocationAccu               kCLLocationAccuracyBest

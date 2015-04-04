@@ -11,6 +11,8 @@
 
 @interface CTPOICategoryFacade : CommonFacade
 
+@property (nonatomic, strong) NSString * city;
+
 - (NSArray*) defaultCategorys;
 
 @end

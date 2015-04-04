@@ -38,6 +38,7 @@
 
 - (void) updateWithGpsWayPts:(NSArray*)waypts
 {
+    return;
     NSMutableArray * ptArr = [NSMutableArray array];
     for (CLLocation * loc in waypts) {
         CLLocationCoordinate2D bdCoor = [GeoTransformer earth2Baidu:loc.coordinate];

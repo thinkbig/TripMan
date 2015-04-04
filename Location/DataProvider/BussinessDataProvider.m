@@ -23,11 +23,13 @@
 
 #define kLastestCityAndDate          @"kLastestCityAndDate"
 #define kUserFavLocation             @"kUserFavLocation"
+#define kRecentSearchKey             @"kRecentSearchKey"
 
 @interface BussinessDataProvider () {
     
-    BOOL            _isWeatherUpdating;
     BOOL            _isRegionUpdating;
+    
+    NSDictionary *      _lastGoodGPS;
     
 }
 
@@ -65,6 +67,32 @@ static BussinessDataProvider * _sharedProvider = nil;
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
++ (CLLocation *) lastGoodLocation
+{
+    NSDictionary * dict = [[BussinessDataProvider sharedInstance] lastGoodGpsItem];
+    if (nil == dict) {
+        return nil;
+    }
+    return [[CLLocation alloc] initWithLatitude:[dict[@"lat"] doubleValue] longitude:[dict[@"lon"] doubleValue]];
+}
+
+- (NSDictionary*) lastGoodGpsItem
+{
+    if (nil == _lastGoodGPS) {
+        _lastGoodGPS = [[NSUserDefaults standardUserDefaults] objectForKey:kLastestGoodGPSData];
+    }
+    return _lastGoodGPS;
+}
+
+- (void) updateLastGoodGpsItem:(GPSLogItem*)gps
+{
+    if (gps) {
+        _lastGoodGPS = @{@"timestamp":gps.timestamp, @"lat":gps.latitude, @"lon":gps.longitude};
+        [[NSUserDefaults standardUserDefaults] setObject:_lastGoodGPS forKey:kLastestGoodGPSData];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kNotifyGoodLocationUpdated object:nil];
+    }
 }
 
 - (void) reCreateCoreDataDb
@@ -122,27 +150,16 @@ static BussinessDataProvider * _sharedProvider = nil;
     
 }
 
-- (NSString *)currentCity
+- (void) updateCurrentCity:(successFacadeBlock)success forceUpdate:(BOOL)force
 {
-    return _latestCityDate[@"city"];
-}
-
-- (void) updateWeatherToday:(CLLocation*)loc
-{
-    // 暂时不需要天气信息
-    return;
-    
-    if (_isWeatherUpdating) {
-        return;
-    }
-    _isWeatherUpdating = YES;
-    if (_latestCityDate && [((NSDate*)_latestCityDate[@"date"]) isToday]) {
-        [self updateWeatherTodayForCity:_latestCityDate[@"city"]];
-         return;
-    }
-    
-    if (nil == loc) {
-        loc = [BussinessDataProvider lastGoodLocation];
+    CLLocation * loc = [BussinessDataProvider lastGoodLocation];
+    if (_latestCityDate.count > 0 && loc) {
+        CLLocation * cityLoc = [[CLLocation alloc] initWithLatitude:[_latestCityDate[@"lat"] floatValue] longitude:[_latestCityDate[@"lon"] floatValue]];
+        CGFloat dist = [cityLoc distanceFromLocation:loc];
+        if ((force && dist < 2000) || (dist < 10000 && [((NSDate*)_latestCityDate[@"date"]) isToday])) {
+            if (success) success(_latestCityDate[@"city"]);
+            return;
+        }
     }
     
     if (loc && CLLocationCoordinate2DIsValid(loc.coordinate))
@@ -151,18 +168,25 @@ static BussinessDataProvider * _sharedProvider = nil;
         wrapper.coordinate = loc.coordinate;
         [wrapper requestWithSuccess:^(BMKReverseGeoCodeResult * result) {
             if (result.addressDetail.city.length > 0) {
-                _latestCityDate = @{@"city": result.addressDetail.city, @"date": [NSDate date]};
+                _latestCityDate = @{@"city": result.addressDetail.city, @"date": [NSDate date],
+                                    @"lat": @(loc.coordinate.latitude), @"lon": @(loc.coordinate.longitude)};
                 [[NSUserDefaults standardUserDefaults] setObject:_latestCityDate forKey:kLastestCityAndDate];
-                [self updateWeatherTodayForCity:result.addressDetail.city];
+                if (success) success(_latestCityDate[@"city"]);
+            } else {
+                if (success) success(nil);
             }
         } failure:^(NSError * err) {
-            _isWeatherUpdating = NO;
+            if (success) success(nil);
         }];
+    } else if (success) {
+        success(nil);
     }
 }
 
 - (void) updateWeatherTodayForCity:(NSString*)city
 {
+    // 暂时不需要天气信息
+    return;
     NSDate * dateDay = [[NSDate date] dateAtStartOfDay];
     NSArray * existInfos = [WeatherInfo where:@{@"city": city, @"date_day": dateDay} inContext:[AnaDbManager deviceDb].tripAnalyzerContent];
     if (existInfos.count == 0 || ![((WeatherInfo*)existInfos[0]).is_analyzed doubleValue]) {
@@ -181,9 +205,7 @@ static BussinessDataProvider * _sharedProvider = nil;
             }
             info.is_analyzed = @YES;
             [[AnaDbManager deviceDb] commit];
-            _isWeatherUpdating = NO;
         } failure:^(NSError * err) {
-            _isWeatherUpdating = NO;
         }];
     }
 }
@@ -387,15 +409,6 @@ static BussinessDataProvider * _sharedProvider = nil;
 //    } failure:nil];
 }
 
-+ (CLLocation *)lastGoodLocation
-{
-    NSDictionary * lastGoodGPS = [[NSUserDefaults standardUserDefaults] objectForKey:kLastestGoodGPSData];
-    if (lastGoodGPS) {
-        return [[CLLocation alloc] initWithLatitude:[lastGoodGPS[@"lat"] doubleValue] longitude:[lastGoodGPS[@"lon"] doubleValue]];
-    }
-    return nil;
-}
-
 - (NSDateFormatter*) dateFormatterForFormatStr:(NSString*)format
 {
     if (format.length == 0) {
@@ -440,26 +453,39 @@ static BussinessDataProvider * _sharedProvider = nil;
 
 #pragma mark - some bussiness data storage
 
-- (NSArray*) favLocations
+- (NSString*) keyByUser:(NSString*)origKey
 {
     NSString * uid = [GToolUtil sharedInstance].userId;
-    NSString * key = kUserFavLocation;
     if (uid) {
-        key = [uid stringByAppendingFormat:@"_%@", uid];
+        return [uid stringByAppendingFormat:@"_%@", origKey];
     }
-    
-    return [[TSCache sharedInst] fileCacheForKey:key];
+    return origKey;
+}
+
+- (NSArray*) favLocations
+{
+    return [[TSCache sharedInst] fileCacheForKey:[self keyByUser:kUserFavLocation]];
 }
 
 - (void) putFavLocations:(NSArray*)favLoc
 {
-    NSString * uid = [GToolUtil sharedInstance].userId;
-    NSString * key = kUserFavLocation;
-    if (uid) {
-        key = [uid stringByAppendingFormat:@"_%@", uid];
+    if (nil == favLoc) {
+        favLoc = [NSArray array];
     }
-    
-    [[TSCache sharedInst] setFileCache:favLoc forKey:key];
+    [[TSCache sharedInst] setFileCache:favLoc forKey:[self keyByUser:kUserFavLocation]];
+}
+
+- (NSArray*) recentSearches
+{
+    return [[TSCache sharedInst] fileCacheForKey:[self keyByUser:kRecentSearchKey]];
+}
+
+- (void) putRecentSearches:(NSArray*)searches
+{
+    if (nil == searches) {
+        searches = [NSArray array];
+    }
+    [[TSCache sharedInst] setFileCache:searches forKey:[self keyByUser:kRecentSearchKey]];
 }
 
 @end

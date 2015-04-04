@@ -310,9 +310,9 @@ typedef NS_ENUM(NSUInteger, eReportType) {
         if (tolCnt > 1 && 0 == completeItems.count) {
             // all report failed
             [self __setRportResult:eReportReslutFail];
+            _asyncingReport = NO;
             if (self.forceAsyncAll && self.tolCnt > 0) {
                 NSLog(@"fail reporting and choose retry");
-                _asyncingReport = NO;
                 UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"同步出错" message:@"是否继续" delegate:nil cancelButtonTitle:@"否" otherButtonTitles:@"继续", nil];
                 [alert rz_showWithCompletionBlock:^(NSInteger dismissalButtonIndex) {
                     if (0 == dismissalButtonIndex) {

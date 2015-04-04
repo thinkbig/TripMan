@@ -60,7 +60,7 @@
 }
 
 - (IBAction)reAnalyzeTrip:(id)sender {
-    [self showToast:@"界面会卡一阵，请耐心等待！"];
+    [self showToast:@"界面会卡一阵，请耐心等待！" onDismiss:nil];
     [[GPSLogger sharedLogger].offTimeAnalyzer analyzeAllFinishedTrip:YES];
 }
 
@@ -73,13 +73,13 @@
 - (void) tapUid {
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
     pasteboard.string = [[GToolUtil sharedInstance] userId];
-    [self showToast:@"uid 已经拷贝到剪切板"];
+    [self showToast:@"uid 已经拷贝到剪切板" onDismiss:nil];
 }
 
 - (void) tapUdid {
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
     pasteboard.string = [[GToolUtil sharedInstance] deviceId];
-    [self showToast:@"udid 已经拷贝到剪切板"];
+    [self showToast:@"udid 已经拷贝到剪切板" onDismiss:nil];
 }
 
 @end

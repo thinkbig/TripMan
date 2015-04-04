@@ -83,7 +83,7 @@
             CGPoint pt3 = [GPSOffTimeFilter item2Point:objNext];
             
             CGFloat angle = [GPSOffTimeFilter checkPointAngle:pt1 antPt:pt2 antPt:pt3];
-            if (angle > 10) {
+            if (angle > 12) {
                 [route addObject:obj];
             } else {
                 [route addObject:objNext];

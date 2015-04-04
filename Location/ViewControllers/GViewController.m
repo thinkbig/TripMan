@@ -9,8 +9,11 @@
 #import "GViewController.h"
 #import "JGProgressHUD.h"
 #import "JGProgressHUDFadeZoomAnimation.h"
+#import <objc/runtime.h>
 
-@interface GViewController ()
+static const NSString * kHUDDismissKey = @"CT_prop_kHUDDismissKey";
+
+@interface GViewController () <JGProgressHUDDelegate>
 
 @property (nonatomic, strong) UIRefreshControl *        pullRefresh;
 @property (nonatomic, strong) JGProgressHUD *           currentHUD;
@@ -86,21 +89,27 @@
     [HUD showInView:self.view];
 }
 
-- (void)showToast:(NSString*)msg
+- (void)showToast:(NSString*)msg onDismiss:(void (^)(id))handler
 {
     if (msg.length > 0) {
         JGProgressHUD *HUD = [self prototypeHUD:NO];
         HUD.indicatorView = nil;
         HUD.textLabel.text = msg;
-        HUD.position = JGProgressHUDPositionBottomCenter;
+        HUD.position = JGProgressHUDPositionCenter;
         HUD.marginInsets = (UIEdgeInsets) {
             .top = 0.0f,
-            .bottom = 20.0f,
+            .bottom = 0.0f,
             .left = 0.0f,
             .right = 0.0f,
         };
+        if (handler) {
+            HUD.delegate = self;
+            objc_setAssociatedObject(HUD, &kHUDDismissKey, handler, OBJC_ASSOCIATION_COPY_NONATOMIC);
+        }
+        
+        HUD.accessibilityLabel = HUD.accessibilityIdentifier = @"Error";
         [HUD showInView:self.view];
-        [HUD dismissAfterDelay:2.0];
+        [HUD dismissAfterDelay:2.5];
     }
 }
 

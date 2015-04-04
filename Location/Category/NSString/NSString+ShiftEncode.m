@@ -30,9 +30,9 @@
     
     int idx = 0;
     while (idx < len) {
-        int offset = idx < offsetArr.count ? [[offsetArr objectAtIndex:idx] integerValue] : 0;
+        long offset = idx < offsetArr.count ? [[offsetArr objectAtIndex:idx] integerValue] : 0;
         unichar singleChar = [self characterAtIndex:idx++];
-        [decodeStr appendFormat:@"%c", singleChar + offset];
+        [decodeStr appendFormat:@"%ld", singleChar + offset];
     }
     return decodeStr;
 }
@@ -44,6 +44,19 @@
         [retStr appendString:substring];
     }];
     return retStr;
+}
+
+- (NSString*) chinese2Pinyin
+{
+    if ([self length]) {
+        NSMutableString *ms = [[NSMutableString alloc] initWithString:self];
+        if (CFStringTransform((__bridge CFMutableStringRef)ms, 0, kCFStringTransformMandarinLatin, NO)) {
+            if (CFStringTransform((__bridge CFMutableStringRef)ms, 0, kCFStringTransformStripDiacritics, NO)) {
+                return [ms copy];
+            }
+        }
+    }
+    return nil;
 }
 
 @end

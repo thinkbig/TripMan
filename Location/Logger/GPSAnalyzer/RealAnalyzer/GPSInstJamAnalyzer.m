@@ -112,11 +112,11 @@
     return curModel;
 }
 
-- (BOOL) shouldReport
+- (BOOL) nearParkingLoc:(NSInteger)parkCnt
 {
     if (self.lastItem) {
         ParkingRegionDetail * detail = [[AnaDbManager sharedInst] parkingDetailForCoordinate:[self.lastItem coordinate] minDist:500];
-        return (detail.parkingCnt < 5);
+        return (detail.parkingCnt < parkCnt);
     }
     return NO;
 }
@@ -125,7 +125,7 @@
 {
     DDLogWarn(@"&&&&&&&&&&&&&&&&&&& reportJamStart");
     
-    if (![self shouldReport]) {
+    if (![self nearParkingLoc:5]) {
         DDLogWarn(@"&&&&&&&&&&&&&&&&&&& reportJamStart canceled");
         return;
     }
@@ -148,7 +148,7 @@
 {
     DDLogWarn(@"&&&&&&&&&&&&&&&&&&& reportJamEnded");
     
-    if (![self shouldReport]) {
+    if (![self nearParkingLoc:5]) {
         DDLogWarn(@"&&&&&&&&&&&&&&&&&&& reportJamEnded canceled");
         return;
     }
@@ -174,7 +174,29 @@
             self.reportModel = nil;
         };
     } failure:^(NSError * err) {
-        DDLogWarn(@"&&&&&&&&&&&&&&&&&&& reportJamEnded Fail: %@", err);
+        DDLogWarn(@"&&&&&&&&&&&&&&&&&&& reportJamEnded Fail");
+    }];
+}
+
+- (void) reportJamIgnore
+{
+    if (nil == self.reportModel.jam_id) {
+        return;
+    }
+    DDLogWarn(@"&&&&&&&&&&&&&&&&&&& reportJamIgnore");
+    
+    CTInstReportModel * curModel = [CTInstReportModel new];
+    curModel.jam_id = self.reportModel.jam_id;
+    CTInstReportFacade * facade = [CTInstReportFacade new];
+    facade.reportModel = curModel;
+    facade.ignore = YES;
+    [facade requestWithSuccess:^(NSDictionary * dict) {
+        DDLogWarn(@"&&&&&&&&&&&&&&&&&&& reportJamEnded Success");
+        if (curModel == self.reportModel) {
+            self.reportModel = nil;
+        };
+    } failure:^(NSError * err) {
+        DDLogWarn(@"&&&&&&&&&&&&&&&&&&& reportJamEnded Fail");
     }];
 }
 
@@ -182,6 +204,21 @@
 {
     self.penddingJam = nil;
     [self.trafficJamArr removeAllObjects];
+}
+
+- (void) driveEndAt:(GPSLogItem*)item
+{
+    if (self.reportModel.jam_id && self.reportModel.st_date) {
+        if (self.reportModel.ed_lat && self.reportModel.ed_lon) {
+            CLLocation * jamEndLoc = [[CLLocation alloc] initWithLatitude:[self.reportModel.ed_lat floatValue] longitude:[self.reportModel.ed_lon floatValue]];
+            CLLocation * driveEndLoc = [item location];
+            if ([jamEndLoc distanceFromLocation:driveEndLoc] > 200) {
+                return;
+            }
+        }
+        
+        [self reportJamIgnore];
+    }
 }
 
 @end

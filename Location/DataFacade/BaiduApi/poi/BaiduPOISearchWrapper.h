@@ -8,6 +8,9 @@
 
 #import "CommonWrapper.h"
 
-@interface BaiduPOISearchWrapper : CommonWrapper
+@interface BaiduPOISearchWrapper : CommonWrapper <BMKPoiSearchDelegate>
+
+@property (nonatomic, strong) NSString *        searchName;
+@property (nonatomic, strong) NSString *        city;
 
 @end

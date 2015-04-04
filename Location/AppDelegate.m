@@ -100,8 +100,6 @@ static NSString * rebuildVal = @"value_0000000000002"; // make sure it is differ
     if (!ret) {
         DDLogWarn(@"baidu mapmanager start failed!");
     }
-    [[BussinessDataProvider sharedInstance] updateWeatherToday:nil];
-    [[BussinessDataProvider sharedInstance] updateAllRegionInfo:NO];
     
     [self setupLogger];
     [self applicationDocumentsDirectory];
@@ -205,6 +203,11 @@ static NSString * rebuildVal = @"value_0000000000002"; // make sure it is differ
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
     DDLogWarn(@"@@@@@@@@@@@@@ applicationDidEnterBackground @@@@@@@@@@@@@");
+    UIApplication * app = [UIApplication sharedApplication];
+    __block UIBackgroundTaskIdentifier bgTask = [app beginBackgroundTaskWithExpirationHandler:^{
+        [app endBackgroundTask:bgTask];
+        bgTask = UIBackgroundTaskInvalid;
+    }];
     if (!IS_UPDATING) {
         [self.locationTracker updateCurrentLocation];
     }
@@ -223,7 +226,7 @@ static NSString * rebuildVal = @"value_0000000000002"; // make sure it is differ
     if (!IS_UPDATING) {
         [[GPSLogger sharedLogger].offTimeAnalyzer rollOutOfDateTrip];
         
-        [[BussinessDataProvider sharedInstance] updateWeatherToday:nil];
+        [[BussinessDataProvider sharedInstance] updateCurrentCity:nil forceUpdate:NO];
         [[BussinessDataProvider sharedInstance] updateAllRegionInfo:NO];
         
         [[DataReporter sharedInst] aliveAsync];
@@ -257,6 +260,10 @@ static NSString * rebuildVal = @"value_0000000000002"; // make sure it is differ
                 completionHandler(UIBackgroundFetchResultFailed);
             }
         }];
+        if (IS_WIFI) {
+            [[BussinessDataProvider sharedInstance] updateCurrentCity:nil forceUpdate:NO];
+            [[BussinessDataProvider sharedInstance] updateAllRegionInfo:NO];
+        }
     }
 }
 

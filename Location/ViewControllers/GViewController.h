@@ -22,7 +22,7 @@
 - (void)showLoadingNonModel;
 - (void)hideLoading;
 
-- (void)showToast:(NSString*)msg;
+- (void)showToast:(NSString*)msg onDismiss:(void (^)(id))handler;
 
 // only for collectionview
 - (void)addPullRefreshOn:(UICollectionView*)collectionView withSelector:(SEL)selector;

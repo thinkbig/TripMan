@@ -55,7 +55,7 @@
     if (btn.tag == 12) {
         [self presentViewController:InstFirstVC(@"Debug") animated:YES completion:nil];
     } else {
-        [self showToast:@"改功能尚在开发中..."];
+        [self showToast:@"改功能尚在开发中..." onDismiss:nil];
     }
 }
 

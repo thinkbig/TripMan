@@ -16,4 +16,6 @@
 
 - (NSString*) reverseString;
 
+- (NSString*) chinese2Pinyin;
+
 @end

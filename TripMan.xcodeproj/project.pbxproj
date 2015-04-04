@@ -222,6 +222,16 @@
 		A3E0A3791ABE48C200E7456C /* GeoRectBound.m in Sources */ = {isa = PBXBuildFile; fileRef = A3E0A3781ABE48C200E7456C /* GeoRectBound.m */; };
 		A3E2891E1ACB98E10043F14C /* CTInstReportFacade.m in Sources */ = {isa = PBXBuildFile; fileRef = A3E2891D1ACB98E10043F14C /* CTInstReportFacade.m */; };
 		A3E289211ACB994A0043F14C /* CTInstReportModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A3E289201ACB994A0043F14C /* CTInstReportModel.m */; };
+		A3E2892B1ACD2DC40043F14C /* SearchSuggestionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A3E289291ACD2DC40043F14C /* SearchSuggestionCell.m */; };
+		A3E2892C1ACD2DC40043F14C /* SearchSuggestionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A3E2892A1ACD2DC40043F14C /* SearchSuggestionCell.xib */; };
+		A3E2892F1ACD2DD80043F14C /* SearchClearCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A3E2892E1ACD2DD80043F14C /* SearchClearCell.m */; };
+		A3E289311ACD2DE70043F14C /* SearchClearCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A3E289301ACD2DE70043F14C /* SearchClearCell.xib */; };
+		A3E289341ACD31710043F14C /* SearchHistoryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A3E289331ACD31710043F14C /* SearchHistoryCell.m */; };
+		A3E289361ACD31B60043F14C /* SearchHistoryCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A3E289351ACD31B60043F14C /* SearchHistoryCell.xib */; };
+		A3E2893D1ACE27400043F14C /* SearchResultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A3E2893C1ACE27400043F14C /* SearchResultViewController.m */; };
+		A3E289401ACE275D0043F14C /* SearchResultCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A3E2893F1ACE275D0043F14C /* SearchResultCell.m */; };
+		A3E289461ACFC58C0043F14C /* FavSelectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A3E289451ACFC58C0043F14C /* FavSelectViewController.m */; };
+		A3E289491ACFC75D0043F14C /* FavSelectCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A3E289481ACFC75D0043F14C /* FavSelectCell.m */; };
 		A3EF5A361A0F553100B38232 /* DriveSuggestCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A3EF5A351A0F553100B38232 /* DriveSuggestCell.m */; };
 		A3FDD15D1A027F64007B3C65 /* TSTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = A3FDD1551A027F64007B3C65 /* TSTabBar.m */; };
 		A3FDD15E1A027F64007B3C65 /* TSTabBarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = A3FDD1581A027F64007B3C65 /* TSTabBarItem.m */; };
@@ -715,6 +725,24 @@
 		A3E2891D1ACB98E10043F14C /* CTInstReportFacade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTInstReportFacade.m; sourceTree = "<group>"; };
 		A3E2891F1ACB994A0043F14C /* CTInstReportModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTInstReportModel.h; sourceTree = "<group>"; };
 		A3E289201ACB994A0043F14C /* CTInstReportModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTInstReportModel.m; sourceTree = "<group>"; };
+		A3E289281ACD2DC40043F14C /* SearchSuggestionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchSuggestionCell.h; sourceTree = "<group>"; };
+		A3E289291ACD2DC40043F14C /* SearchSuggestionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchSuggestionCell.m; sourceTree = "<group>"; };
+		A3E2892A1ACD2DC40043F14C /* SearchSuggestionCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchSuggestionCell.xib; sourceTree = "<group>"; };
+		A3E2892D1ACD2DD80043F14C /* SearchClearCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchClearCell.h; sourceTree = "<group>"; };
+		A3E2892E1ACD2DD80043F14C /* SearchClearCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchClearCell.m; sourceTree = "<group>"; };
+		A3E289301ACD2DE70043F14C /* SearchClearCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchClearCell.xib; sourceTree = "<group>"; };
+		A3E289321ACD31710043F14C /* SearchHistoryCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchHistoryCell.h; sourceTree = "<group>"; };
+		A3E289331ACD31710043F14C /* SearchHistoryCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchHistoryCell.m; sourceTree = "<group>"; };
+		A3E289351ACD31B60043F14C /* SearchHistoryCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchHistoryCell.xib; sourceTree = "<group>"; };
+		A3E2893B1ACE27400043F14C /* SearchResultViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchResultViewController.h; sourceTree = "<group>"; };
+		A3E2893C1ACE27400043F14C /* SearchResultViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchResultViewController.m; sourceTree = "<group>"; };
+		A3E2893E1ACE275D0043F14C /* SearchResultCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchResultCell.h; sourceTree = "<group>"; };
+		A3E2893F1ACE275D0043F14C /* SearchResultCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchResultCell.m; sourceTree = "<group>"; };
+		A3E289421ACE80400043F14C /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		A3E289441ACFC58C0043F14C /* FavSelectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FavSelectViewController.h; sourceTree = "<group>"; };
+		A3E289451ACFC58C0043F14C /* FavSelectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FavSelectViewController.m; sourceTree = "<group>"; };
+		A3E289471ACFC75D0043F14C /* FavSelectCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FavSelectCell.h; sourceTree = "<group>"; };
+		A3E289481ACFC75D0043F14C /* FavSelectCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FavSelectCell.m; sourceTree = "<group>"; };
 		A3EF5A341A0F553100B38232 /* DriveSuggestCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DriveSuggestCell.h; sourceTree = "<group>"; };
 		A3EF5A351A0F553100B38232 /* DriveSuggestCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DriveSuggestCell.m; sourceTree = "<group>"; };
 		A3FDD1541A027F64007B3C65 /* TSTabBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSTabBar.h; sourceTree = "<group>"; };
@@ -1128,6 +1156,9 @@
 				A34F00F21A03CB8C00F58C17 /* CarAssistorViewController.m */,
 				A3EF5A341A0F553100B38232 /* DriveSuggestCell.h */,
 				A3EF5A351A0F553100B38232 /* DriveSuggestCell.m */,
+				A3E289431ACFC5140043F14C /* FavSelect */,
+				A3E2893A1ACE27400043F14C /* SearchResult */,
+				A3E289271ACD2DC40043F14C /* SearchCells */,
 				A331F5BC1A1CCA07001F4DE3 /* DriveSuggestDetail */,
 			);
 			path = DriveAssistor;
@@ -2160,6 +2191,44 @@
 			path = Chetu;
 			sourceTree = "<group>";
 		};
+		A3E289271ACD2DC40043F14C /* SearchCells */ = {
+			isa = PBXGroup;
+			children = (
+				A3E289281ACD2DC40043F14C /* SearchSuggestionCell.h */,
+				A3E289291ACD2DC40043F14C /* SearchSuggestionCell.m */,
+				A3E2892A1ACD2DC40043F14C /* SearchSuggestionCell.xib */,
+				A3E2892D1ACD2DD80043F14C /* SearchClearCell.h */,
+				A3E2892E1ACD2DD80043F14C /* SearchClearCell.m */,
+				A3E289301ACD2DE70043F14C /* SearchClearCell.xib */,
+				A3E289321ACD31710043F14C /* SearchHistoryCell.h */,
+				A3E289331ACD31710043F14C /* SearchHistoryCell.m */,
+				A3E289351ACD31B60043F14C /* SearchHistoryCell.xib */,
+			);
+			path = SearchCells;
+			sourceTree = "<group>";
+		};
+		A3E2893A1ACE27400043F14C /* SearchResult */ = {
+			isa = PBXGroup;
+			children = (
+				A3E2893B1ACE27400043F14C /* SearchResultViewController.h */,
+				A3E2893C1ACE27400043F14C /* SearchResultViewController.m */,
+				A3E2893E1ACE275D0043F14C /* SearchResultCell.h */,
+				A3E2893F1ACE275D0043F14C /* SearchResultCell.m */,
+			);
+			path = SearchResult;
+			sourceTree = "<group>";
+		};
+		A3E289431ACFC5140043F14C /* FavSelect */ = {
+			isa = PBXGroup;
+			children = (
+				A3E289441ACFC58C0043F14C /* FavSelectViewController.h */,
+				A3E289451ACFC58C0043F14C /* FavSelectViewController.m */,
+				A3E289471ACFC75D0043F14C /* FavSelectCell.h */,
+				A3E289481ACFC75D0043F14C /* FavSelectCell.m */,
+			);
+			path = FavSelect;
+			sourceTree = "<group>";
+		};
 		A3FDD1531A027F64007B3C65 /* TabBarViewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -2330,6 +2399,7 @@
 			knownRegions = (
 				en,
 				Base,
+				"zh-Hans",
 			);
 			mainGroup = 5C90908318B3A66A00510153;
 			productRefGroup = 5C90908D18B3A66A00510153 /* Products */;
@@ -2348,6 +2418,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A34F01101A03D78900F58C17 /* Debug.storyboard in Resources */,
+				A3E289311ACD2DE70043F14C /* SearchClearCell.xib in Resources */,
 				A378ABEA1A17A7AA006A3B68 /* TripTodayView.xib in Resources */,
 				A3C454451A8B515800D53342 /* mapapi.bundle in Resources */,
 				A35495AF1A2F472C000D9311 /* TripMonthView.xib in Resources */,
@@ -2356,8 +2427,10 @@
 				5C9090A818B3A66A00510153 /* Images.xcassets in Resources */,
 				5C90909A18B3A66A00510153 /* InfoPlist.strings in Resources */,
 				A399C9FB1A12E0CA00665917 /* Main.storyboard in Resources */,
+				A3E2892C1ACD2DC40043F14C /* SearchSuggestionCell.xib in Resources */,
 				A37E03EF1A0DE10B00B0B0EC /* TripTicketView.xib in Resources */,
 				A34F00FA1A03D04400F58C17 /* CarHealth.storyboard in Resources */,
+				A3E289361ACD31B60043F14C /* SearchHistoryCell.xib in Resources */,
 				A34F00FE1A03D0BD00F58C17 /* CarTrip.storyboard in Resources */,
 				A34F00FC1A03D0B200F58C17 /* CarHome.storyboard in Resources */,
 				A34F00F81A03CFDB00F58C17 /* CarAssistor.storyboard in Resources */,
@@ -2438,6 +2511,7 @@
 				A342849B19C42081002DB0FD /* GPSLogger.m in Sources */,
 				A35C26251A426F4B005F6658 /* NSObject+RZBlockKVO.m in Sources */,
 				A34F01221A04D98E00F58C17 /* BaseBaiduFacade.m in Sources */,
+				A3E289341ACD31710043F14C /* SearchHistoryCell.m in Sources */,
 				A3CD360E19C9767F0039F6E1 /* GPSAnalyzerOffTime.m in Sources */,
 				A35BC7251AA2E98900D726D4 /* CTWakeupFacade.m in Sources */,
 				A35C26421A426F4B005F6658 /* RZRevealViewController.m in Sources */,
@@ -2462,6 +2536,7 @@
 				A37E03F21A0DE19B00B0B0EC /* TripTicketView.m in Sources */,
 				A35BC7291AA35B7D00D726D4 /* NSString+ShiftEncode.m in Sources */,
 				A378ABE31A164664006A3B68 /* DVSwitch.m in Sources */,
+				A3E2892F1ACD2DD80043F14C /* SearchClearCell.m in Sources */,
 				A3CD728A19D14430005F84E2 /* GeoTransformer.m in Sources */,
 				A35C264A1A426F4B005F6658 /* RZWaiter.m in Sources */,
 				A35C262E1A426F4B005F6658 /* UIFont+RZExtensions.m in Sources */,
@@ -2488,9 +2563,11 @@
 				A34F00F31A03CB8C00F58C17 /* CarAssistorViewController.m in Sources */,
 				A3BD72B21A15BC2E0007ECA1 /* BussinessDataProvider.m in Sources */,
 				A39E30CE1AAC6B79004F0D95 /* TrafficJam+Fetcher.m in Sources */,
+				A3E289401ACE275D0043F14C /* SearchResultCell.m in Sources */,
 				A35C263A1A426F4B005F6658 /* RZAnimatedImageView.m in Sources */,
 				A3E0A3791ABE48C200E7456C /* GeoRectBound.m in Sources */,
 				A35C262D1A426F4B005F6658 /* UIColor+RZExtensions.m in Sources */,
+				A3E2892B1ACD2DC40043F14C /* SearchSuggestionCell.m in Sources */,
 				A35C262B1A426F4B005F6658 /* NSUndoManager+RZBlockUndo.m in Sources */,
 				A35BC7401AA94BF800D726D4 /* CTTripReportFacade.m in Sources */,
 				A3171A8A1A0905C4003EA8CE /* TSCache.m in Sources */,
@@ -2534,6 +2611,7 @@
 				A35C26281A426F4B005F6658 /* NSAttributedString+RZExtensions.m in Sources */,
 				A35C26361A426F4B005F6658 /* UIView+RZBorders.m in Sources */,
 				A3CD360219C6DCC80039F6E1 /* GPSAnalyzerRealTime.m in Sources */,
+				A3E2893D1ACE27400043F14C /* SearchResultViewController.m in Sources */,
 				A35C26491A426F4B005F6658 /* RZWebViewController.m in Sources */,
 				A34F019A1A07289C00F58C17 /* CommonWrapper.m in Sources */,
 				A314A6E41A0BBD9A00C12040 /* NSDate+Utilities.m in Sources */,
@@ -2542,6 +2620,7 @@
 				A35C262C1A426F4B005F6658 /* UIAlertView+RZCompletionBlocks.m in Sources */,
 				A34890671A3FCB6F002DE948 /* AJClassHelper.m in Sources */,
 				A3171A911A090666003EA8CE /* NSString+URLEncoding.m in Sources */,
+				A3E289491ACFC75D0043F14C /* FavSelectCell.m in Sources */,
 				A382A4471A124CFF00974E7A /* PICircularProgressView.m in Sources */,
 				A35C26241A426F4B005F6658 /* CAAnimation+RZBlocks.m in Sources */,
 				A34F013C1A052A6B00F58C17 /* BaiduWeatherModel.m in Sources */,
@@ -2587,6 +2666,7 @@
 				A35C26401A426F4B005F6658 /* RZLocationService.m in Sources */,
 				A38FB1971A722AEA00DBA46C /* AnaDbManager.m in Sources */,
 				A34F01131A03D78900F58C17 /* LogFileListViewController.m in Sources */,
+				A3E289461ACFC58C0043F14C /* FavSelectViewController.m in Sources */,
 				A34890731A3FCCAF002DE948 /* NSData+Godzippa.m in Sources */,
 				A34284A019C6770A002DB0FD /* GPSFileLogFormatter.m in Sources */,
 				A34F01121A03D78900F58C17 /* LogFileContentViewController.m in Sources */,
@@ -2637,6 +2717,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				5C90909918B3A66A00510153 /* en */,
+				A3E289421ACE80400043F14C /* zh-Hans */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";

@@ -21,6 +21,4 @@
 @property (nonatomic, strong) CTRoute *         route;
 @property (nonatomic, strong) NSArray *         waypts;
 
-- (IBAction)switchRoute:(id)sender;
-
 @end

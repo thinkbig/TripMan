@@ -21,5 +21,7 @@ typedef NS_ENUM(NSUInteger, eJamAnalyzeStat) {
 
 - (void) appendGPSInfo:(GPSLogItem*)gps;
 - (void) reset;
+- (BOOL) nearParkingLoc:(NSInteger)parkCnt;
+- (void) driveEndAt:(GPSLogItem*)item;
 
 @end

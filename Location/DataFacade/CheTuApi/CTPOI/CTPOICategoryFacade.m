@@ -19,9 +19,8 @@
 
 - (id)requestParam
 {
-    NSString * city = [BussinessDataProvider sharedInstance].currentCity;
-    if (city) {
-        return @{@"city": city};
+    if (self.city) {
+        return @{@"city": self.city};
     }
     return [super requestParam];
 }

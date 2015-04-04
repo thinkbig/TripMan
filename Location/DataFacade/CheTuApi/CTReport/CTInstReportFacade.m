@@ -25,11 +25,14 @@
     if (jam_id) {
         [path appendFormat:@"&jam_id=%@", jam_id];
     }
+    if (self.ignore) {
+        [path appendString:@"&ignore=1"];
+    }
     return path;
 }
 
 - (eSerializationType)requestSerializationType {
-    return eSerializationJsonType;
+    return eSerializationJsonGzipType;
 }
 
 - (NSDictionary*)requestParam
