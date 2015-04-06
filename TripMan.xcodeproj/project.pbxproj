@@ -232,6 +232,10 @@
 		A3E289401ACE275D0043F14C /* SearchResultCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A3E2893F1ACE275D0043F14C /* SearchResultCell.m */; };
 		A3E289461ACFC58C0043F14C /* FavSelectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A3E289451ACFC58C0043F14C /* FavSelectViewController.m */; };
 		A3E289491ACFC75D0043F14C /* FavSelectCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A3E289481ACFC75D0043F14C /* FavSelectCell.m */; };
+		A3E2894E1AD13BB10043F14C /* OpenGpsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A3E2894D1AD13BB10043F14C /* OpenGpsViewController.m */; };
+		A3E289531AD13DCB0043F14C /* NoGpsHintView.m in Sources */ = {isa = PBXBuildFile; fileRef = A3E289521AD13DCB0043F14C /* NoGpsHintView.m */; };
+		A3E289551AD13DE80043F14C /* NoGpsHintView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A3E289541AD13DE80043F14C /* NoGpsHintView.xib */; };
+		A3E289571AD16FC70043F14C /* OpenGps.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A3E289561AD16FC70043F14C /* OpenGps.storyboard */; };
 		A3EF5A361A0F553100B38232 /* DriveSuggestCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A3EF5A351A0F553100B38232 /* DriveSuggestCell.m */; };
 		A3FDD15D1A027F64007B3C65 /* TSTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = A3FDD1551A027F64007B3C65 /* TSTabBar.m */; };
 		A3FDD15E1A027F64007B3C65 /* TSTabBarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = A3FDD1581A027F64007B3C65 /* TSTabBarItem.m */; };
@@ -743,6 +747,12 @@
 		A3E289451ACFC58C0043F14C /* FavSelectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FavSelectViewController.m; sourceTree = "<group>"; };
 		A3E289471ACFC75D0043F14C /* FavSelectCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FavSelectCell.h; sourceTree = "<group>"; };
 		A3E289481ACFC75D0043F14C /* FavSelectCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FavSelectCell.m; sourceTree = "<group>"; };
+		A3E2894C1AD13BB10043F14C /* OpenGpsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenGpsViewController.h; sourceTree = "<group>"; };
+		A3E2894D1AD13BB10043F14C /* OpenGpsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenGpsViewController.m; sourceTree = "<group>"; };
+		A3E289511AD13DCB0043F14C /* NoGpsHintView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoGpsHintView.h; sourceTree = "<group>"; };
+		A3E289521AD13DCB0043F14C /* NoGpsHintView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NoGpsHintView.m; sourceTree = "<group>"; };
+		A3E289541AD13DE80043F14C /* NoGpsHintView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NoGpsHintView.xib; sourceTree = "<group>"; };
+		A3E289561AD16FC70043F14C /* OpenGps.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = OpenGps.storyboard; sourceTree = "<group>"; };
 		A3EF5A341A0F553100B38232 /* DriveSuggestCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DriveSuggestCell.h; sourceTree = "<group>"; };
 		A3EF5A351A0F553100B38232 /* DriveSuggestCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DriveSuggestCell.m; sourceTree = "<group>"; };
 		A3FDD1541A027F64007B3C65 /* TSTabBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSTabBar.h; sourceTree = "<group>"; };
@@ -2141,6 +2151,7 @@
 		A3CD362219CFB86D0039F6E1 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				A3E2894A1AD132050043F14C /* UserGuide */,
 				A34F01011A03D78900F58C17 /* DebugView */,
 				A34F00F01A03CB7300F58C17 /* DriveAssistor */,
 				A3FDD1701A028879007B3C65 /* CarHealth */,
@@ -2227,6 +2238,27 @@
 				A3E289481ACFC75D0043F14C /* FavSelectCell.m */,
 			);
 			path = FavSelect;
+			sourceTree = "<group>";
+		};
+		A3E2894A1AD132050043F14C /* UserGuide */ = {
+			isa = PBXGroup;
+			children = (
+				A3E2894B1AD13B780043F14C /* NoGpsHint */,
+			);
+			path = UserGuide;
+			sourceTree = "<group>";
+		};
+		A3E2894B1AD13B780043F14C /* NoGpsHint */ = {
+			isa = PBXGroup;
+			children = (
+				A3E2894C1AD13BB10043F14C /* OpenGpsViewController.h */,
+				A3E2894D1AD13BB10043F14C /* OpenGpsViewController.m */,
+				A3E289561AD16FC70043F14C /* OpenGps.storyboard */,
+				A3E289511AD13DCB0043F14C /* NoGpsHintView.h */,
+				A3E289521AD13DCB0043F14C /* NoGpsHintView.m */,
+				A3E289541AD13DE80043F14C /* NoGpsHintView.xib */,
+			);
+			path = NoGpsHint;
 			sourceTree = "<group>";
 		};
 		A3FDD1531A027F64007B3C65 /* TabBarViewController */ = {
@@ -2422,6 +2454,7 @@
 				A378ABEA1A17A7AA006A3B68 /* TripTodayView.xib in Resources */,
 				A3C454451A8B515800D53342 /* mapapi.bundle in Resources */,
 				A35495AF1A2F472C000D9311 /* TripMonthView.xib in Resources */,
+				A3E289551AD13DE80043F14C /* NoGpsHintView.xib in Resources */,
 				A3C454461A8B515800D53342 /* readme.txt in Resources */,
 				A34F01001A03D0CB00F58C17 /* CarSetting.storyboard in Resources */,
 				5C9090A818B3A66A00510153 /* Images.xcassets in Resources */,
@@ -2432,6 +2465,7 @@
 				A34F00FA1A03D04400F58C17 /* CarHealth.storyboard in Resources */,
 				A3E289361ACD31B60043F14C /* SearchHistoryCell.xib in Resources */,
 				A34F00FE1A03D0BD00F58C17 /* CarTrip.storyboard in Resources */,
+				A3E289571AD16FC70043F14C /* OpenGps.storyboard in Resources */,
 				A34F00FC1A03D0B200F58C17 /* CarHome.storyboard in Resources */,
 				A34F00F81A03CFDB00F58C17 /* CarAssistor.storyboard in Resources */,
 			);
@@ -2572,6 +2606,7 @@
 				A35BC7401AA94BF800D726D4 /* CTTripReportFacade.m in Sources */,
 				A3171A8A1A0905C4003EA8CE /* TSCache.m in Sources */,
 				A35C263E1A426F4B005F6658 /* RZCollectionViewAnimationAssistant.m in Sources */,
+				A3E289531AD13DCB0043F14C /* NoGpsHintView.m in Sources */,
 				A34F01971A07259D00F58C17 /* BaiduGeocodingWrapper.m in Sources */,
 				A3FDD1601A027F64007B3C65 /* TSTabBarViewController.m in Sources */,
 				A35C263B1A426F4B005F6658 /* RZButtonView.m in Sources */,
@@ -2690,6 +2725,7 @@
 				A35BC7461AA9673E00D726D4 /* TurningInfo+Fetcher.m in Sources */,
 				A35BC7671AAB1CBE00D726D4 /* WeatherInfo.m in Sources */,
 				A34F00E61A03C8BE00F58C17 /* CarHealthViewController.m in Sources */,
+				A3E2894E1AD13BB10043F14C /* OpenGpsViewController.m in Sources */,
 				A321E2C61AC8344600CA9035 /* CTFavLocation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

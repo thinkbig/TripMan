@@ -8,6 +8,8 @@
 
 #import "MainTabViewController.h"
 #import "TSTabBarItem.h"
+#import "NoGpsHintView.h"
+#import "OpenGpsViewController.h"
 
 @interface MainTabViewController ()
 
@@ -50,11 +52,37 @@
     self.tabBar.backgroundImageView.image = [UIImage imageNamed:@"tabbar"];
     [self setSelectedIndex:0 animed:YES];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self applicationEnterForeground];
+}
+
+- (void)applicationEnterForeground
+{
+    // show hint view
+    CLAuthorizationStatus authorizationStatus= [CLLocationManager authorizationStatus];
+    //if (kCLAuthorizationStatusAuthorizedAlways != authorizationStatus)
+    {
+        NSArray *nibs = [[NSBundle mainBundle] loadNibNamed:@"NoGpsHintView" owner:self options:nil];
+        NoGpsHintView * hintView = (NoGpsHintView*)[nibs objectAtIndex:0];
+        [hintView.howToBtn addTarget:self action:@selector(showHowToOpenGps) forControlEvents:UIControlEventTouchUpInside];
+        [self showHintView:hintView];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)showHowToOpenGps
+{
+    OpenGpsViewController * openGpsVC = InstFirstVC(@"OpenGps");
+    [self presentViewController:openGpsVC animated:YES completion:nil];
 }
 
 /*

@@ -20,6 +20,7 @@ typedef enum {
 @property (nonatomic, strong) UIView *          contentView;
 @property (nonatomic, assign) BOOL              isTabBarHidding;
 @property (nonatomic) TSTabShowHideFrom         animFrom;
+@property (nonatomic, strong) UIView *          hintView;
 
 - (void)showTabBar:(TSTabShowHideFrom)showHideFrom animated:(BOOL)animated;
 - (void)hideTabBar:(TSTabShowHideFrom)showHideFrom animated:(BOOL)animated;

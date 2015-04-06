@@ -38,6 +38,22 @@
     }
 }
 
+- (void)setHintView:(UIView *)hintView
+{
+    if (_hintView != hintView)
+    {
+        [_hintView removeFromSuperview];
+        _hintView = hintView;
+        
+        if (_hintView) {
+            CGRect hintRect = hintView.frame;
+            _hintView.center = CGPointMake(self.bounds.size.width/2.0, self.tabBar.frame.origin.y-hintRect.size.height/2.0);
+            [self addSubview:_hintView];
+        }
+        [self setNeedsLayout];
+    }
+}
+
 - (void)showTabBar:(TSTabShowHideFrom)showHideFrom animated:(BOOL)animated
 {
     BOOL shouldAnimContent = (TSTabShowHideFromBottom == showHideFrom);
@@ -102,6 +118,15 @@
     [_contentView setNeedsLayout];
 }
 
+- (void)layoutHint
+{
+    _hintView.frame = (CGRect) {
+        .origin.x = 0,
+        .origin.y = self.tabBar.frame.origin.y-40,
+        .size.width = CGRectGetWidth(self.bounds),
+        .size.height = 40
+    };
+}
 
 #pragma mark - Layout & Drawing
 
@@ -111,6 +136,7 @@
     
     [self layoutTabBar];
     [self layoutContent];
+    [self layoutHint];
 }
 
 
