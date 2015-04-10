@@ -16,6 +16,7 @@ typedef NS_ENUM(NSInteger, eCommonErrorCode) {
     eBussinessError             = 10001,
     eBadDataError               = 10002,
     eInvalidInputError          = 10003,
+    eNetworkError               = 10004,
 };
 
 #endif

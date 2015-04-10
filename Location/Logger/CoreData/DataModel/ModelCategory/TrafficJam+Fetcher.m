@@ -33,4 +33,24 @@
     return CLLocationCoordinate2DMake([self.end_lat doubleValue], [self.end_lon doubleValue]);
 }
 
+- (CTBaseLocation*) stCTLocation
+{
+    CTBaseLocation * loc = [CTBaseLocation new];
+    loc.timestamp = self.start_date;
+    loc.lat = self.start_lat;
+    loc.lon = self.start_lon;
+    
+    return loc;
+}
+
+- (CTBaseLocation*) edCTLocation
+{
+    CTBaseLocation * loc = [CTBaseLocation new];
+    loc.timestamp = self.end_date;
+    loc.lat = self.end_lat;
+    loc.lon = self.end_lon;
+    
+    return loc;
+}
+
 @end

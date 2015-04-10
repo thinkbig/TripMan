@@ -53,6 +53,7 @@
     [self setSelectedIndex:0 animed:YES];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationEnterForeground) name:@"kLocationAuthrizeStatChange" object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -65,12 +66,14 @@
 {
     // show hint view
     CLAuthorizationStatus authorizationStatus= [CLLocationManager authorizationStatus];
-    //if (kCLAuthorizationStatusAuthorizedAlways != authorizationStatus)
+    if (kCLAuthorizationStatusAuthorizedAlways != authorizationStatus)
     {
         NSArray *nibs = [[NSBundle mainBundle] loadNibNamed:@"NoGpsHintView" owner:self options:nil];
         NoGpsHintView * hintView = (NoGpsHintView*)[nibs objectAtIndex:0];
         [hintView.howToBtn addTarget:self action:@selector(showHowToOpenGps) forControlEvents:UIControlEventTouchUpInside];
         [self showHintView:hintView];
+    } else {
+        [self showHintView:nil];
     }
 }
 

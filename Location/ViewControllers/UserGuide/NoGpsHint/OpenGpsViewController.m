@@ -17,6 +17,24 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
+        self.ios7HintView.hidden = YES;
+    } else {
+        UIImageView *ios7GuideImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"guide_opengps_ios7"]];
+        [self.ios7HintView addSubview:ios7GuideImage];
+        self.ios7HintView.contentSize = ios7GuideImage.bounds.size;
+    }
+    
+    NSString * hintStr = @"车图需要使用您的 位置 来记录行驶轨迹和优化您行程，并且需要 运动记录 来优化电量";
+    NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:hintStr];
+    
+    NSRange range1 = [hintStr rangeOfString:@" 位置 "];
+    NSRange range2 = [hintStr rangeOfString:@" 运动记录 "];
+    [attrStr addAttribute:NSForegroundColorAttributeName value:[UIColor orangeColor] range:range1];
+    [attrStr addAttribute:NSForegroundColorAttributeName value:[UIColor orangeColor] range:range2];
+
+    self.hintLabel.attributedText = attrStr;
 }
 
 - (void)didReceiveMemoryWarning {

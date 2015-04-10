@@ -48,7 +48,7 @@
         [facade requestWithSuccess:^(id result) {
             if (favLoc == self.favLoc) {
                 NSNumber * during = result[@"duration"];
-                NSNumber * jamCnt = result[@"jamCnt"];
+                NSNumber * jamCnt = result[@"status"];
                 [self updateTimeDuring:[during floatValue] andJamCnt:[jamCnt floatValue]];
             }
         } failure:^(NSError * err) {

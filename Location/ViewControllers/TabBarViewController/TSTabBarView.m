@@ -62,6 +62,7 @@
     _isTabBarHidding = NO;
     _animFrom = showHideFrom;
     [UIView animateWithDuration:((animated) ? animDuring : 0) animations:^{
+        self.hintView.alpha = 1;
         if (shouldAnimContent) {
             [self layoutSubviews];
         } else {
@@ -83,6 +84,7 @@
         [self layoutContent];
     }
     [UIView animateWithDuration:((animated) ? animDuring : 0) animations:^{
+        self.hintView.alpha = 0;
         [self layoutSubviews];
     }];
 }

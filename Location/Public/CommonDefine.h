@@ -42,7 +42,7 @@
 
 #define IS_UPDATING                 (((AppDelegate*)([UIApplication sharedApplication].delegate)).isUpdating)
 #define IS_WIFI                     (((AppDelegate*)([UIApplication sharedApplication].delegate)).netStat == AFNetworkReachabilityStatusReachableViaWiFi)
-#define IS_REACHABLE                (((AppDelegate*)([UIApplication sharedApplication].delegate)).netStat == AFNetworkReachabilityStatusReachableViaWiFi)
+#define IS_REACHABLE                (((AppDelegate*)([UIApplication sharedApplication].delegate)).netStat != AFNetworkReachabilityStatusNotReachable)
 
 // directory define
 #define DocumentDirectory           [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject]

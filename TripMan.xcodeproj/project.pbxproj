@@ -2251,9 +2251,9 @@
 		A3E2894B1AD13B780043F14C /* NoGpsHint */ = {
 			isa = PBXGroup;
 			children = (
+				A3E289561AD16FC70043F14C /* OpenGps.storyboard */,
 				A3E2894C1AD13BB10043F14C /* OpenGpsViewController.h */,
 				A3E2894D1AD13BB10043F14C /* OpenGpsViewController.m */,
-				A3E289561AD16FC70043F14C /* OpenGps.storyboard */,
 				A3E289511AD13DCB0043F14C /* NoGpsHintView.h */,
 				A3E289521AD13DCB0043F14C /* NoGpsHintView.m */,
 				A3E289541AD13DE80043F14C /* NoGpsHintView.xib */,

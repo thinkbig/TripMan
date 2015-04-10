@@ -15,6 +15,8 @@
 #import "GeoTransformer.h"
 #import "GRoadSnapFacade.h"
 #import "TrafficJam+Fetcher.h"
+#import "NSDate+Utilities.h"
+#import "TrafficJam+Fetcher.h"
 
 @interface BaiduMapViewController ()
 
@@ -83,11 +85,96 @@
     [self.mapView removeOverlays:self.mapView.overlays];
     [self.mapView removeAnnotations:self.mapView.annotations];
     
+    // merge
+    NSMutableArray * allPoints = [NSMutableArray arrayWithCapacity:route.count];
+    NSMutableArray * allJams = [NSMutableArray arrayWithCapacity:2];
+    NSMutableArray * jamArr = [NSMutableArray array];
+    for (TrafficJam * jamPair in self.tripSum.traffic_jams) {
+        if (jamPair.end_date && jamPair.start_date && [jamPair.end_date timeIntervalSinceDate:jamPair.start_date] > cHeavyTrafficJamThreshold/2.0)
+        {
+            [jamArr addObject:jamPair];
+        }
+    }
+    if (jamArr.count == 0) {
+        [allPoints addObjectsFromArray:route];
+    } else {
+        NSInteger jamIdx = 0;
+        TrafficJam * curJam = jamArr[jamIdx++];
+        NSMutableArray * curJamArr = nil;
+        for (int i=0; i < route.count; i++)
+        {
+            CTBaseLocation * loc = route[i];
+            if (nil == curJam || i == 0) {
+                [allPoints addObject:loc];
+                continue;
+            }
+            CTBaseLocation * lastLoc = route[i-1];
+            CGFloat dist2 = [loc distanceFrom:lastLoc];
+            if (0 == curJamArr.count && [loc.timestamp isEqualToDate:curJam.start_date]) {
+                CTBaseLocation * jamStLoc = [curJam stCTLocation];
+                CGFloat dist1 = [jamStLoc distanceFrom:lastLoc];
+                CGFloat dist3 = [jamStLoc distanceFrom:loc];
+                if (dist1+dist3 > dist2*1.1) {
+                    [allPoints addObject:jamStLoc];
+                    curJamArr = [NSMutableArray arrayWithObject:jamStLoc];
+                    [allJams addObject:curJamArr];
+                } else {
+                    [allPoints addObject:loc];
+                }
+            } else {
+                if ([loc.timestamp isEqualToDate:curJam.end_date] && 0 == curJamArr.count) {
+                    CTBaseLocation * jamStLoc = [curJam stCTLocation];
+                    CGFloat dist1 = [jamStLoc distanceFrom:lastLoc];
+                    CGFloat dist3 = [jamStLoc distanceFrom:loc];
+                    if (dist1+dist3 > dist2*1.1) {
+                        [allPoints addObject:loc];
+                    } else {
+                        [allPoints addObject:jamStLoc];
+                        curJamArr = [NSMutableArray arrayWithObject:jamStLoc];
+                        [allJams addObject:curJamArr];
+                    }
+                } else {
+                    if (nil == curJamArr) {
+                        CTBaseLocation * jamStLoc = [curJam stCTLocation];
+                        CGFloat dist1 = [jamStLoc distanceFrom:lastLoc];
+                        CGFloat dist3 = [jamStLoc distanceFrom:loc];
+                        if (dist1+dist3 > dist2*1.1) {
+                            [allPoints addObject:loc];
+                            [curJamArr addObject:loc];
+                        } else {
+                            [allPoints addObject:jamStLoc];
+                            curJamArr = [NSMutableArray arrayWithObject:jamStLoc];
+                            [allJams addObject:curJamArr];
+                        }
+                    }
+                    CTBaseLocation * jamEdLoc = [curJam edCTLocation];
+                    CGFloat dist1 = [jamEdLoc distanceFrom:lastLoc];
+                    CGFloat dist3 = [jamEdLoc distanceFrom:loc];
+                    if (dist1+dist3 > dist2*1.1) {
+                        [allPoints addObject:loc];
+                        [curJamArr addObject:loc];
+                    } else {
+                        i--;
+                        [allPoints addObject:jamEdLoc];
+                        [curJamArr addObject:jamEdLoc];
+                        
+                        curJamArr = nil;
+                        if (jamIdx < jamArr.count) {
+                            curJam = jamArr[jamIdx++];
+                        } else {
+                            curJam = nil;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     GeoRectBound * regionBound = [GeoRectBound new];
-
-    BMKMapPoint pointsToUse[route.count];
-    for (int i = 0; i < route.count; i++) {
-        id item = route[i];
+    
+    BMKMapPoint pointsToUse[allPoints.count];
+    for (int i = 0; i < allPoints.count; i++) {
+        CTBaseLocation * item = allPoints[i];
         CLLocationCoordinate2D itemCoor = [item coordinate];
         if (eCoorTypeGps == coorType) {
             itemCoor = [GeoTransformer earth2Baidu:itemCoor];
@@ -104,7 +191,7 @@
             itemSt.title = @"起点";
             itemSt.type = 0;
             [_mapView addAnnotation:itemSt];
-        } else if (route.count-1 == i) {
+        } else if (allPoints.count-1 == i) {
             RouteAnnotation* itemEd = [[RouteAnnotation alloc] init];
             itemEd.coordinate = itemCoor;
             itemEd.title = @"终点";
@@ -112,31 +199,40 @@
             [_mapView addAnnotation:itemEd];
         }
     }
-
-    BMKPolyline * lineOne = [BMKPolyline polylineWithPoints:pointsToUse count:route.count];
+    BMKPolyline * lineOne = [BMKPolyline polylineWithPoints:pointsToUse count:allPoints.count];
     lineOne.title = @"green";
     [self.mapView addOverlay:lineOne];
     
     // draw traffic jam
-    NSArray * jamArr =  [self.tripSum.traffic_jams allObjects];
-    for (TrafficJam * jamPair in jamArr)
+    for (NSArray * jamArr in allJams)
     {
-        if (jamPair.end_date && jamPair.start_date && [jamPair.end_date timeIntervalSinceDate:jamPair.start_date] > cHeavyTrafficJamThreshold)
-        {
-            BMKMapPoint jamToUse[2];
-            
-            CLLocationCoordinate2D bdCoordsSt = [GeoTransformer earth2Baidu:[jamPair stCoordinate]];
-            BMKMapPoint bdMapCoorSt = BMKMapPointForCoordinate(bdCoordsSt);
-            jamToUse[0] = bdMapCoorSt;
-
-            CLLocationCoordinate2D bdCoordsEd = [GeoTransformer earth2Baidu:[jamPair edCoordinate]];
-            BMKMapPoint bdMapCoorEd = BMKMapPointForCoordinate(bdCoordsEd);
-            jamToUse[1] = bdMapCoorEd;
-            
-            BMKPolyline * jamLine = [BMKPolyline polylineWithPoints:jamToUse count:2];
-            jamLine.title = @"red";
-            [self.mapView addOverlay:jamLine];
+        if (jamArr.count < 2) {
+            continue;
         }
+        BMKMapPoint jamToUse[jamArr.count];
+        
+        CTBaseLocation * first = jamArr[0];
+        CTBaseLocation * last = [jamArr lastObject];
+        
+        for (int i=0; i < jamArr.count; i++) {
+            CTBaseLocation * item = jamArr[i];
+            CLLocationCoordinate2D itemCoor = [item coordinate];
+            if (eCoorTypeGps == coorType) {
+                itemCoor = [GeoTransformer earth2Baidu:itemCoor];
+            } else if (eCoorTypeMars == coorType) {
+                itemCoor = [GeoTransformer mars2Baidu:itemCoor];
+            }
+            BMKMapPoint bdCoor = BMKMapPointForCoordinate(itemCoor);
+            jamToUse[i] = bdCoor;
+        }
+        
+        BMKPolyline * jamLine = [BMKPolyline polylineWithPoints:jamToUse count:jamArr.count];
+        if ([last.timestamp timeIntervalSinceDate:first.timestamp] > cHeavyTrafficJamThreshold) {
+            jamLine.title = @"red";
+        } else {
+            jamLine.title = @"yellow";
+        }
+        [self.mapView addOverlay:jamLine];
     }
     
     [self.mapView setRegion:[regionBound baiduRegion] animated:YES];

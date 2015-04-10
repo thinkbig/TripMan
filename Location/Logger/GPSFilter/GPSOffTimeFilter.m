@@ -155,8 +155,7 @@
         NSString * seg = @"";
         NSMutableString * wayStr = [[NSMutableString alloc] init];
         for (GPSLogItem * item in route) {
-            CLLocationCoordinate2D coor = [item coordinate];
-            [wayStr appendFormat:@"%@%.5f,%.5f", seg, coor.latitude, coor.longitude];
+            [wayStr appendFormat:@"%@%.f,%.5f,%.5f", seg, [item.timestamp timeIntervalSince1970], [item.latitude doubleValue], [item.longitude doubleValue]];
             seg = @"|";
         }
         return wayStr;
@@ -170,8 +169,11 @@
     NSMutableArray * ptArr = [NSMutableArray arrayWithCapacity:segments.count];
     for (NSString * oneSeg in segments) {
         NSArray * coorNum = [oneSeg componentsSeparatedByString:@","];
-        if (coorNum.count == 2) {
-            CLLocation * loc = [[CLLocation alloc] initWithLatitude:[coorNum[0] floatValue] longitude:[coorNum[1] floatValue]];
+        if (coorNum.count == 3) {
+            CTBaseLocation * loc = [[CTBaseLocation alloc] init];
+            loc.timestamp = [NSDate dateWithTimeIntervalSince1970:[coorNum[0] floatValue]];
+            loc.lat = @([coorNum[1] floatValue]);
+            loc.lon = @([coorNum[2] floatValue]);
             [ptArr addObject:loc];
         }
     }
@@ -459,7 +461,7 @@
 
         // 一个拐点有可能会被识别出多个拐点，因为采样精度的原因，合并距离相近的拐点
         if (delIdx < 0 && idx+3 < self.anglePointIdx.count) {
-            CGFloat dist = [self.smoothData[idx2] distanceFrom:self.smoothData[idx3]];
+            CGFloat dist = [(GPSLogItem*)self.smoothData[idx2] distanceFrom:self.smoothData[idx3]];
             if (dist < 260) {
                 NSInteger idx4 = [self.anglePointIdx[idx+3] integerValue];
                 CGPoint pt4 = [GPSOffTimeFilter item2Point:self.smoothData[idx4]];

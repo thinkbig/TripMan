@@ -53,8 +53,8 @@
 #define cOntOfDateThreshold                    (60*30)          // if the last gps data is over 30*60s ealier, force end unfinished trip
 #define cCanStopMonitoringThreshold            (60*3)
 
-#define cInsDrivingSpeed                       (20.0/3.6)       //  > 15 km/h
-#define cInsTrafficJamSpeed                    (15.0/3.6)        //  < 5 km/h
+#define cInsDrivingSpeed                       (30.0/3.6)       //  > 15 km/h
+#define cInsTrafficJamSpeed                    (20.0/3.6)        //  < 5 km/h
 #define cInsRunningSpeed                       (10.0/3.6)       //  > 10 km/h
 #define cInsWalkingSpeed                       (5.0/3.6)        //  < 5 km/h
 #define cInsStationarySpeed                    (2/3.6)          //  < 2 km/h

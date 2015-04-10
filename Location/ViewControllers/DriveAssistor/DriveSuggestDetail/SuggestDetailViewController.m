@@ -261,7 +261,7 @@
         delete [] pointsToUse;
     }
     
-    for (CLLocation * loc in self.waypts) {
+    for (CTBaseLocation * loc in self.waypts) {
         CLLocationCoordinate2D bdCoor = [GeoTransformer earth2Baidu:loc.coordinate];
 
         [regionBound updateBoundsWithCoor:bdCoor];

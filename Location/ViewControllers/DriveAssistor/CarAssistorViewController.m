@@ -303,16 +303,7 @@
         if (indexPath.row > 0) {
             if (0 == _selCategoryIdx) {
                 ParkingRegionDetail * selectRegion = self.mostParkingLoc[indexPath.row-1];
-                ParkingRegionDetail * startDetail = [[AnaDbManager deviceDb] parkingDetailForCoordinate:curLoc.coordinate minDist:500];
-                TripSummary * bestSum = [[AnaDbManager sharedInst] bestTripWithStartRegion:startDetail.coreDataItem endRegion:selectRegion.coreDataItem];
-
-                CTRoute * route = [CTRoute new];
-                [route updateWithDestRegion:selectRegion.coreDataItem fromCurrentLocation:curLoc];
-                
-                SuggestDetailViewController * suggestDetail = [self.storyboard instantiateViewControllerWithIdentifier:@"SuggestDetailID"];
-                suggestDetail.route = route;
-                suggestDetail.waypts = [bestSum wayPoints];
-                [self.navigationController pushViewController:suggestDetail animated:YES];
+                [self gotoDetail:selectRegion fromLoc:curLoc];
             } else {
                 
             }
@@ -381,15 +372,41 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.row < self.recentSearch.count) {
-        CTFavLocation * loc = self.recentSearch[indexPath.row];
-        [self searchWithKeyword:loc.name andCity:loc.city];
-    } else if (indexPath.row == self.recentSearch.count) {
-        [self.recentSearch removeAllObjects];
-        [[BussinessDataProvider sharedInstance] putRecentSearches:nil];
-        [tableView reloadData];
+    
+    if (self.localSuggestion.count == 0) {
+        if (indexPath.row < self.recentSearch.count) {
+            CTFavLocation * loc = self.recentSearch[indexPath.row];
+            [self searchWithKeyword:loc.name andCity:loc.city];
+        } else if (indexPath.row == self.recentSearch.count) {
+            [self.recentSearch removeAllObjects];
+            [[BussinessDataProvider sharedInstance] putRecentSearches:nil];
+            [tableView reloadData];
+        }
+    } else {
+        CLLocation * curLoc = [BussinessDataProvider lastGoodLocation];
+        if (nil == curLoc) {
+            [self showToast:@"当前gps不可用" onDismiss:nil];
+            return;
+        }
+        ParkingRegionDetail * selectRegion = self.localSuggestion[indexPath.row];
+        [self gotoDetail:selectRegion fromLoc:curLoc];
     }
 }
+
+- (void) gotoDetail:(ParkingRegionDetail*)selectRegion fromLoc:(CLLocation*)curLoc
+{
+    ParkingRegionDetail * startDetail = [[AnaDbManager deviceDb] parkingDetailForCoordinate:curLoc.coordinate minDist:500];
+    TripSummary * bestSum = [[AnaDbManager sharedInst] bestTripWithStartRegion:startDetail.coreDataItem endRegion:selectRegion.coreDataItem];
+    
+    CTRoute * route = [CTRoute new];
+    [route updateWithDestRegion:selectRegion.coreDataItem fromCurrentLocation:curLoc];
+    
+    SuggestDetailViewController * suggestDetail = [self.storyboard instantiateViewControllerWithIdentifier:@"SuggestDetailID"];
+    suggestDetail.route = route;
+    suggestDetail.waypts = [bestSum wayPoints];
+    [self.navigationController pushViewController:suggestDetail animated:YES];
+}
+
 
 #pragma mark - UIScrollViewDelegate
 

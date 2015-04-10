@@ -15,4 +15,7 @@
 - (CLLocationCoordinate2D) stCoordinate;
 - (CLLocationCoordinate2D) edCoordinate;
 
+- (CTBaseLocation*) stCTLocation;
+- (CTBaseLocation*) edCTLocation;
+
 @end

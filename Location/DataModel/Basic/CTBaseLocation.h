@@ -14,6 +14,7 @@
 
 @interface CTBaseLocation : JSONModel
 
+@property (nonatomic, strong) NSDate<Optional> *   timestamp;
 @property (nonatomic, strong) NSNumber<Optional> * lon;
 @property (nonatomic, strong) NSNumber<Optional> * lat;
 @property (nonatomic, strong) NSString<Optional> * name;
@@ -25,5 +26,7 @@
 
 - (void) updateWithCoordinate:(CLLocationCoordinate2D)coor;
 - (BOOL) updateWithCoordinateStr:(NSString*)coorStr;
+
+- (CGFloat) distanceFrom:(CTBaseLocation*)loc;
 
 @end

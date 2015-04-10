@@ -47,4 +47,8 @@
     return NO;
 }
 
+- (CGFloat) distanceFrom:(CTBaseLocation*)loc {
+    return [[self clLocation] distanceFromLocation:[loc clLocation]];
+}
+
 @end

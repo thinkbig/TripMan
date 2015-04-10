@@ -121,7 +121,7 @@
         _night_max_speed = MAX(_night_max_speed, curSpeed);
     }
     
-    if (curSpeed > cAvgTrafficJamSpeed) {
+    if (curSpeed > cInsTrafficJamSpeed) {
         [self appendVerifiedTrafficJamItem];
     } else if ([item.speed floatValue] >= 0) {
         [_lastTrafficJam addObject:item];
@@ -164,7 +164,7 @@
         CGFloat jamDist = [anotherItem distanceFrom:oneItem];
         CGFloat jamDuring = [anotherItem.timestamp timeIntervalSinceDate:oneItem.timestamp];
         
-        if (jamDist < 100 || jamDuring < 10) {
+        if (jamDist < 200 || jamDuring < 30) {
             lastPair.second = curPair.second;
         } else {
             if ([self isValidJam:lastPair]) {

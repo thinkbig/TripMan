@@ -33,7 +33,8 @@ typedef NS_ENUM(NSUInteger, eCallbackStrategy) {
 
 @interface CommonFacade : NSObject
 
-@property (nonatomic, assign) NSUInteger statusCode;
+@property (readonly, nonatomic) NSUInteger statusCode;
+@property (nonatomic) NSUInteger    retryCnt;       // default 0
 
 // for public use
 - (void)requestWithSuccess:(successFacadeBlock)success failure:(failureFacadeBlock)failure;

@@ -44,7 +44,8 @@ static NSString * rebuildVal = @"value_0000000000002"; // make sure it is differ
     //[CintricFind initWithApiKey:@"3c601eda17508279e5fcda88bc314061" andSecret:@"66d480af63780e19b4448f9eae7829e9"];
     //[CintricFind setUniqueIdForUser:@"exampleId"];
     
-    [Parse setApplicationId:@"2Vm0ziBqqos8KflxCetdDffvgq6wg4bj6g3uuWlX" clientKey:@"UZCgfJCFrYqDbEDR1COtoJD0fh51NLQ3bR4HM4lh"];
+    //[Parse setApplicationId:@"2Vm0ziBqqos8KflxCetdDffvgq6wg4bj6g3uuWlX" clientKey:@"UZCgfJCFrYqDbEDR1COtoJD0fh51NLQ3bR4HM4lh"];
+    
     if ([application respondsToSelector:@selector(registerUserNotificationSettings:)]) {
         // iOS 8
         UIUserNotificationSettings* settings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound categories:nil];
@@ -148,10 +149,10 @@ static NSString * rebuildVal = @"value_0000000000002"; // make sure it is differ
     [[NSUserDefaults standardUserDefaults] setValue:dt forKey:kDeviceToken];
     [[DataReporter sharedInst] asyncUserDeviceInfo];
     
-    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-    [currentInstallation setDeviceTokenFromData:deviceToken];
-    currentInstallation.channels = @[@"global"];
-    [currentInstallation saveInBackground];
+//    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+//    [currentInstallation setDeviceTokenFromData:deviceToken];
+//    currentInstallation.channels = @[@"global"];
+//    [currentInstallation saveInBackground];
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
@@ -164,13 +165,13 @@ static NSString * rebuildVal = @"value_0000000000002"; // make sure it is differ
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    [PFPush handlePush:userInfo];
+    //[PFPush handlePush:userInfo];
     DDLogWarn(@"$$$$$$$$$$ Did recieve push notifycation = %@", userInfo);
 }
 
 -(void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
-    [PFPush handlePush:userInfo];
+    //[PFPush handlePush:userInfo];
     if([userInfo[@"aps"][@"content-available"] intValue]== 1) //it's the silent notification
     {
         //bla bla bla put your code here
@@ -253,7 +254,7 @@ static NSString * rebuildVal = @"value_0000000000002"; // make sure it is differ
     
     if (!IS_UPDATING) {
         [[DataReporter sharedInst] asyncFromBackgroundFetch:^(eReportReslut result) {
-            DDLogWarn(@"############## Background fetch result (%lu) ... #############", result);
+            DDLogWarn(@"############## Background fetch result (%u) ... #############", result);
             if (eReportReslutComplete == result) {
                 completionHandler(UIBackgroundFetchResultNewData);
             } else {

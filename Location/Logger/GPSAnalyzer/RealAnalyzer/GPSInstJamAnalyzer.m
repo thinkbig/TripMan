@@ -14,11 +14,12 @@
 @interface GPSInstJamAnalyzer ()
 
 @property (nonatomic, strong) GPSLogItem *          lastItem;
+@property (nonatomic, strong) GPSLogItem *          lastReportItem;
 
 @property (nonatomic, strong) TSPair *              penddingJam;
 @property (nonatomic, strong) NSMutableArray *      trafficJamArr;
 
-@property (nonatomic, strong) CTInstReportModel *   reportModel;      // TSPair(model, retryCnt)
+@property (nonatomic, strong) CTInstReportModel *   reportModel;
 
 @end
 
@@ -62,7 +63,7 @@
             CGFloat jamDist = [oneItem distanceFrom:item];
             CGFloat jamDuring = [item.timestamp timeIntervalSinceDate:oneItem.timestamp];
             
-            if (jamDist > 100 && jamDuring > 10) {
+            if (jamDist > 200 && jamDuring > 30) {
                 // 判断jam结束了，上报并清除jam缓存
                 if (eJamAnalyzeStatConfirmed == self.anaStat) {
                     [self reportJamEnded];
@@ -75,8 +76,17 @@
     self.lastItem = item;
     
     eJamAnalyzeStat stat = [self checkJamStat:self.penddingJam];
-    if (eJamAnalyzeStatConfirmed != self.anaStat && stat == eJamAnalyzeStatConfirmed) {
-        [self reportJamStart];
+    if (stat == eJamAnalyzeStatConfirmed) {
+        if (eJamAnalyzeStatConfirmed != self.anaStat) {
+            [self reportJamStart];
+        } else if (self.penddingJam.second) {
+            GPSLogItem * lastReportItem = self.penddingJam.second;
+            CGFloat jamDist = [lastReportItem distanceFrom:item];
+            CGFloat jamDuring = [item.timestamp timeIntervalSinceDate:lastReportItem.timestamp];
+            if ((jamDist > 100 && jamDuring > 60*3) || jamDist > 300 || jamDuring > 5*60) {
+                [self reportJamResume];
+            }
+        }
     }
     self.anaStat = stat;
 }
@@ -84,7 +94,7 @@
 - (BOOL) isJamItem:(GPSLogItem*)item
 {
     CGFloat curSpeed = ([item.speed floatValue] < 0 ? 0 : [item.speed floatValue]);
-    return (curSpeed < cAvgTrafficJamSpeed);
+    return (curSpeed < cInsTrafficJamSpeed);
 }
 
 - (eJamAnalyzeStat) checkJamStat:(TSPair*)jamPair
@@ -138,9 +148,36 @@
     [facade requestWithSuccess:^(NSDictionary * dict) {
         NSString * jamId = dict[@"jam_id"];
         curModel.jam_id = jamId;
+        self.lastReportItem = self.penddingJam.first;
         DDLogWarn(@"&&&&&&&&&&&&&&&&&&& reportJamStart Success");
     } failure:^(NSError * err) {
         DDLogWarn(@"&&&&&&&&&&&&&&&&&&& reportJamStart Fail: %@", err);
+    }];
+}
+
+- (void) reportJamResume
+{
+    DDLogWarn(@"&&&&&&&&&&&&&&&&&&& reportJamResume");
+    
+    if (![self nearParkingLoc:5]) {
+        [self reportJamIgnore];
+        DDLogWarn(@"&&&&&&&&&&&&&&&&&&& reportJamResume canceled");
+        return;
+    }
+    
+    if (nil == self.reportModel) {
+        self.reportModel = [self modelWithStartItem:self.penddingJam.first];
+    }
+    GPSLogItem * reportItem = self.lastItem;
+    [self.reportModel updateWithUserLocation:[self.lastItem coordinate]];
+    
+    CTInstReportFacade * facade = [CTInstReportFacade new];
+    facade.reportModel = self.reportModel;
+    [facade requestWithSuccess:^(NSDictionary * dict) {
+        self.lastReportItem = reportItem;
+        DDLogWarn(@"&&&&&&&&&&&&&&&&&&& reportJamResume Success");
+    } failure:^(NSError * err) {
+        DDLogWarn(@"&&&&&&&&&&&&&&&&&&& reportJamResume Fail: %@", err);
     }];
 }
 
@@ -150,6 +187,7 @@
     
     if (![self nearParkingLoc:5]) {
         DDLogWarn(@"&&&&&&&&&&&&&&&&&&& reportJamEnded canceled");
+        [self reportJamIgnore];
         return;
     }
     
@@ -168,14 +206,14 @@
     CTInstReportModel * curModel = self.reportModel;
     CTInstReportFacade * facade = [CTInstReportFacade new];
     facade.reportModel = curModel;
+    facade.retryCnt = 1;
     [facade requestWithSuccess:^(NSDictionary * dict) {
         DDLogWarn(@"&&&&&&&&&&&&&&&&&&& reportJamEnded Success");
-        if (curModel == self.reportModel) {
-            self.reportModel = nil;
-        };
     } failure:^(NSError * err) {
         DDLogWarn(@"&&&&&&&&&&&&&&&&&&& reportJamEnded Fail");
     }];
+    
+    [self reset];
 }
 
 - (void) reportJamIgnore
@@ -192,32 +230,28 @@
     facade.ignore = YES;
     [facade requestWithSuccess:^(NSDictionary * dict) {
         DDLogWarn(@"&&&&&&&&&&&&&&&&&&& reportJamEnded Success");
-        if (curModel == self.reportModel) {
-            self.reportModel = nil;
-        };
     } failure:^(NSError * err) {
         DDLogWarn(@"&&&&&&&&&&&&&&&&&&& reportJamEnded Fail");
     }];
+    
+    [self reset];
 }
 
 - (void) reset
 {
     self.penddingJam = nil;
     [self.trafficJamArr removeAllObjects];
+    self.reportModel = nil;
+    self.lastReportItem = nil;
 }
 
 - (void) driveEndAt:(GPSLogItem*)item
 {
+    // 说明程序判断驾驶停止，但是reportJamEnded并没有上报，因此丢弃
     if (self.reportModel.jam_id && self.reportModel.st_date) {
-        if (self.reportModel.ed_lat && self.reportModel.ed_lon) {
-            CLLocation * jamEndLoc = [[CLLocation alloc] initWithLatitude:[self.reportModel.ed_lat floatValue] longitude:[self.reportModel.ed_lon floatValue]];
-            CLLocation * driveEndLoc = [item location];
-            if ([jamEndLoc distanceFromLocation:driveEndLoc] > 200) {
-                return;
-            }
-        }
-        
         [self reportJamIgnore];
+    } else {
+        [self reset];
     }
 }
 

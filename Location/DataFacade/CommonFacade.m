@@ -9,7 +9,22 @@
 #import "CommonFacade.h"
 #import "NSDictionary+QueryString.h"
 
+@interface CommonFacade () {
+    NSUInteger _realRetryCnt;
+}
+
+@property (readwrite, nonatomic) NSUInteger statusCode;
+@property (nonatomic) NSUInteger realRetryCnt;
+
+@end
+
 @implementation CommonFacade
+
+- (void)setRetryCnt:(NSUInteger)retryCnt
+{
+    _retryCnt = retryCnt;
+    _realRetryCnt = retryCnt;
+}
 
 - (void)requestWithSuccess:(successFacadeBlock)success failure:(failureFacadeBlock)failure
 {
@@ -31,7 +46,13 @@
 }
 
 - (void)fetchDataWithPath:(NSString *)resPath requestType:(eRequestType)type param:(NSDictionary*)param constructBodyBlock:(void (^)(id <AFMultipartFormData> formData))block success:(successFacadeBlock)success failure:(failureFacadeBlock)failure
-{    
+{
+    if (!IS_REACHABLE) {
+        if (failure) {
+            failure(ERR_MAKE(eNetworkError, @"网络不可用"));
+        }
+        return;
+    }
     NSString * keyUrl = [self keyByUrl:[self baseUrl] resPath:resPath andParam:param];
     eCallbackStrategy cbStrategy = [self callbackStrategy];
     BOOL cacheCallBacked = NO;
@@ -93,8 +114,13 @@
             }
         }
         // strategy eCallBackCacheAndRequestNew have been callback once, do not need call back again
-        if (failure && !(cacheCallBacked)) {
-            failure(error);
+        if (!(cacheCallBacked)) {
+            if (_realRetryCnt>0) {
+                _realRetryCnt--;
+                [self fetchDataWithPath:resPath requestType:type param:param constructBodyBlock:block success:success failure:failure];
+            } else if (failure) {
+                failure(error);
+            }
         }
     };
     

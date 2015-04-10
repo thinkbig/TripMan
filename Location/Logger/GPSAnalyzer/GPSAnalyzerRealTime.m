@@ -162,8 +162,6 @@
 
         if ([_isInTrip boolValue]) {
             [self.jamAnalyzer appendGPSInfo:gps];
-        } else {
-            [self.jamAnalyzer reset];
         }
         // 如果靠近常用的停车位置，则把停车检测的时间阈值减少一半
         //_endThreshold = ([self.jamAnalyzer nearParkingLoc:5] ? cDriveEndThreshold*0.5 : cDriveEndThreshold);
@@ -217,6 +215,8 @@
     if (eMotionStatDriving == stat) {
         self.lostGPSTimer = [NSTimer timerWithTimeInterval:20*60 target:self selector:@selector(didLostGPS) userInfo:nil repeats:NO];
         [[NSRunLoop mainRunLoop] addTimer:self.lostGPSTimer forMode:NSDefaultRunLoopMode];
+    } else {
+        [self.jamAnalyzer driveEndAt:gps];
     }
 }
 

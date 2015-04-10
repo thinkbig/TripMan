@@ -108,7 +108,6 @@ typedef enum
         self.signalStrength = eGPSSignalStrengthUnknow;
         _locationStarted = NO;
         self.regionExitRecorder = [NSMutableDictionary dictionaryWithCapacity:2];
-        [self setKeepMonitor];
         [self preload];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tripStatChange:) name:kNotifyTripStatChange object:nil];
@@ -483,6 +482,7 @@ typedef enum
     if (status > kCLAuthorizationStatusDenied) {
         [self runBackgroundTask:1];
     }
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"kLocationAuthrizeStatChange" object:nil];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLCircularRegion *)region
