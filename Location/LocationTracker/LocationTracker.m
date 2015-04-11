@@ -286,12 +286,12 @@ typedef enum
             if (!DEBUG_MODE) {
                 GPSEvent5(statDate, eGPSEventDriveStart, theRegion, @"tripStEd", nil);
             }
-            // remove all monitor spot
-            CLLocationManager * manager = self.locationManager;
-            NSSet * regions = manager.monitoredRegions;
-            for (CLCircularRegion * region in regions) {
-                [manager stopMonitoringForRegion:region];
-            }
+            // remove all monitor spot (no not remove, in case crash)
+//            CLLocationManager * manager = self.locationManager;
+//            NSSet * regions = manager.monitoredRegions;
+//            for (CLCircularRegion * region in regions) {
+//                [manager stopMonitoringForRegion:region];
+//            }
         } else {
             if (!DEBUG_MODE) {
                 if (dropTrip && [dropTrip boolValue]) {
@@ -356,7 +356,9 @@ typedef enum
     
     CLLocationManager *locationManager = self.locationManager;
 	[locationManager stopUpdatingLocation];
-    [locationManager stopMonitoringSignificantLocationChanges];
+    if (!self.useSignificantLocationChange) {
+        [locationManager stopMonitoringSignificantLocationChanges];
+    }
 
     [self stopMotionChecker];
     
@@ -798,12 +800,11 @@ typedef enum
                 }
             }
         }
+        
+        if (mostUsedLoc.count < 3) {
+            self.useSignificantLocationChange = YES;
+        }
     }
-}
-
-- (void) test
-{
-
 }
 
 @end

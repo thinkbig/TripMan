@@ -11,6 +11,26 @@
 
 @implementation SuggestDetailCell
 
+- (void) updateWithJam:(CTJam*)jam
+{
+    if (jam) {
+        eStepTraffic stat = [jam trafficStat];
+        if (eStepTrafficSlow == stat) {
+            self.jamStatBgImage.image = [UIImage imageNamed:@"roadcondition_tagyellow"];
+            self.jamStatLabel.text = @"缓行";
+        } else if (eStepTrafficVerySlow == stat) {
+            self.jamStatBgImage.image = [UIImage imageNamed:@"roadcondition_tagred"];
+            self.jamStatLabel.text = @"拥堵";
+        } else {
+            self.jamStatBgImage.image = [UIImage imageNamed:@"roadcondition_taggreen"];
+            self.jamStatLabel.text = @"正常";
+        }
+        self.jamStatTitle.text = jam.intro ? jam.intro : @"未知路段";
+        self.jamStatSubTitle.text = nil;
+        self.jamDurationLabel.text = [NSString stringWithFormat:@"%.f min", [jam.duration floatValue]/60.0];
+    }
+}
+
 @end
 
 ///////////////////////////////////////////////////////

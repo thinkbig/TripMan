@@ -11,7 +11,7 @@
 @implementation CTTrafficAbstractFacade
 
 - (NSString *)getPath {
-    return @"traffic/abstract";
+    return @"traffic/abstractbaidu";
 }
 
 - (eRequestType)requestType {

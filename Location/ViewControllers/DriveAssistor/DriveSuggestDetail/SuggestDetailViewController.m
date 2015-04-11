@@ -139,8 +139,52 @@
     }
 }
 
+- (void) requestRouteFromApple
+{
+    CLLocationCoordinate2D sourceCoords = [GeoTransformer baidu2Mars:[self.route.orig clLocation].coordinate];
+    MKPlacemark *sourcePlacemark = [[MKPlacemark alloc] initWithCoordinate:sourceCoords addressDictionary:nil];
+    MKMapItem *source = [[MKMapItem alloc] initWithPlacemark:sourcePlacemark];
+    
+    CLLocationCoordinate2D destinationCoords = [GeoTransformer baidu2Mars:[self.route.dest clLocation].coordinate];
+    MKPlacemark *destinationPlacemark = [[MKPlacemark alloc] initWithCoordinate:destinationCoords addressDictionary:nil];
+    MKMapItem *destination = [[MKMapItem alloc] initWithPlacemark:destinationPlacemark];
+    
+    MKDirectionsRequest *directionsRequest = [MKDirectionsRequest new];
+    [directionsRequest setSource:source];
+    [directionsRequest setDestination:destination];
+    
+    MKDirections *directions = [[MKDirections alloc] initWithRequest:directionsRequest];
+    [directions calculateDirectionsWithCompletionHandler:^(MKDirectionsResponse *response, NSError *error) {
+        // Handle the response here
+        [self.mapView removeOverlays:self.mapView.overlays];
+        
+        for (MKRoute * route in response.routes)
+        {
+            NSUInteger ptCnt = route.polyline.pointCount;
+            CLLocationCoordinate2D routeCoordinates[ptCnt];
+            [route.polyline getCoordinates:routeCoordinates range:NSMakeRange(0, ptCnt)];
+            
+            BMKMapPoint pointsToUse[ptCnt];
+            for (int i=0; i < ptCnt; i++) {
+                CLLocationCoordinate2D coor = routeCoordinates[i];
+                CLLocationCoordinate2D bdCoor = [GeoTransformer mars2Baidu:coor];
+                BMKMapPoint bdMapPt = BMKMapPointForCoordinate(bdCoor);
+                pointsToUse[i] = bdMapPt;
+            }
+            
+            BMKPolyline * lineOne = [BMKPolyline polylineWithPoints:pointsToUse count:ptCnt];
+            lineOne.title = @"green";
+            [self.mapView addOverlay:lineOne];
+        }
+        
+        [self.mapView reloadInputViews];
+    }];
+}
+
 - (void)updateTripInfo
 {
+    //[self requestRouteFromApple];
+    //return;
     if (self.route.orig && self.route.dest)
     {
         if (self.route.steps.count == 0) {

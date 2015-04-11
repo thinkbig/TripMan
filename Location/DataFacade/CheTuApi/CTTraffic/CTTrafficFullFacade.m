@@ -13,7 +13,7 @@
 @implementation CTTrafficFullFacade
 
 - (NSString *)getPath {
-    return @"traffic/full";
+    return @"traffic/fullbaidu";
 }
 
 - (eRequestType)requestType {

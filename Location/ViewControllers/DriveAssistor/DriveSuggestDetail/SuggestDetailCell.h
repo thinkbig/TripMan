@@ -11,6 +11,14 @@
 
 @interface SuggestDetailCell : UICollectionViewCell
 
+@property (weak, nonatomic) IBOutlet UIImageView *jamStatBgImage;
+@property (weak, nonatomic) IBOutlet UILabel *jamStatLabel;
+@property (weak, nonatomic) IBOutlet UILabel *jamStatTitle;
+@property (weak, nonatomic) IBOutlet UILabel *jamStatSubTitle;
+@property (weak, nonatomic) IBOutlet UILabel *jamDurationLabel;
+
+- (void) updateWithJam:(CTJam*)jam;
+
 @end
 
 ///////////////////////////////////////////////////////////////

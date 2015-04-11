@@ -12,6 +12,8 @@
 
 @interface SuggestOverLayerCollectionViewController ()
 
+@property (nonatomic, strong) NSArray * allJams;
+
 @end
 
 @implementation SuggestOverLayerCollectionViewController
@@ -26,6 +28,19 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)setRoute:(CTRoute *)route
+{
+    _route = route;
+    
+    NSMutableArray * jamInfo = [NSMutableArray array];
+    for (CTStep * step in route.steps) {
+        if (step.jams.count > 0) {
+            [jamInfo addObjectsFromArray:step.jams];
+        }
+    }
+    self.allJams = jamInfo;
 }
 
 /*
@@ -48,7 +63,13 @@
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     if (0 == section) {
-        return 3+1;
+        if (self.allJams == 0) {
+            return 1;
+        } else if (self.allJams.count > 3) {
+            return 4;
+        } else {
+            return self.allJams.count;
+        }
     } else {
         return 6;
     }
@@ -65,7 +86,12 @@
             UICollectionViewCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"JamCellExpendId" forIndexPath:indexPath];
             cell = realCell;
         } else {
-            UICollectionViewCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"JamCellId" forIndexPath:indexPath];
+            SuggestDetailCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"SuggestDetailCellId" forIndexPath:indexPath];
+            CTJam * jam = nil;
+            if (indexPath.row < self.allJams.count) {
+                jam = self.allJams[indexPath.row];
+            }
+            [realCell updateWithJam:jam];
             
             cell = realCell;
         }

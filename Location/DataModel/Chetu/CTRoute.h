@@ -16,6 +16,22 @@ typedef NS_ENUM(NSUInteger, eStepTraffic) {
     eStepTrafficDefMax = eStepTrafficVerySlow,
 };
 
+@protocol CTJam <NSObject>
+@end
+
+@interface CTJam : JSONModel
+
+@property (nonatomic, strong) NSNumber<Optional> * duration;
+@property (nonatomic, strong) NSString<Optional> * intro;
+@property (nonatomic, strong) CTBaseLocation<Optional> * from;
+@property (nonatomic, strong) CTBaseLocation<Optional> * to;
+
+- (eStepTraffic) trafficStat;
+
+@end
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 @protocol CTStep <NSObject>
 @end
 
@@ -28,6 +44,7 @@ typedef NS_ENUM(NSUInteger, eStepTraffic) {
 @property (nonatomic, strong) NSString<Optional> * path;
 @property (nonatomic, strong) CTBaseLocation<Optional> * from;
 @property (nonatomic, strong) CTBaseLocation<Optional> * to;
+@property (nonatomic, strong) NSArray<CTJam, Optional> * jams;
 
 - (eStepTraffic) trafficStat;
 - (NSArray*) pathArray;
@@ -42,7 +59,7 @@ typedef NS_ENUM(NSUInteger, eStepTraffic) {
 
 @property (nonatomic, strong) NSNumber<Optional> * distance;
 @property (nonatomic, strong) NSNumber<Optional> * duration;
-@property (nonatomic, strong) NSNumber<Optional> * status;
+@property (nonatomic, strong) NSNumber<Optional> * jam_duration;    // 表示该路段最长的缓行时间
 @property (nonatomic, strong) CTBaseLocation<Optional> * orig;
 @property (nonatomic, strong) CTBaseLocation<Optional> * dest;
 @property (nonatomic, strong) NSArray<CTStep, Optional> * steps;
