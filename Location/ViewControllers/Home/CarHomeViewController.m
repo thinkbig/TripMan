@@ -155,6 +155,8 @@
     UIFont * font12 = [UIFont boldSystemFontOfSize:11];
     self.healthCell.IllegalCount.attributedText = [NSAttributedString stringWithNumber:@"0" font:DigitalFontSize(14) color:COLOR_STAT_RED andUnit:@" 新违章" font:font12 color:[UIColor whiteColor]];
     self.healthCell.IllegalPendingCount.attributedText = [NSAttributedString stringWithNumber:@"0" font:DigitalFontSize(14) color:COLOR_STAT_RED andUnit:@" 未处理违章" font:font12 color:[UIColor whiteColor]];
+    
+    self.healthCell.carMaintainProgress.progressFillColor = COLOR_STAT_RED;
 }
 
 

@@ -54,7 +54,9 @@
     CGRect scrollFrame = self.rootScrollView.bounds;
     // add header and content
     if (nil == self.mapView) {
-        self.mapView = [[BMKMapView alloc] initWithFrame:scrollFrame];
+        CGRect mapRc = scrollFrame;
+        mapRc.size.height -= OVER_HEADER_HEIGHT-25;
+        self.mapView = [[BMKMapView alloc] initWithFrame:mapRc];
         self.mapView.delegate = self;
         self.mapView.zoomEnabled = YES;
         self.mapView.scrollEnabled = YES;
@@ -70,27 +72,39 @@
     
     if (nil == self.overLayerVC) {
         self.overLayerVC = [self.storyboard instantiateViewControllerWithIdentifier:@"SuggestOverLay"];
-        scrollFrame.origin.y = (scrollFrame.size.height - OVER_HEADER_HEIGHT);
         self.overLayerVC.view.frame = scrollFrame;
         self.overLayerVC.collectionView.backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"main_bg"]];
         [self.rootScrollView addSubview:self.overLayerVC.view];
     }
-    CGSize contentSize = self.rootScrollView.frame.size;
-    contentSize.height = CGRectGetMaxY(scrollFrame);
-    self.rootScrollView.contentSize = contentSize;
     
     [self.overLayerVC.collectionView addObserver:self forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
     
     UIPanGestureRecognizer * panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panOverLayer:)];
     [self.overLayerVC.collectionView addGestureRecognizer:panGesture];
     
-    __block CGPoint offset = self.rootScrollView.contentOffset;
+    [self showLoading];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    CGRect scrollFrame = self.rootScrollView.bounds;
+    CGRect mapRc = scrollFrame;
+    
+    scrollFrame.origin.y = (scrollFrame.size.height - OVER_HEADER_HEIGHT);
+    self.overLayerVC.view.frame = scrollFrame;
+    
+    CGSize contentSize = self.rootScrollView.frame.size;
+    contentSize.height = CGRectGetMaxY(scrollFrame);
+    self.rootScrollView.contentSize = contentSize;
+    
+    mapRc.size.height -= OVER_HEADER_HEIGHT-25;
+    self.mapView.frame = mapRc;
+    
+    CGPoint offset = self.rootScrollView.contentOffset;
     offset.y = self.rootScrollView.height - OVER_HEADER_HEIGHT;
     [self.rootScrollView setContentOffset:offset animated:NO];
-    [UIView animateWithDuration:1.0 delay:0.6 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-        offset.y = 0.f;
-        [self.rootScrollView setContentOffset:offset animated:NO];
-    } completion:nil];
     
     [self updateTripInfo];
 }
@@ -202,6 +216,11 @@
                 [self updateRouteViewWithRoute:self.route];
                 self.overLayerVC.route = self.route;
                 [self.overLayerVC.collectionView reloadData];
+                
+                [UIView animateWithDuration:1.0 delay:0.3 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                    [self.rootScrollView setContentOffset:CGPointMake(0, 0) animated:NO];
+                } completion:nil];
+                
             } failure:^(NSError * err) {
                 [self hideLoading];
                 [self showToast:@"暂时无法获得交通数据" onDismiss:^(id toast) {
@@ -232,6 +251,10 @@
         [self.overLayerVC.collectionView reloadInputViews];
         
         [self updateRouteView:[GPSOffTimeFilter smoothGPSData:_gpsLogs iteratorCnt:3]];
+        
+        [UIView animateWithDuration:1.0 delay:0.6 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            [self.rootScrollView setContentOffset:CGPointMake(0, 0) animated:NO];
+        } completion:nil];
     }
 }
 
@@ -314,8 +337,6 @@
         [self.mapView addOverlay:circle];
     }
 
-    regionBound.maxLat += 0.01;
-    regionBound.minLat -= 0.02;
     [self.mapView setRegion:[regionBound baiduRegion] animated:YES];
     
     [self.mapView reloadInputViews];

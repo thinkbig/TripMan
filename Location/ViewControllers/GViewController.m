@@ -69,7 +69,7 @@ static const NSString * kHUDDismissKey = @"CT_prop_kHUDDismissKey";
 {
     self.isLoading = YES;
     if (self.currentHUD) {
-        [self.currentHUD dismissAnimated:YES];
+        return;
     }
     self.currentHUD = [self prototypeHUD:YES];
     self.currentHUD.textLabel.text = @"载入中...";

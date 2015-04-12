@@ -351,20 +351,19 @@ typedef enum
     
     DDLogWarn(@"realStopLocationTracking");
     
-    CMMotionManager *motionManager = [LocationTracker sharedMotionManager];
-    [motionManager stopAccelerometerUpdates];
-    
-    CLLocationManager *locationManager = self.locationManager;
-	[locationManager stopUpdatingLocation];
-    if (!self.useSignificantLocationChange) {
-        [locationManager stopMonitoringSignificantLocationChanges];
-    }
-
-    [self stopMotionChecker];
-    
     CLLocation * lastGoodGPS = [BussinessDataProvider lastGoodLocation];
     if (lastGoodGPS) {
         [self setStillLocation:lastGoodGPS force:YES];
+    }
+    
+    CMMotionManager *motionManager = [LocationTracker sharedMotionManager];
+    [motionManager stopAccelerometerUpdates];
+    [self stopMotionChecker];
+    
+    CLLocationManager *locationManager = self.locationManager;
+    [locationManager stopUpdatingLocation];
+    if (!self.useSignificantLocationChange) {
+        [locationManager stopMonitoringSignificantLocationChanges];
     }
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -772,6 +771,10 @@ typedef enum
             [self registerNotificationForLocation:loc withRadius:@(cReagionRadius) assignIdentifier:REGION_ID_LAST_STILL group:REGION_GROUP_LAST_STILL];
         }
     }
+    
+    if (self.locationManager.monitoredRegions.count < 3) {
+        self.useSignificantLocationChange = YES;
+    }
 }
 
 - (void)setParkingLocation:(CLLocation*)loc;
@@ -799,10 +802,6 @@ typedef enum
                     [self registerNotificationForLocation:curLoc withRadius:@(2*cReagionRadius) assignIdentifier:REGION_ID_MOST_PARKING(idCnt++) group:REGION_GROUP_MOST_STAY];
                 }
             }
-        }
-        
-        if (mostUsedLoc.count < 3) {
-            self.useSignificantLocationChange = YES;
         }
     }
 }

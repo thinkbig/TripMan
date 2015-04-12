@@ -66,15 +66,12 @@
 - (void)awakeFromNib
 {
     // car health chart
-    self.carHealthProgress.showText = NO;
     self.carHealthProgress.progress = 0.7;
     self.carHealthProgress.showShadow = NO;
     
     // car maintain chart
-    self.carMaintainProgress.showText = NO;
     self.carMaintainProgress.showShadow = NO;
     self.carMaintainProgress.progress = 0.7;
-    self.carMaintainProgress.progressFillColor = COLOR_STAT_RED;
 }
 
 @end

@@ -17,7 +17,7 @@
         id appearance = [self appearance];
         
         [appearance setStartAngle:90];
-        [appearance setShowText:YES];
+        [appearance setShowText:NO];
         [appearance setRoundedHead:YES];
         [appearance setRoundedTail:NO];
         [appearance setShowShadow:YES];

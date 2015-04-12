@@ -36,10 +36,10 @@
 - (BMKCoordinateRegion) baiduRegion
 {
     BMKCoordinateRegion bdRegion;
-    bdRegion.center.latitude     = (self.maxLat + self.minLat) / 2.0 - 0.007;
+    bdRegion.center.latitude     = (self.maxLat + self.minLat) / 2.0;
     bdRegion.center.longitude    = (self.maxLon + self.minLon) / 2.0;
-    bdRegion.span.latitudeDelta  = (self.maxLat - self.minLat) / 2.0 * 1.3;
-    bdRegion.span.longitudeDelta = (self.maxLon - self.minLon) / 2.0 * 1.4;
+    bdRegion.span.latitudeDelta  = (self.maxLat - self.minLat) / 2.0 * 1.9;
+    bdRegion.span.longitudeDelta = (self.maxLon - self.minLon) / 2.0 * 1.6;
     
     return bdRegion;
 }

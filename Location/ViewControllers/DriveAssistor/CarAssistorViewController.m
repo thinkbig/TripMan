@@ -469,6 +469,9 @@
 
 - (void) searchWithKeyword:(NSString*)key andCity:(NSString*)city
 {
+    // ios7 中如果没有这一句会有bug
+    [self.searchBar endEditing:YES];
+
     [self showLoading];
     BaiduPOISearchWrapper * wrapper = [BaiduPOISearchWrapper new];
     wrapper.city = city;
