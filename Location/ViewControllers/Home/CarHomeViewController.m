@@ -53,7 +53,7 @@
     CLLocation * curLoc = [BussinessDataProvider lastGoodLocation];
     if (curLoc) {
         ParkingRegionDetail * parkingDetail = [[AnaDbManager sharedInst] parkingDetailForCoordinate:curLoc.coordinate minDist:500];
-        NSArray * mostTrips = [[AnaDbManager sharedInst] tripsWithStartRegion:parkingDetail.coreDataItem tripLimit:1];
+        NSArray * mostTrips = [[AnaDbManager sharedInst] tripsWithStartRegion:parkingDetail.coreDataItem tripLimit:1 startDate:now];
         if (mostTrips.count > 0) {
             TripSummary * bestTrip = mostTrips[0];
             NSArray * timeFilterArr = [TripFilter filterTrips:mostTrips byTime:now between:-10 toMinute:30];

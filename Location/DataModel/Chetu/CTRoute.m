@@ -17,7 +17,7 @@
     CGFloat jamDuration = [self.duration floatValue];
     if (jamDuration > cHeavyTrafficJamThreshold) {
         return eStepTrafficVerySlow;
-    } else if (jamDuration > cHeavyTrafficJamThreshold/2.0) {
+    } else if (jamDuration > 0) {
         return eStepTrafficSlow;
     }
     return eStepTrafficOk;

@@ -291,7 +291,7 @@
             SuggestDetailViewController * suggestDetail = [self.storyboard instantiateViewControllerWithIdentifier:@"SuggestDetailID"];
             suggestDetail.route = route;
             if (endRegion) {
-                TripSummary * bestSum = [[AnaDbManager sharedInst] bestTripWithStartRegion:startDetail.coreDataItem endRegion:endRegion];
+                TripSummary * bestSum = [[AnaDbManager sharedInst] bestTripWithStartRegion:startDetail.coreDataItem endRegion:endRegion startDate:[NSDate date]];
                 suggestDetail.waypts = [bestSum wayPoints];
             }
             [self.navigationController pushViewController:suggestDetail animated:YES];
@@ -396,7 +396,7 @@
 - (void) gotoDetail:(ParkingRegionDetail*)selectRegion fromLoc:(CLLocation*)curLoc
 {
     ParkingRegionDetail * startDetail = [[AnaDbManager deviceDb] parkingDetailForCoordinate:curLoc.coordinate minDist:500];
-    TripSummary * bestSum = [[AnaDbManager sharedInst] bestTripWithStartRegion:startDetail.coreDataItem endRegion:selectRegion.coreDataItem];
+    TripSummary * bestSum = [[AnaDbManager sharedInst] bestTripWithStartRegion:startDetail.coreDataItem endRegion:selectRegion.coreDataItem startDate:[NSDate date]];
     
     CTRoute * route = [CTRoute new];
     [route updateWithDestRegion:selectRegion.coreDataItem fromCurrentLocation:curLoc];

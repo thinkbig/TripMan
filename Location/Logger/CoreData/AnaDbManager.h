@@ -29,8 +29,8 @@
 - (NSDate*) lastTripDateInUserHistory;
 
 - (ParkingRegionDetail*) parkingDetailForCoordinate:(CLLocationCoordinate2D)coordinate minDist:(CGFloat)minDist;
-- (NSArray*) tripsWithStartRegion:(ParkingRegion*)region tripLimit:(NSInteger)limit;
-- (TripSummary*) bestTripWithStartRegion:(ParkingRegion*)stRegion endRegion:(ParkingRegion*)edRegion;
+- (NSArray*) tripsWithStartRegion:(ParkingRegion*)region tripLimit:(NSInteger)limit startDate:(NSDate*)stDate;
+- (TripSummary*) bestTripWithStartRegion:(ParkingRegion*)stRegion endRegion:(ParkingRegion*)edRegion startDate:(NSDate*)stDate;
 - (NSArray*) mostUsedParkingRegionLimit:(NSUInteger)limit;
 
 - (DaySummary*) userDaySumForDeviceDaySum:(DaySummary*)daySum;

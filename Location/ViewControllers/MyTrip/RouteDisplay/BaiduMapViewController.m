@@ -95,6 +95,9 @@
             [jamArr addObject:jamPair];
         }
     }
+    [jamArr sortUsingComparator:^NSComparisonResult(TrafficJam * obj1, TrafficJam * obj2) {
+        return [obj1.start_date compare:obj2.start_date];
+    }];
     if (jamArr.count == 0) {
         [allPoints addObjectsFromArray:route];
     } else {
@@ -140,7 +143,6 @@
                         CGFloat dist3 = [jamStLoc distanceFrom:loc];
                         if (dist1+dist3 > dist2*1.1) {
                             [allPoints addObject:loc];
-                            [curJamArr addObject:loc];
                         } else {
                             [allPoints addObject:jamStLoc];
                             curJamArr = [NSMutableArray arrayWithObject:jamStLoc];
@@ -154,7 +156,13 @@
                         [allPoints addObject:loc];
                         [curJamArr addObject:loc];
                     } else {
-                        i--;
+                        if (nil == curJamArr) {
+                            CTBaseLocation * jamStLoc = [curJam stCTLocation];
+                            curJamArr = [NSMutableArray arrayWithObject:jamStLoc];
+                            [allJams addObject:curJamArr];
+                            [allPoints addObject:jamStLoc];
+                        }
+                        
                         [allPoints addObject:jamEdLoc];
                         [curJamArr addObject:jamEdLoc];
                         
@@ -164,6 +172,8 @@
                         } else {
                             curJam = nil;
                         }
+                        
+                        i--;
                     }
                 }
             }

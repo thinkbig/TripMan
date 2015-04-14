@@ -28,6 +28,9 @@
         self.jamStatTitle.text = jam.intro ? jam.intro : @"未知路段";
         self.jamStatSubTitle.text = nil;
         self.jamDurationLabel.text = [NSString stringWithFormat:@"%.f min", [jam.duration floatValue]/60.0];
+    } else {
+        self.jamStatBgImage.image = [UIImage imageNamed:@"roadcondition_taggreen"];
+        self.jamStatLabel.text = @"正常";
     }
 }
 

@@ -10,8 +10,11 @@
 #import "SuggestDetailCell.h"
 #import "ParkingRegion+Fetcher.h"
 
+#define kMaxJamDisplayCount         3
+
 @interface SuggestOverLayerCollectionViewController ()
 
+@property (nonatomic) BOOL  expand;
 @property (nonatomic, strong) NSArray * allJams;
 
 @end
@@ -63,10 +66,10 @@
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     if (0 == section) {
-        if (self.allJams == 0) {
-            return 1;
-        } else if (self.allJams.count > 3) {
-            return 4;
+        if (self.allJams.count == 0) {
+            return 0;
+        } else if (self.allJams.count > kMaxJamDisplayCount) {
+            return self.expand ? self.allJams.count : kMaxJamDisplayCount+1;
         } else {
             return self.allJams.count;
         }
@@ -82,10 +85,13 @@
     
     if (0 == indexPath.section)
     {
-        if (3 == indexPath.row) {
-            UICollectionViewCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"JamCellExpendId" forIndexPath:indexPath];
-            cell = realCell;
-        } else {
+        if (!self.expand) {
+            if (kMaxJamDisplayCount == indexPath.row) {
+                UICollectionViewCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"JamCellExpendId" forIndexPath:indexPath];
+                cell = realCell;
+            }
+        }
+        if (nil == cell) {
             SuggestDetailCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"SuggestDetailCellId" forIndexPath:indexPath];
             CTJam * jam = nil;
             if (indexPath.row < self.allJams.count) {
@@ -133,8 +139,10 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     if (0 == indexPath.section) {
-        if (3 == indexPath.row) {
-            return CGSizeMake(320.f, 30.f);
+        if (!self.expand) {
+            if (kMaxJamDisplayCount == indexPath.row) {
+                return CGSizeMake(320.f, 30.f);
+            }
         }
         return CGSizeMake(320.f, 70.f);
     } else if (1 == indexPath.section) {
@@ -163,6 +171,16 @@
         return CGSizeMake(320, 114);
     }
     return CGSizeZero;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (!self.expand) {
+        if (kMaxJamDisplayCount == indexPath.row) {
+            self.expand = YES;
+            [collectionView reloadData];
+        }
+    }
 }
 
 #pragma mark <UICollectionViewDelegate>

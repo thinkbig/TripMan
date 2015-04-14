@@ -10,6 +10,7 @@
 #import "DaySummary+Fetcher.h"
 #import "NSDate+Utilities.h"
 #import "ParkingRegion+Fetcher.h"
+#import "TripFilter.h"
 
 @interface AnaDbManager ()
 
@@ -137,7 +138,7 @@
     return deviceDetail;
 }
 
-- (NSArray*) tripsWithStartRegion:(ParkingRegion*)region tripLimit:(NSInteger)limit
+- (NSArray*) tripsWithStartRegion:(ParkingRegion*)region tripLimit:(NSInteger)limit startDate:(NSDate*)stDate
 {
     NSArray * rawGroups = [region.group_owner_st allObjects];
     
@@ -176,7 +177,7 @@
     return bestTrips;
 }
 
-- (TripSummary*) bestTripWithStartRegion:(ParkingRegion*)stRegion endRegion:(ParkingRegion*)edRegion
+- (TripSummary*) bestTripWithStartRegion:(ParkingRegion*)stRegion endRegion:(ParkingRegion*)edRegion startDate:(NSDate*)stDate
 {
     RegionGroup * group = nil;
     for (RegionGroup * curGroup in stRegion.group_owner_st) {
@@ -186,9 +187,22 @@
         }
     }
     
+    NSArray * trips = [group.trips allObjects];
+    NSMutableArray * timeMatches = [NSMutableArray arrayWithCapacity:group.trips.count];
+    for (TripSummary * sum in trips) {
+        CGFloat timeGap = [stDate timeIntervalSinceDate:sum.start_date];
+        if ((timeGap >= 0 && timeGap < 60*60) || (timeGap < 0 && timeGap > -60*10)) {
+            [timeMatches addObject:sum];
+        }
+    }
+    
+    if (timeMatches.count == 0) {
+        [timeMatches addObjectsFromArray:trips];
+    }
+    
     TripSummary * bestTrip = nil;
     CGFloat bestDuring = MAXFLOAT;
-    for (TripSummary * sum in group.trips) {
+    for (TripSummary * sum in timeMatches) {
         CGFloat curDuring = [sum.total_during floatValue];
         if (curDuring > 0 && curDuring < bestDuring) {
             bestDuring = curDuring;
