@@ -70,7 +70,7 @@
     NSMutableArray * route = [NSMutableArray array];
     NSUInteger tolCnt = rawRoute.count;
     if (tolCnt <= 3) {
-        rawRoute = rawRoute;
+        return rawRoute;
     } else {
         [route addObject:rawRoute[0]];
         for (int i = 1; i < tolCnt-1; i++) {
@@ -95,7 +95,7 @@
     return route;
 }
 
-+ (NSArray*) keyRouteFromGPS:(NSArray*)gpsData
++ (NSArray*) keyRouteFromGPS:(NSArray*)gpsData autoFilter:(BOOL)filter
 {
     CGFloat gpsErrSmall = 30;
     CGFloat gpsErrBig = 100;
@@ -113,7 +113,7 @@
     NSMutableArray * rawRoute1 = [NSMutableArray array];
     NSUInteger tolCnt1 = gpsData.count;
     [gpsData enumerateObjectsUsingBlock:^(GPSLogItem * obj, NSUInteger idx, BOOL *stop) {
-        if (idx == 0) {
+        if (idx == 0 || obj.isKeyPoint) {
             [rawRoute1 addObject:obj];
         } else if (idx == tolCnt1-1) {
             GPSLogItem * lastGps = [rawRoute1 lastObject];
@@ -137,15 +137,17 @@
             }
         }
     }];
-    
+        
     // 第二次筛选，对于非起点终点，非拐点的位置，增加他的间隔
     NSArray * rawRoute = rawRoute1;
-    NSArray * lastRoute = nil;
-    do {
-        lastRoute = rawRoute;
-        rawRoute = [GPSOffTimeFilter filterWithTurning:rawRoute];
-    } while (rawRoute.count != lastRoute.count);
-        
+    if (filter) {
+        NSArray * lastRoute = nil;
+        do {
+            lastRoute = rawRoute;
+            rawRoute = [GPSOffTimeFilter filterWithTurning:rawRoute];
+        } while (rawRoute.count != lastRoute.count);
+    }
+    
     return rawRoute;
 }
 
@@ -171,7 +173,7 @@
         NSArray * coorNum = [oneSeg componentsSeparatedByString:@","];
         if (coorNum.count == 3) {
             CTBaseLocation * loc = [[CTBaseLocation alloc] init];
-            loc.timestamp = [NSDate dateWithTimeIntervalSince1970:[coorNum[0] floatValue]];
+            loc.ts = [NSDate dateWithTimeIntervalSince1970:[coorNum[0] floatValue]];
             loc.lat = @([coorNum[1] floatValue]);
             loc.lon = @([coorNum[2] floatValue]);
             [ptArr addObject:loc];
@@ -201,7 +203,7 @@
         if (accuracy < 0 || accuracy > 100) {
             continue;
         }
-        if (accuracy < 30) {
+        if (accuracy < 60) {
             // regard as good location, 精度小于30米，则直接使用不做去噪处理
             if (penddingData.count == 1) {
                 if (smoothData.count > 0) {

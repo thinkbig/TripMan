@@ -193,7 +193,7 @@
     
     TSPair * pair = self.penddingJam;
     NSArray * jamArr = [self.trafficJamArr copy];
-    NSArray * waypoint = [GPSOffTimeFilter keyRouteFromGPS:jamArr];
+    NSArray * waypoint = [GPSOffTimeFilter keyRouteFromGPS:jamArr autoFilter:YES];
     NSString * wayptStr = [GPSOffTimeFilter routeToString:waypoint];
     
     if (nil == self.reportModel) {

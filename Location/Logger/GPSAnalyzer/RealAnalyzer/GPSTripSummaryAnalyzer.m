@@ -10,6 +10,8 @@
 #import "GPSTripSummaryAnalyzer.h"
 #import "TrafficJam.h"
 #import "TSPair.h"
+#import "GPSOffTimeFilter.h"
+#import "CTRoute.h"
 
 @interface GPSTripSummaryAnalyzer ()
 
@@ -76,6 +78,120 @@
     
     [self filterJamData];
     [self analyzeTrafficSum];
+    
+    
+    // mark all jam with key point
+    for (TSPair * pair in self.traffic_jams) {
+        GPSLogItem * first = pair.first;
+        GPSLogItem * second = pair.second;
+        first.isKeyPoint = YES;
+        second.isKeyPoint = YES;
+    }
+
+    // 关键点，没有做筛选前
+    NSArray * keyRoute = [GPSOffTimeFilter keyRouteFromGPS:gpsLogs autoFilter:NO];
+    
+    // filteredRoute 表示精简的route，相邻2点表示一个step
+    NSArray * filteredRoute = keyRoute;
+    NSArray * lastRoute = nil;
+    do {
+        lastRoute = filteredRoute;
+        filteredRoute = [GPSOffTimeFilter filterWithTurning:filteredRoute];
+    } while (filteredRoute.count != lastRoute.count);
+    
+    if (filteredRoute.count < 2) {
+        // 不可能发生，仅仅是保护
+        self.route = nil;
+    } else {
+        // 如果相邻filteredRoute，都很接近，则可能是转角点，合并这些点为一个step
+        GPSLogItem * lastItem = filteredRoute[0];
+        NSMutableArray * mergedRoute = [NSMutableArray arrayWithObject:lastItem];
+        for (int i = 1; i < filteredRoute.count-1; i++) {
+            GPSLogItem * item = filteredRoute[i];
+            CGFloat dist = [lastItem distanceFrom:item];
+            if (dist > 300) {
+                [mergedRoute addObject:item];
+                lastItem = item;
+            }
+        }
+        [mergedRoute addObject:[filteredRoute lastObject]];
+        
+        self.route = [CTRoute new];
+        [self.route setCoorType:eCoorTypeGps];
+        self.route.orig = [[CTBaseLocation alloc] initWithLogItem:mergedRoute[0]];
+        self.route.dest = [[CTBaseLocation alloc] initWithLogItem:[mergedRoute lastObject]];
+        
+        NSMutableArray * realSteps = [NSMutableArray arrayWithCapacity:mergedRoute.count];
+        lastItem = mergedRoute[0];
+        NSUInteger routeIdx = 0;
+        for (int i = 1; i < mergedRoute.count; i++) {
+            GPSLogItem * curItem = mergedRoute[i];
+            CTStep * step = [[CTStep alloc] init];
+            step.from = [[CTBaseLocation alloc] initWithLogItem:lastItem];
+            step.to = [[CTBaseLocation alloc] initWithLogItem:curItem];
+            NSMutableArray * curJams = [NSMutableArray array];
+            
+            // jam info
+            CTJam * curJam = nil;
+            
+            // match curItem
+            NSString * seg = @"";
+            NSMutableString * pathString = [NSMutableString string];
+            for (; routeIdx < keyRoute.count; routeIdx++)
+            {
+                GPSLogItem * rawItem = keyRoute[routeIdx];
+                if (rawItem == curItem) {
+                    if (curJam) {
+                        curJam.to = [[CTBaseLocation alloc] initWithLogItem:curItem];
+                        [curJams addObject:curJam];
+                        // alloc a new one
+                        curJam = [CTJam new];
+                        curJam.from = [[CTBaseLocation alloc] initWithLogItem:curItem];
+                    }
+                    routeIdx++;
+                    break;
+                } else {
+                    CLLocationCoordinate2D coor = [rawItem coordinate];
+                    [pathString appendFormat:@"%@%.5f,%.5f", seg, coor.longitude, coor.latitude];
+                    seg = @";";
+                }
+                
+                if (rawItem.isKeyPoint) {
+                    if (nil == curJam) {
+                        curJam = [CTJam new];
+                        curJam.from = [[CTBaseLocation alloc] initWithLogItem:rawItem];
+                    } else {
+                        curJam.to = [[CTBaseLocation alloc] initWithLogItem:rawItem];
+                        [curJams addObject:curJam];
+                        curJam = nil;
+                    }
+                }
+            }
+            if (pathString.length > 0) {
+                step.path = [pathString copy];
+            }
+            if (curJams.count > 0) {
+                step.jams = [curJams copy];
+            }
+            
+            lastItem = curItem;
+            
+            // add to realSteps
+            [realSteps addObject:step];
+        }
+        
+        if (realSteps.count > 0) {
+            self.route.steps = [realSteps copy];
+        }
+    }
+}
+
+- (NSString*) jsonRoute
+{
+    if (self.route) {
+        return [self.route toJSONString];
+    }
+    return nil;
 }
 
 - (void) appendData:(GPSLogItem*)item

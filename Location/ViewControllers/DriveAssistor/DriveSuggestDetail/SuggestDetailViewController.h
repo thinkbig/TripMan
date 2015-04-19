@@ -19,6 +19,7 @@
 
 @property (nonatomic, strong) TripSummary *     tripSum;
 @property (nonatomic, strong) CTRoute *         route;
-@property (nonatomic, strong) NSArray *         waypts;
+
+@property (nonatomic, strong) NSString *        endParkingId;       // 如果有
 
 @end

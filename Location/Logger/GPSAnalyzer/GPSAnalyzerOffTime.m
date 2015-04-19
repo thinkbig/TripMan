@@ -338,11 +338,13 @@
     
     TripsCoreDataManager * manager = self.manager;
     NSArray * rawRoute = [rawData subarrayWithRange:NSMakeRange(0, realEndIdx)];
-    NSArray * keyRoute = [GPSOffTimeFilter keyRouteFromGPS:rawRoute];
     NSArray * smoothData = [GPSOffTimeFilter smoothGPSData:rawRoute iteratorCnt:3];
     
     // update analyze summary info
     GPSTripSummaryAnalyzer * oneTripAna = [GPSTripSummaryAnalyzer new];
+    if (smoothData.count < 10) {
+        smoothData = rawRoute;
+    }
     [oneTripAna updateGPSDataArray:smoothData];
     
     tripSum.total_dist = @(oneTripAna.total_dist);
@@ -352,11 +354,7 @@
     tripSum.traffic_jam_dist = @(oneTripAna.traffic_jam_dist);
     tripSum.traffic_jam_during = @(oneTripAna.traffic_jam_during);
     tripSum.traffic_avg_speed = @(oneTripAna.traffic_avg_speed);
-    
-    NSString * keyRouteStr = [GPSOffTimeFilter routeToString:keyRoute];
-    if (keyRouteStr.length > 0) {
-        tripSum.addi_info = keyRouteStr;
-    }
+    tripSum.addi_info = [oneTripAna jsonRoute];
     
     NSArray * oldJams = [tripSum.traffic_jams allObjects];
     NSArray * jamArr = [oneTripAna getTrafficJams];

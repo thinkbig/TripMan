@@ -17,30 +17,6 @@
 
 @implementation TripSummary (Fetcher)
 
-- (eTrafficStatus) trafficStatus
-{
-    eTrafficStatus status = eTrafficGreen;
-    NSInteger heavyJam = [self.traffic_heavy_jam_cnt integerValue];
-    if (heavyJam > 0) {
-        NSArray * allJams = [self.traffic_jams allObjects];
-        CGFloat maxDuring = 0;
-        TrafficJam * maxJam = nil;
-        for (TrafficJam * jam in allJams) {
-            if (maxDuring < [jam.traffic_jam_during floatValue]) {
-                maxDuring = [jam.traffic_jam_during floatValue];
-                maxJam = jam;
-            }
-        }
-        if (maxDuring > 60*5) {
-            status = eTrafficYellow;
-            if (maxDuring > 60*10 || [maxJam.traffic_jam_dist floatValue] < 300) {
-                status = eTrafficRed;
-            }
-        }
-    }
-    return status;
-}
-
 - (BOOL) readyForUpload
 {
     NSString * st_parkingId = self.region_group.start_region.parking_id;
@@ -99,10 +75,13 @@
     return mutableDict;
 }
 
-- (NSArray*) wayPoints
+- (CTRoute*) tripRoute
 {
-    NSString * keyRouteStr = self.addi_info;
-    return [GPSOffTimeFilter stringToLocationRoute:keyRouteStr];    // gps坐标
+    if (self.addi_info.length > 0) {
+        CTRoute * route = [[CTRoute alloc] initWithString:self.addi_info error:nil];
+        return route;
+    }
+    return nil;
 }
 
 @end

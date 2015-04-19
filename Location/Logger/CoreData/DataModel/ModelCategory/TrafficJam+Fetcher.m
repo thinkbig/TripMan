@@ -36,7 +36,7 @@
 - (CTBaseLocation*) stCTLocation
 {
     CTBaseLocation * loc = [CTBaseLocation new];
-    loc.timestamp = self.start_date;
+    loc.ts = self.start_date;
     loc.lat = self.start_lat;
     loc.lon = self.start_lon;
     
@@ -46,7 +46,7 @@
 - (CTBaseLocation*) edCTLocation
 {
     CTBaseLocation * loc = [CTBaseLocation new];
-    loc.timestamp = self.end_date;
+    loc.ts = self.end_date;
     loc.lat = self.end_lat;
     loc.lon = self.end_lon;
     

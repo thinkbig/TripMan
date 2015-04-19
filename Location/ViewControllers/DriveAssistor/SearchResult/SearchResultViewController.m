@@ -78,6 +78,7 @@
     BMKPoiInfo * info = self.poiArray[indexPath.row];
     
     CTRoute * route = [CTRoute new];
+    [route setCoorType:eCoorTypeBaidu];
     
     route.orig = [CTBaseLocation new];
     route.orig.name = @"当前位置";

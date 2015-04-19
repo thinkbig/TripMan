@@ -13,13 +13,17 @@
 #import "DaySummary+Fetcher.h"
 #import "ParkingRegion+Fetcher.h"
 #import "TripFilter.h"
+#import "CTTrafficAbstractFacade.h"
 
 @interface CarHomeViewController ()
 
-@property (nonatomic, strong) TripSummary *     mostTrip;
-@property (nonatomic, strong) HomeTripHeader *  header;
-@property (nonatomic, strong) HomeTripCell *    tripCell;
-@property (nonatomic, strong) HomeHealthCell *  healthCell;
+@property (nonatomic, strong) CTRoute *                 bestRoute;
+@property (nonatomic, strong) ParkingRegion *           bestGuessDest;
+@property (nonatomic, strong) TripSummary *             bestTrip;
+
+@property (nonatomic, strong) HomeTripHeader *          header;
+@property (nonatomic, strong) HomeTripCell *            tripCell;
+@property (nonatomic, strong) HomeHealthCell *          healthCell;
 
 @end
 
@@ -49,22 +53,58 @@
     if (IS_UPDATING) {
         return;
     }
+    self.bestTrip = nil;
     NSDate * now = [NSDate date];
     CLLocation * curLoc = [BussinessDataProvider lastGoodLocation];
     if (curLoc) {
         ParkingRegionDetail * parkingDetail = [[AnaDbManager sharedInst] parkingDetailForCoordinate:curLoc.coordinate minDist:500];
-        NSArray * mostTrips = [[AnaDbManager sharedInst] tripsWithStartRegion:parkingDetail.coreDataItem tripLimit:1 startDate:now];
+        NSArray * mostTrips = [[AnaDbManager sharedInst] tripsWithStartRegion:parkingDetail.coreDataItem tripLimit:10 startDate:now];
         if (mostTrips.count > 0) {
-            TripSummary * bestTrip = mostTrips[0];
-            NSArray * timeFilterArr = [TripFilter filterTrips:mostTrips byTime:now between:-10 toMinute:30];
+            self.bestTrip = mostTrips[0];
+            NSArray * timeFilterArr = [TripFilter filterTrips:mostTrips byTime:now between:-60 toMinute:60];
             if (timeFilterArr.count > 0) {
-                bestTrip = timeFilterArr[0];
+                self.bestTrip = timeFilterArr[0];
                 NSArray * weekendFilterArr = [TripFilter filterTrips:mostTrips byDayType:[TripFilter dayTypeByDate:now]];
                 if (weekendFilterArr.count > 0) {
-                    bestTrip = weekendFilterArr[0];
+                    self.bestTrip = weekendFilterArr[0];
                 }
             }
-            self.mostTrip = bestTrip;
+        }
+        if (nil == self.bestTrip) {
+            // 取这次旅程的起点作为猜测
+            TripSummary * lastTrip = [[AnaDbManager sharedInst] lastTrip];
+            if (lastTrip && lastTrip.region_group.start_region != lastTrip.region_group.end_region) {
+                self.bestGuessDest = lastTrip.region_group.start_region;
+            }
+        } else {
+            self.bestGuessDest = self.bestTrip.region_group.end_region;
+        }
+        
+        if (nil == self.bestGuessDest) {
+            // 所以停车位置中，去过最多的那个作为猜测，去除当前位置点
+            NSArray * parkLoc = [[AnaDbManager sharedInst] mostUsedParkingRegionLimit:2];
+            for (ParkingRegionDetail * locDetail in parkLoc) {
+                if (parkingDetail != locDetail) {
+                    self.bestGuessDest = locDetail.coreDataItem;
+                    break;
+                }
+            }
+        }
+        
+        if (self.bestGuessDest) {
+            CTTrafficAbstractFacade * facade = [[CTTrafficAbstractFacade alloc] init];
+            facade.fromCoorBaidu = [GeoTransformer earth2Baidu:curLoc.coordinate];
+            facade.toCoorBaidu = [GeoTransformer earth2Baidu:self.bestGuessDest.centerCoordinate];
+            if (parkingDetail) {
+                facade.fromParkingId = parkingDetail.coreDataItem.parking_id;
+                facade.toParkingId = self.bestGuessDest.parking_id;
+            }
+            [facade requestWithSuccess:^(CTRoute * result) {
+                self.bestRoute = result;
+                [self.homeCollection reloadData];
+            } failure:^(NSError * err) {
+                //NSLog(@"asdfasdf = %@", err);
+            }];
         }
     }
     
@@ -91,20 +131,34 @@
     if (IS_UPDATING) {
         return;
     }
-    NSString * destStr = [_mostTrip.region_group.end_region nameWithDefault:nil];
-    if (_mostTrip.region_group.end_region.street) {
-        if (destStr) {
-            destStr = [NSString stringWithFormat:@"%@ %@", _mostTrip.region_group.end_region.street, destStr];
-        } else {
-            destStr = _mostTrip.region_group.end_region.street;
+    
+    if (self.bestGuessDest) {
+        NSString * destStr = [self.bestGuessDest nameWithDefault:nil];
+        if (self.bestGuessDest.street) {
+            if (destStr) {
+                destStr = [NSString stringWithFormat:@"%@ %@", self.bestGuessDest.street, destStr];
+            } else {
+                destStr = self.bestGuessDest.street;
+            }
         }
+        self.header.suggestDest.text = destStr.length > 0 ? destStr : @"未知地点";
+        NSString * mostDest = nil;
+        if (self.bestRoute) {
+            mostDest = [NSString stringWithFormat:@"距我的地点约 %.1fkm", [self.bestRoute.distance floatValue]/1000.0];
+        } else if (self.bestTrip) {
+            mostDest = [NSString stringWithFormat:@"距我的地点约 %.1fkm", [self.bestTrip.total_dist floatValue]/1000.0];
+        } else {
+            mostDest = @"距我的地点约 --km";
+        }
+        NSMutableAttributedString * mostTripDest = [[NSMutableAttributedString alloc] initWithString:mostDest];
+        [mostTripDest addAttribute:NSForegroundColorAttributeName value:UIColorFromRGB(0x82d13a) range:NSMakeRange(6, mostDest.length-6)];
+        [mostTripDest addAttribute:NSFontAttributeName value:DigitalFontSize(13) range:NSMakeRange(6, mostDest.length-6)];
+        self.header.suggestDistFrom.attributedText = mostTripDest;
+    } else {
+        self.header.suggestDest.text = @"当前位置";
+        self.header.suggestDistFrom.text = @"您还没有行程记录";
     }
-    self.header.suggestDest.text = destStr.length > 0 ? destStr : @"未知地点";
-    NSString * mostDest = [NSString stringWithFormat:@"距我的地点约 %.1fkm", [_mostTrip.total_dist floatValue]/1000.0];
-    NSMutableAttributedString * mostTripDest = [[NSMutableAttributedString alloc] initWithString:mostDest];
-    [mostTripDest addAttribute:NSForegroundColorAttributeName value:UIColorFromRGB(0x82d13a) range:NSMakeRange(6, mostDest.length-6)];
-    [mostTripDest addAttribute:NSFontAttributeName value:DigitalFontSize(13) range:NSMakeRange(6, mostDest.length-6)];
-    self.header.suggestDistFrom.attributedText = mostTripDest;
+    
 }
 
 - (void) updateTrip
@@ -112,15 +166,38 @@
     if (IS_UPDATING) {
         return;
     }
-    // set during
-    self.tripCell.duringLabel.text = [NSString stringWithFormat:@"%02d", (int)([_mostTrip.total_during floatValue]/60.0)];
     
-    // most trip info
-    self.tripCell.jamLabel.text = [NSString stringWithFormat:@"%ld", (long)[_mostTrip.traffic_heavy_jam_cnt integerValue]];
+    if (self.bestRoute)
+    {
+        self.tripCell.duringLabel.text = [NSString stringWithFormat:@"%02d", (int)([self.bestRoute.duration floatValue]/60.0)];
+        BOOL hasJam = [self.bestRoute.most_jam.duration floatValue] > cTrafficJamThreshold;
+        self.tripCell.jamLabel.text = [NSString stringWithFormat:@"%ld", (long)hasJam];
+        NSDate * dateNow = [NSDate date];
+        NSDateFormatter * formatter = [[BussinessDataProvider sharedInstance] dateFormatterForFormatStr:@"HH:mm"];
+        self.tripCell.suggestLabel.text = dateNow ? [formatter stringFromDate:dateNow] : @"00:00";
+    }
+    else
+    {
+        self.tripCell.duringLabel.text = @"--";
+        self.tripCell.jamLabel.text = @"-";
+        self.tripCell.suggestLabel.text = @"--:--";
+    }
     
-    NSDateFormatter * formatter = [[BussinessDataProvider sharedInstance] dateFormatterForFormatStr:@"HH:mm"];
-    self.tripCell.suggestLabel.text = _mostTrip.start_date ? [formatter stringFromDate:_mostTrip.start_date] : @"00:00";
-    
+    self.tripCell.statusLabel.text = @"目前道路无特殊情况";
+    self.tripCell.statusColorView.backgroundColor = COLOR_STAT_GREEN;
+    if (self.bestRoute.most_jam) {
+        eStepTraffic status = [self.bestRoute.most_jam trafficStat];
+        if (self.bestRoute.most_jam.intro) {
+            self.tripCell.statusLabel.text = self.bestRoute.most_jam.intro;
+        } else {
+            if (status == eStepTrafficVerySlow) {
+                self.tripCell.statusLabel.text = @"旅程有拥堵";
+            } else if (status == eStepTrafficSlow) {
+                self.tripCell.statusLabel.text = @"车多缓行";
+            }
+        }
+        self.tripCell.statusColorView.backgroundColor = [CTJam colorFromTraffic:status];
+    }
 }
 
 - (void) updateHealth

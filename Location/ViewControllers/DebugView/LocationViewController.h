@@ -17,5 +17,6 @@
 
 - (IBAction)forceReport:(id)sender;
 - (IBAction)reAnalyzeTrip:(id)sender;
+- (IBAction)toJamMap:(id)sender;
 
 @end

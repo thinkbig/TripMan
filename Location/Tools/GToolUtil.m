@@ -40,11 +40,16 @@ static GToolUtil * _sharedUtil = nil;
         static NSString * kTripManDeviceIdKey = @"kTripManDeviceIdKey";
         _deviceId = [[FXKeychain defaultKeychain] objectForKey:kTripManDeviceIdKey];
         if (nil == _deviceId) {
-            _deviceId = [UIDevice currentDevice].identifierForVendor.UUIDString;
+            // FXKeychain may have bug, check user default
+            _deviceId = [[NSUserDefaults standardUserDefaults] objectForKey:kTripManDeviceIdKey];
             if (nil == _deviceId) {
-                _deviceId = [GToolUtil createUUID];
+                _deviceId = [UIDevice currentDevice].identifierForVendor.UUIDString;
+                if (nil == _deviceId) {
+                    _deviceId = [GToolUtil createUUID];
+                }
+                [[NSUserDefaults standardUserDefaults] setObject:_deviceId forKey:kTripManDeviceIdKey];
+                [[FXKeychain defaultKeychain] setObject:_deviceId forKey:kTripManDeviceIdKey];
             }
-            [[FXKeychain defaultKeychain] setObject:_deviceId forKey:kTripManDeviceIdKey];
         }
     }
     return self;

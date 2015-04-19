@@ -9,6 +9,7 @@
 #import "LocationViewController.h"
 #import "GPSLogger.h"
 #import "DataReporter.h"
+#import "JamDisplayViewController.h"
 
 @implementation LocationViewController
 
@@ -60,13 +61,21 @@
 }
 
 - (IBAction)reAnalyzeTrip:(id)sender {
-    [self showToast:@"界面会卡一阵，请耐心等待！" onDismiss:nil];
-    [[GPSLogger sharedLogger].offTimeAnalyzer analyzeAllFinishedTrip:YES];
+    [self showLoading];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        [[GPSLogger sharedLogger].offTimeAnalyzer analyzeAllFinishedTrip:YES];
+        [self hideLoading];
+    });
+}
+
+- (IBAction)toJamMap:(id)sender {
+    JamDisplayViewController * jamVC = [self.storyboard instantiateViewControllerWithIdentifier:@"JamDisplayVC"];
+    [self.navigationController pushViewController:jamVC animated:YES];
 }
 
 - (void) updateReport {
     TripsCoreDataManager * manager = [AnaDbManager deviceDb];
-    NSString * report = [NSString stringWithFormat:@"尚未上报：停车位置(%ld)  旅程详情(%ld)  原始gps(%ld)", (unsigned long)[manager parkingRegionsToReport:NO].count, [manager tripsReadyToReport:NO].count, [manager tripRawsReadyToReport].count];
+    NSString * report = [NSString stringWithFormat:@"尚未上报：停车位置(%ld)  旅程详情(%ld)  原始gps(%ld)", (unsigned long)[manager parkingRegionsToReport:NO].count, (unsigned long)[manager tripsReadyToReport:NO].count, (unsigned long)[manager tripRawsReadyToReport].count];
     self.reportLabel.text = report;
 }
 

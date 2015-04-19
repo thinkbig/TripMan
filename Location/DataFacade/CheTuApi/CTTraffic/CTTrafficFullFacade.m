@@ -13,7 +13,7 @@
 @implementation CTTrafficFullFacade
 
 - (NSString *)getPath {
-    return @"traffic/fullbaidu";
+    return @"traffic/fulluser";
 }
 
 - (eRequestType)requestType {
@@ -21,30 +21,22 @@
 }
 
 - (NSDictionary*)requestParam {
-    NSMutableDictionary * param = [[NSMutableDictionary alloc] initWithDictionary:@{@"from": [NSString stringWithFormat:@"%.5f,%.5f", self.fromCoorBaidu.longitude, self.fromCoorBaidu.latitude], @"to": [NSString stringWithFormat:@"%.5f,%.5f", self.toCoorBaidu.longitude, self.toCoorBaidu.latitude]}];
-    
-    if (self.wayPtsBaidu.count > 0) {
-        NSString * seg = @"";
-        NSMutableString * wayStr = [[NSMutableString alloc] init];
-        for (NSDictionary * ptDict in self.wayPtsBaidu) {
-            [wayStr appendFormat:@"%@%.5f,%.5f", seg, [ptDict[@"lon"] floatValue], [ptDict[@"lat"] floatValue]];
-            seg = @"|";
-        }
-        param[@"waypoints"] = wayStr;
+    NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithDictionary:
+                                  @{@"from": [NSString stringWithFormat:@"%f,%f", self.fromCoorBaidu.longitude, self.fromCoorBaidu.latitude],
+                                    @"to": [NSString stringWithFormat:@"%f,%f", self.toCoorBaidu.longitude, self.toCoorBaidu.latitude]}];
+    if (self.fromParkingId && self.toParkingId) {
+        dict[@"fromId"] = self.fromParkingId;
+        dict[@"toId"] = self.toParkingId;
     }
-    
-    return param;
-}
-
-- (void) updateWithGpsWayPts:(NSArray*)waypts
-{
-    return;
-    NSMutableArray * ptArr = [NSMutableArray array];
-    for (CLLocation * loc in waypts) {
-        CLLocationCoordinate2D bdCoor = [GeoTransformer earth2Baidu:loc.coordinate];
-        [ptArr addObject:@{@"lat": @(bdCoor.latitude), @"lon": @(bdCoor.longitude)}];
+    NSString * udid = [[GToolUtil sharedInstance] deviceId];
+    NSString * uid = [[GToolUtil sharedInstance] userId];
+    if (uid) {
+        dict[@"uid"] = uid;
     }
-    self.wayPtsBaidu = ptArr;
+    if (udid) {
+        dict[@"udid"] = udid;
+    }
+    return dict;
 }
 
 - (id)parseRespData:(id)data error:(NSError *__autoreleasing *)err {
@@ -57,7 +49,7 @@
 - (NSString*) keyByUrl:(NSString*)url resPath:(NSString*)path andParam:(NSDictionary*)param
 {
     // 经纬度，一度大约为80~111km，所有取近似地点的时候，取小数点后3位，也就是百米作为误差
-    return [NSString stringWithFormat:@"%ld_full_%ld-%ld_%ld-%ld", lround(self.fromCoorBaidu.latitude*1000), lround(self.fromCoorBaidu.longitude*1000), lround(self.toCoorBaidu.latitude*1000), lround(self.toCoorBaidu.longitude*1000), (unsigned long)self.wayPtsBaidu.count];
+    return [NSString stringWithFormat:@"%ld_full_%ld-%ld_%ld", lround(self.fromCoorBaidu.latitude*1000), lround(self.fromCoorBaidu.longitude*1000), lround(self.toCoorBaidu.latitude*1000), lround(self.toCoorBaidu.longitude*1000)];
 }
 
 - (eCacheStrategy) cacheStrategy {
@@ -65,7 +57,7 @@
 }
 
 - (NSTimeInterval) expiredDuring {
-    return 60*5;
+    return 60*10;
 }
 
 @end

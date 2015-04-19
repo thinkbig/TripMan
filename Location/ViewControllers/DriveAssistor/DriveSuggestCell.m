@@ -42,14 +42,18 @@
     CGFloat dist = [GToolUtil distFrom:mLoc.coordinate toCoor:favLoc.coordinate];
     
     if (dist > 500) {
+        ParkingRegionDetail * startDetail = [[AnaDbManager deviceDb] parkingDetailForCoordinate:mLoc.coordinate minDist:500];
         CTTrafficAbstractFacade * facade = [[CTTrafficAbstractFacade alloc] init];
         facade.fromCoorBaidu = [GeoTransformer earth2Baidu:mLoc.coordinate];
         facade.toCoorBaidu = [GeoTransformer earth2Baidu:favLoc.coordinate];
-        [facade requestWithSuccess:^(id result) {
+        if (startDetail) {
+            facade.fromParkingId = startDetail.coreDataItem.parking_id;
+            facade.toParkingId = favLoc.parking_id;
+        }
+        [facade requestWithSuccess:^(CTRoute * result) {
             if (favLoc == self.favLoc) {
-                NSNumber * during = result[@"duration"];
-                NSNumber * jamCnt = result[@"status"];
-                [self updateTimeDuring:[during floatValue] andJamCnt:[jamCnt floatValue]];
+                BOOL hasJam = [result.most_jam.duration floatValue] > cTrafficJamThreshold;
+                [self updateTimeDuring:[result.duration floatValue] andJamCnt:hasJam];
             }
         } failure:^(NSError * err) {
             [self updateTimeDuring:-1 andJamCnt:0];
@@ -120,12 +124,17 @@
     CGFloat dist = [GToolUtil distFrom:mLoc.coordinate toCoor:loc.region.center];
     
     if (dist > 500) {
+        ParkingRegionDetail * startDetail = [[AnaDbManager deviceDb] parkingDetailForCoordinate:mLoc.coordinate minDist:500];
         CTTrafficAbstractFacade * facade = [[CTTrafficAbstractFacade alloc] init];
         facade.fromCoorBaidu = [GeoTransformer earth2Baidu:mLoc.coordinate];
         facade.toCoorBaidu = [GeoTransformer earth2Baidu:loc.region.center];
-        [facade requestWithSuccess:^(id result) {
+        if (startDetail) {
+            facade.fromParkingId = startDetail.coreDataItem.parking_id;
+            facade.toParkingId = loc.coreDataItem.parking_id;
+        }
+        [facade requestWithSuccess:^(CTRoute * result) {
             if (loc == self.location) {
-                NSNumber * during = result[@"duration"];
+                NSNumber * during = result.duration;
                 [self updateTimeDuring:[NSString stringWithFormat:@"%d", (int)([during floatValue]/60)]];
             }
         } failure:^(NSError * err) {

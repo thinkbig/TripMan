@@ -7,6 +7,7 @@
 //
 
 #import "JSONModel.h"
+#import "GPSLogItem.h"
 
 @protocol CTBaseLocation <NSObject>
 
@@ -14,12 +15,14 @@
 
 @interface CTBaseLocation : JSONModel
 
-@property (nonatomic, strong) NSDate<Optional> *   timestamp;
+@property (nonatomic, strong) NSDate<Optional> *   ts;
 @property (nonatomic, strong) NSNumber<Optional> * lon;
 @property (nonatomic, strong) NSNumber<Optional> * lat;
 @property (nonatomic, strong) NSString<Optional> * name;
 @property (nonatomic, strong) NSString<Optional> * street;
 @property (nonatomic, strong) NSString<Optional> * city;
+
+- (id)initWithLogItem:(GPSLogItem*)item;
 
 - (CLLocationCoordinate2D) coordinate;
 - (CLLocation*) clLocation;

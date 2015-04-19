@@ -13,4 +13,7 @@
 @property (nonatomic) CLLocationCoordinate2D        fromCoorBaidu;
 @property (nonatomic) CLLocationCoordinate2D        toCoorBaidu;
 
+@property (nonatomic, strong) NSString *            fromParkingId;
+@property (nonatomic, strong) NSString *            toParkingId;
+
 @end

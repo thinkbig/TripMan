@@ -282,18 +282,16 @@
     if (0 == indexPath.section) {
         if (indexPath.row < self.userFavLocs.count) {
             CTFavLocation * locFav = self.userFavLocs[indexPath.row];
-            ParkingRegionDetail * startDetail = [[AnaDbManager deviceDb] parkingDetailForCoordinate:curLoc.coordinate minDist:500];
-            ParkingRegion * endRegion = [[AnaDbManager deviceDb] parkingRegioinForId:locFav.parking_id];
-            
             CTRoute * route = [CTRoute new];
-            [route updateWithDestCoor:locFav.coordinate andDestName:locFav.name fromCurrentLocation:curLoc];
+            [route setCoorType:eCoorTypeBaidu];
+            route.orig.name = @"当前位置";
+            [route.orig updateWithCoordinate:[GeoTransformer earth2Baidu:curLoc.coordinate]];
+            route.dest.name = locFav.name ? locFav.name : @"目的地";
+            [route.dest updateWithCoordinate:[GeoTransformer earth2Baidu:locFav.coordinate]];
             
             SuggestDetailViewController * suggestDetail = [self.storyboard instantiateViewControllerWithIdentifier:@"SuggestDetailID"];
             suggestDetail.route = route;
-            if (endRegion) {
-                TripSummary * bestSum = [[AnaDbManager sharedInst] bestTripWithStartRegion:startDetail.coreDataItem endRegion:endRegion startDate:[NSDate date]];
-                suggestDetail.waypts = [bestSum wayPoints];
-            }
+            suggestDetail.endParkingId = locFav.parking_id;
             [self.navigationController pushViewController:suggestDetail animated:YES];
         } else {
             FavSelectViewController * favSelVC = [self.storyboard instantiateViewControllerWithIdentifier:@"FavSelectVC"];
@@ -394,16 +392,17 @@
 }
 
 - (void) gotoDetail:(ParkingRegionDetail*)selectRegion fromLoc:(CLLocation*)curLoc
-{
-    ParkingRegionDetail * startDetail = [[AnaDbManager deviceDb] parkingDetailForCoordinate:curLoc.coordinate minDist:500];
-    TripSummary * bestSum = [[AnaDbManager sharedInst] bestTripWithStartRegion:startDetail.coreDataItem endRegion:selectRegion.coreDataItem startDate:[NSDate date]];
-    
+{    
     CTRoute * route = [CTRoute new];
-    [route updateWithDestRegion:selectRegion.coreDataItem fromCurrentLocation:curLoc];
+    [route setCoorType:eCoorTypeBaidu];
+    route.orig.name = @"当前位置";
+    [route.orig updateWithCoordinate:[GeoTransformer earth2Baidu:curLoc.coordinate]];
+    route.dest.name = [selectRegion.coreDataItem nameWithDefault:@"目的地"];
+    [route.dest updateWithCoordinate:[GeoTransformer earth2Baidu:[selectRegion.coreDataItem centerCoordinate]]];
     
     SuggestDetailViewController * suggestDetail = [self.storyboard instantiateViewControllerWithIdentifier:@"SuggestDetailID"];
     suggestDetail.route = route;
-    suggestDetail.waypts = [bestSum wayPoints];
+    suggestDetail.endParkingId = selectRegion.coreDataItem.parking_id;
     [self.navigationController pushViewController:suggestDetail animated:YES];
 }
 

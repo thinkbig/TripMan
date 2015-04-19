@@ -36,6 +36,7 @@
     loc.lon = self.center_lon;
     loc.name = [self nameWithDefault:@"未知地点"];
     loc.street = self.street;
+    loc.parking_id = self.parking_id;
     
     return loc;
 }

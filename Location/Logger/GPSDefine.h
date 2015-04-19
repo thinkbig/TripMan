@@ -62,7 +62,8 @@
 #define cDriveStartThreshold                    10
 #define cMoveStartRecordThreshold               (60*3)          // must bigger than cDriveStartThreshold
 #define cDriveEndThreshold                      (60*8)
-#define cHeavyTrafficJamThreshold               (60*3)
+#define cHeavyTrafficJamThreshold               (60*5)
+#define cTrafficJamThreshold                    (60*2)
 
 #define cStartLocErrorDist                      2000
 #define cReagionRadius                          120
@@ -80,13 +81,13 @@
 
 #define NotNulStr(str_)                 ((str_)?(str_):@"")
 
-#define GPSLog(loc_, acc_)              GPSLogInternal((loc_).timestamp, @"%f,%f,%f,%f,%f,%f,%f,%f,%f,%f", (loc_).coordinate.latitude, (loc_).coordinate.longitude, (loc_).altitude, (loc_).horizontalAccuracy, (loc_).verticalAccuracy, (loc_).course, (loc_).speed, (acc_).acceleration.x, (acc_).acceleration.y, (acc_).acceleration.z)
-#define GPSLog2(loc_, acc_, speed_)              GPSLogInternal((loc_).timestamp, @"%f,%f,%f,%f,%f,%f,%f,%f,%f,%f", (loc_).coordinate.latitude, (loc_).coordinate.longitude, (loc_).altitude, (loc_).horizontalAccuracy, (loc_).verticalAccuracy, (loc_).course, (speed_), (acc_).acceleration.x, (acc_).acceleration.y, (acc_).acceleration.z)
-
+#define GPSLog(loc_, acc_)              GPSLogInternal((loc_).timestamp, @"%.5f,%.5f,%.2f,%.f,%.f,%.1f,%.2f,%.6f,%.6f,%.6f", (loc_).coordinate.latitude, (loc_).coordinate.longitude, (loc_).altitude, (loc_).horizontalAccuracy, (loc_).verticalAccuracy, (loc_).course, (loc_).speed, (acc_).acceleration.x, (acc_).acceleration.y, (acc_).acceleration.z)
+#define GPSLog2(loc_, acc_, speed_)              GPSLogInternal((loc_).timestamp, @"%.5f,%.5f,%.2f,%.f,%.f,%.1f,%.2f,%.6f,%.6f,%.6f", (loc_).coordinate.latitude, (loc_).coordinate.longitude, (loc_).altitude, (loc_).horizontalAccuracy, (loc_).verticalAccuracy, (loc_).course, (speed_), (acc_).acceleration.x, (acc_).acceleration.y, (acc_).acceleration.z)
+// sample data = [1427880442,31.327835,120.751843,0.533905,5,8,358.242188,8.779999999999999,-0.000687,0.57869,-0.753555]
 
 #define GPSEvent(tstamp_, type_)                            GPSEvent3((tstamp_), (type_), nil)
 #define GPSEvent3(tstamp_, type_, msg_)                     GPSEvent5((tstamp_), (type_), nil, nil, (msg_))
-#define GPSEvent5(tstamp_, type_, region_, group_, msg_)    GPSEventInternal((tstamp_), @"%ld,%f,%f,%f,%@,%@,%@", (long)(type_), ((CLCircularRegion*)(region_)).center.latitude, ((CLCircularRegion*)(region_)).center.longitude, ((CLCircularRegion*)(region_)).radius, NotNulStr(((CLCircularRegion*)(region_)).identifier), NotNulStr(group_), NotNulStr(msg_))
+#define GPSEvent5(tstamp_, type_, region_, group_, msg_)    GPSEventInternal((tstamp_), @"%ld,%.5f,%.5f,%.f,%@,%@,%@", (long)(type_), ((CLCircularRegion*)(region_)).center.latitude, ((CLCircularRegion*)(region_)).center.longitude, ((CLCircularRegion*)(region_)).radius, NotNulStr(((CLCircularRegion*)(region_)).identifier), NotNulStr(group_), NotNulStr(msg_))
 
 
 // debug config

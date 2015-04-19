@@ -42,12 +42,8 @@
     [[GPSLogger sharedLogger].offTimeAnalyzer analyzeTripForSum:self.tripSum withAnalyzer:nil];
     
     [self updateTripInfo];
-    
-    //[self updateRouteView:[GPSOffTimeFilter smoothGPSData:_gpsLogs iteratorCnt:3]];
-    //[self updateRouteView:_gpsLogs];
-    //[self updateRouteView:[GPSOffTimeFilter keyRouteFromGPS:_gpsLogs turningPoint:[self.tripSum.turning_info turningPts]]];
-    
-    NSArray * rawRoute = [GPSOffTimeFilter keyRouteFromGPS:_gpsLogs];
+
+    NSArray * rawRoute = [GPSOffTimeFilter keyRouteFromGPS:_gpsLogs autoFilter:YES];
     [self updateRouteView:rawRoute];
     [self updateSnapData:rawRoute];
     
@@ -67,7 +63,6 @@
     CTTrafficFullFacade * facade = [[CTTrafficFullFacade alloc] init];
     facade.fromCoorBaidu = [GeoTransformer mars2Baidu:[first.location coordinate]];
     facade.toCoorBaidu = [GeoTransformer mars2Baidu:[last.location coordinate]];
-    facade.wayPtsBaidu = bdArr;
     [facade requestWithSuccess:^(CTRoute * route) {
         NSLog(@"updateWayPointData");
         [self updateWithBaiduRoute:route];

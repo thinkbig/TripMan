@@ -17,5 +17,6 @@
 @property (nonatomic, strong) NSBundle *        bdBundle;
 
 - (UIImage*) imageNamed:(NSString*)filename;
++ (CGFloat) mapAngleFromPoint:(CGPoint)fromPt toPoint:(CGPoint)toPt;
 
 @end

@@ -1,30 +1,25 @@
 //
-//  BaiduMapViewController.m
+//  JamDisplayViewController.m
 //  TripMan
 //
-//  Created by taq on 3/26/15.
+//  Created by taq on 4/17/15.
 //  Copyright (c) 2015 Location. All rights reserved.
 //
 
-#import "BaiduMapViewController.h"
-#import "RouteAnnotation.h"
+#import "JamDisplayViewController.h"
 #import "BaiduHelper.h"
+#import "CTRealtimeJamFacade.h"
+#import "RouteAnnotation.h"
 #import "UIImage+Rotate.h"
-#import "GPSOffTimeFilter.h"
-#import "GeoRectBound.h"
-#import "GeoTransformer.h"
-#import "TrafficJam+Fetcher.h"
-#import "NSDate+Utilities.h"
-#import "TrafficJam+Fetcher.h"
+#import "JamZone.h"
 
-@interface BaiduMapViewController ()
+@interface JamDisplayViewController ()
 
 @property (nonatomic, strong) BaiduHelper *     bdHelper;
-@property (nonatomic, strong) NSArray *         locationArr;
 
 @end
 
-@implementation BaiduMapViewController
+@implementation JamDisplayViewController
 
 - (void)internalInit {
     [super internalInit];
@@ -34,7 +29,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-
+    
+    self.title = @"实时拥堵地图";
+    
     if (nil == self.mapView) {
         self.mapView = [[BMKMapView alloc] initWithFrame:self.view.bounds];
         self.mapView.delegate = self;
@@ -46,11 +43,12 @@
     }
     self.mapView.showsUserLocation = YES;
     
-    [[GPSLogger sharedLogger].offTimeAnalyzer analyzeTripForSum:self.tripSum withAnalyzer:nil];
+    [self updateUserLocation];
+    BMKCoordinateRegion viewRegion = BMKCoordinateRegionMake([BussinessDataProvider lastGoodLocation].coordinate, BMKCoordinateSpanMake(0.5, 0.5));
+    BMKCoordinateRegion adjustedRegion = [_mapView regionThatFits:viewRegion];
+    [_mapView setRegion:adjustedRegion animated:YES];
     
-    NSString * keyRouteStr = self.tripSum.addi_info;
-    self.route = [[CTRoute alloc] initWithString:keyRouteStr error:nil];
-    [self updateRouteViewWithRoute:self.route coorType:eCoorTypeGps];
+    [self requestJamWithZone];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -58,90 +56,57 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void) updateRouteViewWithRoute:(CTRoute*)route coorType:(eCoorType)coorType
+- (void)updateUserLocation
 {
-    [self.mapView removeOverlays:self.mapView.overlays];
-    [self.mapView removeAnnotations:self.mapView.annotations];
-    
-    NSArray * steps = route.steps;
-    GeoRectBound * regionBound = [GeoRectBound new];
-    
-    for (CTStep * oneStep in steps)
-    {
-        CLLocationCoordinate2D bdCoorFrom = [GeoTransformer baiduCoor:[oneStep.from coordinate] fromType:coorType];
-        BMKMapPoint bdMapFrom = BMKMapPointForCoordinate(bdCoorFrom);
-        [regionBound updateBoundsWithCoor:bdCoorFrom];
-        
-        CLLocationCoordinate2D btCoorTo = [GeoTransformer baiduCoor:[oneStep.to coordinate] fromType:coorType];
-        BMKMapPoint bdMapTo = BMKMapPointForCoordinate(btCoorTo);
-        [regionBound updateBoundsWithCoor:btCoorTo];
-        
-        NSArray * pathArr = [oneStep pathArray];
-        
-        BMKMapPoint * pointsToUse = new BMKMapPoint[pathArr.count+2];
-        pointsToUse[0] = bdMapFrom;
-        pointsToUse[pathArr.count+1] = bdMapTo;
+    CLLocation * userLoc = [BussinessDataProvider lastGoodLocation];
+    if (userLoc) {
+        CLLocationCoordinate2D bdCoor = [GeoTransformer earth2Baidu:userLoc.coordinate];
+        BMKUserLocation * userLoc = [[BMKUserLocation alloc] init];
+        [userLoc setValue:[[CLLocation alloc] initWithLatitude:bdCoor.latitude longitude:bdCoor.longitude] forKey:@"location"];
+        [self.mapView updateLocationData:userLoc];
+    }
+}
 
-        // 转弯节点添加标注
+- (IBAction)refresh:(id)sender {
+    [self requestJamWithZone];
+}
+
+- (void) requestJamWithZone
+{
+    GeoRectBound * bound = [GeoRectBound new];
+    BMKCoordinateRegion region = self.mapView.region;
+    bound.minLat = region.center.latitude - region.span.latitudeDelta;
+    bound.maxLat = region.center.latitude + region.span.latitudeDelta;
+    bound.minLon = region.center.longitude - region.span.longitudeDelta;
+    bound.maxLon = region.center.longitude + region.span.longitudeDelta;
+    
+    CTRealtimeJamFacade * facade = [[CTRealtimeJamFacade alloc] init];
+    facade.geoBound = bound;
+    [facade requestWithSuccess:^(NSArray * jamArr) {
+        [self updateWithJamArr:jamArr];
+    } failure:^(NSError * err) {
+        NSLog(@"err = %@", err);
+    }];
+}
+
+- (void) updateWithJamArr:(NSArray*)jamArr
+{
+    [self.mapView removeAnnotations:self.mapView.annotations];
+    [self.mapView removeOverlays:self.mapView.overlays];
+    
+    for (JamZone * zone in jamArr) {
+        CLLocationCoordinate2D bdCoor = [GeoTransformer earth2Baidu:zone.position.coordinate];
+        
         RouteAnnotation* itemNode = [[RouteAnnotation alloc] init];
-        itemNode.coordinate = bdCoorFrom;
-        itemNode.degree = [BaiduHelper mapAngleFromPoint:CGPointMake(bdCoorFrom.longitude, bdCoorFrom.latitude) toPoint:CGPointMake(btCoorTo.longitude, btCoorTo.latitude)];
+        itemNode.coordinate = bdCoor;
+        itemNode.degree = [zone headingDegree];
         itemNode.type = 2;
         [_mapView addAnnotation:itemNode];
         
-        [pathArr enumerateObjectsUsingBlock:^(CTBaseLocation * obj, NSUInteger idx, BOOL *stop) {
-            CLLocationCoordinate2D btCoor = [GeoTransformer baiduCoor:[obj coordinate] fromType:coorType];
-            [regionBound updateBoundsWithCoor:btCoor];
-            BMKMapPoint bdMappt = BMKMapPointForCoordinate(btCoor);
-            pointsToUse[idx+1] = bdMappt;
-        }];
         
-        BMKPolyline * lineOne = [BMKPolyline polylineWithPoints:pointsToUse count:pathArr.count+2];
-        lineOne.title = @"green";
-        [self.mapView addOverlay:lineOne];
-        
-        delete [] pointsToUse;
-        
-        // 处理堵车数据
-        NSArray * filteredJamArr = [oneStep jamsWithThreshold:cTrafficJamThreshold];
-        for (CTJam * jam in filteredJamArr) {
-            NSArray * jamArr = [oneStep fullPathOfJam:jam];
-            if (jamArr.count > 0) {
-                BMKMapPoint * jamsToUse = new BMKMapPoint[jamArr.count];
-                [jamArr enumerateObjectsUsingBlock:^(CTBaseLocation * obj, NSUInteger idx, BOOL *stop) {
-                    CLLocationCoordinate2D btCoor = [GeoTransformer baiduCoor:[obj coordinate] fromType:coorType];
-                    BMKMapPoint bdMappt = BMKMapPointForCoordinate(btCoor);
-                    jamsToUse[idx] = bdMappt;
-                }];
-                
-                eStepTraffic stat = [jam trafficStat];
-                BMKPolyline * jamOne = [BMKPolyline polylineWithPoints:jamsToUse count:jamArr.count];
-                jamOne.title = (eStepTrafficVerySlow == stat) ? @"red" : @"yellow";
-                [self.mapView addOverlay:jamOne];
-                
-                delete [] jamsToUse;
-            }
-        }
+        BMKCircle * circle = [BMKCircle circleWithCenterCoordinate:bdCoor radius:[zone.radius floatValue]];
+        [self.mapView addOverlay:circle];
     }
-    
-    CTBaseLocation * startLoc = route.orig;
-    CTBaseLocation * endLoc = route.dest;
-    
-    RouteAnnotation* itemSt = [[RouteAnnotation alloc] init];
-    itemSt.coordinate = [GeoTransformer baiduCoor:[startLoc coordinate] fromType:coorType];
-    itemSt.title = @"起点";
-    itemSt.type = 0;
-    [_mapView addAnnotation:itemSt];
-    [regionBound updateBoundsWithCoor:itemSt.coordinate];
-    
-    RouteAnnotation* itemEd = [[RouteAnnotation alloc] init];
-    itemEd.coordinate = [GeoTransformer baiduCoor:[endLoc coordinate] fromType:coorType];
-    itemEd.title = @"终点";
-    itemEd.type = 1;
-    [_mapView addAnnotation:itemEd];
-    [regionBound updateBoundsWithCoor:itemEd.coordinate];
-    
-    [self.mapView setRegion:[regionBound baiduRegion] animated:YES];
     
     [self.mapView reloadInputViews];
 }
@@ -156,7 +121,7 @@
 }
 */
 
-#pragma mark -
+
 #pragma mark implement BMKMapViewDelegate
 
 - (BMKOverlayView *)mapView:(BMKMapView *)mapView viewForOverlay:(id <BMKOverlay>)overlay

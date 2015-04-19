@@ -109,5 +109,15 @@ const double ee = 0.00669342162296594323;
 //    return CLLocationCoordinate2DMake(bdLat, bdLon);
 }
 
++ (CLLocationCoordinate2D) baiduCoor:(CLLocationCoordinate2D)coor fromType:(eCoorType)coorType
+{
+    if (eCoorTypeGps == coorType) {
+        return [GeoTransformer earth2Baidu:coor];
+    } else if (eCoorTypeMars == coorType) {
+        return [GeoTransformer mars2Baidu:coor];
+    }
+    return coor;
+}
+
 
 @end

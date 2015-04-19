@@ -26,7 +26,7 @@
 - (NSDictionary*)requestParam {
     return @{@"from": [self coor2String:self.fromCoorBD],
              @"to": [self coor2String:self.toCoorBD],
-             @"in_coor": @"coor_baidu"};
+             @"in_coor": @"baidu"};
 }
 
 - (NSArray*)parseRespData:(NSDictionary*)data error:(NSError *__autoreleasing *)err {

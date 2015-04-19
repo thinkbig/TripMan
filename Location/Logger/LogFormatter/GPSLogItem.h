@@ -15,6 +15,7 @@
 @interface GPSLogItem : NSObject
 
 @property (nonatomic) BOOL                          isValid;
+@property (nonatomic) BOOL                          isKeyPoint;     // 是否是 关键拐点，或者是拥堵起始点
 
 @property (nonatomic, strong) NSDate   *            timestamp;
 @property (nonatomic, strong) NSNumber   *          latitude;

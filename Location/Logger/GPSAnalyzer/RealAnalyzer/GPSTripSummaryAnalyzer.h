@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "GPSLogItem.h"
+#import "CTRoute.h"
 
 @interface GPSTripSummaryAnalyzer : NSObject
 
@@ -30,8 +31,11 @@
 @property (nonatomic) CGFloat          night_avg_speed;
 @property (nonatomic) CGFloat          night_max_speed;
 
+@property (nonatomic, strong) CTRoute *         route;
+
 - (void) updateGPSDataArray:(NSArray*)gpsLogs;
 
 - (NSArray*) getTrafficJams;
+- (NSString*) jsonRoute;
 
 @end

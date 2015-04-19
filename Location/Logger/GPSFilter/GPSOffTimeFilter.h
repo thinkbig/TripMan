@@ -34,7 +34,9 @@ typedef NS_ENUM(NSUInteger, eTurningStat) {
 @interface GPSOffTimeFilter : NSObject
 
 // 获得关键路径点，返回使用原始gps数据，不做去噪
-+ (NSArray*) keyRouteFromGPS:(NSArray*)gpsData;
++ (NSArray*) keyRouteFromGPS:(NSArray*)gpsData autoFilter:(BOOL)filter;
+// 把上面函数获得的关键，增加采样间隔，拆成多个steps，等价于上面函数filter=YES
++ (NSArray*) filterWithTurning:(NSArray*)rawRoute;
 
 // 用来去噪，一般repeat为3
 + (NSArray*) smoothGPSData:(NSArray*)gpsData iteratorCnt:(NSInteger)repeat;

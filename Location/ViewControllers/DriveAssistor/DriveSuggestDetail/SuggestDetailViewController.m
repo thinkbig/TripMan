@@ -27,7 +27,6 @@
 @property (nonatomic) CGPoint                   lastTouchLoc;
 @property (nonatomic) BOOL                      isOpen;
 @property (nonatomic, strong) BaiduHelper *     bdHelper;
-@property (nonatomic) BOOL                      isBaiduRoute;
 
 @end
 
@@ -197,18 +196,20 @@
 
 - (void)updateTripInfo
 {
-    //[self requestRouteFromApple];
-    //return;
     if (self.route.orig && self.route.dest)
     {
         if (self.route.steps.count == 0) {
-            self.isBaiduRoute = self.waypts.count == 0 ? YES : NO;
+            CLLocation * mLoc = [BussinessDataProvider lastGoodLocation];
+            ParkingRegionDetail * startDetail = [[AnaDbManager deviceDb] parkingDetailForCoordinate:mLoc.coordinate minDist:500];
             
             [self showLoading];
             CTTrafficFullFacade * facade = [[CTTrafficFullFacade alloc] init];
             facade.fromCoorBaidu = [self.route.orig clLocation].coordinate;
             facade.toCoorBaidu = [self.route.dest clLocation].coordinate;
-            [facade updateWithGpsWayPts:self.waypts];
+            if (startDetail && self.endParkingId) {
+                facade.fromParkingId = startDetail.coreDataItem.parking_id;
+                facade.toParkingId = self.endParkingId;
+            }
             [facade requestWithSuccess:^(CTRoute * result) {
                 [self hideLoading];
                 self.mapView.userTrackingMode = BMKUserTrackingModeNone;
@@ -261,34 +262,107 @@
 - (void) updateRouteViewWithRoute:(CTRoute*)route
 {
     [self.mapView removeOverlays:self.mapView.overlays];
+    [self.mapView removeAnnotations:self.mapView.annotations];
     
+    eCoorType coorType = [route coorType];
     NSArray * steps = route.steps;
+    GeoRectBound * regionBound = [GeoRectBound new];
+    
+    for (CTStep * oneStep in steps)
+    {
+        CLLocationCoordinate2D bdCoorFrom = [GeoTransformer baiduCoor:[oneStep.from coordinate] fromType:coorType];
+        BMKMapPoint bdMapFrom = BMKMapPointForCoordinate(bdCoorFrom);
+        [regionBound updateBoundsWithCoor:bdCoorFrom];
+        
+        CLLocationCoordinate2D btCoorTo = [GeoTransformer baiduCoor:[oneStep.to coordinate] fromType:coorType];
+        BMKMapPoint bdMapTo = BMKMapPointForCoordinate(btCoorTo);
+        [regionBound updateBoundsWithCoor:btCoorTo];
+        
+        NSArray * pathArr = [oneStep pathArray];
+        
+        BMKMapPoint * pointsToUse = new BMKMapPoint[pathArr.count+2];
+        pointsToUse[0] = bdMapFrom;
+        pointsToUse[pathArr.count+1] = bdMapTo;
+        
+        // 转弯节点添加标注
+        RouteAnnotation* itemNode = [[RouteAnnotation alloc] init];
+        itemNode.coordinate = bdCoorFrom;
+        itemNode.degree = [BaiduHelper mapAngleFromPoint:CGPointMake(bdCoorFrom.longitude, bdCoorFrom.latitude) toPoint:CGPointMake(btCoorTo.longitude, btCoorTo.latitude)];
+        itemNode.type = 2;
+        [_mapView addAnnotation:itemNode];
+        
+        [pathArr enumerateObjectsUsingBlock:^(CTBaseLocation * obj, NSUInteger idx, BOOL *stop) {
+            CLLocationCoordinate2D btCoor = [GeoTransformer baiduCoor:[obj coordinate] fromType:coorType];
+            [regionBound updateBoundsWithCoor:btCoor];
+            BMKMapPoint bdMappt = BMKMapPointForCoordinate(btCoor);
+            pointsToUse[idx+1] = bdMappt;
+        }];
+        
+        BMKPolyline * lineOne = [BMKPolyline polylineWithPoints:pointsToUse count:pathArr.count+2];
+        lineOne.title = @"green";
+        [self.mapView addOverlay:lineOne];
+        
+        delete [] pointsToUse;
+        
+        // 处理堵车数据
+        NSArray * filteredJamArr = [oneStep jamsWithThreshold:cTrafficJamThreshold];
+        for (CTJam * jam in filteredJamArr) {
+            NSArray * jamArr = [oneStep fullPathOfJam:jam];
+            if (jamArr.count > 0) {
+                BMKMapPoint * jamsToUse = new BMKMapPoint[jamArr.count];
+                [jamArr enumerateObjectsUsingBlock:^(CTBaseLocation * obj, NSUInteger idx, BOOL *stop) {
+                    CLLocationCoordinate2D btCoor = [GeoTransformer baiduCoor:[obj coordinate] fromType:coorType];
+                    BMKMapPoint bdMappt = BMKMapPointForCoordinate(btCoor);
+                    jamsToUse[idx] = bdMappt;
+                }];
+                
+                eStepTraffic stat = [jam trafficStat];
+                BMKPolyline * jamOne = [BMKPolyline polylineWithPoints:jamsToUse count:jamArr.count];
+                jamOne.title = (eStepTrafficVerySlow == stat) ? @"red" : @"yellow";
+                [self.mapView addOverlay:jamOne];
+                
+                delete [] jamsToUse;
+            }
+        }
+    }
+    
     CTBaseLocation * startLoc = route.orig;
     CTBaseLocation * endLoc = route.dest;
     
-    GeoRectBound * regionBound = [GeoRectBound new];
-    
     RouteAnnotation* itemSt = [[RouteAnnotation alloc] init];
-    itemSt.coordinate = [startLoc clLocation].coordinate;
+    itemSt.coordinate = [startLoc coordinate];
     itemSt.title = @"起点";
     itemSt.type = 0;
     [_mapView addAnnotation:itemSt];
     [regionBound updateBoundsWithCoor:itemSt.coordinate];
     
     RouteAnnotation* itemEd = [[RouteAnnotation alloc] init];
-    itemEd.coordinate = [endLoc clLocation].coordinate;
+    itemEd.coordinate = [endLoc coordinate];
     itemEd.title = @"终点";
     itemEd.type = 1;
     [_mapView addAnnotation:itemEd];
     [regionBound updateBoundsWithCoor:itemEd.coordinate];
     
+    [self.mapView setRegion:[regionBound baiduRegion] animated:YES];
+    
+    [self.mapView reloadInputViews];
+}
+
+- (void) updateRouteViewWithRoute1:(CTRoute*)route
+{
+    [self.mapView removeOverlays:self.mapView.overlays];
+    
+    NSArray * steps = route.steps;
+    eCoorType coorType = [route coorType];
+    GeoRectBound * regionBound = [GeoRectBound new];
+    
     for (CTStep * oneStep in steps)
     {
-        CLLocationCoordinate2D bdCoorFrom = [oneStep.from coordinate];
+        CLLocationCoordinate2D bdCoorFrom = [GeoTransformer baiduCoor:[oneStep.from coordinate] fromType:coorType];
         BMKMapPoint bdMapFrom = BMKMapPointForCoordinate(bdCoorFrom);
         [regionBound updateBoundsWithCoor:bdCoorFrom];
         
-        CLLocationCoordinate2D btCoorTo = [oneStep.to coordinate];
+        CLLocationCoordinate2D btCoorTo = [GeoTransformer baiduCoor:[oneStep.to coordinate] fromType:coorType];
         BMKMapPoint bdMapTo = BMKMapPointForCoordinate(btCoorTo);
         [regionBound updateBoundsWithCoor:btCoorTo];
         
@@ -300,7 +374,7 @@
         eStepTraffic stat = [oneStep trafficStat];
         
         [pathArr enumerateObjectsUsingBlock:^(CTBaseLocation * obj, NSUInteger idx, BOOL *stop) {
-            CLLocationCoordinate2D btCoor = [obj coordinate];
+            CLLocationCoordinate2D btCoor = [GeoTransformer baiduCoor:[obj coordinate] fromType:coorType];
             [regionBound updateBoundsWithCoor:btCoor];
             BMKMapPoint bdMappt = BMKMapPointForCoordinate(btCoor);
             pointsToUse[idx+1] = bdMappt;
@@ -316,26 +390,26 @@
         } else {
             lineOne.title = @"green";
         }
-        
-//        static BOOL isred = NO;
-//        if (isred) {
-//            lineOne.title = @"red";
-//        } else {
-//            lineOne.title = @"green";
-//        }
-//        isred = !isred;
-        
+
         delete [] pointsToUse;
     }
     
-    for (CTBaseLocation * loc in self.waypts) {
-        CLLocationCoordinate2D bdCoor = [GeoTransformer earth2Baidu:loc.coordinate];
+    CTBaseLocation * startLoc = route.orig;
+    CTBaseLocation * endLoc = route.dest;
 
-        [regionBound updateBoundsWithCoor:bdCoor];
-        BMKCircle * circle = nil;
-        circle = [BMKCircle circleWithCenterCoordinate:bdCoor radius:10];
-        [self.mapView addOverlay:circle];
-    }
+    RouteAnnotation* itemSt = [[RouteAnnotation alloc] init];
+    itemSt.coordinate = [startLoc clLocation].coordinate;
+    itemSt.title = @"起点";
+    itemSt.type = 0;
+    [_mapView addAnnotation:itemSt];
+    [regionBound updateBoundsWithCoor:itemSt.coordinate];
+    
+    RouteAnnotation* itemEd = [[RouteAnnotation alloc] init];
+    itemEd.coordinate = [endLoc clLocation].coordinate;
+    itemEd.title = @"终点";
+    itemEd.type = 1;
+    [_mapView addAnnotation:itemEd];
+    [regionBound updateBoundsWithCoor:itemEd.coordinate];
 
     [self.mapView setRegion:[regionBound baiduRegion] animated:YES];
     

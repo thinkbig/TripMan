@@ -16,6 +16,10 @@
 		5C9090A018B3A66A00510153 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C90909F18B3A66A00510153 /* AppDelegate.m */; };
 		5C9090A818B3A66A00510153 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5C9090A718B3A66A00510153 /* Images.xcassets */; };
 		5C9090CE18B3AB2100510153 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C9090CD18B3AB2100510153 /* CoreLocation.framework */; };
+		A301EB5C1ADD03C400CC6412 /* JSONValueTransformer+CustomTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = A301EB5B1ADD03C400CC6412 /* JSONValueTransformer+CustomTransformer.m */; };
+		A301EB621AE0F4AA00CC6412 /* JamDisplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A301EB611AE0F4AA00CC6412 /* JamDisplayViewController.m */; };
+		A301EB651AE0F77C00CC6412 /* CTRealtimeJamFacade.m in Sources */ = {isa = PBXBuildFile; fileRef = A301EB641AE0F77C00CC6412 /* CTRealtimeJamFacade.m */; };
+		A301EB681AE0FE6300CC6412 /* JamZone.m in Sources */ = {isa = PBXBuildFile; fileRef = A301EB671AE0FE6300CC6412 /* JamZone.m */; };
 		A314116C1A0A4CCD0019F557 /* TripMan.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A31411681A0A4CCD0019F557 /* TripMan.xcdatamodeld */; };
 		A314116D1A0A4CCD0019F557 /* TripsCoreDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A314116B1A0A4CCD0019F557 /* TripsCoreDataManager.m */; };
 		A314118A1A0A7C700019F557 /* ParkingRegionDetail.m in Sources */ = {isa = PBXBuildFile; fileRef = A31411891A0A7C700019F557 /* ParkingRegionDetail.m */; };
@@ -82,7 +86,6 @@
 		A34F01121A03D78900F58C17 /* LogFileContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A34F01071A03D78900F58C17 /* LogFileContentViewController.m */; };
 		A34F01131A03D78900F58C17 /* LogFileListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A34F01091A03D78900F58C17 /* LogFileListViewController.m */; };
 		A34F01141A03D78900F58C17 /* MapDisplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A34F010C1A03D78900F58C17 /* MapDisplayViewController.m */; };
-		A34F01151A03D78900F58C17 /* TripDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A34F010F1A03D78900F58C17 /* TripDetailViewController.m */; };
 		A34F01191A04A56F00F58C17 /* CommonFacade.m in Sources */ = {isa = PBXBuildFile; fileRef = A34F01181A04A56F00F58C17 /* CommonFacade.m */; };
 		A34F011D1A04A7EF00F58C17 /* TSHttpClient.m in Sources */ = {isa = PBXBuildFile; fileRef = A34F011C1A04A7EF00F58C17 /* TSHttpClient.m */; };
 		A34F01221A04D98E00F58C17 /* BaseBaiduFacade.m in Sources */ = {isa = PBXBuildFile; fileRef = A34F01211A04D98E00F58C17 /* BaseBaiduFacade.m */; };
@@ -274,6 +277,14 @@
 		5C9090CD18B3AB2100510153 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		93515B6ED517B0A75A7B458C /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		9CF3732F4F7B1B5DC081B37D /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		A301EB5A1ADD03C400CC6412 /* JSONValueTransformer+CustomTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "JSONValueTransformer+CustomTransformer.h"; sourceTree = "<group>"; };
+		A301EB5B1ADD03C400CC6412 /* JSONValueTransformer+CustomTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "JSONValueTransformer+CustomTransformer.m"; sourceTree = "<group>"; };
+		A301EB601AE0F4AA00CC6412 /* JamDisplayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JamDisplayViewController.h; sourceTree = "<group>"; };
+		A301EB611AE0F4AA00CC6412 /* JamDisplayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JamDisplayViewController.m; sourceTree = "<group>"; };
+		A301EB631AE0F77C00CC6412 /* CTRealtimeJamFacade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTRealtimeJamFacade.h; sourceTree = "<group>"; };
+		A301EB641AE0F77C00CC6412 /* CTRealtimeJamFacade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTRealtimeJamFacade.m; sourceTree = "<group>"; };
+		A301EB661AE0FE6300CC6412 /* JamZone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JamZone.h; sourceTree = "<group>"; };
+		A301EB671AE0FE6300CC6412 /* JamZone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JamZone.m; sourceTree = "<group>"; };
 		A31411691A0A4CCD0019F557 /* TripMan.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TripMan.xcdatamodel; sourceTree = "<group>"; };
 		A314116A1A0A4CCD0019F557 /* TripsCoreDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TripsCoreDataManager.h; sourceTree = "<group>"; };
 		A314116B1A0A4CCD0019F557 /* TripsCoreDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripsCoreDataManager.m; sourceTree = "<group>"; };
@@ -392,8 +403,6 @@
 		A34F01091A03D78900F58C17 /* LogFileListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogFileListViewController.m; sourceTree = "<group>"; };
 		A34F010B1A03D78900F58C17 /* MapDisplayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapDisplayViewController.h; sourceTree = "<group>"; };
 		A34F010C1A03D78900F58C17 /* MapDisplayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapDisplayViewController.m; sourceTree = "<group>"; };
-		A34F010E1A03D78900F58C17 /* TripDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TripDetailViewController.h; sourceTree = "<group>"; };
-		A34F010F1A03D78900F58C17 /* TripDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripDetailViewController.m; sourceTree = "<group>"; };
 		A34F01171A04A56F00F58C17 /* CommonFacade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonFacade.h; sourceTree = "<group>"; };
 		A34F01181A04A56F00F58C17 /* CommonFacade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommonFacade.m; sourceTree = "<group>"; };
 		A34F011B1A04A7EF00F58C17 /* TSHttpClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSHttpClient.h; sourceTree = "<group>"; };
@@ -1182,7 +1191,6 @@
 				A34F01041A03D78900F58C17 /* LocationViewController.m */,
 				A34F01051A03D78900F58C17 /* LogDisplay */,
 				A34F010A1A03D78900F58C17 /* MapDisplay */,
-				A34F010D1A03D78900F58C17 /* TripDetail */,
 			);
 			path = DebugView;
 			sourceTree = "<group>";
@@ -1203,17 +1211,10 @@
 			children = (
 				A34F010B1A03D78900F58C17 /* MapDisplayViewController.h */,
 				A34F010C1A03D78900F58C17 /* MapDisplayViewController.m */,
+				A301EB601AE0F4AA00CC6412 /* JamDisplayViewController.h */,
+				A301EB611AE0F4AA00CC6412 /* JamDisplayViewController.m */,
 			);
 			path = MapDisplay;
-			sourceTree = "<group>";
-		};
-		A34F010D1A03D78900F58C17 /* TripDetail */ = {
-			isa = PBXGroup;
-			children = (
-				A34F010E1A03D78900F58C17 /* TripDetailViewController.h */,
-				A34F010F1A03D78900F58C17 /* TripDetailViewController.m */,
-			);
-			path = TripDetail;
 			sourceTree = "<group>";
 		};
 		A34F01161A04A56F00F58C17 /* DataFacade */ = {
@@ -1863,6 +1864,8 @@
 				A3E0A3781ABE48C200E7456C /* GeoRectBound.m */,
 				A39E31491AB71260004F0D95 /* CTBaseLocation.h */,
 				A39E314A1AB71260004F0D95 /* CTBaseLocation.m */,
+				A301EB5A1ADD03C400CC6412 /* JSONValueTransformer+CustomTransformer.h */,
+				A301EB5B1ADD03C400CC6412 /* JSONValueTransformer+CustomTransformer.m */,
 			);
 			path = Basic;
 			sourceTree = "<group>";
@@ -2092,6 +2095,8 @@
 				A3E0A3751ABC176600E7456C /* CTTrafficFullFacade.m */,
 				A39E31461AB6D395004F0D95 /* CTTrafficLightFacade.h */,
 				A39E31471AB6D395004F0D95 /* CTTrafficLightFacade.m */,
+				A301EB631AE0F77C00CC6412 /* CTRealtimeJamFacade.h */,
+				A301EB641AE0F77C00CC6412 /* CTRealtimeJamFacade.m */,
 			);
 			path = CTTraffic;
 			sourceTree = "<group>";
@@ -2198,6 +2203,8 @@
 				A321E2C51AC8344600CA9035 /* CTFavLocation.m */,
 				A3E2891F1ACB994A0043F14C /* CTInstReportModel.h */,
 				A3E289201ACB994A0043F14C /* CTInstReportModel.m */,
+				A301EB661AE0FE6300CC6412 /* JamZone.h */,
+				A301EB671AE0FE6300CC6412 /* JamZone.m */,
 			);
 			path = Chetu;
 			sourceTree = "<group>";
@@ -2561,7 +2568,6 @@
 				A3C4544D1A8B774500D53342 /* UIImage+Rotate.m in Sources */,
 				A3E0A3731ABC0A3000E7456C /* CTRoute.m in Sources */,
 				A34F01371A051EBD00F58C17 /* AFNetworkActivityLogger.m in Sources */,
-				A34F01151A03D78900F58C17 /* TripDetailViewController.m in Sources */,
 				A3C454491A8B522000D53342 /* BaiduHelper.m in Sources */,
 				A3D0B4BB1A2C64A80030B19E /* MPGraphView.m in Sources */,
 				A331F5BB1A1CC5DB001F4DE3 /* A3ParallaxScrollView.m in Sources */,
@@ -2569,6 +2575,7 @@
 				A34F00EF1A03C8F800F58C17 /* CarSettingViewController.m in Sources */,
 				A37E03F21A0DE19B00B0B0EC /* TripTicketView.m in Sources */,
 				A35BC7291AA35B7D00D726D4 /* NSString+ShiftEncode.m in Sources */,
+				A301EB5C1ADD03C400CC6412 /* JSONValueTransformer+CustomTransformer.m in Sources */,
 				A378ABE31A164664006A3B68 /* DVSwitch.m in Sources */,
 				A3E2892F1ACD2DD80043F14C /* SearchClearCell.m in Sources */,
 				A3CD728A19D14430005F84E2 /* GeoTransformer.m in Sources */,
@@ -2585,6 +2592,7 @@
 				A34F01111A03D78900F58C17 /* LocationViewController.m in Sources */,
 				A3CD360519C6DE610039F6E1 /* GPSLogItem.m in Sources */,
 				A385C54A19F68FA000A0F7F6 /* GPSAcceleratorAnalyzer.m in Sources */,
+				A301EB651AE0F77C00CC6412 /* CTRealtimeJamFacade.m in Sources */,
 				A3CD361919CAB0AD0039F6E1 /* BackgroundTaskManager.m in Sources */,
 				A35C26321A426F4B005F6658 /* UIImage+RZSolidColor.m in Sources */,
 				A3BD72AC1A14F2B00007ECA1 /* BaiduRoadMarkFacade.m in Sources */,
@@ -2614,6 +2622,7 @@
 				A35C26371A426F4B005F6658 /* UIView+RZFrameUtils.m in Sources */,
 				A331F5C71A1D700A001F4DE3 /* SuggestOverLayerCollectionViewController.m in Sources */,
 				A35C26451A426F4B005F6658 /* RZSingleChildContainerViewController.m in Sources */,
+				A301EB621AE0F4AA00CC6412 /* JamDisplayViewController.m in Sources */,
 				A35BC7521AAA90B100D726D4 /* EnvInfo+Fetcher.m in Sources */,
 				A37E03EC1A0D216900B0B0EC /* TSPair.m in Sources */,
 				A321E2921AC4526300CA9035 /* BaiduMapViewController.m in Sources */,
@@ -2708,6 +2717,7 @@
 				5C9090A018B3A66A00510153 /* AppDelegate.m in Sources */,
 				A3C011FA1AC3D2FC0088EFF3 /* BaseGoogleFacade.m in Sources */,
 				A34890741A3FCCAF002DE948 /* NSFileManager+Godzippa.m in Sources */,
+				A301EB681AE0FE6300CC6412 /* JamZone.m in Sources */,
 				A35BC74F1AAA8FD800D726D4 /* DrivingInfo+Fetcher.m in Sources */,
 				A35C26471A426F4B005F6658 /* RZTelprompt.m in Sources */,
 				A35C263F1A426F4B005F6658 /* RZDelayedOperation.m in Sources */,

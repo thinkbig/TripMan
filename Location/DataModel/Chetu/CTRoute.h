@@ -8,6 +8,7 @@
 
 #import "JSONModel.h"
 #import "CTBaseLocation.h"
+#import "GeoTransformer.h"
 
 typedef NS_ENUM(NSUInteger, eStepTraffic) {
     eStepTrafficOk = 0,
@@ -26,6 +27,7 @@ typedef NS_ENUM(NSUInteger, eStepTraffic) {
 @property (nonatomic, strong) CTBaseLocation<Optional> * from;
 @property (nonatomic, strong) CTBaseLocation<Optional> * to;
 
++ (UIColor*) colorFromTraffic:(eStepTraffic)traffic;
 - (eStepTraffic) trafficStat;
 
 @end
@@ -39,7 +41,7 @@ typedef NS_ENUM(NSUInteger, eStepTraffic) {
 
 @property (nonatomic, strong) NSNumber<Optional> * distance;
 @property (nonatomic, strong) NSNumber<Optional> * duration;
-@property (nonatomic, strong) NSNumber<Optional> * status;
+@property (nonatomic, strong) NSNumber<Ignore> * status;
 @property (nonatomic, strong) NSString<Optional> * intro;
 @property (nonatomic, strong) NSString<Optional> * path;
 @property (nonatomic, strong) CTBaseLocation<Optional> * from;
@@ -47,6 +49,8 @@ typedef NS_ENUM(NSUInteger, eStepTraffic) {
 @property (nonatomic, strong) NSArray<CTJam, Optional> * jams;
 
 - (eStepTraffic) trafficStat;
+- (NSArray*) jamsWithThreshold:(CGFloat)threshold;
+- (NSArray*) fullPathOfJam:(CTJam*)jam;
 - (NSArray*) pathArray;
 
 @end
@@ -59,15 +63,16 @@ typedef NS_ENUM(NSUInteger, eStepTraffic) {
 
 @property (nonatomic, strong) NSNumber<Optional> * distance;
 @property (nonatomic, strong) NSNumber<Optional> * duration;
-@property (nonatomic, strong) NSNumber<Optional> * jam_duration;    // 表示该路段最长的缓行时间
+@property (nonatomic, strong) CTJam<Optional> * most_jam;    // 表示最长缓行路段，abstract接口用，full接口这部分数据可有可无
 @property (nonatomic, strong) CTBaseLocation<Optional> * orig;
 @property (nonatomic, strong) CTBaseLocation<Optional> * dest;
 @property (nonatomic, strong) NSArray<CTStep, Optional> * steps;
-
-- (void) updateWithDestRegion:(ParkingRegion*)region fromCurrentLocation:(CLLocation*)curLoc;
-- (void) updateWithDestCoor:(CLLocationCoordinate2D)coor andDestName:(NSString*)destName fromCurrentLocation:(CLLocation*)curLoc;
+@property (nonatomic, strong) NSString<Optional> * coor_type;
 
 - (void) mergeFromAnother:(CTRoute*)route;
 - (eStepTraffic) trafficStat;
+
+- (eCoorType) coorType;
+- (void)setCoorType:(eCoorType)coorType;
 
 @end

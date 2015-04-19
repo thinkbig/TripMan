@@ -7,11 +7,12 @@
 //
 
 #import "CTTrafficAbstractFacade.h"
+#import "CTRoute.h"
 
 @implementation CTTrafficAbstractFacade
 
 - (NSString *)getPath {
-    return @"traffic/abstractbaidu";
+    return @"traffic/abstractuser";
 }
 
 - (eRequestType)requestType {
@@ -19,12 +20,27 @@
 }
 
 - (NSDictionary*)requestParam {
-    return @{@"from": [NSString stringWithFormat:@"%f,%f", self.fromCoorBaidu.longitude, self.fromCoorBaidu.latitude],
-             @"to": [NSString stringWithFormat:@"%f,%f", self.toCoorBaidu.longitude, self.toCoorBaidu.latitude]};
+    NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithDictionary:
+                                  @{@"from": [NSString stringWithFormat:@"%f,%f", self.fromCoorBaidu.longitude, self.fromCoorBaidu.latitude],
+                                    @"to": [NSString stringWithFormat:@"%f,%f", self.toCoorBaidu.longitude, self.toCoorBaidu.latitude]}];
+    if (self.fromParkingId && self.toParkingId) {
+        dict[@"fromId"] = self.fromParkingId;
+        dict[@"toId"] = self.toParkingId;
+    }
+    NSString * udid = [[GToolUtil sharedInstance] deviceId];
+    NSString * uid = [[GToolUtil sharedInstance] userId];
+    if (uid) {
+        dict[@"uid"] = uid;
+    }
+    if (udid) {
+        dict[@"udid"] = udid;
+    }
+    return dict;
 }
 
 - (id)parseRespData:(id)data error:(NSError *__autoreleasing *)err {
-    return data;
+    CTRoute * route = [[CTRoute alloc] initWithDictionary:data error:nil];
+    return route;
 }
 
 #pragma mark - cache override
@@ -40,7 +56,7 @@
 }
 
 - (NSTimeInterval) expiredDuring {
-    return 60*5;
+    return 60*10;
 }
 
 @end

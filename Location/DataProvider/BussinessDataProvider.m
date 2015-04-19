@@ -293,11 +293,6 @@ static BussinessDataProvider * _sharedProvider = nil;
         return;
     }
     
-//    CLLocation * first = [sum.region_group.start_region centerLocation];
-//    CLLocation * lastLoc = [sum.region_group.end_region centerLocation];
-//    NSMutableArray * locArr = [NSMutableArray arrayWithObject:first];
-//    NSArray * wayPts = [sum wayPoints:1];
-    
     //只把一个trip拆成2段，不拆过细是因为无法判断是否高架，而且因为gps点不能完全保证落在路上，拆分过细会导致误报非常多的红绿灯
     NSArray * locArr = nil;
     CLLocation * first = [GToolUtil dictToLocation:ptArr[0]];

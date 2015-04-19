@@ -254,7 +254,7 @@ static NSString * rebuildVal = @"value_0000000000002"; // make sure it is differ
     
     if (!IS_UPDATING) {
         [[DataReporter sharedInst] asyncFromBackgroundFetch:^(eReportReslut result) {
-            DDLogWarn(@"############## Background fetch result (%u) ... #############", result);
+            DDLogWarn(@"############## Background fetch result (%lu) ... #############", result);
             if (eReportReslutComplete == result) {
                 completionHandler(UIBackgroundFetchResultNewData);
             } else {

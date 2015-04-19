@@ -7,8 +7,20 @@
 //
 
 #import "CTBaseLocation.h"
+#import "JSONValueTransformer+CustomTransformer.h"
 
 @implementation CTBaseLocation
+
+- (id)initWithLogItem:(GPSLogItem*)item
+{
+    self = [super init];
+    if (self) {
+        self.lat = item.latitude;
+        self.lon = item.longitude;
+        self.ts = item.timestamp;
+    }
+    return self;
+}
 
 - (BOOL)isEqual:(CTBaseLocation*)anObject
 {

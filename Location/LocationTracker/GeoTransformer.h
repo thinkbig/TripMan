@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
+#import "BMapKit.h"
 
 typedef NS_ENUM(NSUInteger, eCoorType) {
     eCoorTypeGps = 0,
@@ -24,5 +25,7 @@ typedef NS_ENUM(NSUInteger, eCoorType) {
 
 + (CLLocationCoordinate2D)earth2Baidu:(CLLocationCoordinate2D)location;
 + (BMKMapPoint)earth2BaiduProjection:(CLLocationCoordinate2D)location;
+
++ (CLLocationCoordinate2D) baiduCoor:(CLLocationCoordinate2D)coor fromType:(eCoorType)coorType;
 
 @end
