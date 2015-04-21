@@ -1,10 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="6qP-hc-9nB">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="z2p-Iq-JWN">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
     </dependencies>
     <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="JKv-Fs-9Wp">
+            <objects>
+                <navigationController navigationBarHidden="YES" id="z2p-Iq-JWN" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="zgW-sA-FwZ">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="6qP-hc-9nB" kind="relationship" relationship="rootViewController" id="FvI-vg-WQj"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="uGB-Jr-P7L" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-675" y="-73"/>
+        </scene>
         <!--Car Home View Controller-->
         <scene sceneID="DOu-2Q-bvD">
             <objects>
@@ -319,13 +335,14 @@
                             <constraint firstItem="vFc-m3-nn5" firstAttribute="leading" secondItem="dBn-84-mas" secondAttribute="leading" id="Pga-ql-WIL"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="e3T-uK-GtD"/>
                     <connections>
                         <outlet property="homeCollection" destination="vFc-m3-nn5" id="79z-ww-TKC"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Oma-yU-Qx2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="179" y="-20"/>
+            <point key="canvasLocation" x="-241" y="-73"/>
         </scene>
     </scenes>
     <resources>

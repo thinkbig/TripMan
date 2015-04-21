@@ -34,6 +34,9 @@
 
 + (NSArray*) filterTrips:(NSArray*)rawArr byDayType:(eDayType)type
 {
+    if (eDayTypeAuto == type) {
+        type = [self dayTypeByDate:[NSDate date]];
+    }
     NSMutableArray * backupSums = [NSMutableArray array];
     for (TripSummary * sum in rawArr) {
         if (eDayTypeNormal == type) {
@@ -49,7 +52,7 @@
     return backupSums;
 }
 
-+ (NSArray*) filterRegion:(NSArray *)rawRegions byStartRegion:(CLLocation*)loc byDist:(CGFloat)dist
++ (NSArray*) filterRegion:(NSArray *)rawRegions byStartRegion:(CLLocation*)loc byDist:(CGFloat)dist onlyRecognized:(BOOL)onlyRecognize
 {
     if (nil == loc) {
         return rawRegions;
@@ -57,15 +60,24 @@
     NSMutableArray * allRegion = [NSMutableArray arrayWithCapacity:rawRegions.count];
     for (id rawOne in rawRegions) {
         CGFloat realDist = 0;
+        NSString * poiName = nil;
         if ([rawOne isKindOfClass:[ParkingRegion class]]) {
             ParkingRegion * oneRegion = rawOne;
+            poiName = [rawOne nameWithDefault:nil];
             realDist = [[oneRegion centerLocation] distanceFromLocation:loc];
         } else if ([rawOne isKindOfClass:[ParkingRegionDetail class]]) {
             ParkingRegion * oneRegion = ((ParkingRegionDetail*)rawOne).coreDataItem;
+            poiName = [oneRegion nameWithDefault:nil];
             realDist = [[oneRegion centerLocation] distanceFromLocation:loc];
         }
         if (realDist > dist) {
-            [allRegion addObject:rawOne];
+            if (onlyRecognize) {
+                if (poiName) {
+                    [allRegion addObject:rawOne];
+                }
+            } else {
+                [allRegion addObject:rawOne];
+            }
         }
     }
     return allRegion;

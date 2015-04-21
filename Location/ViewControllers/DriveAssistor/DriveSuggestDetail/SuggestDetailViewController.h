@@ -11,7 +11,7 @@
 #import "A3ParallaxScrollView.h"
 #import "CTRoute.h"
 
-@interface SuggestDetailViewController : GViewController <BMKMapViewDelegate>
+@interface SuggestDetailViewController : GViewController <BMKMapViewDelegate, UIScrollViewDelegate>
 
 @property (weak, nonatomic) IBOutlet A3ParallaxScrollView *rootScrollView;
 

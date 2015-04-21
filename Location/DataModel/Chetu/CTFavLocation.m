@@ -10,4 +10,13 @@
 
 @implementation CTFavLocation
 
+- (void) updateWithParkingRegion:(ParkingRegion*)region
+{
+    self.lat = region.center_lat;
+    self.lon = region.center_lon;
+    self.name = [region nameWithDefault:@"未知地点"];
+    self.street = region.street;
+    self.parking_id = region.parking_id;
+}
+
 @end

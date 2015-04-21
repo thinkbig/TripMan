@@ -68,8 +68,8 @@ static NSString * rebuildVal = @"value_0000000000002"; // make sure it is differ
     self.baiduMapManager = [[BMKMapManager alloc] init];
     
     // check if need rebuild db
-    NSString * oldVa = [[NSUserDefaults standardUserDefaults] objectForKey:rebuildKey];
-    if (nil == oldVa || ![rebuildVal isEqualToString:oldVa])
+    NSString * oldVal = [[NSUserDefaults standardUserDefaults] objectForKey:rebuildKey];
+    if (oldVal && ![rebuildVal isEqualToString:oldVal])
     {
         IS_UPDATING = YES;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateComplete) name:kNotifyUpgradeComplete object:nil];
@@ -254,7 +254,7 @@ static NSString * rebuildVal = @"value_0000000000002"; // make sure it is differ
     
     if (!IS_UPDATING) {
         [[DataReporter sharedInst] asyncFromBackgroundFetch:^(eReportReslut result) {
-            DDLogWarn(@"############## Background fetch result (%lu) ... #############", result);
+            DDLogWarn(@"############## Background fetch result (%ld) ... #############", (int)result);
             if (eReportReslutComplete == result) {
                 completionHandler(UIBackgroundFetchResultNewData);
             } else {

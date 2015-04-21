@@ -20,6 +20,7 @@
 		A301EB621AE0F4AA00CC6412 /* JamDisplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A301EB611AE0F4AA00CC6412 /* JamDisplayViewController.m */; };
 		A301EB651AE0F77C00CC6412 /* CTRealtimeJamFacade.m in Sources */ = {isa = PBXBuildFile; fileRef = A301EB641AE0F77C00CC6412 /* CTRealtimeJamFacade.m */; };
 		A301EB681AE0FE6300CC6412 /* JamZone.m in Sources */ = {isa = PBXBuildFile; fileRef = A301EB671AE0FE6300CC6412 /* JamZone.m */; };
+		A301EB6B1AE3A70300CC6412 /* CTTimePredictFacade.m in Sources */ = {isa = PBXBuildFile; fileRef = A301EB6A1AE3A70300CC6412 /* CTTimePredictFacade.m */; };
 		A314116C1A0A4CCD0019F557 /* TripMan.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A31411681A0A4CCD0019F557 /* TripMan.xcdatamodeld */; };
 		A314116D1A0A4CCD0019F557 /* TripsCoreDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A314116B1A0A4CCD0019F557 /* TripsCoreDataManager.m */; };
 		A314118A1A0A7C700019F557 /* ParkingRegionDetail.m in Sources */ = {isa = PBXBuildFile; fileRef = A31411891A0A7C700019F557 /* ParkingRegionDetail.m */; };
@@ -285,6 +286,8 @@
 		A301EB641AE0F77C00CC6412 /* CTRealtimeJamFacade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTRealtimeJamFacade.m; sourceTree = "<group>"; };
 		A301EB661AE0FE6300CC6412 /* JamZone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JamZone.h; sourceTree = "<group>"; };
 		A301EB671AE0FE6300CC6412 /* JamZone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JamZone.m; sourceTree = "<group>"; };
+		A301EB691AE3A70300CC6412 /* CTTimePredictFacade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTTimePredictFacade.h; sourceTree = "<group>"; };
+		A301EB6A1AE3A70300CC6412 /* CTTimePredictFacade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTTimePredictFacade.m; sourceTree = "<group>"; };
 		A31411691A0A4CCD0019F557 /* TripMan.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TripMan.xcdatamodel; sourceTree = "<group>"; };
 		A314116A1A0A4CCD0019F557 /* TripsCoreDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TripsCoreDataManager.h; sourceTree = "<group>"; };
 		A314116B1A0A4CCD0019F557 /* TripsCoreDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripsCoreDataManager.m; sourceTree = "<group>"; };
@@ -2097,6 +2100,8 @@
 				A39E31471AB6D395004F0D95 /* CTTrafficLightFacade.m */,
 				A301EB631AE0F77C00CC6412 /* CTRealtimeJamFacade.h */,
 				A301EB641AE0F77C00CC6412 /* CTRealtimeJamFacade.m */,
+				A301EB691AE3A70300CC6412 /* CTTimePredictFacade.h */,
+				A301EB6A1AE3A70300CC6412 /* CTTimePredictFacade.m */,
 			);
 			path = CTTraffic;
 			sourceTree = "<group>";
@@ -2615,6 +2620,7 @@
 				A3171A8A1A0905C4003EA8CE /* TSCache.m in Sources */,
 				A35C263E1A426F4B005F6658 /* RZCollectionViewAnimationAssistant.m in Sources */,
 				A3E289531AD13DCB0043F14C /* NoGpsHintView.m in Sources */,
+				A301EB6B1AE3A70300CC6412 /* CTTimePredictFacade.m in Sources */,
 				A34F01971A07259D00F58C17 /* BaiduGeocodingWrapper.m in Sources */,
 				A3FDD1601A027F64007B3C65 /* TSTabBarViewController.m in Sources */,
 				A35C263B1A426F4B005F6658 /* RZButtonView.m in Sources */,

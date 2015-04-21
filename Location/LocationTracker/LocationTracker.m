@@ -653,6 +653,9 @@ typedef enum
         return;
     } else {
         _maylostGpsDate = nil;
+        if (self.locationManager.monitoredRegions.count == 0) {
+            [self registerNotificationForLocation:mostAccuracyLocation withRadius:@(cReagionRadius) assignIdentifier:REGION_ID_LAST_STILL group:REGION_GROUP_LAST_STILL];
+        }
     }
     
     if (nil == _resumeGpsDate) {
@@ -767,12 +770,13 @@ typedef enum
         CLLocation * lastLoc = [[CLLocation alloc] initWithLatitude:_lastStillRegion.center.latitude longitude:_lastStillRegion.center.longitude];
         if (forceSet || nil == _lastStillRegion || [lastLoc distanceFromLocation:loc] > 2*cReagionRadius)
         {
-            DDLogWarn(@"&&&&&&&&&&&&&& add still reagion monitor for location = %@", loc);
+            DDLogWarn(@"&&&&&&&&&&&&&& add still region monitor for location = %@", loc);
             [self registerNotificationForLocation:loc withRadius:@(cReagionRadius) assignIdentifier:REGION_ID_LAST_STILL group:REGION_GROUP_LAST_STILL];
         }
     }
     
     if (self.locationManager.monitoredRegions.count < 3) {
+        // 至少开过一次车，起点一个，终点2个
         self.useSignificantLocationChange = YES;
     }
 }
@@ -781,7 +785,7 @@ typedef enum
 {
     if (loc && CLLocationCoordinate2DIsValid(loc.coordinate))
     {
-        DDLogWarn(@"&&&&&&&&&&&&&& add parking reagion monitor for location = %@", loc);
+        DDLogWarn(@"&&&&&&&&&&&&&& add parking region monitor for location = %@", loc);
         [self registerNotificationForLocation:loc withRadius:@(cReagionRadius*1.5) assignIdentifier:REGION_ID_LAST_PARKING group:REGION_GROUP_LAST_PARKING];
         
         NSInteger idCnt = 1;

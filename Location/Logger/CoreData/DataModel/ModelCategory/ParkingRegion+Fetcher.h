@@ -7,7 +7,6 @@
 //
 
 #import "ParkingRegion.h"
-#import "CTFavLocation.h"
 
 @interface ParkingRegion (Fetcher)
 
@@ -15,9 +14,9 @@
 
 - (CLLocation*) centerLocation;
 - (CLLocationCoordinate2D) centerCoordinate;
-- (CTFavLocation*) toFavLocation;
 
 - (CGFloat) distanseFrom:(ParkingRegion*)region;
+- (NSInteger) driveEndCount;
 
 - (NSDictionary*) toJsonDict;
 

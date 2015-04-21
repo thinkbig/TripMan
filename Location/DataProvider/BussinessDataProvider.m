@@ -20,6 +20,7 @@
 #import "AnaDbManager.h"
 #import "ParkingRegion+Fetcher.h"
 #import "CTBaseLocation.h"
+#import "TripFilter.h"
 
 #define kLastestCityAndDate          @"kLastestCityAndDate"
 #define kUserFavLocation             @"kUserFavLocation"
@@ -423,6 +424,165 @@ static BussinessDataProvider * _sharedProvider = nil;
     return formater;
 }
 
+- (NSArray*) bestGuessLocations:(NSInteger)limit formatToDetail:(BOOL)format
+{
+    if (limit <= 0) {
+        limit = INT16_MAX;
+    }
+    
+    NSMutableArray * finalArr = [NSMutableArray array];
+    NSArray * rawRegions = [[AnaDbManager sharedInst] mostUsedParkingRegionLimit:0];
+    
+    // 顺序是：当前位置出发最近一次去过的地方 --》 当前位置当前时间范围出发按照去过次数排序 --》当前位置的出发地点 --> 当前位置非当前时间范围按照去过的次数排序 --》 非当前位置出发的地点按照去过的次数排序
+    CLLocation * curLoc = [BussinessDataProvider lastGoodLocation];
+    if (curLoc)
+    {
+        NSArray * filterRegions = [TripFilter filterRegion:rawRegions byStartRegion:curLoc byDist:1500 onlyRecognized:YES];
+        
+        NSMutableArray * traveledGroups = [NSMutableArray array];
+        NSMutableArray * traveledTrips = [NSMutableArray array];
+        NSMutableArray * otherRegions = [NSMutableArray arrayWithArray:filterRegions];
+        
+        ParkingRegionDetail * stDetail = [[AnaDbManager sharedInst] parkingDetailForCoordinate:curLoc.coordinate minDist:500];
+        if (stDetail) {
+            NSArray * groups = [stDetail.coreDataItem.group_owner_st allObjects];
+            for (RegionGroup * group in groups) {
+                for (ParkingRegionDetail * detail in filterRegions) {
+                    if (detail.coreDataItem == group.end_region) {
+                        [traveledGroups addObject:group];
+                        [otherRegions removeObject:detail];
+                    }
+                }
+            }
+            
+            // 把 traveledGroups 每一个都选出一个最佳的trip
+            for (RegionGroup * group in traveledGroups) {
+                TripSummary * bestTrip = [self bestTripForRegionGroup:group];
+                if (bestTrip) {
+                    [traveledTrips addObject:bestTrip];
+                }
+            }
+            
+            // traveledTrips 再分2组，一组是出发时间和当前时间非常接近的trip，另一组是剩下的
+            NSArray * sortedTrips = [traveledTrips sortedArrayUsingComparator:^NSComparisonResult(TripSummary * obj1, TripSummary * obj2) {
+                return [obj2.start_date compare:obj1.start_date];
+            }];
+            NSMutableArray * sortedMutTrips = [NSMutableArray arrayWithArray:sortedTrips];
+            NSArray * timeMatchTrips = [TripFilter filterTrips:sortedTrips byTime:[NSDate date] between:-60 toMinute:120];
+            if (timeMatchTrips.count > 0) {
+                [finalArr addObjectsFromArray:timeMatchTrips];
+                for (TripSummary * removeSum in timeMatchTrips) {
+                    [sortedMutTrips removeObject:removeSum];
+                }
+            }
+            [finalArr addObjectsFromArray:sortedMutTrips];
+            
+            // 把当前位置的出发地点
+            BOOL hasAdded = NO;
+            TripSummary * lastTrip = [[AnaDbManager sharedInst] lastTrip];
+            ParkingRegion * stRegion = lastTrip.region_group.start_region;
+            for (TripSummary * sum in finalArr) {
+                if (sum.region_group.end_region == stRegion) {
+                    hasAdded = YES;
+                    break;
+                }
+            }
+            if (!hasAdded) {
+                ParkingRegionDetail * findDetail = nil;
+                for (ParkingRegionDetail * detail in otherRegions) {
+                    if (detail.coreDataItem == stRegion) {
+                        findDetail = detail;
+                        break;
+                    }
+                }
+                // 把出发地址点移到队列最前面
+                if (findDetail) {
+                    [otherRegions removeObject:findDetail];
+                    [otherRegions insertObject:findDetail atIndex:0];
+                }
+            }
+        }
+        
+        if (finalArr.count < limit) {
+            // 把剩下的，没开过的location，按照停车次数排序
+            NSArray * otherSortedRegion = [otherRegions sortedArrayUsingComparator:^NSComparisonResult(ParkingRegionDetail * obj1, ParkingRegionDetail * obj2) {
+                if (obj1.coreDataItem.driveEndCount > obj2.coreDataItem.driveEndCount) {
+                    return (NSComparisonResult)NSOrderedAscending;
+                }
+                if (obj1.coreDataItem.driveEndCount < obj2.coreDataItem.driveEndCount) {
+                    return (NSComparisonResult)NSOrderedDescending;
+                }
+                return (NSComparisonResult)NSOrderedSame;
+            }];
+            [finalArr addObjectsFromArray:otherSortedRegion];
+        }
+    }
+    else
+    {
+        for (ParkingRegionDetail * detail in rawRegions) {
+            [finalArr addObject:detail.coreDataItem];
+        }
+    }
+    
+    if (format) {
+        NSMutableArray * formatArr = [NSMutableArray arrayWithCapacity:finalArr.count];
+        NSArray * allDeviceDetail = [[AnaDbManager deviceDb] allParkingDetails];
+        NSArray * allUserDetail = [[AnaDbManager userDb] allParkingDetails];
+        for (id obj in finalArr) {
+            ParkingRegion * curRegion = obj;
+            if ([obj isKindOfClass:[TripSummary class]]) {
+                curRegion = ((TripSummary*)obj).region_group.end_region;
+            } else if ([obj isKindOfClass:[ParkingRegionDetail class]]) {
+                [formatArr addObject:obj];
+                continue;
+            }
+            BOOL find = NO;
+            for (ParkingRegionDetail * detail in allDeviceDetail) {
+                if (detail.coreDataItem == curRegion) {
+                    [formatArr addObject:detail];
+                    find = YES;
+                    break;
+                }
+            }
+            if (!find) {
+                for (ParkingRegionDetail * detail in allUserDetail) {
+                    if (detail.coreDataItem == curRegion) {
+                        [formatArr addObject:detail];
+                        find = YES;
+                    }
+                }
+            }
+        }
+        return formatArr;
+    }
+    
+    return finalArr;
+}
+
+- (TripSummary*) bestTripForRegionGroup:(RegionGroup*)group
+{
+    // 筛选条件：筛选是否当前时间范围内出发 --》 筛选是否节假日匹配 --》最近的一次旅程
+    NSArray * allTrips = [group.trips allObjects];
+    NSArray * finalTrips = allTrips;
+    NSArray * filterTimeTrips = [TripFilter filterTrips:allTrips byTime:[NSDate date] between:-60 toMinute:120];
+    if (filterTimeTrips.count > 0) {
+        finalTrips = filterTimeTrips;
+        NSArray * filterHolidayTrips = [TripFilter filterTrips:filterTimeTrips byDayType:eDayTypeAuto];
+        if (filterHolidayTrips.count > 0) {
+            finalTrips = filterHolidayTrips;
+        }
+    }
+    
+    NSArray * sortedArr = [finalTrips sortedArrayUsingComparator:^NSComparisonResult(TripSummary * obj1, TripSummary * obj2) {
+        return [obj2.start_date compare:obj1.start_date];
+    }];
+    
+    if (sortedArr.count > 0) {
+        return sortedArr[0];
+    }
+    return nil;
+}
+
 - (void) userDidLogin
 {
 //    if ([[UserWrapper sharedInst] isLogin]) {
@@ -459,7 +619,22 @@ static BussinessDataProvider * _sharedProvider = nil;
 
 - (NSArray*) favLocations
 {
-    return [[TSCache sharedInst] fileCacheForKey:[self keyByUser:kUserFavLocation]];
+    NSArray * origLoc = [[TSCache sharedInst] fileCacheForKey:[self keyByUser:kUserFavLocation]];
+    
+    // merge with parking info
+    for (CTFavLocation * favLoc in origLoc) {
+        ParkingRegion * region = [[AnaDbManager sharedInst] parkingRegioinForId:favLoc.parking_id];
+        if (region) {
+            [favLoc updateWithParkingRegion:region];
+        } else {
+            ParkingRegionDetail * detail = [[AnaDbManager sharedInst] parkingDetailForCoordinate:favLoc.coordinate minDist:500];
+            if (detail) {
+                [favLoc updateWithParkingRegion:detail.coreDataItem];
+            }
+        }
+    }
+    
+    return origLoc;
 }
 
 - (void) putFavLocations:(NSArray*)favLoc

@@ -346,6 +346,7 @@
         
         __block GPSLogItem * item = nil;
         BOOL dropTrip = NO;
+        CGFloat maxDist = _maxDist;
         if (inTrip) {
             if (_startMoveTraceIdx < self.logArr.count) {
                 item = ((GPSLogItem*)(self.logArr[_startMoveTraceIdx]));
@@ -374,7 +375,7 @@
             [[NSNotificationCenter defaultCenter] postNotificationName:kNotifyTripStatChange object:nil userInfo:dict];
         });
 
-        DDLogWarn(@"!!!!!!!!!!!!!!!!!!!!!!!! notify is driving %d at %@, if drop %d, maxDist %f", inTrip, item.timestamp, dropTrip, _maxDist);
+        DDLogWarn(@"!!!!!!!!!!!!!!!!!!!!!!!! notify is driving %d at %@, if drop %d, maxDist %f", inTrip, item.timestamp, dropTrip, maxDist);
     }
 }
 

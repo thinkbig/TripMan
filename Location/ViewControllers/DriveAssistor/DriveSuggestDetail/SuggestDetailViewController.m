@@ -16,6 +16,7 @@
 #import "CTTrafficFullFacade.h"
 #import "GeoRectBound.h"
 #import "RouteAnnotation.h"
+#import "CTTimePredictFacade.h"
 
 #define OVER_HEADER_HEIGHT      114
 
@@ -49,7 +50,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 
-    self.rootScrollView.scrollEnabled = NO;
+    self.rootScrollView.delegate = self;
     CGRect scrollFrame = self.rootScrollView.bounds;
     // add header and content
     if (nil == self.mapView) {
@@ -82,6 +83,11 @@
     [self.overLayerVC.collectionView addGestureRecognizer:panGesture];
     
     [self showLoading];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [self.navigationController setNavigationBarHidden:NO animated:animated];
+    [super viewWillAppear:animated];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -218,6 +224,20 @@
                 self.overLayerVC.route = self.route;
                 [self.overLayerVC.collectionView reloadData];
                 
+                CTTimePredictFacade * predFacade = [[CTTimePredictFacade alloc] init];
+                predFacade.fromCoorBaidu = [self.route.orig clLocation].coordinate;
+                predFacade.toCoorBaidu = [self.route.dest clLocation].coordinate;
+                if (startDetail && self.endParkingId) {
+                    predFacade.fromParkingId = startDetail.coreDataItem.parking_id;
+                    predFacade.toParkingId = self.endParkingId;
+                }
+                [predFacade requestWithSuccess:^(NSDictionary * predict) {
+                    self.overLayerVC.predictDict = predict;
+                    [self.overLayerVC.collectionView reloadData];
+                } failure:^(NSError * err) {
+                    [self showToast:@"暂时无法获得交通预测数据" onDismiss:nil];
+                }];
+                
                 [UIView animateWithDuration:1.0 delay:0.3 options:UIViewAnimationOptionCurveEaseInOut animations:^{
                     [self.rootScrollView setContentOffset:CGPointMake(0, 0) animated:NO];
                 } completion:nil];
@@ -228,6 +248,7 @@
                     [self.navigationController popViewControllerAnimated:YES];
                 }];
             }];
+            
         } else {
             [self updateRouteViewWithRoute:self.route];
             self.overLayerVC.route = self.route;
@@ -601,6 +622,25 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    CGPoint offset = self.rootScrollView.contentOffset;
+    self.rootScrollView.contentOffset = offset;
+    
+    CGFloat thresOffset = self.rootScrollView.height - OVER_HEADER_HEIGHT;
+    CGFloat maxOffset = self.overLayerVC.collectionView.height - OVER_HEADER_HEIGHT;
+    CGFloat halfThres = !self.isOpen ? thresOffset/3.0 : 2.0*thresOffset/3.0;
+    if (offset.y < halfThres) {
+        offset.y = 0;
+    } else if (offset.y >= maxOffset) {
+        offset.y = maxOffset;
+    } else if (offset.y >= halfThres && offset.y < thresOffset) {
+        offset.y = thresOffset;
+    }
+    [self.rootScrollView setContentOffset:offset animated:YES];
+}
 
 
 #pragma mark -

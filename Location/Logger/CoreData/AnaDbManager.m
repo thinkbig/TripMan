@@ -138,6 +138,15 @@
     return deviceDetail;
 }
 
+- (ParkingRegion*) parkingRegioinForId:(NSString*)parkingId
+{
+    ParkingRegion * region = [self.deviceDbMgr parkingRegioinForId:parkingId];
+    if (nil == region) {
+        region = [self.userDbMgr parkingRegioinForId:parkingId];
+    }
+    return region;
+}
+
 - (NSArray*) tripsWithStartRegion:(ParkingRegion*)region tripLimit:(NSInteger)limit startDate:(NSDate*)stDate
 {
     NSArray * rawGroups = [region.group_owner_st allObjects];

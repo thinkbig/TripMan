@@ -29,18 +29,6 @@
     return CLLocationCoordinate2DMake([self.center_lat doubleValue], [self.center_lon doubleValue]);
 }
 
-- (CTFavLocation*) toFavLocation
-{
-    CTFavLocation * loc = [[CTFavLocation alloc] init];
-    loc.lat = self.center_lat;
-    loc.lon = self.center_lon;
-    loc.name = [self nameWithDefault:@"未知地点"];
-    loc.street = self.street;
-    loc.parking_id = self.parking_id;
-    
-    return loc;
-}
-
 - (CGFloat) distanseFrom:(ParkingRegion*)region
 {
     if (nil == region) {
@@ -49,6 +37,15 @@
         return 0;
     }
     return [[self centerLocation] distanceFromLocation:[region centerLocation]];
+}
+
+- (NSInteger) driveEndCount
+{
+    NSUInteger tripCnt = 0;
+    for (RegionGroup * group in self.group_owner_ed) {
+        tripCnt += group.trips.count;
+    }
+    return tripCnt;
 }
 
 - (NSDictionary*) toJsonDict

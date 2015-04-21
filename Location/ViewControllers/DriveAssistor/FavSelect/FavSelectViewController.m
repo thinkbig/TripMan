@@ -111,7 +111,8 @@
         [self showToast:@"最多添加3个关注地点" onDismiss:nil];
         return;
     } else {
-        fav = [info.coreDataItem toFavLocation];
+        fav = [CTFavLocation new];
+        [fav updateWithParkingRegion:info.coreDataItem];
         [self.userFavLocs addObject:fav];
     }
     

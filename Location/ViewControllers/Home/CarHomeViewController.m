@@ -14,6 +14,7 @@
 #import "ParkingRegion+Fetcher.h"
 #import "TripFilter.h"
 #import "CTTrafficAbstractFacade.h"
+#import "SuggestDetailViewController.h"
 
 @interface CarHomeViewController ()
 
@@ -42,8 +43,8 @@
     [self reloadContent];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
+    [self.navigationController setNavigationBarHidden:YES animated:animated];
     [super viewWillAppear:animated];
     [self reloadContent];
 }
@@ -53,62 +54,103 @@
     if (IS_UPDATING) {
         return;
     }
+    
     self.bestTrip = nil;
-    NSDate * now = [NSDate date];
-    CLLocation * curLoc = [BussinessDataProvider lastGoodLocation];
-    if (curLoc) {
-        ParkingRegionDetail * parkingDetail = [[AnaDbManager sharedInst] parkingDetailForCoordinate:curLoc.coordinate minDist:500];
-        NSArray * mostTrips = [[AnaDbManager sharedInst] tripsWithStartRegion:parkingDetail.coreDataItem tripLimit:10 startDate:now];
-        if (mostTrips.count > 0) {
-            self.bestTrip = mostTrips[0];
-            NSArray * timeFilterArr = [TripFilter filterTrips:mostTrips byTime:now between:-60 toMinute:60];
-            if (timeFilterArr.count > 0) {
-                self.bestTrip = timeFilterArr[0];
-                NSArray * weekendFilterArr = [TripFilter filterTrips:mostTrips byDayType:[TripFilter dayTypeByDate:now]];
-                if (weekendFilterArr.count > 0) {
-                    self.bestTrip = weekendFilterArr[0];
-                }
-            }
+    NSArray * guessTrips = [[BussinessDataProvider sharedInstance] bestGuessLocations:1 formatToDetail:NO];
+    if (guessTrips.count > 0) {
+        id guessData = guessTrips[0];
+        if ([guessData isKindOfClass:[TripSummary class]]) {
+            self.bestTrip = guessData;
         }
-        if (nil == self.bestTrip) {
-            // 取这次旅程的起点作为猜测
-            TripSummary * lastTrip = [[AnaDbManager sharedInst] lastTrip];
-            if (lastTrip && lastTrip.region_group.start_region != lastTrip.region_group.end_region) {
-                self.bestGuessDest = lastTrip.region_group.start_region;
-            }
-        } else {
+        if (self.bestTrip) {
             self.bestGuessDest = self.bestTrip.region_group.end_region;
+        } else {
+            if ([guessData isKindOfClass:[ParkingRegionDetail class]]) {
+                self.bestGuessDest = ((ParkingRegionDetail*)guessData).coreDataItem;
+            } else if ([guessData isKindOfClass:[ParkingRegion class]]) {
+                self.bestGuessDest = guessData;
+            }
         }
         
-        if (nil == self.bestGuessDest) {
-            // 所以停车位置中，去过最多的那个作为猜测，去除当前位置点
-            NSArray * parkLoc = [[AnaDbManager sharedInst] mostUsedParkingRegionLimit:2];
-            for (ParkingRegionDetail * locDetail in parkLoc) {
-                if (parkingDetail != locDetail) {
-                    self.bestGuessDest = locDetail.coreDataItem;
-                    break;
+        CLLocation * curLoc = [BussinessDataProvider lastGoodLocation];
+        if (curLoc) {
+            if (self.bestGuessDest) {
+                ParkingRegionDetail * parkingDetail = [[AnaDbManager sharedInst] parkingDetailForCoordinate:curLoc.coordinate minDist:500];
+                CTTrafficAbstractFacade * facade = [[CTTrafficAbstractFacade alloc] init];
+                facade.fromCoorBaidu = [GeoTransformer earth2Baidu:curLoc.coordinate];
+                facade.toCoorBaidu = [GeoTransformer earth2Baidu:self.bestGuessDest.centerCoordinate];
+                if (parkingDetail) {
+                    facade.fromParkingId = parkingDetail.coreDataItem.parking_id;
+                    facade.toParkingId = self.bestGuessDest.parking_id;
                 }
+                [facade requestWithSuccess:^(CTRoute * result) {
+                    self.bestRoute = result;
+                    [self.homeCollection reloadData];
+                } failure:^(NSError * err) {
+                    //NSLog(@"asdfasdf = %@", err);
+                }];
             }
         }
         
-        if (self.bestGuessDest) {
-            CTTrafficAbstractFacade * facade = [[CTTrafficAbstractFacade alloc] init];
-            facade.fromCoorBaidu = [GeoTransformer earth2Baidu:curLoc.coordinate];
-            facade.toCoorBaidu = [GeoTransformer earth2Baidu:self.bestGuessDest.centerCoordinate];
-            if (parkingDetail) {
-                facade.fromParkingId = parkingDetail.coreDataItem.parking_id;
-                facade.toParkingId = self.bestGuessDest.parking_id;
-            }
-            [facade requestWithSuccess:^(CTRoute * result) {
-                self.bestRoute = result;
-                [self.homeCollection reloadData];
-            } failure:^(NSError * err) {
-                //NSLog(@"asdfasdf = %@", err);
-            }];
-        }
+        [self.homeCollection reloadData];
     }
     
-    [self.homeCollection reloadData];
+//    self.bestTrip = nil;
+//    NSDate * now = [NSDate date];
+//    CLLocation * curLoc = [BussinessDataProvider lastGoodLocation];
+//    if (curLoc) {
+//        ParkingRegionDetail * parkingDetail = [[AnaDbManager sharedInst] parkingDetailForCoordinate:curLoc.coordinate minDist:500];
+//        NSArray * mostTrips = [[AnaDbManager sharedInst] tripsWithStartRegion:parkingDetail.coreDataItem tripLimit:10 startDate:now];
+//        if (mostTrips.count > 0) {
+//            self.bestTrip = mostTrips[0];
+//            NSArray * timeFilterArr = [TripFilter filterTrips:mostTrips byTime:now between:-60 toMinute:60];
+//            if (timeFilterArr.count > 0) {
+//                self.bestTrip = timeFilterArr[0];
+//                NSArray * weekendFilterArr = [TripFilter filterTrips:mostTrips byDayType:[TripFilter dayTypeByDate:now]];
+//                if (weekendFilterArr.count > 0) {
+//                    self.bestTrip = weekendFilterArr[0];
+//                }
+//            }
+//        }
+//        if (nil == self.bestTrip) {
+//            // 取这次旅程的起点作为猜测
+//            TripSummary * lastTrip = [[AnaDbManager sharedInst] lastTrip];
+//            if (lastTrip && lastTrip.region_group.start_region != lastTrip.region_group.end_region) {
+//                self.bestGuessDest = lastTrip.region_group.start_region;
+//            }
+//        } else {
+//            self.bestGuessDest = self.bestTrip.region_group.end_region;
+//        }
+//        
+//        if (nil == self.bestGuessDest) {
+//            // 所以停车位置中，去过最多的那个作为猜测，去除当前位置点
+//            NSArray * parkLoc = [[AnaDbManager sharedInst] mostUsedParkingRegionLimit:2];
+//            for (ParkingRegionDetail * locDetail in parkLoc) {
+//                if (parkingDetail != locDetail) {
+//                    self.bestGuessDest = locDetail.coreDataItem;
+//                    break;
+//                }
+//            }
+//        }
+//        
+//        if (self.bestGuessDest) {
+//            CTTrafficAbstractFacade * facade = [[CTTrafficAbstractFacade alloc] init];
+//            facade.fromCoorBaidu = [GeoTransformer earth2Baidu:curLoc.coordinate];
+//            facade.toCoorBaidu = [GeoTransformer earth2Baidu:self.bestGuessDest.centerCoordinate];
+//            if (parkingDetail) {
+//                facade.fromParkingId = parkingDetail.coreDataItem.parking_id;
+//                facade.toParkingId = self.bestGuessDest.parking_id;
+//            }
+//            [facade requestWithSuccess:^(CTRoute * result) {
+//                self.bestRoute = result;
+//                [self.homeCollection reloadData];
+//            } failure:^(NSError * err) {
+//                //NSLog(@"asdfasdf = %@", err);
+//            }];
+//        }
+//    }
+//    
+//    [self.homeCollection reloadData];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -158,7 +200,6 @@
         self.header.suggestDest.text = @"当前位置";
         self.header.suggestDistFrom.text = @"您还没有行程记录";
     }
-    
 }
 
 - (void) updateTrip
@@ -236,6 +277,20 @@
     self.healthCell.carMaintainProgress.progressFillColor = COLOR_STAT_RED;
 }
 
+- (void) gotoDetail:(ParkingRegion*)region fromLoc:(CLLocation*)curLoc
+{
+    CTRoute * route = [CTRoute new];
+    [route setCoorType:eCoorTypeBaidu];
+    route.orig.name = @"当前位置";
+    [route.orig updateWithCoordinate:[GeoTransformer earth2Baidu:curLoc.coordinate]];
+    route.dest.name = [region nameWithDefault:@"目的地"];
+    [route.dest updateWithCoordinate:[GeoTransformer earth2Baidu:[region centerCoordinate]]];
+
+    SuggestDetailViewController * suggestDetail = InstVC(@"CarAssistor", @"SuggestDetailID");
+    suggestDetail.route = route;
+    suggestDetail.endParkingId = region.parking_id;
+    [self.navigationController pushViewController:suggestDetail animated:YES];
+}
 
 #pragma mark - UICollectionViewDataSource
 
@@ -305,7 +360,16 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-
+    if (0 == indexPath.section) {
+        if (0 == indexPath.row) {
+            CLLocation * curLoc = [BussinessDataProvider lastGoodLocation];
+            if (curLoc) {
+                [self gotoDetail:self.bestGuessDest fromLoc:curLoc];
+            } else {
+                [self showToast:@"当前gps不可用" onDismiss:nil];
+            }
+        }
+    }
 }
 
 @end

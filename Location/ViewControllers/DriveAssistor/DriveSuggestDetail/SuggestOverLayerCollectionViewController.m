@@ -9,6 +9,7 @@
 #import "SuggestOverLayerCollectionViewController.h"
 #import "SuggestDetailCell.h"
 #import "ParkingRegion+Fetcher.h"
+#import "NSArray+ObjectiveSugar.h"
 
 #define kMaxJamDisplayCount         3
 
@@ -24,7 +25,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-
+    self.collectionView.scrollEnabled = NO;
     // Do any additional setup after loading the view.
 }
 
@@ -46,6 +47,7 @@
     self.allJams = jamInfo;
 }
 
+
 /*
 #pragma mark - Navigation
 
@@ -55,6 +57,7 @@
     // Pass the selected object to the new view controller.
 }
 */
+
 
 #pragma mark <UICollectionViewDataSource>
 
@@ -74,7 +77,7 @@
             return self.allJams.count;
         }
     } else {
-        return 6;
+        return self.predictDict ? self.predictDict.count + 1 : 6;
     }
     return 0;
 }
@@ -109,8 +112,18 @@
             
             cell = realCell;
         } else {
-            UICollectionViewCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"SuggestListCell" forIndexPath:indexPath];
-            
+            SuggestPredictCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"SuggestPredictCellId" forIndexPath:indexPath];
+            NSArray * allKeys = [[self.predictDict allKeys] sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+                return [@([obj1 integerValue]) compare:@([obj2 integerValue])];
+            }];
+            if (indexPath.row-1 < allKeys.count) {
+                NSString * curMin = allKeys[indexPath.row-1];
+                CGFloat coef = [self.predictDict[curMin] floatValue];
+                CGFloat duration = [self.route.duration floatValue];
+                [realCell updateWithStartTime:[NSDate dateWithTimeIntervalSinceNow:[curMin integerValue]*60] andDuration:duration*coef];
+            } else {
+                [realCell updateWithStartTime:nil andDuration:0];
+            }
             cell = realCell;
         }
     }

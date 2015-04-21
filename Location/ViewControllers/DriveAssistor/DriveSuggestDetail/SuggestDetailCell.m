@@ -36,7 +36,7 @@
 
 @end
 
-///////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @implementation SuggestDetailHeader
 
@@ -65,3 +65,23 @@
 }
 
 @end
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+@implementation SuggestPredictCell
+
+- (void) updateWithStartTime:(NSDate*)stDate andDuration:(NSTimeInterval)duration
+{
+    if (stDate) {
+        NSDateFormatter * formatter = [[BussinessDataProvider sharedInstance] dateFormatterForFormatStr:@"HH:mm"];
+        self.startTimeLabel.text = [formatter stringFromDate:stDate];
+        self.predictDurationLabel.text = [NSString stringWithFormat:@"%.fmin", duration/60.0];
+    } else {
+        self.startTimeLabel.text = @"00:00";
+        self.predictDurationLabel.text = @"--";
+    }
+}
+
+@end
+
+

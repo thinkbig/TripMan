@@ -15,5 +15,6 @@
 
 @property (nonatomic, strong) TripSummary *     tripSum;
 @property (nonatomic, strong) CTRoute *         route;
+@property (nonatomic, strong) NSDictionary *    predictDict;
 
 @end

@@ -34,6 +34,8 @@
 - (void) updateLastGoodGpsItem:(GPSLogItem*)gps;
 
 - (NSDateFormatter*) dateFormatterForFormatStr:(NSString*)format;
+- (NSArray*) bestGuessLocations:(NSInteger)limit formatToDetail:(BOOL)format;
+- (TripSummary*) bestTripForRegionGroup:(RegionGroup*)group;
 
 // some bussiness data storage
 // CTFavLocation

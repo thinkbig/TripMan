@@ -82,13 +82,13 @@
                                                                                                  }];
 }
 
-- (void)updateData
-{
-    CTPOICategoryFacade * poiFacade = [CTPOICategoryFacade new];
-    [poiFacade requestWithSuccess:^(id array) {
-        self.categories = array;
-    } failure:nil];
-}
+//- (void)updateData
+//{
+//    CTPOICategoryFacade * poiFacade = [CTPOICategoryFacade new];
+//    [poiFacade requestWithSuccess:^(id array) {
+//        self.categories = array;
+//    } failure:nil];
+//}
 
 - (void)reloadContent
 {
@@ -107,16 +107,7 @@
     
     self.recentSearch = [NSMutableArray arrayWithArray:[[BussinessDataProvider sharedInstance] recentSearches]];
     
-    NSArray * rawRegions = [[AnaDbManager sharedInst] mostUsedParkingRegionLimit:0];
-    CLLocation * curLoc = [BussinessDataProvider lastGoodLocation];
-    if (curLoc) {
-        // 删除起点和终点过于接近的点，要求大于1500米
-        NSArray * filterRegions = [TripFilter filterRegion:rawRegions byStartRegion:curLoc byDist:1500];
-        self.mostParkingLoc = filterRegions;
-
-    } else {
-        self.mostParkingLoc = rawRegions;
-    }
+    self.mostParkingLoc = [[BussinessDataProvider sharedInstance] bestGuessLocations:0 formatToDetail:YES];
     
     [self.suggestCollectionView reloadData];
     [self updateSuggestionByKeyword:self.searchBar.text];
@@ -300,7 +291,7 @@
     } else if (1 == indexPath.section) {
         if (indexPath.row > 0) {
             if (0 == _selCategoryIdx) {
-                ParkingRegionDetail * selectRegion = self.mostParkingLoc[indexPath.row-1];
+                id selectRegion = self.mostParkingLoc[indexPath.row-1];
                 [self gotoDetail:selectRegion fromLoc:curLoc];
             } else {
                 

@@ -34,3 +34,17 @@
 - (void) updateWithTrip:(TripSummary*)sum;
 
 @end
+
+///////////////////////////////////////////////////////////////
+
+@interface SuggestPredictCell : UICollectionViewCell
+
+@property (weak, nonatomic) IBOutlet UIImageView *jamStatImage;
+@property (weak, nonatomic) IBOutlet UILabel *startTimeLabel;
+@property (weak, nonatomic) IBOutlet UILabel *predictDurationLabel;
+
+- (void) updateWithStartTime:(NSDate*)stDate andDuration:(NSTimeInterval)duration;
+
+@end
+
+
