@@ -18,3 +18,19 @@
 @property (weak, nonatomic) IBOutlet UIButton *btn4;
 
 @end
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+@interface CarSettingSixCell : UICollectionViewCell
+
+@property (weak, nonatomic) IBOutlet UIView *backgroundColorView;
+@property (weak, nonatomic) IBOutlet UIImageView *shadowImage;
+@property (weak, nonatomic) IBOutlet UIButton *btn1;
+@property (weak, nonatomic) IBOutlet UIButton *btn2;
+@property (weak, nonatomic) IBOutlet UIButton *btn3;
+@property (weak, nonatomic) IBOutlet UIButton *btn4;
+@property (weak, nonatomic) IBOutlet UIButton *btn5;
+@property (weak, nonatomic) IBOutlet UIButton *btn6;
+
+
+@end

@@ -105,6 +105,103 @@
                                             <outlet property="shadowImage" destination="d9b-bm-Syb" id="otm-PO-vFd"/>
                                         </connections>
                                     </collectionViewCell>
+                                    <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CarSettingSixCellId" id="RQb-dH-eND" customClass="CarSettingSixCell">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="332"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <view userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jLV-Vy-Pd3">
+                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="332"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qgC-wx-QXW">
+                                                    <rect key="frame" x="160" y="0.0" width="1" height="332"/>
+                                                    <color key="backgroundColor" white="1" alpha="0.20000000000000001" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <button opaque="NO" tag="11" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eSt-ve-U89">
+                                                    <rect key="frame" x="45" y="0.0" width="115" height="110"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                                                    <inset key="titleEdgeInsets" minX="-29" minY="30" maxX="0.0" maxY="0.0"/>
+                                                    <inset key="imageEdgeInsets" minX="43" minY="0.0" maxX="43" maxY="30"/>
+                                                    <state key="normal" title="关于我们" image="mycar_aboutus">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                </button>
+                                                <button opaque="NO" tag="12" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zRa-Rg-paF">
+                                                    <rect key="frame" x="161" y="0.0" width="115" height="110"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                                                    <inset key="titleEdgeInsets" minX="-29" minY="30" maxX="0.0" maxY="0.0"/>
+                                                    <inset key="imageEdgeInsets" minX="43" minY="0.0" maxX="43" maxY="30"/>
+                                                    <state key="normal" title="意见反馈" image="mycar_report">
+                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                </button>
+                                                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3Rt-sr-dFI">
+                                                    <rect key="frame" x="45" y="110" width="231" height="1"/>
+                                                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.20000000000000001" colorSpace="calibratedRGB"/>
+                                                </view>
+                                                <button opaque="NO" tag="21" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="APm-xQ-MEM">
+                                                    <rect key="frame" x="45" y="111" width="115" height="110"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                                                    <inset key="titleEdgeInsets" minX="-29" minY="30" maxX="0.0" maxY="0.0"/>
+                                                    <inset key="imageEdgeInsets" minX="43" minY="0.0" maxX="43" maxY="30"/>
+                                                    <state key="normal" title="意见反馈" image="mycar_version">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                </button>
+                                                <button opaque="NO" tag="22" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b0x-BJ-oCp">
+                                                    <rect key="frame" x="161" y="111" width="115" height="110"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                                                    <inset key="titleEdgeInsets" minX="-29" minY="30" maxX="0.0" maxY="0.0"/>
+                                                    <inset key="imageEdgeInsets" minX="43" minY="0.0" maxX="43" maxY="30"/>
+                                                    <state key="normal" title="常见问题" image="mycar_FAQ">
+                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                </button>
+                                                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1Yw-ZZ-a4q">
+                                                    <rect key="frame" x="44" y="221" width="231" height="1"/>
+                                                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.20000000000000001" colorSpace="calibratedRGB"/>
+                                                </view>
+                                                <button opaque="NO" tag="32" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NYr-ne-xHS">
+                                                    <rect key="frame" x="160" y="222" width="115" height="110"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                                                    <inset key="titleEdgeInsets" minX="-29" minY="30" maxX="0.0" maxY="0.0"/>
+                                                    <inset key="imageEdgeInsets" minX="43" minY="0.0" maxX="43" maxY="30"/>
+                                                    <state key="normal" title="去给好评" image="mycar_good">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                </button>
+                                                <button opaque="NO" tag="31" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nN7-Ah-f6c">
+                                                    <rect key="frame" x="46" y="222" width="115" height="110"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                                                    <inset key="titleEdgeInsets" minX="-29" minY="30" maxX="0.0" maxY="0.0"/>
+                                                    <inset key="imageEdgeInsets" minX="43" minY="0.0" maxX="43" maxY="30"/>
+                                                    <state key="normal" title="用户指南" image="mycar_Guide">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                </button>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="shadow" translatesAutoresizingMaskIntoConstraints="NO" id="IqH-gC-hoT">
+                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="5"/>
+                                                </imageView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <size key="customSize" width="320" height="332"/>
+                                        <connections>
+                                            <outlet property="backgroundColorView" destination="jLV-Vy-Pd3" id="hFq-bs-bfx"/>
+                                            <outlet property="btn1" destination="eSt-ve-U89" id="eg6-Lw-HcJ"/>
+                                            <outlet property="btn2" destination="zRa-Rg-paF" id="RsW-oM-WWh"/>
+                                            <outlet property="btn3" destination="APm-xQ-MEM" id="L6z-4T-yJ2"/>
+                                            <outlet property="btn4" destination="b0x-BJ-oCp" id="UFH-B7-WhI"/>
+                                            <outlet property="btn5" destination="nN7-Ah-f6c" id="W4d-r8-9DS"/>
+                                            <outlet property="btn6" destination="NYr-ne-xHS" id="gAt-o3-DR8"/>
+                                            <outlet property="shadowImage" destination="IqH-gC-hoT" id="kSA-0b-Att"/>
+                                        </connections>
+                                    </collectionViewCell>
                                 </cells>
                                 <connections>
                                     <outlet property="dataSource" destination="qLt-gF-1r7" id="QNq-Lr-AQW"/>
@@ -153,7 +250,13 @@
     </scenes>
     <resources>
         <image name="main_bg" width="320" height="568"/>
+        <image name="mycar_FAQ" width="25" height="25"/>
+        <image name="mycar_Guide" width="23" height="28"/>
+        <image name="mycar_aboutus" width="28" height="22"/>
+        <image name="mycar_good" width="27" height="27"/>
         <image name="mycar_profile" width="115" height="110"/>
+        <image name="mycar_report" width="22" height="22"/>
+        <image name="mycar_version" width="18" height="24"/>
         <image name="shadow" width="266" height="6"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

@@ -40,8 +40,9 @@
     
     NSMutableArray * jamInfo = [NSMutableArray array];
     for (CTStep * step in route.steps) {
-        if (step.jams.count > 0) {
-            [jamInfo addObjectsFromArray:step.jams];
+        NSArray * filteredJamArr = [step jamsWithThreshold:cTrafficJamThreshold];
+        if (filteredJamArr.count > 0) {
+            [jamInfo addObjectsFromArray:filteredJamArr];
         }
     }
     self.allJams = jamInfo;

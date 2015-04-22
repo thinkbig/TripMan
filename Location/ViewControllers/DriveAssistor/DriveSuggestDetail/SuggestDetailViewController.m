@@ -655,11 +655,11 @@
         BMKPolylineView * routeLineView = [[BMKPolylineView alloc] initWithPolyline:line];
         routeLineView.lineWidth = 8;
         if ([line.title isEqualToString:@"green"]) {
-            routeLineView.strokeColor = [UIColor colorWithRed:20.0f/255.0f green:220.0f/255.0f blue:255.0f/255.0f alpha:0.8];
+            routeLineView.strokeColor = COLOR_STAT_GREEN;
         } else if ([line.title isEqualToString:@"yellow"]) {
-            routeLineView.strokeColor = [UIColor colorWithRed:210.0f/255.0f green:225.0f/255.0f blue:15.0f/255.0f alpha:0.8];
+            routeLineView.strokeColor = COLOR_STAT_YELLOW;
         } else if ([line.title isEqualToString:@"red"]) {
-            routeLineView.strokeColor = [UIColor colorWithRed:255.0f/255.0f green:12.0f/255.0f blue:55.0f/255.0f alpha:0.8];
+            routeLineView.strokeColor = COLOR_STAT_RED;
         }
         
         overlayView = routeLineView;

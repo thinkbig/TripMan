@@ -46,10 +46,6 @@
 }
 */
 
-- (IBAction)reInstall:(id)sender {
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://fir.im/y764"]];
-}
-
 - (void) clickBtn:(UIButton*)btn
 {
     if (btn.tag == 12) {
@@ -68,22 +64,18 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return 2;
+    return 1;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    CarSettingCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"CarSettingCellId" forIndexPath:indexPath];
+    CarSettingSixCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"CarSettingSixCellId" forIndexPath:indexPath];
     
     if (indexPath.row == 0)
     {
         cell.shadowImage.hidden = YES;
         cell.backgroundColorView.backgroundColor = [UIColor clearColor];
-        [cell.btn1 setBackgroundImage:[UIImage imageNamed:@"mycar_profile"] forState:UIControlStateNormal];
-        [cell.btn2 setBackgroundImage:[UIImage imageNamed:@"mycar_setting"] forState:UIControlStateNormal];
-        [cell.btn3 setBackgroundImage:[UIImage imageNamed:@"mycar_drivehabit"] forState:UIControlStateNormal];
-        [cell.btn4 setBackgroundImage:[UIImage imageNamed:@"mycar_myshare"] forState:UIControlStateNormal];
-        
+
         cell.btn1.tag = 11;
         [cell.btn1 addTarget:self action:@selector(clickBtn:) forControlEvents:UIControlEventTouchUpInside];
         cell.btn2.tag = 12;
@@ -92,31 +84,17 @@
         [cell.btn3 addTarget:self action:@selector(clickBtn:) forControlEvents:UIControlEventTouchUpInside];
         cell.btn4.tag = 22;
         [cell.btn4 addTarget:self action:@selector(clickBtn:) forControlEvents:UIControlEventTouchUpInside];
-    }
-    else if (indexPath.row == 1)
-    {
-        cell.shadowImage.hidden = NO;
-        cell.backgroundColorView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.4];
-        [cell.btn1 setBackgroundImage:[UIImage imageNamed:@"mycar_obd"] forState:UIControlStateNormal];
-        [cell.btn2 setBackgroundImage:[UIImage imageNamed:@"mycar_fine"] forState:UIControlStateNormal];
-        [cell.btn3 setBackgroundImage:[UIImage imageNamed:@"mycar_driverecord"] forState:UIControlStateNormal];
-        [cell.btn4 setBackgroundImage:[UIImage imageNamed:@"mycar_serveticket"] forState:UIControlStateNormal];
-        
-        cell.btn1.tag = 31;
-        [cell.btn1 addTarget:self action:@selector(clickBtn:) forControlEvents:UIControlEventTouchUpInside];
-        cell.btn2.tag = 32;
-        [cell.btn2 addTarget:self action:@selector(clickBtn:) forControlEvents:UIControlEventTouchUpInside];
-        cell.btn3.tag = 41;
-        [cell.btn3 addTarget:self action:@selector(clickBtn:) forControlEvents:UIControlEventTouchUpInside];
-        cell.btn4.tag = 42;
-        [cell.btn4 addTarget:self action:@selector(clickBtn:) forControlEvents:UIControlEventTouchUpInside];
+        cell.btn5.tag = 31;
+        [cell.btn5 addTarget:self action:@selector(clickBtn:) forControlEvents:UIControlEventTouchUpInside];
+        cell.btn6.tag = 32;
+        [cell.btn6 addTarget:self action:@selector(clickBtn:) forControlEvents:UIControlEventTouchUpInside];
     }
     
     return cell;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    return CGSizeMake(320, 221);
+    return CGSizeMake(320, 332);
 }
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
@@ -126,7 +104,7 @@
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
 {
-    return UIEdgeInsetsMake(48.f, 0, 0, 0);
+    return UIEdgeInsetsMake((self.view.bounds.size.height - 332)/2.0f, 0, 0, 0);
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
