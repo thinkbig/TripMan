@@ -29,6 +29,7 @@ typedef NS_ENUM(NSUInteger, eStepTraffic) {
 
 + (UIColor*) colorFromTraffic:(eStepTraffic)traffic;
 - (eStepTraffic) trafficStat;
+- (CLLocationCoordinate2D) centerCoordenate;
 
 @end
 

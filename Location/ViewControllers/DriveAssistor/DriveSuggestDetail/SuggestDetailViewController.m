@@ -17,6 +17,7 @@
 #import "GeoRectBound.h"
 #import "RouteAnnotation.h"
 #import "CTTimePredictFacade.h"
+#import "RouteOverlayView.h"
 
 #define OVER_HEADER_HEIGHT      114
 
@@ -50,6 +51,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 
+    self.rootScrollView.scrollEnabled = NO;
     self.rootScrollView.delegate = self;
     CGRect scrollFrame = self.rootScrollView.bounds;
     // add header and content
@@ -154,6 +156,11 @@
                 offset.y = thresOffset;
             }
             [self.rootScrollView setContentOffset:offset animated:YES];
+            if (offset.y > thresOffset) {
+                self.rootScrollView.scrollEnabled = YES;
+            } else {
+                self.rootScrollView.scrollEnabled = NO;
+            }
         }
     }
 }
@@ -255,29 +262,6 @@
             [self.overLayerVC.collectionView reloadData];
         }
     }
-    else if (self.tripSum)
-    {
-        NSMutableArray * logs = [NSMutableArray array];
-        
-        GPSLogItem * stLog = [[GPSLogItem alloc] initWithParkingRegion:self.tripSum.region_group.start_region];
-        stLog.timestamp = self.tripSum.start_date;
-        [logs addObject:stLog];
-        
-        NSArray * logArr = [[GPSLogger sharedLogger].dbLogger selectLogFrom:self.tripSum.start_date toDate:self.tripSum.end_date offset:0 limit:0];
-        [logs addObjectsFromArray:logArr];
-        self.gpsLogs = logs;
-        
-        [self.mapView reloadInputViews];
-        
-        self.overLayerVC.tripSum = self.tripSum;
-        [self.overLayerVC.collectionView reloadInputViews];
-        
-        [self updateRouteView:[GPSOffTimeFilter smoothGPSData:_gpsLogs iteratorCnt:3]];
-        
-        [UIView animateWithDuration:1.0 delay:0.6 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-            [self.rootScrollView setContentOffset:CGPointMake(0, 0) animated:NO];
-        } completion:nil];
-    }
 }
 
 - (void) updateRouteViewWithRoute:(CTRoute*)route
@@ -319,7 +303,7 @@
             pointsToUse[idx+1] = bdMappt;
         }];
         
-        BMKPolyline * lineOne = [BMKPolyline polylineWithPoints:pointsToUse count:pathArr.count+2];
+        RouteOverlay * lineOne = [RouteOverlay routeWithPoints:pointsToUse count:pathArr.count+2];
         lineOne.title = @"green";
         [self.mapView addOverlay:lineOne];
         
@@ -338,7 +322,7 @@
                 }];
                 
                 eStepTraffic stat = [jam trafficStat];
-                BMKPolyline * jamOne = [BMKPolyline polylineWithPoints:jamsToUse count:jamArr.count];
+                RouteOverlay * jamOne = [RouteOverlay routeWithPoints:jamsToUse count:jamArr.count];
                 jamOne.title = (eStepTrafficVerySlow == stat) ? @"red" : @"yellow";
                 [self.mapView addOverlay:jamOne];
                 
@@ -365,228 +349,6 @@
     [regionBound updateBoundsWithCoor:itemEd.coordinate];
     
     [self.mapView setRegion:[regionBound baiduRegion] animated:YES];
-    
-    [self.mapView reloadInputViews];
-}
-
-- (void) updateRouteViewWithRoute1:(CTRoute*)route
-{
-    [self.mapView removeOverlays:self.mapView.overlays];
-    
-    NSArray * steps = route.steps;
-    eCoorType coorType = [route coorType];
-    GeoRectBound * regionBound = [GeoRectBound new];
-    
-    for (CTStep * oneStep in steps)
-    {
-        CLLocationCoordinate2D bdCoorFrom = [GeoTransformer baiduCoor:[oneStep.from coordinate] fromType:coorType];
-        BMKMapPoint bdMapFrom = BMKMapPointForCoordinate(bdCoorFrom);
-        [regionBound updateBoundsWithCoor:bdCoorFrom];
-        
-        CLLocationCoordinate2D btCoorTo = [GeoTransformer baiduCoor:[oneStep.to coordinate] fromType:coorType];
-        BMKMapPoint bdMapTo = BMKMapPointForCoordinate(btCoorTo);
-        [regionBound updateBoundsWithCoor:btCoorTo];
-        
-        NSArray * pathArr = [oneStep pathArray];
-        
-        BMKMapPoint * pointsToUse = new BMKMapPoint[pathArr.count+2];
-        pointsToUse[0] = bdMapFrom;
-        pointsToUse[pathArr.count+1] = bdMapTo;
-        eStepTraffic stat = [oneStep trafficStat];
-        
-        [pathArr enumerateObjectsUsingBlock:^(CTBaseLocation * obj, NSUInteger idx, BOOL *stop) {
-            CLLocationCoordinate2D btCoor = [GeoTransformer baiduCoor:[obj coordinate] fromType:coorType];
-            [regionBound updateBoundsWithCoor:btCoor];
-            BMKMapPoint bdMappt = BMKMapPointForCoordinate(btCoor);
-            pointsToUse[idx+1] = bdMappt;
-        }];
-        
-        BMKPolyline * lineOne = [BMKPolyline polylineWithPoints:pointsToUse count:pathArr.count+2];
-        [self.mapView addOverlay:lineOne];
-        
-        if (eStepTrafficSlow == stat) {
-            lineOne.title = @"yellow";
-        } else if (eStepTrafficVerySlow == stat) {
-            lineOne.title = @"red";
-        } else {
-            lineOne.title = @"green";
-        }
-
-        delete [] pointsToUse;
-    }
-    
-    CTBaseLocation * startLoc = route.orig;
-    CTBaseLocation * endLoc = route.dest;
-
-    RouteAnnotation* itemSt = [[RouteAnnotation alloc] init];
-    itemSt.coordinate = [startLoc clLocation].coordinate;
-    itemSt.title = @"起点";
-    itemSt.type = 0;
-    [_mapView addAnnotation:itemSt];
-    [regionBound updateBoundsWithCoor:itemSt.coordinate];
-    
-    RouteAnnotation* itemEd = [[RouteAnnotation alloc] init];
-    itemEd.coordinate = [endLoc clLocation].coordinate;
-    itemEd.title = @"终点";
-    itemEd.type = 1;
-    [_mapView addAnnotation:itemEd];
-    [regionBound updateBoundsWithCoor:itemEd.coordinate];
-
-    [self.mapView setRegion:[regionBound baiduRegion] animated:YES];
-    
-    [self.mapView reloadInputViews];
-}
-
--(void) updateRouteView:(NSArray*)gpsLog
-{
-    [self.mapView removeOverlays:self.mapView.overlays];
-    
-    if (gpsLog.count > 1)
-    {
-        NSArray * jamArr =  [[self.tripSum.traffic_jams allObjects] sortedArrayWithOptions:NSSortStable usingComparator:^NSComparisonResult(TrafficJam * obj1, TrafficJam * obj2) {
-            return [obj1.start_date compare:obj2.start_date];
-        }];
-        
-        NSMutableArray * jamLogArr = [NSMutableArray arrayWithCapacity:jamArr.count];
-        NSInteger rawJamIdx = 0;
-        TrafficJam * curJam = nil;
-        if (jamArr.count > 0) {
-            curJam = jamArr[0];
-        }
-        GPSLogItem * firstLog = gpsLog[0];
-        NSTimeInterval lastDuring = fabs([firstLog.timestamp timeIntervalSinceDate:curJam.start_date]);
-        TSPair * pair = nil;
-        for (NSInteger i = 1; i < gpsLog.count; i++)
-        {
-            if (nil == curJam) {
-                break;
-            }
-            GPSLogItem * curLog = gpsLog[i];
-            if (nil == pair) {
-                NSTimeInterval during = fabs([curLog.timestamp timeIntervalSinceDate:curJam.start_date]);
-                if (during >= lastDuring) {
-                    pair = TSPairMake(@(i-1), nil, nil);
-                    lastDuring = fabs([curLog.timestamp timeIntervalSinceDate:curJam.end_date]);
-                } else {
-                    lastDuring = during;
-                }
-            } else {
-                NSTimeInterval during = fabs([curLog.timestamp timeIntervalSinceDate:curJam.end_date]);
-                if (during >= lastDuring) {
-                    pair.second = @(i-1);
-                    [jamLogArr addObject:pair];
-                    pair = nil;
-                    rawJamIdx++;
-                    if (rawJamIdx < jamArr.count) {
-                        curJam = jamArr[rawJamIdx];
-                    } else {
-                        break;
-                    }
-                    lastDuring = fabs([curLog.timestamp timeIntervalSinceDate:curJam.start_date]);
-                } else {
-                    lastDuring = during;
-                }
-            }
-        }
-        
-        BMKCoordinateRegion region;
-        
-        CLLocationDegrees maxLat = -90;
-        CLLocationDegrees maxLon = -180;
-        CLLocationDegrees minLat = 90;
-        CLLocationDegrees minLon = 180;
-        
-        BMKMapPoint * pointsToUse = new BMKMapPoint[gpsLog.count];
-        int realCnt = 0;
-        BOOL isJam = NO;
-        NSInteger stJamIdx = -1;
-        NSInteger edJamIdx = -1;
-        NSInteger jamIdx = 0;
-        if (jamLogArr.count > 0) {
-            TSPair * curJamPair = jamLogArr[jamIdx];
-            stJamIdx = [curJamPair.first integerValue];
-            edJamIdx = [curJamPair.second integerValue];
-        }
-        for (int i = 0; i < gpsLog.count; i++)
-        {
-            GPSLogItem * item = gpsLog[i];
-            
-            if ([item.horizontalAccuracy doubleValue] > 1000) {
-                continue;
-            }
-            
-            CLLocationCoordinate2D coords;
-            coords.latitude = [item.latitude doubleValue];
-            coords.longitude = [item.longitude doubleValue];
-            CLLocationCoordinate2D regionCoord = [GeoTransformer earth2Baidu:coords];
-            BMKMapPoint marsCoords = BMKMapPointForCoordinate(regionCoord);
-            
-            if (i == 0) {
-                RouteAnnotation* item = [[RouteAnnotation alloc] init];
-                item.coordinate = regionCoord;
-                item.title = @"起点";
-                item.type = 0;
-                [_mapView addAnnotation:item];
-            } else if (i == gpsLog.count-1) {
-                RouteAnnotation* item = [[RouteAnnotation alloc] init];
-                item.coordinate = regionCoord;
-                item.title = @"终点";
-                item.type = 1;
-                [_mapView addAnnotation:item];
-            }
-            
-            if(regionCoord.latitude > maxLat)
-                maxLat = regionCoord.latitude;
-            if(regionCoord.latitude < minLat)
-                minLat = regionCoord.latitude;
-            if(regionCoord.longitude > maxLon)
-                maxLon = regionCoord.longitude;
-            if(regionCoord.longitude < minLon)
-                minLon = regionCoord.longitude;
-            
-            // travel route and traffic jam route
-            pointsToUse[realCnt++] = marsCoords;
-            if (!isJam && i >= stJamIdx && i <= edJamIdx) {
-                BMKPolyline * lineOne = [BMKPolyline polylineWithPoints:pointsToUse count:realCnt];
-                lineOne.title = @"green";
-                [self.mapView addOverlay:lineOne];
-                realCnt = 0;
-                pointsToUse[realCnt++] = marsCoords;
-                isJam = YES;
-            } else if (isJam && i > edJamIdx) {
-                BMKPolyline *lineOne = [BMKPolyline polylineWithPoints:pointsToUse count:realCnt];
-                TrafficJam * jamPair = jamArr[jamIdx];
-                if (jamPair.end_date && jamPair.start_date && [jamPair.end_date timeIntervalSinceDate:jamPair.start_date] > cHeavyTrafficJamThreshold) {
-                    lineOne.title = @"red";
-                } else {
-                    lineOne.title = @"yellow";
-                }
-                [self.mapView addOverlay:lineOne];
-                realCnt = 0;
-                pointsToUse[realCnt++] = marsCoords;
-                isJam = NO;
-                jamIdx++;
-                if (jamIdx < jamLogArr.count) {
-                    TSPair * curJamPair = jamLogArr[jamIdx];
-                    stJamIdx = [curJamPair.first integerValue];
-                    edJamIdx = [curJamPair.second integerValue];
-                }
-            }
-        }
-        
-        BMKPolyline *lineOne = [BMKPolyline polylineWithPoints:pointsToUse count:realCnt];
-        lineOne.title = isJam ? @"yellow" : @"green";
-        [self.mapView addOverlay:lineOne];
-
-        
-        region.center.latitude     = (maxLat + minLat) / 2 - 0.007;
-        region.center.longitude    = (maxLon + minLon) / 2;
-        region.span.latitudeDelta  = (maxLat - minLat)/2.0 + 0.018;
-        region.span.longitudeDelta = (maxLon - minLon)/2.0 + 0.018;
-        [self.mapView setRegion:region animated:YES];
-        
-        delete [] pointsToUse;
-    }
     
     [self.mapView reloadInputViews];
 }
@@ -640,6 +402,12 @@
         offset.y = thresOffset;
     }
     [self.rootScrollView setContentOffset:offset animated:YES];
+    
+    if (offset.y > thresOffset) {
+        self.rootScrollView.scrollEnabled = YES;
+    } else {
+        self.rootScrollView.scrollEnabled = NO;
+    }
 }
 
 
@@ -649,20 +417,11 @@
 - (BMKOverlayView *)mapView:(BMKMapView *)mapView viewForOverlay:(id <BMKOverlay>)overlay
 {
     BMKOverlayView* overlayView = nil;
-    if ([overlay isKindOfClass:[BMKPolyline class]])
+    if ([overlay isKindOfClass:[RouteOverlay class]])
     {
-        BMKPolyline * line = (BMKPolyline*)overlay;
-        BMKPolylineView * routeLineView = [[BMKPolylineView alloc] initWithPolyline:line];
-        routeLineView.lineWidth = 8;
-        if ([line.title isEqualToString:@"green"]) {
-            routeLineView.strokeColor = COLOR_STAT_GREEN;
-        } else if ([line.title isEqualToString:@"yellow"]) {
-            routeLineView.strokeColor = COLOR_STAT_YELLOW;
-        } else if ([line.title isEqualToString:@"red"]) {
-            routeLineView.strokeColor = COLOR_STAT_RED;
-        }
-        
-        overlayView = routeLineView;
+        RouteOverlayView * routeView = [[RouteOverlayView alloc] initWithOverlay:overlay];
+        routeView.lineWidth = 10;
+        return routeView;
     }
     else if ([overlay isKindOfClass:[BMKCircle class]])
     {

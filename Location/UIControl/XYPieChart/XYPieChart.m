@@ -111,6 +111,7 @@ static NSUInteger kDefaultSliceZOrder = 100;
 @synthesize animationSpeed = _animationSpeed;
 @synthesize pieCenter = _pieCenter;
 @synthesize pieRadius = _pieRadius;
+@synthesize hollowThickness = _hollowThickness;
 @synthesize showLabel = _showLabel;
 @synthesize labelFont = _labelFont;
 @synthesize labelColor = _labelColor;
@@ -206,6 +207,8 @@ static CGPathRef CGPathCreateArc(CGPoint center, CGFloat radius, CGFloat startAn
 {
     [_pieView setCenter:pieCenter];
     _pieCenter = CGPointMake(_pieView.frame.size.width/2, _pieView.frame.size.height/2);
+    
+    [self setHollowThickness:_hollowThickness];
 }
 
 - (void)setPieRadius:(CGFloat)pieRadius
@@ -216,6 +219,37 @@ static CGPathRef CGPathCreateArc(CGPoint center, CGFloat radius, CGFloat startAn
     _pieCenter = CGPointMake(frame.size.width/2, frame.size.height/2);
     [_pieView setFrame:frame];
     [_pieView.layer setCornerRadius:_pieRadius];
+    
+    [self setHollowThickness:_hollowThickness];
+}
+
+- (void)setHollowThickness:(CGFloat)hollowThickness
+{
+    if (_hollowThickness == hollowThickness) {
+        return;
+    }
+    _hollowThickness = hollowThickness;
+    
+    _pieView.layer.mask = nil;
+    if (_hollowThickness > 0) {
+        CAShapeLayer *maskLayer = [CAShapeLayer layer];
+        _pieView.layer.mask = maskLayer;
+        
+        UIBezierPath *path = [UIBezierPath bezierPath];
+        [path addArcWithCenter:_pieCenter
+                        radius:_pieRadius-hollowThickness
+                    startAngle:0.0
+                      endAngle:M_PI * 2
+                     clockwise:NO];
+        [path addArcWithCenter:_pieCenter
+                        radius:_pieRadius
+                    startAngle:0.0
+                      endAngle:M_PI * 2
+                     clockwise:YES];
+
+        maskLayer.lineWidth = 0;
+        maskLayer.path = [path CGPath];
+    }
 }
 
 - (void)setPieBackgroundColor:(UIColor *)color
@@ -230,6 +264,9 @@ static CGPathRef CGPathCreateArc(CGPoint center, CGFloat radius, CGFloat startAn
     _showPercentage = showPercentage;
     for(SliceLayer *layer in _pieView.layer.sublayers)
     {
+        if (![layer isKindOfClass:[SliceLayer class]]) {
+            continue;
+        }
         CATextLayer *textLayer = [[layer sublayers] objectAtIndex:0];
         [textLayer setHidden:!_showLabel];
         if(!_showLabel) return;
@@ -263,9 +300,11 @@ static CGPathRef CGPathCreateArc(CGPoint center, CGFloat radius, CGFloat startAn
         
         _selectedSliceIndex = -1;
         [slicelayers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            SliceLayer *layer = (SliceLayer *)obj;
-            if(layer.isSelected)
-                [self setSliceDeselectedAtIndex:idx];
+            if ([obj isKindOfClass:[SliceLayer class]]) {
+                SliceLayer *layer = (SliceLayer *)obj;
+                if(layer.isSelected)
+                    [self setSliceDeselectedAtIndex:idx];
+            }
         }];
         
         double startToAngle = 0.0;

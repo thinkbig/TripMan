@@ -25,25 +25,29 @@
 
 @property (nonatomic, strong) NSArray *     colorArr;
 
+@property (nonatomic, weak) CAShapeLayer *  maskLayer;
+@property (nonatomic, weak) CAShapeLayer *  circleLayer;
+
 @end
 
 @implementation TicketDetailCell
 
 - (void)awakeFromNib
 {
-    self.colorArr = @[[UIColor redColor], [UIColor orangeColor], [UIColor greenColor], [UIColor cyanColor]];
+    self.colorArr = @[COLOR_STAT_RED, COLOR_STAT_YELLOW, COLOR_STAT_GREEN, COLOR_STATUS_BLUE];
     
     self.chartCenter.layer.cornerRadius = CGRectGetHeight(self.chartCenter.bounds)/2.0;
+    
     CGFloat height = CGRectGetHeight(self.pieChart.bounds);
     self.pieChart.backgroundColor = [UIColor clearColor];
-    //self.pieChart.layer.cornerRadius = height/2.0;
     [self.pieChart setDataSource:self];
     [self.pieChart setStartPieAngle:M_PI_2];
-    [self.pieChart setAnimationSpeed:1.0];
+    [self.pieChart setAnimationSpeed:1.2];
     [self.pieChart setShowPercentage:NO];
     [self.pieChart setShowLabel:NO];
     [self.pieChart setPieRadius:height/2.0-7.0];
     [self.pieChart setPieCenter:CGPointMake(height/2.0, height/2.0-1)];
+    [self.pieChart setHollowThickness:5];
     [self.pieChart setPieBackgroundColor:[UIColor clearColor]];
     [self.pieChart setUserInteractionEnabled:NO];
 }
@@ -71,7 +75,9 @@
 - (void)setChartArr:(NSArray *)chartArr
 {
     _chartArr = chartArr;
-    [self.pieChart reloadData];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.pieChart reloadData];
+    });
 }
 
 #pragma mark - XYPieChartDataSource

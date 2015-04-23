@@ -589,7 +589,15 @@ typedef enum
                     CGFloat tmpSpeed = dist/interval;
                     if (tmpSpeed < cAvgNoiceSpeed) {
                         if (!_isDriving) {
-                            if (_lastLastLoc) {
+                            BOOL skipModify = YES;
+                            if (tmpSpeed > cAvgDrivingSpeed*1.5) {
+                                if (newLocation.horizontalAccuracy < kGoodHorizontalAccuracy && _lastLoc.horizontalAccuracy < kGoodHorizontalAccuracy) {
+                                    skipModify = NO;
+                                }
+                            } else {
+                                skipModify = NO;
+                            }
+                            if (!skipModify && _lastLastLoc) {
                                 CGFloat angle = [GPSOffTimeFilter checkPointAngle:[GPSOffTimeFilter coor2Point:_lastLastLoc.coordinate] antPt:[GPSOffTimeFilter coor2Point:_lastLoc.coordinate] antPt:[GPSOffTimeFilter coor2Point:newLocation.coordinate]];
                                 if (angle < 100) {
                                     // filter the wrong gps

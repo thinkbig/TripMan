@@ -15,6 +15,7 @@
 #import "TripFilter.h"
 #import "CTTrafficAbstractFacade.h"
 #import "SuggestDetailViewController.h"
+#import "BaiduReverseGeocodingWrapper.h"
 
 @interface CarHomeViewController ()
 
@@ -228,7 +229,7 @@
     self.tripCell.statusColorView.backgroundColor = COLOR_STAT_GREEN;
     if (self.bestRoute.most_jam) {
         eStepTraffic status = [self.bestRoute.most_jam trafficStat];
-        if (self.bestRoute.most_jam.intro) {
+        if (self.bestRoute.most_jam.intro.length > 0) {
             self.tripCell.statusLabel.text = self.bestRoute.most_jam.intro;
         } else {
             if (status == eStepTrafficVerySlow) {
@@ -238,6 +239,22 @@
             }
         }
         self.tripCell.statusColorView.backgroundColor = [CTJam colorFromTraffic:status];
+        
+        CTJam * curJam = self.bestRoute.most_jam;
+        BaiduReverseGeocodingWrapper * wrapper = [BaiduReverseGeocodingWrapper new];
+        wrapper.coordinate = [curJam centerCoordenate];
+        [wrapper requestWithSuccess:^(BMKReverseGeoCodeResult * result) {
+            if (curJam == self.bestRoute.most_jam && result.addressDetail.streetName.length > 0) {
+                curJam.intro = result.addressDetail.streetName;
+                if (curJam.intro.length > 0) {
+                    if (status == eStepTrafficVerySlow) {
+                        self.tripCell.statusLabel.text = [NSString stringWithFormat:@"%@ 有拥堵", curJam.intro];
+                    } else if (status == eStepTrafficSlow) {
+                        self.tripCell.statusLabel.text = [NSString stringWithFormat:@"%@ 有缓行", curJam.intro];
+                    }
+                }
+            }
+        } failure:nil];
     }
 }
 
@@ -334,7 +351,7 @@
         if (0 == indexPath.row) {
             return CGSizeMake(320, 270);
         } else {
-            return CGSizeMake(320, 180);
+            return CGSizeMake(320, 170);
         }
     }
     return CGSizeZero;

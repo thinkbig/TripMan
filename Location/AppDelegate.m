@@ -16,7 +16,6 @@
 #import "NSString+MD5.h"
 #import "DataReporter.h"
 
-static NSString * rebuildKey = @"kLocationForceRebuildKey";
 static NSString * rebuildVal = @"value_0000000000002"; // make sure it is different if this version should rebuild db
 
 @implementation AppDelegate
@@ -68,7 +67,7 @@ static NSString * rebuildVal = @"value_0000000000002"; // make sure it is differ
     self.baiduMapManager = [[BMKMapManager alloc] init];
     
     // check if need rebuild db
-    NSString * oldVal = [[NSUserDefaults standardUserDefaults] objectForKey:rebuildKey];
+    NSString * oldVal = [[NSUserDefaults standardUserDefaults] objectForKey:kLocationForceRebuildKey];
     if (oldVal && ![rebuildVal isEqualToString:oldVal])
     {
         IS_UPDATING = YES;
@@ -92,7 +91,7 @@ static NSString * rebuildVal = @"value_0000000000002"; // make sure it is differ
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
-    [[NSUserDefaults standardUserDefaults] setObject:rebuildVal forKey:rebuildKey];
+    [[NSUserDefaults standardUserDefaults] setObject:rebuildVal forKey:kLocationForceRebuildKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
     IS_UPDATING = NO;
@@ -196,8 +195,9 @@ static NSString * rebuildVal = @"value_0000000000002"; // make sure it is differ
     if (!IS_UPDATING) {
         [DDLog flushLog];
         [[AnaDbManager deviceDb] commit];
-        [[NSUserDefaults standardUserDefaults] synchronize];
     }
+    [[NSUserDefaults standardUserDefaults] setObject:[NSDate date] forKey:kLastResignActiveDate];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     DDLogWarn(@"@@@@@@@@@@@@@ applicationWillResignActive @@@@@@@@@@@@@");
 }
 
@@ -254,7 +254,7 @@ static NSString * rebuildVal = @"value_0000000000002"; // make sure it is differ
     
     if (!IS_UPDATING) {
         [[DataReporter sharedInst] asyncFromBackgroundFetch:^(eReportReslut result) {
-            DDLogWarn(@"############## Background fetch result (%ld) ... #############", (int)result);
+            DDLogWarn(@"############## Background fetch result (%ld) ... #############", (unsigned long)result);
             if (eReportReslutComplete == result) {
                 completionHandler(UIBackgroundFetchResultNewData);
             } else {

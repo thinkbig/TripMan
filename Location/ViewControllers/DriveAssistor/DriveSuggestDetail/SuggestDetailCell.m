@@ -8,11 +8,19 @@
 
 #import "SuggestDetailCell.h"
 #import "ParkingRegion+Fetcher.h"
+#import "BaiduReverseGeocodingWrapper.h"
+
+@interface SuggestDetailCell ()
+
+@property (nonatomic, strong) CTJam *       curJam;
+
+@end
 
 @implementation SuggestDetailCell
 
 - (void) updateWithJam:(CTJam*)jam
 {
+    self.curJam = jam;
     if (jam) {
         eStepTraffic stat = [jam trafficStat];
         if (eStepTrafficSlow == stat) {
@@ -25,12 +33,23 @@
             self.jamStatBgImage.image = [UIImage imageNamed:@"roadcondition_taggreen"];
             self.jamStatLabel.text = @"正常";
         }
-        self.jamStatTitle.text = jam.intro ? jam.intro : @"未知路段";
+        self.jamStatTitle.text = jam.intro.length > 0 ? jam.intro : @"-- --";
         self.jamStatSubTitle.text = nil;
         self.jamDurationLabel.text = [NSString stringWithFormat:@"%.f min", [jam.duration floatValue]/60.0];
     } else {
         self.jamStatBgImage.image = [UIImage imageNamed:@"roadcondition_taggreen"];
         self.jamStatLabel.text = @"正常";
+    }
+    
+    if (jam && jam.intro.length == 0) {
+        BaiduReverseGeocodingWrapper * wrapper = [BaiduReverseGeocodingWrapper new];
+        wrapper.coordinate = [jam centerCoordenate];
+        [wrapper requestWithSuccess:^(BMKReverseGeoCodeResult * result) {
+            if (jam == self.curJam && result.addressDetail.streetName.length > 0) {
+                jam.intro = result.addressDetail.streetName;
+                self.jamStatTitle.text = jam.intro;
+            }
+        } failure:nil];
     }
 }
 

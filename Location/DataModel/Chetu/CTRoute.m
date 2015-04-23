@@ -39,6 +39,14 @@
     return curStat;
 }
 
+- (CLLocationCoordinate2D) centerCoordenate
+{
+    if (self.from && self.to) {
+        return CLLocationCoordinate2DMake(([self.from.lat floatValue] + [self.to.lat floatValue])/2.0, ([self.from.lon floatValue] + [self.to.lon floatValue])/2.0);
+    }
+    return CLLocationCoordinate2DMake(0, 0);
+}
+
 - (NSNumber<Optional> *)duration {
     if (nil == _duration) {
         if (self.from && self.to) {

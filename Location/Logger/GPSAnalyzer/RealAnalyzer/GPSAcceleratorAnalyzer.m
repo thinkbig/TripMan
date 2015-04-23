@@ -25,10 +25,10 @@
     self.shortest_40 = 0;
     self.shortest_60 = 0;
     self.shortest_80 = 0;
-    self.during_0_30 = 0;
-    self.during_30_60 = 0;
-    self.during_60_100 = 0;
-    self.during_100_NA = 0;
+    self.during_0_20 = 0;
+    self.during_20_40 = 0;
+    self.during_40_80 = 0;
+    self.during_80_NA = 0;
     
     if (gpsLogs.count < 2) {
         return;
@@ -103,14 +103,14 @@
             //CGFloat during = [item.timestamp timeIntervalSinceDate:prevLog.timestamp];
             CGFloat dist = [item distanceFrom:prevLog];
             CGFloat prevSpeed = [prevLog.speed floatValue];
-            if (prevSpeed > 100.0/3.6) {
-                self.during_100_NA += dist;
-            } else if (prevSpeed > 60.0/3.6) {
-                self.during_60_100 += dist;
-            } else if (prevSpeed > 30.0/3.6) {
-                self.during_30_60 += dist;
+            if (prevSpeed > 80.0/3.6) {
+                self.during_80_NA += dist;
+            } else if (prevSpeed > 40.0/3.6) {
+                self.during_40_80 += dist;
+            } else if (prevSpeed > 20.0/3.6) {
+                self.during_20_40 += dist;
             } else {
-                self.during_0_30 += dist;
+                self.during_0_20 += dist;
             }
         }
         prevLog = item;

@@ -16,6 +16,7 @@
 #import "TrafficJam+Fetcher.h"
 #import "NSDate+Utilities.h"
 #import "TrafficJam+Fetcher.h"
+#import "RouteOverlayView.h"
 
 @interface BaiduMapViewController ()
 
@@ -96,7 +97,7 @@
             pointsToUse[idx+1] = bdMappt;
         }];
         
-        BMKPolyline * lineOne = [BMKPolyline polylineWithPoints:pointsToUse count:pathArr.count+2];
+        RouteOverlay * lineOne = [RouteOverlay routeWithPoints:pointsToUse count:pathArr.count+2];
         lineOne.title = @"green";
         [self.mapView addOverlay:lineOne];
         
@@ -115,7 +116,7 @@
                 }];
                 
                 eStepTraffic stat = [jam trafficStat];
-                BMKPolyline * jamOne = [BMKPolyline polylineWithPoints:jamsToUse count:jamArr.count];
+                RouteOverlay * jamOne = [RouteOverlay routeWithPoints:jamsToUse count:jamArr.count];
                 jamOne.title = (eStepTrafficVerySlow == stat) ? @"red" : @"yellow";
                 [self.mapView addOverlay:jamOne];
                 
@@ -162,20 +163,11 @@
 - (BMKOverlayView *)mapView:(BMKMapView *)mapView viewForOverlay:(id <BMKOverlay>)overlay
 {
     BMKOverlayView* overlayView = nil;
-    if ([overlay isKindOfClass:[BMKPolyline class]])
+    if ([overlay isKindOfClass:[RouteOverlay class]])
     {
-        BMKPolyline * line = (BMKPolyline*)overlay;
-        BMKPolylineView * routeLineView = [[BMKPolylineView alloc] initWithPolyline:line];
-        routeLineView.lineWidth = 8;
-        if ([line.title isEqualToString:@"green"]) {
-            routeLineView.strokeColor = COLOR_STAT_GREEN;
-        } else if ([line.title isEqualToString:@"yellow"]) {
-            routeLineView.strokeColor = COLOR_STAT_YELLOW;
-        } else if ([line.title isEqualToString:@"red"]) {
-            routeLineView.strokeColor = COLOR_STAT_RED;
-        }
-        
-        overlayView = routeLineView;
+        RouteOverlayView * routeView = [[RouteOverlayView alloc] initWithOverlay:overlay];
+        routeView.lineWidth = 10;
+        return routeView;
     }
     else if ([overlay isKindOfClass:[BMKCircle class]])
     {

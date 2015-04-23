@@ -18,6 +18,10 @@
 #define ENV_DEVICE_TYPE_IOS     @"1"        // 0=unknow, 1=iOS, 2=Android, 3=OBD
 #define ENV_APP_SOURCE          @"0"        // 0=内测推广，1=apple商店，2=googlePlay
 #define ENV_COUNTRY_CODE        @"CN"
-#define kDeviceToken            @"device_token"
+
+
+#define kDeviceToken                @"kADeviceToken"
+#define kLocationForceRebuildKey    @"kLocationForceRebuildKey"
+#define kLastResignActiveDate       @"kLastResignActiveDate"
 
 #endif

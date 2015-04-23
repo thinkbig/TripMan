@@ -29,6 +29,16 @@
     self.geocodesearch.delegate = nil;
 }
 
+- (NSString*) keyForRequest
+{
+    return [NSString stringWithFormat:@"bd_reverse_geocode_%ld-%ld", lround(self.coordinate.latitude*100000), lround(self.coordinate.longitude*100000)];
+}
+
+- (id)cachedResult
+{
+    return [[TSCache sharedInst] sqliteCacheForKey:[self keyForRequest]];
+}
+
 - (void)realSendRequest
 {
     if (!CLLocationCoordinate2DIsValid(self.coordinate)) {
@@ -53,6 +63,7 @@
 -(void) onGetReverseGeoCodeResult:(BMKGeoCodeSearch *)searcher result:(BMKReverseGeoCodeResult *)result errorCode:(BMKSearchErrorCode)error
 {
     if (error == 0) {
+        [[TSCache sharedInst] setSqlitCache:result forKey:[self keyForRequest]];
         if (self.successBlock) {
             self.successBlock(result);
         }

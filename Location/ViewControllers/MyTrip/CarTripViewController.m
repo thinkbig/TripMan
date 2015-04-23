@@ -59,6 +59,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
     [self.dateFormatter setTimeZone:[NSTimeZone localTimeZone]];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tripEnd) name:kNotifyTripDidEnd object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
 }
 
 - (void)dealloc
@@ -188,12 +189,27 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
     // Dispose of any resources that can be recreated.
 }
 
+- (void)applicationBecomeActive
+{
+    NSDate * lastResignDate = [[NSUserDefaults standardUserDefaults] objectForKey:kLastResignActiveDate];
+    if (![lastResignDate isToday]) {
+        self.currentIdx = _currentIdx;
+    } else {
+        [self rebuildContent:NO];
+    }
+}
+
 - (void)setCurrentIdx:(NSUInteger)currentIdx
 {
-    if (currentIdx != _currentIdx) {
-        _currentIdx = currentIdx;
-        [self rebuildContent:YES];
-    }
+    _currentIdx = currentIdx;
+    NSDate * now = [NSDate date];
+    self.currentDate = now;
+    self.currentWeekDate = now;
+    self.currentMonthDate = now;
+    [self.switcher setLabelText:@"今天" forIndex:0];
+    [self.switcher setLabelText:@"本周" forIndex:1];
+    [self.switcher setLabelText:@"本月" forIndex:2];
+    [self rebuildContent:YES];
 }
 
 - (void)showTomorrow

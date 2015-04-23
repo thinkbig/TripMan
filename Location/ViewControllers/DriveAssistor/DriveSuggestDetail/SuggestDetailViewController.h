@@ -17,9 +17,7 @@
 
 @property (strong, nonatomic) BMKMapView *mapView;
 
-@property (nonatomic, strong) TripSummary *     tripSum;
 @property (nonatomic, strong) CTRoute *         route;
-
 @property (nonatomic, strong) NSString *        endParkingId;       // 如果有
 
 @end

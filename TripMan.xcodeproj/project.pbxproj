@@ -21,6 +21,11 @@
 		A301EB651AE0F77C00CC6412 /* CTRealtimeJamFacade.m in Sources */ = {isa = PBXBuildFile; fileRef = A301EB641AE0F77C00CC6412 /* CTRealtimeJamFacade.m */; };
 		A301EB681AE0FE6300CC6412 /* JamZone.m in Sources */ = {isa = PBXBuildFile; fileRef = A301EB671AE0FE6300CC6412 /* JamZone.m */; };
 		A301EB6B1AE3A70300CC6412 /* CTTimePredictFacade.m in Sources */ = {isa = PBXBuildFile; fileRef = A301EB6A1AE3A70300CC6412 /* CTTimePredictFacade.m */; };
+		A304052D1AE7C84A0047E66B /* BMKAddressComponent+Encode.m in Sources */ = {isa = PBXBuildFile; fileRef = A304052C1AE7C84A0047E66B /* BMKAddressComponent+Encode.m */; };
+		A30405301AE7CB910047E66B /* BMKPoiInfo+Encode.m in Sources */ = {isa = PBXBuildFile; fileRef = A304052F1AE7CB910047E66B /* BMKPoiInfo+Encode.m */; };
+		A30405331AE7CE5F0047E66B /* BMKReverseGeoCodeResult+Encode.m in Sources */ = {isa = PBXBuildFile; fileRef = A30405321AE7CE5F0047E66B /* BMKReverseGeoCodeResult+Encode.m */; };
+		A30405381AE876400047E66B /* RouteOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = A30405371AE876400047E66B /* RouteOverlay.m */; };
+		A304053B1AE87FF70047E66B /* RouteOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = A304053A1AE87FF70047E66B /* RouteOverlayView.m */; };
 		A314116C1A0A4CCD0019F557 /* TripMan.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A31411681A0A4CCD0019F557 /* TripMan.xcdatamodeld */; };
 		A314116D1A0A4CCD0019F557 /* TripsCoreDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A314116B1A0A4CCD0019F557 /* TripsCoreDataManager.m */; };
 		A314118A1A0A7C700019F557 /* ParkingRegionDetail.m in Sources */ = {isa = PBXBuildFile; fileRef = A31411891A0A7C700019F557 /* ParkingRegionDetail.m */; };
@@ -288,6 +293,16 @@
 		A301EB671AE0FE6300CC6412 /* JamZone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JamZone.m; sourceTree = "<group>"; };
 		A301EB691AE3A70300CC6412 /* CTTimePredictFacade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTTimePredictFacade.h; sourceTree = "<group>"; };
 		A301EB6A1AE3A70300CC6412 /* CTTimePredictFacade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTTimePredictFacade.m; sourceTree = "<group>"; };
+		A304052B1AE7C84A0047E66B /* BMKAddressComponent+Encode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "BMKAddressComponent+Encode.h"; sourceTree = "<group>"; };
+		A304052C1AE7C84A0047E66B /* BMKAddressComponent+Encode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "BMKAddressComponent+Encode.m"; sourceTree = "<group>"; };
+		A304052E1AE7CB910047E66B /* BMKPoiInfo+Encode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "BMKPoiInfo+Encode.h"; sourceTree = "<group>"; };
+		A304052F1AE7CB910047E66B /* BMKPoiInfo+Encode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "BMKPoiInfo+Encode.m"; sourceTree = "<group>"; };
+		A30405311AE7CE5F0047E66B /* BMKReverseGeoCodeResult+Encode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "BMKReverseGeoCodeResult+Encode.h"; sourceTree = "<group>"; };
+		A30405321AE7CE5F0047E66B /* BMKReverseGeoCodeResult+Encode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "BMKReverseGeoCodeResult+Encode.m"; sourceTree = "<group>"; };
+		A30405361AE876400047E66B /* RouteOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RouteOverlay.h; sourceTree = "<group>"; };
+		A30405371AE876400047E66B /* RouteOverlay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RouteOverlay.m; sourceTree = "<group>"; };
+		A30405391AE87FF70047E66B /* RouteOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RouteOverlayView.h; sourceTree = "<group>"; };
+		A304053A1AE87FF70047E66B /* RouteOverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RouteOverlayView.m; sourceTree = "<group>"; };
 		A31411691A0A4CCD0019F557 /* TripMan.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TripMan.xcdatamodel; sourceTree = "<group>"; };
 		A314116A1A0A4CCD0019F557 /* TripsCoreDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TripsCoreDataManager.h; sourceTree = "<group>"; };
 		A314116B1A0A4CCD0019F557 /* TripsCoreDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripsCoreDataManager.m; sourceTree = "<group>"; };
@@ -911,6 +926,30 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		A304052A1AE7C7DC0047E66B /* Category */ = {
+			isa = PBXGroup;
+			children = (
+				A304052B1AE7C84A0047E66B /* BMKAddressComponent+Encode.h */,
+				A304052C1AE7C84A0047E66B /* BMKAddressComponent+Encode.m */,
+				A304052E1AE7CB910047E66B /* BMKPoiInfo+Encode.h */,
+				A304052F1AE7CB910047E66B /* BMKPoiInfo+Encode.m */,
+				A30405311AE7CE5F0047E66B /* BMKReverseGeoCodeResult+Encode.h */,
+				A30405321AE7CE5F0047E66B /* BMKReverseGeoCodeResult+Encode.m */,
+			);
+			path = Category;
+			sourceTree = "<group>";
+		};
+		A30405351AE8760C0047E66B /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				A30405361AE876400047E66B /* RouteOverlay.h */,
+				A30405371AE876400047E66B /* RouteOverlay.m */,
+				A30405391AE87FF70047E66B /* RouteOverlayView.h */,
+				A304053A1AE87FF70047E66B /* RouteOverlayView.m */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
 		A31411661A0A4CCD0019F557 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
@@ -1314,6 +1353,7 @@
 		A34F01391A052A4800F58C17 /* Baidu */ = {
 			isa = PBXGroup;
 			children = (
+				A304052A1AE7C7DC0047E66B /* Category */,
 				A34F013A1A052A6B00F58C17 /* BaiduWeatherModel.h */,
 				A34F013B1A052A6B00F58C17 /* BaiduWeatherModel.m */,
 				A3BD72AD1A15A9950007ECA1 /* BaiduMarkModel.h */,
@@ -2161,6 +2201,7 @@
 		A3CD362219CFB86D0039F6E1 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				A30405351AE8760C0047E66B /* Components */,
 				A3E2894A1AD132050043F14C /* UserGuide */,
 				A34F01011A03D78900F58C17 /* DebugView */,
 				A34F00F01A03CB7300F58C17 /* DriveAssistor */,
@@ -2569,6 +2610,7 @@
 				A35C26461A426F4B005F6658 /* RZSplitViewController.m in Sources */,
 				A35BC73A1AA82D9B00D726D4 /* TripSummary+Fetcher.m in Sources */,
 				A35C26501A42C5BB005F6658 /* ScrollSegView.m in Sources */,
+				A304052D1AE7C84A0047E66B /* BMKAddressComponent+Encode.m in Sources */,
 				A385C54719F6423300A0F7F6 /* GPSTurningAnalyzer.m in Sources */,
 				A3C4544D1A8B774500D53342 /* UIImage+Rotate.m in Sources */,
 				A3E0A3731ABC0A3000E7456C /* CTRoute.m in Sources */,
@@ -2608,9 +2650,11 @@
 				A348906C1A3FCB6F002DE948 /* NSData+Base64.m in Sources */,
 				A3E0A3701ABC0A0C00E7456C /* POICategory.m in Sources */,
 				A34F00F31A03CB8C00F58C17 /* CarAssistorViewController.m in Sources */,
+				A30405381AE876400047E66B /* RouteOverlay.m in Sources */,
 				A3BD72B21A15BC2E0007ECA1 /* BussinessDataProvider.m in Sources */,
 				A39E30CE1AAC6B79004F0D95 /* TrafficJam+Fetcher.m in Sources */,
 				A3E289401ACE275D0043F14C /* SearchResultCell.m in Sources */,
+				A304053B1AE87FF70047E66B /* RouteOverlayView.m in Sources */,
 				A35C263A1A426F4B005F6658 /* RZAnimatedImageView.m in Sources */,
 				A3E0A3791ABE48C200E7456C /* GeoRectBound.m in Sources */,
 				A35C262D1A426F4B005F6658 /* UIColor+RZExtensions.m in Sources */,
@@ -2689,6 +2733,7 @@
 				A34F01191A04A56F00F58C17 /* CommonFacade.m in Sources */,
 				A39E31451AB4701A004F0D95 /* TripFilter.m in Sources */,
 				A31FCA6319D94B9600A3BB4C /* GPSOffTimeFilter.m in Sources */,
+				A30405331AE7CE5F0047E66B /* BMKReverseGeoCodeResult+Encode.m in Sources */,
 				A3FDD16A1A028037007B3C65 /* CustomBadge.m in Sources */,
 				A348906A1A3FCB6F002DE948 /* AJPropertyDescriptor.m in Sources */,
 				A35C264B1A426F4B005F6658 /* RZCommonUtils.m in Sources */,
@@ -2729,6 +2774,7 @@
 				A35C263F1A426F4B005F6658 /* RZDelayedOperation.m in Sources */,
 				A35C26381A426F4B005F6658 /* UIViewController+RZKeyboardWatcher.m in Sources */,
 				A35BC7731AAB1CBF00D726D4 /* TripSummary.m in Sources */,
+				A30405301AE7CB910047E66B /* BMKPoiInfo+Encode.m in Sources */,
 				A34F01461A06699300F58C17 /* iCarousel.m in Sources */,
 				A35C26431A426F4B005F6658 /* RZSegmentViewController.m in Sources */,
 				A378ABED1A17A7C2006A3B68 /* TripTodayView.m in Sources */,

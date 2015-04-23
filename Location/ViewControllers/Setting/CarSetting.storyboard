@@ -148,7 +148,7 @@
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                                     <inset key="titleEdgeInsets" minX="-29" minY="30" maxX="0.0" maxY="0.0"/>
                                                     <inset key="imageEdgeInsets" minX="43" minY="0.0" maxX="43" maxY="30"/>
-                                                    <state key="normal" title="意见反馈" image="mycar_version">
+                                                    <state key="normal" title="版本信息" image="mycar_version">
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                 </button>
@@ -245,7 +245,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="upg-UL-aGH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="567" y="199"/>
+            <point key="canvasLocation" x="536" y="-473"/>
         </scene>
     </scenes>
     <resources>

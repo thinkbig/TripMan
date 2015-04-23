@@ -148,7 +148,6 @@
                         curJam = [CTJam new];
                         curJam.from = [[CTBaseLocation alloc] initWithLogItem:curItem];
                     }
-                    routeIdx++;
                     break;
                 } else {
                     CLLocationCoordinate2D coor = [rawItem coordinate];
@@ -201,24 +200,21 @@
         self.lastLoc = [[CLLocation alloc] initWithLatitude:[item.latitude doubleValue] longitude:[item.longitude doubleValue]];
         return;
     }
+    
     CLLocation * curLoc = [[CLLocation alloc] initWithLatitude:[item.latitude doubleValue] longitude:[item.longitude doubleValue]];
     CLLocationDistance distance = [self.lastLoc distanceFromLocation:curLoc];
     NSTimeInterval during = [item.timestamp timeIntervalSinceDate:self.lastItem.timestamp];
+    
+    CGFloat threshold = cInsTrafficJamSpeed;
+    if (distance > 500) {
+        threshold = cAvgTrafficJamSpeed;
+    }
 
     if (during < 0 || (during > 0 && distance/during > cAvgNoiceSpeed)) {
         // regard as noise
         during = distance/cAvgDrivingSpeed;
     }
-    CGFloat curSpeed = ([item.speed floatValue] < 0 ? 0 : [item.speed floatValue]);
     
-    // filter the speed for noise
-    if (curSpeed > 30) {
-        if ([item.horizontalAccuracy doubleValue] > 100 || [self.lastItem.horizontalAccuracy doubleValue] > 100 || [item.timestamp timeIntervalSinceDate:self.lastItem.timestamp] > 60) {
-            curSpeed = 10;
-        }
-    }
-    
-    _max_speed = MAX(_max_speed, curSpeed);
     if (_total_dist <= 0) {
         // first point
         distance *= 1.414;
@@ -226,6 +222,22 @@
     }
     _total_dist += distance;
     _total_during += during;
+    
+    CGFloat curSpeed = ([item.speed floatValue] < 0 ? 0 : [item.speed floatValue]);
+    if (curSpeed <= 0 && during > 5) {
+        curSpeed = distance/during;
+    }
+    // filter the speed for noise
+    if (curSpeed > 30) {
+        if ([item.horizontalAccuracy doubleValue] > 100 || [self.lastItem.horizontalAccuracy doubleValue] > 100 || [item.timestamp timeIntervalSinceDate:self.lastItem.timestamp] > 60) {
+            curSpeed = 10;
+        } else if (curSpeed > 300/3.6) {
+            curSpeed = 30;
+        }
+    }
+    if (_max_speed < curSpeed) {
+        _max_speed = curSpeed;
+    }
     
     if ([self checkDayOrNight:item.timestamp]) {
         _day_dist += distance;
@@ -237,7 +249,7 @@
         _night_max_speed = MAX(_night_max_speed, curSpeed);
     }
     
-    if (curSpeed > cInsTrafficJamSpeed) {
+    if (curSpeed > threshold) {
         [self appendVerifiedTrafficJamItem];
     } else if ([item.speed floatValue] >= 0) {
         [_lastTrafficJam addObject:item];
