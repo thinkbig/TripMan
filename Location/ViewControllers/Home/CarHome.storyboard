@@ -181,7 +181,7 @@
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 </view>
-                                                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MR3-s6-AXd" userLabel="Event View">
+                                                <view hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MR3-s6-AXd" userLabel="Event View">
                                                     <rect key="frame" x="160" y="0.0" width="160" height="50"/>
                                                     <subviews>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="finetoday" translatesAutoresizingMaskIntoConstraints="NO" id="wcZ-XK-CgQ">
@@ -353,7 +353,7 @@
         <image name="main_bg" width="320" height="568"/>
         <image name="mainbar" width="320" height="215"/>
         <image name="roadcondition" width="203" height="38"/>
-        <image name="shadow" width="266" height="6"/>
+        <image name="shadow" width="320" height="5"/>
         <image name="smallballgreen" width="25" height="25"/>
         <image name="smallballred" width="25" height="25"/>
     </resources>

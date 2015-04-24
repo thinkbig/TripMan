@@ -26,6 +26,12 @@
 		A30405331AE7CE5F0047E66B /* BMKReverseGeoCodeResult+Encode.m in Sources */ = {isa = PBXBuildFile; fileRef = A30405321AE7CE5F0047E66B /* BMKReverseGeoCodeResult+Encode.m */; };
 		A30405381AE876400047E66B /* RouteOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = A30405371AE876400047E66B /* RouteOverlay.m */; };
 		A304053B1AE87FF70047E66B /* RouteOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = A304053A1AE87FF70047E66B /* RouteOverlayView.m */; };
+		A30405401AE911BC0047E66B /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A304053F1AE911BC0047E66B /* AboutViewController.m */; };
+		A30405431AE911D50047E66B /* FeedbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A30405421AE911D50047E66B /* FeedbackViewController.m */; };
+		A30405461AE911E90047E66B /* VersionInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A30405451AE911E90047E66B /* VersionInfoViewController.m */; };
+		A30405491AE9146D0047E66B /* FAQViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A30405481AE9146D0047E66B /* FAQViewController.m */; };
+		A304054F1AE91E5A0047E66B /* MVTextInputsScroller.m in Sources */ = {isa = PBXBuildFile; fileRef = A304054C1AE91E5A0047E66B /* MVTextInputsScroller.m */; };
+		A30405501AE91E5A0047E66B /* UIViewController+InputScroller.m in Sources */ = {isa = PBXBuildFile; fileRef = A304054E1AE91E5A0047E66B /* UIViewController+InputScroller.m */; };
 		A314116C1A0A4CCD0019F557 /* TripMan.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A31411681A0A4CCD0019F557 /* TripMan.xcdatamodeld */; };
 		A314116D1A0A4CCD0019F557 /* TripsCoreDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A314116B1A0A4CCD0019F557 /* TripsCoreDataManager.m */; };
 		A314118A1A0A7C700019F557 /* ParkingRegionDetail.m in Sources */ = {isa = PBXBuildFile; fileRef = A31411891A0A7C700019F557 /* ParkingRegionDetail.m */; };
@@ -303,6 +309,18 @@
 		A30405371AE876400047E66B /* RouteOverlay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RouteOverlay.m; sourceTree = "<group>"; };
 		A30405391AE87FF70047E66B /* RouteOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RouteOverlayView.h; sourceTree = "<group>"; };
 		A304053A1AE87FF70047E66B /* RouteOverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RouteOverlayView.m; sourceTree = "<group>"; };
+		A304053E1AE911BC0047E66B /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutViewController.h; sourceTree = "<group>"; };
+		A304053F1AE911BC0047E66B /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
+		A30405411AE911D50047E66B /* FeedbackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedbackViewController.h; sourceTree = "<group>"; };
+		A30405421AE911D50047E66B /* FeedbackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedbackViewController.m; sourceTree = "<group>"; };
+		A30405441AE911E90047E66B /* VersionInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VersionInfoViewController.h; sourceTree = "<group>"; };
+		A30405451AE911E90047E66B /* VersionInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VersionInfoViewController.m; sourceTree = "<group>"; };
+		A30405471AE9146D0047E66B /* FAQViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FAQViewController.h; sourceTree = "<group>"; };
+		A30405481AE9146D0047E66B /* FAQViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FAQViewController.m; sourceTree = "<group>"; };
+		A304054B1AE91E5A0047E66B /* MVTextInputsScroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVTextInputsScroller.h; sourceTree = "<group>"; };
+		A304054C1AE91E5A0047E66B /* MVTextInputsScroller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVTextInputsScroller.m; sourceTree = "<group>"; };
+		A304054D1AE91E5A0047E66B /* UIViewController+InputScroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+InputScroller.h"; sourceTree = "<group>"; };
+		A304054E1AE91E5A0047E66B /* UIViewController+InputScroller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+InputScroller.m"; sourceTree = "<group>"; };
 		A31411691A0A4CCD0019F557 /* TripMan.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TripMan.xcdatamodel; sourceTree = "<group>"; };
 		A314116A1A0A4CCD0019F557 /* TripsCoreDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TripsCoreDataManager.h; sourceTree = "<group>"; };
 		A314116B1A0A4CCD0019F557 /* TripsCoreDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripsCoreDataManager.m; sourceTree = "<group>"; };
@@ -950,6 +968,32 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
+		A304053D1AE911A20047E66B /* SubSetting */ = {
+			isa = PBXGroup;
+			children = (
+				A304053E1AE911BC0047E66B /* AboutViewController.h */,
+				A304053F1AE911BC0047E66B /* AboutViewController.m */,
+				A30405411AE911D50047E66B /* FeedbackViewController.h */,
+				A30405421AE911D50047E66B /* FeedbackViewController.m */,
+				A30405441AE911E90047E66B /* VersionInfoViewController.h */,
+				A30405451AE911E90047E66B /* VersionInfoViewController.m */,
+				A30405471AE9146D0047E66B /* FAQViewController.h */,
+				A30405481AE9146D0047E66B /* FAQViewController.m */,
+			);
+			path = SubSetting;
+			sourceTree = "<group>";
+		};
+		A304054A1AE91E5A0047E66B /* InputScroller */ = {
+			isa = PBXGroup;
+			children = (
+				A304054B1AE91E5A0047E66B /* MVTextInputsScroller.h */,
+				A304054C1AE91E5A0047E66B /* MVTextInputsScroller.m */,
+				A304054D1AE91E5A0047E66B /* UIViewController+InputScroller.h */,
+				A304054E1AE91E5A0047E66B /* UIViewController+InputScroller.m */,
+			);
+			path = InputScroller;
+			sourceTree = "<group>";
+		};
 		A31411661A0A4CCD0019F557 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
@@ -1324,6 +1368,7 @@
 		A34F01281A0500E000F58C17 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				A304054A1AE91E5A0047E66B /* InputScroller */,
 				A34F01331A051EBD00F58C17 /* Debug */,
 				A3326B261A2DFAA800C9F1C9 /* GToolUtil.h */,
 				A3326B271A2DFAA800C9F1C9 /* GToolUtil.m */,
@@ -2393,6 +2438,7 @@
 		A3FDD1731A028879007B3C65 /* Setting */ = {
 			isa = PBXGroup;
 			children = (
+				A304053D1AE911A20047E66B /* SubSetting */,
 				A34F00FF1A03D0CB00F58C17 /* CarSetting.storyboard */,
 				A34F00ED1A03C8F800F58C17 /* CarSettingViewController.h */,
 				A34F00EE1A03C8F800F58C17 /* CarSettingViewController.m */,
@@ -2591,6 +2637,7 @@
 				A3FDD16F1A02814D007B3C65 /* UIControl+Blocks.m in Sources */,
 				A3BD72AF1A15A9950007ECA1 /* BaiduMarkModel.m in Sources */,
 				A34890681A3FCB6F002DE948 /* AJJson2ObjectSerializer.m in Sources */,
+				A30405461AE911E90047E66B /* VersionInfoViewController.m in Sources */,
 				A35C26261A426F4B005F6658 /* NSDate+RZExtensions.m in Sources */,
 				A35C26411A426F4B005F6658 /* RZProgressView.m in Sources */,
 				A35C26861A490F5F005F6658 /* HomeTripCell.m in Sources */,
@@ -2601,6 +2648,7 @@
 				A3E289341ACD31710043F14C /* SearchHistoryCell.m in Sources */,
 				A3CD360E19C9767F0039F6E1 /* GPSAnalyzerOffTime.m in Sources */,
 				A35BC7251AA2E98900D726D4 /* CTWakeupFacade.m in Sources */,
+				A30405431AE911D50047E66B /* FeedbackViewController.m in Sources */,
 				A35C26421A426F4B005F6658 /* RZRevealViewController.m in Sources */,
 				A3FDD17A1A028A6B007B3C65 /* GViewController.m in Sources */,
 				A34F01141A03D78900F58C17 /* MapDisplayViewController.m in Sources */,
@@ -2637,10 +2685,12 @@
 				A3FDD15F1A027F64007B3C65 /* TSTabBarView.m in Sources */,
 				A3FDD15D1A027F64007B3C65 /* TSTabBar.m in Sources */,
 				A34F01111A03D78900F58C17 /* LocationViewController.m in Sources */,
+				A30405501AE91E5A0047E66B /* UIViewController+InputScroller.m in Sources */,
 				A3CD360519C6DE610039F6E1 /* GPSLogItem.m in Sources */,
 				A385C54A19F68FA000A0F7F6 /* GPSAcceleratorAnalyzer.m in Sources */,
 				A301EB651AE0F77C00CC6412 /* CTRealtimeJamFacade.m in Sources */,
 				A3CD361919CAB0AD0039F6E1 /* BackgroundTaskManager.m in Sources */,
+				A30405491AE9146D0047E66B /* FAQViewController.m in Sources */,
 				A35C26321A426F4B005F6658 /* UIImage+RZSolidColor.m in Sources */,
 				A3BD72AC1A14F2B00007ECA1 /* BaiduRoadMarkFacade.m in Sources */,
 				A35C262F1A426F4B005F6658 /* UIImage+RZAverageColor.m in Sources */,
@@ -2744,6 +2794,7 @@
 				A314118A1A0A7C700019F557 /* ParkingRegionDetail.m in Sources */,
 				A32CF4041A24C4C0008EA051 /* TicketDetailViewController.m in Sources */,
 				A3D0B4B91A2C64A80030B19E /* CoorViewX.m in Sources */,
+				A30405401AE911BC0047E66B /* AboutViewController.m in Sources */,
 				A314116C1A0A4CCD0019F557 /* TripMan.xcdatamodeld in Sources */,
 				A33544111A1F1C3C0023815B /* ZBNSearchDisplayController.m in Sources */,
 				A378ABE71A16F124006A3B68 /* DRDynamicSlideShow.m in Sources */,
@@ -2766,6 +2817,7 @@
 				A34284A019C6770A002DB0FD /* GPSFileLogFormatter.m in Sources */,
 				A34F01121A03D78900F58C17 /* LogFileContentViewController.m in Sources */,
 				5C9090A018B3A66A00510153 /* AppDelegate.m in Sources */,
+				A304054F1AE91E5A0047E66B /* MVTextInputsScroller.m in Sources */,
 				A3C011FA1AC3D2FC0088EFF3 /* BaseGoogleFacade.m in Sources */,
 				A34890741A3FCCAF002DE948 /* NSFileManager+Godzippa.m in Sources */,
 				A301EB681AE0FE6300CC6412 /* JamZone.m in Sources */,

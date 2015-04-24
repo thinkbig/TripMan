@@ -222,30 +222,150 @@
                     <nil key="simulatedTopBarMetrics"/>
                     <connections>
                         <outlet property="settingCollection" destination="c2J-1g-yxy" id="wqh-KK-Fa4"/>
+                        <segue destination="ujE-d8-qmT" kind="push" id="zc8-uk-jhW"/>
+                        <segue destination="TcY-7W-GWN" kind="push" id="rFf-bY-bIa"/>
+                        <segue destination="0tL-ZO-qSg" kind="push" id="h7x-vp-niP"/>
+                        <segue destination="chu-cl-OsE" kind="push" id="DFj-F9-qec"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sbs-Hy-C3o" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="96" y="199"/>
         </scene>
+        <!--Version Info View Controller-->
+        <scene sceneID="ESg-ai-k4y">
+            <objects>
+                <viewController storyboardIdentifier="VersionInfoViewController" hidesBottomBarWhenPushed="YES" id="0tL-ZO-qSg" customClass="VersionInfoViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="2qV-af-DWj"/>
+                        <viewControllerLayoutGuide type="bottom" id="Q04-GV-2At"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="qPE-Zr-oGR">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="7wG-eI-mtr"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" translucent="NO" prompted="NO"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="sU7-d2-JH0" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="536" y="199"/>
+        </scene>
         <!--View Controller-->
+        <scene sceneID="lQ3-3Z-0pO">
+            <objects>
+                <viewController storyboardIdentifier="FAQViewController" hidesBottomBarWhenPushed="YES" id="chu-cl-OsE" customClass="FAQViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="hXg-KN-YXr"/>
+                        <viewControllerLayoutGuide type="bottom" id="8eR-oy-OU2"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="fB7-JL-Pmf">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="OrI-eV-0av"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" translucent="NO" prompted="NO"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="GZy-Kg-89i" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="987" y="199"/>
+        </scene>
+        <!--About View Controller-->
         <scene sceneID="eND-lR-Cgp">
             <objects>
-                <viewController hidesBottomBarWhenPushed="YES" id="ujE-d8-qmT" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AboutViewController" hidesBottomBarWhenPushed="YES" id="ujE-d8-qmT" customClass="AboutViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="CCC-hl-9Ct"/>
                         <viewControllerLayoutGuide type="bottom" id="gWf-p9-kpm"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="tIw-y5-dqU">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="TgE-Iw-OtW"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" translucent="NO" prompted="NO"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="upg-UL-aGH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="536" y="-473"/>
+        </scene>
+        <!--FeedBackVC-->
+        <scene sceneID="ahN-l6-SpA">
+            <objects>
+                <viewController storyboardIdentifier="FeedbackViewController" hidesBottomBarWhenPushed="YES" id="TcY-7W-GWN" userLabel="FeedBackVC" customClass="FeedbackViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="gjL-Lv-HZg"/>
+                        <viewControllerLayoutGuide type="bottom" id="qHT-KI-DLM"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="IWW-7y-shw">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="92k-fu-fOQ">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
+                                <subviews>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="请留下您的联系方式" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gmm-W8-OPr">
+                                        <rect key="frame" x="15" y="12" width="290" height="21"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZCq-7n-hf7">
+                                        <rect key="frame" x="0.0" y="44" width="320" height="48"/>
+                                        <subviews>
+                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="手机号、邮箱或者QQ号" minimumFontSize="7" translatesAutoresizingMaskIntoConstraints="NO" id="jpx-CV-sdH">
+                                                <rect key="frame" x="15" y="9" width="293" height="30"/>
+                                                <accessibility key="accessibilityConfiguration" label="contact"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits"/>
+                                            </textField>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    </view>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="您的宝贵意见" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CLo-F9-cra">
+                                        <rect key="frame" x="15" y="105" width="290" height="21"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yE0-WX-8I4">
+                                        <rect key="frame" x="0.0" y="136" width="320" height="130"/>
+                                        <subviews>
+                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4gv-Fx-Uwk" customClass="TSPlaceHolderTextView">
+                                                <rect key="frame" x="12" y="0.0" width="296" height="128"/>
+                                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                <accessibility key="accessibilityConfiguration" label="content"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                            </textView>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="92k-fu-fOQ" firstAttribute="top" secondItem="gjL-Lv-HZg" secondAttribute="bottom" id="SiF-Ma-HAb"/>
+                            <constraint firstItem="92k-fu-fOQ" firstAttribute="leading" secondItem="IWW-7y-shw" secondAttribute="leading" id="Umn-aV-cEx"/>
+                            <constraint firstItem="qHT-KI-DLM" firstAttribute="top" secondItem="92k-fu-fOQ" secondAttribute="bottom" id="gkA-2y-2j3"/>
+                            <constraint firstAttribute="trailing" secondItem="92k-fu-fOQ" secondAttribute="trailing" id="qvC-MZ-wi5"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="Rdc-Pu-AZi">
+                        <barButtonItem key="rightBarButtonItem" title="发送" id="NcX-DU-v1d"/>
+                    </navigationItem>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" translucent="NO" prompted="NO"/>
+                    <connections>
+                        <outlet property="contentScroll" destination="92k-fu-fOQ" id="cQO-bG-MYM"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="aRh-2e-yfu" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="987" y="-473"/>
         </scene>
     </scenes>
     <resources>

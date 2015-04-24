@@ -69,6 +69,8 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
 
 - (void) tripEnd
 {
+    TripSummary * sum = [[AnaDbManager sharedInst] lastTrip];
+    [[GPSLogger sharedLogger].offTimeAnalyzer analyzeTripForSum:sum withAnalyzer:nil];
     [self rebuildContent:NO];
 }
 

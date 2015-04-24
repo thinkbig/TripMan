@@ -35,12 +35,13 @@
 - (void)glRender
 {
     RouteOverlay *customOverlay = [self routeOverlay];
-    NSString * textureImg = @"fast.png";
+    NSString * textureImg = @"map_green.png";
     if ([customOverlay.title isEqualToString:@"yellow"]) {
-        textureImg = @"slow.png";
+        textureImg = @"map_yellow.png";
     } else if ([customOverlay.title isEqualToString:@"red"]) {
-        textureImg = @"busy.png";
+        textureImg = @"map_red.png";
     }
+    
     GLuint testureID = [self loadStrokeTextureImage:[UIImage imageNamed:textureImg]];
     if (testureID) {
         [self renderTexturedLinesWithPoints:customOverlay.points pointCount:customOverlay.pointCount lineWidth:self.lineWidth textureID:testureID looped:NO];

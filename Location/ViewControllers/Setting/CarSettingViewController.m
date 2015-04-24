@@ -48,10 +48,22 @@
 
 - (void) clickBtn:(UIButton*)btn
 {
-    if (btn.tag == 12) {
+    if (btn.tag == 11) {
+        UIViewController * vc = [self.storyboard instantiateViewControllerWithIdentifier:@"AboutViewController"];
+        [self.navigationController pushViewController:vc animated:YES];
+    } else if (btn.tag == 12) {
+        UIViewController * vc = [self.storyboard instantiateViewControllerWithIdentifier:@"FeedbackViewController"];
+        [self.navigationController pushViewController:vc animated:YES];
+    } else if (btn.tag == 21) {
+        UIViewController * vc = [self.storyboard instantiateViewControllerWithIdentifier:@"VersionInfoViewController"];
+        [self.navigationController pushViewController:vc animated:YES];
+    } else if (btn.tag == 22) {
+        UIViewController * vc = [self.storyboard instantiateViewControllerWithIdentifier:@"FAQViewController"];
+        [self.navigationController pushViewController:vc animated:YES];
+    } else if (btn.tag == 31) {
         [self presentViewController:InstFirstVC(@"Debug") animated:YES completion:nil];
-    } else {
-        [self showToast:@"改功能尚在开发中..." onDismiss:nil];
+    } else if (btn.tag == 32) {
+        [self showToast:@"产品还没有上线" onDismiss:nil];
     }
 }
 
@@ -109,7 +121,7 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-
+    
 }
 
 @end
