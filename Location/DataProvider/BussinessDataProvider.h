@@ -46,4 +46,7 @@
 - (NSArray*) recentSearches;
 - (void) putRecentSearches:(NSArray*)searches;
 
+// update DeviceHistory
+- (void) updateDeviceHistory;
+
 @end

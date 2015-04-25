@@ -227,8 +227,10 @@ static NSString * rebuildVal = @"value_0000000000002"; // make sure it is differ
     if (!IS_UPDATING) {
         [[GPSLogger sharedLogger].offTimeAnalyzer rollOutOfDateTrip];
         
-        [[BussinessDataProvider sharedInstance] updateCurrentCity:nil forceUpdate:NO];
-        [[BussinessDataProvider sharedInstance] updateAllRegionInfo:NO];
+        BussinessDataProvider * provider = [BussinessDataProvider sharedInstance];
+        [provider updateDeviceHistory];
+        [provider updateCurrentCity:nil forceUpdate:NO];
+        [provider updateAllRegionInfo:NO];
         
         [[DataReporter sharedInst] aliveAsync];
     }

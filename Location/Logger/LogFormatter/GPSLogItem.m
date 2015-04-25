@@ -107,6 +107,11 @@
     return [[self location] distanceFromLocation:[item location]];
 }
 
+- (CLLocationDistance) distanceFromCLLocation:(CLLocation*)loc
+{
+    return [[self location] distanceFromLocation:loc];
+}
+
 - (CLLocationDistance) distanceFromDict:(NSDictionary*)dict
 {
     CLLocation * dictLoc = [[CLLocation alloc] initWithLatitude:[dict[@"lat"] doubleValue] longitude:[dict[@"lon"] doubleValue]];

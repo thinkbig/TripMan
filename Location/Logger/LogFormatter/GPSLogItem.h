@@ -43,6 +43,7 @@
 - (double) safeSpeed;
 - (CLLocationDistance) distanceFrom:(GPSLogItem*)item;
 - (CLLocationDistance) distanceFromDict:(NSDictionary*)dict;
+- (CLLocationDistance) distanceFromCLLocation:(CLLocation*)loc;
 
 - (NSArray*) toArray;
 

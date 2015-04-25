@@ -31,9 +31,11 @@
     NSNumber *          _eStat;
     NSDate *            _lastExitReagionDate;
     
+    CLLocation *        _lastMonitorLoc;
     GPSLogItem *        _driveStart;
     GPSLogItem *        _maxDistItem;
     CGFloat             _maxDist;
+    CGFloat             _maxDist2Monitor;
     
     CGFloat             _angleDiffTol;
     NSInteger           _angleDiffCnt;          // 用于计算最近10个gps点的轨迹，是否近似线性，是否是跳变
@@ -178,6 +180,10 @@
     if (_driveStart) {
         CGFloat distFromStart = [gps distanceFrom:_driveStart];
         _maxDist = MAX(distFromStart, _maxDist);
+    }
+    if (_lastMonitorLoc) {
+        CGFloat distFromMonitor = [gps distanceFromCLLocation:_lastMonitorLoc];
+        _maxDist2Monitor = MAX(distFromMonitor, _maxDist2Monitor);
     }
     if ([_isInTrip boolValue] && [gps.horizontalAccuracy doubleValue] > kLowHorizontalAccuracy) {
         if ([gps.timestamp timeIntervalSinceDate:_driveStart.timestamp] > 10*60) {
@@ -351,17 +357,23 @@
             if (_startMoveTraceIdx < self.logArr.count) {
                 item = ((GPSLogItem*)(self.logArr[_startMoveTraceIdx]));
                 _driveStart = item;
+                GPSEventItem * lastMonitorRegion = [[GPSLogger sharedLogger].dbLogger selectLatestEventBefore:item.timestamp ofType:eGPSEventMonitorRegion];
+                if (lastMonitorRegion) {
+                    _lastMonitorLoc = [lastMonitorRegion location];
+                }
                 _maxDist = 0;
                 _maxDistItem = nil;
             }
         } else {
             if (_endSpeedTraceIdx < self.logArr.count) {
                 item = ((GPSLogItem*)(self.logArr[_endSpeedTraceIdx]));
-                if (_maxDist < 400) {
+                if (_maxDist < 400 && _maxDist2Monitor < 400) {
                     dropTrip = YES;
                 }
                 _maxDist = 0;
+                _maxDist2Monitor = 0;
                 _driveStart = _maxDistItem = nil;
+                _lastMonitorLoc = nil;
             }
         }
         dispatch_async(dispatch_get_main_queue(), ^{

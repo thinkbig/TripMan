@@ -799,12 +799,6 @@ typedef enum
         NSInteger idCnt = 1;
         TripSummary * lastTrip = [[AnaDbManager sharedInst] lastTrip];
         ParkingRegion * lastSt = lastTrip.region_group.start_region;
-        if (lastSt) {
-            CLLocation * lastStLoc = [[CLLocation alloc] initWithLatitude:[lastSt.center_lat doubleValue] longitude:[lastSt.center_lon doubleValue]];
-            if ([lastStLoc distanceFromLocation:loc] > 500) {
-                [self registerNotificationForLocation:lastStLoc withRadius:@(2*cReagionRadius) assignIdentifier:REGION_ID_MOST_PARKING(idCnt++) group:REGION_GROUP_MOST_STAY];
-            }
-        }
         
         NSArray * mostUsedLoc = [[AnaDbManager sharedInst] mostUsedParkingRegionLimit:5];
         for (ParkingRegionDetail * region in mostUsedLoc) {
@@ -813,6 +807,13 @@ typedef enum
                 if ([curLoc distanceFromLocation:loc] > 500) {
                     [self registerNotificationForLocation:curLoc withRadius:@(2*cReagionRadius) assignIdentifier:REGION_ID_MOST_PARKING(idCnt++) group:REGION_GROUP_MOST_STAY];
                 }
+            }
+        }
+        
+        if (lastSt) {
+            CLLocation * lastStLoc = [[CLLocation alloc] initWithLatitude:[lastSt.center_lat doubleValue] longitude:[lastSt.center_lon doubleValue]];
+            if ([lastStLoc distanceFromLocation:loc] > 500) {
+                [self registerNotificationForLocation:lastStLoc withRadius:@(2*cReagionRadius) assignIdentifier:REGION_ID_MOST_PARKING(idCnt++) group:REGION_GROUP_MOST_STAY];
             }
         }
     }

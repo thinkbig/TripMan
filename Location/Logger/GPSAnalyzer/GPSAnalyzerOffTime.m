@@ -539,7 +539,11 @@
 
 - (GPSLogItem*)modifyStartPoint:(TripSummary*)sum firstGPSLog:(GPSLogItem*)firstLog
 {
-    GPSEventItem * stRegion = [[GPSLogger sharedLogger].dbLogger selectLatestEventBefore:sum.start_date ofType:eGPSEventDriveEnd];
+    GPSEventItem * stRegion = [[GPSLogger sharedLogger].dbLogger selectLatestEventBefore:sum.start_date ofType:eGPSEventMonitorRegion];
+    
+    if (nil == stRegion) {
+        stRegion = [[GPSLogger sharedLogger].dbLogger selectLatestEventBefore:sum.start_date ofType:eGPSEventDriveEnd];
+    }
     if (nil == stRegion || ![stRegion isValidLocation]) {
         // if do not have the last end drive point, or do not have the lat lon
         // try get the last end driving point by trip sum
@@ -564,9 +568,6 @@
         }
     }
     
-    if (nil == stRegion) {
-        stRegion = [[GPSLogger sharedLogger].dbLogger selectLatestEventBefore:sum.start_date ofType:eGPSEventMonitorRegion];
-    }
     if (stRegion) {
         return [[GPSLogItem alloc] initWithEventItem:stRegion];
     }

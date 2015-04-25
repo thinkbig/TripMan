@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6252" systemVersion="14B25" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6751" systemVersion="14B25" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="DaySummary" representedClassName="DaySummary" syncable="YES">
         <attribute name="addi_data" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="addi_info" optional="YES" attributeType="String" syncable="YES"/>
@@ -17,6 +17,15 @@
         <relationship name="all_trips" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TripSummary" inverseName="day_summary" inverseEntity="TripSummary" syncable="YES"/>
         <relationship name="month_summary" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MonthSummary" inverseName="all_days" inverseEntity="MonthSummary" syncable="YES"/>
         <relationship name="week_summary" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WeekSummary" inverseName="all_days" inverseEntity="WeekSummary" syncable="YES"/>
+    </entity>
+    <entity name="DeviceHistory" representedClassName="DeviceHistory" syncable="YES">
+        <attribute name="app_info" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="created_at" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="device_id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="device_info" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="other_info" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="updated_at" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="user_id" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="DrivingInfo" representedClassName="DrivingInfo" syncable="YES">
         <attribute name="acce_cnt" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
@@ -39,6 +48,7 @@
         <attribute name="shortest_80" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <relationship name="trip_owner" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TripSummary" inverseName="driving_info" inverseEntity="TripSummary" syncable="YES"/>
     </entity>
+    <entity name="Entity" syncable="YES"/>
     <entity name="EnvInfo" representedClassName="EnvInfo" syncable="YES">
         <attribute name="addi_data" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="addi_info" optional="YES" attributeType="String" syncable="YES"/>
@@ -212,5 +222,7 @@
         <element name="TurningInfo" positionX="-9" positionY="108" width="128" height="238"/>
         <element name="WeatherInfo" positionX="9" positionY="144" width="128" height="223"/>
         <element name="WeekSummary" positionX="0" positionY="153" width="128" height="255"/>
+        <element name="Entity" positionX="-18" positionY="135" width="128" height="45"/>
+        <element name="DeviceHistory" positionX="-9" positionY="144" width="128" height="148"/>
     </elements>
 </model>

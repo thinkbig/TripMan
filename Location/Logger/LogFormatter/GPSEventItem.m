@@ -48,6 +48,11 @@
 	return self;
 }
 
+- (CLLocation*) location
+{
+    return [[CLLocation alloc] initWithLatitude:[self.latitude doubleValue] longitude:[self.longitude doubleValue]];
+}
+
 - (BOOL) isValidLocation
 {
     return ([self.latitude doubleValue] != 0 && [self.longitude doubleValue] != 0);

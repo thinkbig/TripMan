@@ -12,11 +12,7 @@
 @implementation CTRealtimeJamFacade
 
 - (NSString *)getPath {
-    return @"traffic/jamsinzone.s";
-}
-
-- (NSString *)baseUrl {
-    return @"http://121.43.230.8:8080/api/";
+    return @"traffic/jamszone";
 }
 
 - (eRequestType)requestType {

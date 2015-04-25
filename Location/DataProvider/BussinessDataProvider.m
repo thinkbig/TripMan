@@ -21,6 +21,7 @@
 #import "ParkingRegion+Fetcher.h"
 #import "CTBaseLocation.h"
 #import "TripFilter.h"
+#import "DeviceHistory.h"
 
 #define kLastestCityAndDate          @"kLastestCityAndDate"
 #define kUserFavLocation             @"kUserFavLocation"
@@ -656,6 +657,40 @@ static BussinessDataProvider * _sharedProvider = nil;
         searches = [NSArray array];
     }
     [[TSCache sharedInst] setFileCache:searches forKey:[self keyByUser:kRecentSearchKey]];
+}
+
+- (void) updateDeviceHistory
+{
+    NSDate * now = [NSDate date];
+    NSDictionary * plistDict = [[NSBundle mainBundle] infoDictionary];
+    NSString * appVersion = [NSString stringWithFormat:@"appVersion=%@", plistDict[@"CFBundleVersion"]];
+    NSString * deviceInfo = [NSString stringWithFormat:@"name=%@,model=%@", [UIDevice currentDevice].name, gDeviceType];
+    NSString * uid = [GToolUtil sharedInstance].userId;
+    if (nil == uid) uid = @"";
+    NSString * udid = [GToolUtil sharedInstance].deviceId;
+    if (nil == udid) udid = @"";
+    
+    DeviceHistory * device = nil;
+    NSArray * history = [DeviceHistory where:nil inContext:[AnaDbManager deviceDb].tripAnalyzerContent order:@{@"created_at": @"DESC"} limit:@(1)];
+    if (history.count > 0) {
+        device = history[0];
+        if (![uid isEqualToString:device.user_id] || ![udid isEqualToString:device.device_id] ||
+            ![appVersion isEqualToString:device.app_info] || [deviceInfo isEqualToString:device.device_info]) {
+            device = nil;
+        } else {
+            device.updated_at = now;
+        }
+    }
+    if (nil == device) {
+        device = [DeviceHistory createInContext:[AnaDbManager deviceDb].tripAnalyzerContent];
+        device.user_id = uid;
+        device.device_id = udid;
+        device.app_info = appVersion;
+        device.device_info = deviceInfo;
+        device.created_at = now;
+        device.updated_at = now;
+    }
+    [device save];
 }
 
 @end

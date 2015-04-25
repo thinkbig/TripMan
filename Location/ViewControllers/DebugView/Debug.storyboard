@@ -307,7 +307,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="JRS-0C-Tjr">
-                        <barButtonItem key="rightBarButtonItem" title="Stop" id="yBv-rL-BKL">
+                        <barButtonItem key="rightBarButtonItem" title="Send" id="yBv-rL-BKL">
                             <connections>
                                 <action selector="logSwitch:" destination="Ful-FB-kmw" id="F4Z-VN-k0q"/>
                             </connections>
