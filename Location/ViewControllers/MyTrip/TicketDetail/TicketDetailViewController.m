@@ -153,13 +153,6 @@
             self.tripSum.is_valid = @NO;
             [[AnaDbManager sharedInst] commit];
             [self.navigationController popViewControllerAnimated:YES];
-        } else {
-            // 仅仅用于测试，可以恢复所有被删除的trip
-//            NSArray * arr = [TripSummary where:@"is_valid=0" inContext:[AnaDbManager deviceDb].tripAnalyzerContent];
-//            for (TripSummary * sum in arr) {
-//                sum.is_valid = @YES;
-//            }
-//            [[AnaDbManager sharedInst] commit];
         }
     }];
 }

@@ -31,5 +31,6 @@
 - (BOOL) updateWithCoordinateStr:(NSString*)coorStr;
 
 - (CGFloat) distanceFrom:(CTBaseLocation*)loc;
+- (CGFloat) distanceFromLoc:(CLLocation*)loc;
 
 @end

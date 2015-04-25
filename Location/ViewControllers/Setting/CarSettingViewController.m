@@ -61,7 +61,7 @@
         UIViewController * vc = [self.storyboard instantiateViewControllerWithIdentifier:@"FAQViewController"];
         [self.navigationController pushViewController:vc animated:YES];
     } else if (btn.tag == 31) {
-        [self presentViewController:InstFirstVC(@"Debug") animated:YES completion:nil];
+        [self showToast:@"产品还没有上线" onDismiss:nil];
     } else if (btn.tag == 32) {
         [self showToast:@"产品还没有上线" onDismiss:nil];
     }

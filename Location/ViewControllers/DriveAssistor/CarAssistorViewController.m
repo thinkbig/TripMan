@@ -273,17 +273,22 @@
     if (0 == indexPath.section) {
         if (indexPath.row < self.userFavLocs.count) {
             CTFavLocation * locFav = self.userFavLocs[indexPath.row];
-            CTRoute * route = [CTRoute new];
-            [route setCoorType:eCoorTypeBaidu];
-            route.orig.name = @"当前位置";
-            [route.orig updateWithCoordinate:[GeoTransformer earth2Baidu:curLoc.coordinate]];
-            route.dest.name = locFav.name ? locFav.name : @"目的地";
-            [route.dest updateWithCoordinate:[GeoTransformer earth2Baidu:locFav.coordinate]];
-            
-            SuggestDetailViewController * suggestDetail = [self.storyboard instantiateViewControllerWithIdentifier:@"SuggestDetailID"];
-            suggestDetail.route = route;
-            suggestDetail.endParkingId = locFav.parking_id;
-            [self.navigationController pushViewController:suggestDetail animated:YES];
+            CGFloat dist = [locFav distanceFromLoc:curLoc];
+            if (dist < 1000) {
+                [self showToast:@"当前就在目标附近" onDismiss:nil];
+            } else {
+                CTRoute * route = [CTRoute new];
+                [route setCoorType:eCoorTypeBaidu];
+                route.orig.name = @"当前位置";
+                [route.orig updateWithCoordinate:[GeoTransformer earth2Baidu:curLoc.coordinate]];
+                route.dest.name = locFav.name ? locFav.name : @"目的地";
+                [route.dest updateWithCoordinate:[GeoTransformer earth2Baidu:locFav.coordinate]];
+                
+                SuggestDetailViewController * suggestDetail = [self.storyboard instantiateViewControllerWithIdentifier:@"SuggestDetailID"];
+                suggestDetail.route = route;
+                suggestDetail.endParkingId = locFav.parking_id;
+                [self.navigationController pushViewController:suggestDetail animated:YES];
+            }
         } else {
             FavSelectViewController * favSelVC = [self.storyboard instantiateViewControllerWithIdentifier:@"FavSelectVC"];
             [self.navigationController pushViewController:favSelVC animated:YES];

@@ -191,6 +191,7 @@
 		A385C54A19F68FA000A0F7F6 /* GPSAcceleratorAnalyzer.m in Sources */ = {isa = PBXBuildFile; fileRef = A385C54919F68FA000A0F7F6 /* GPSAcceleratorAnalyzer.m */; };
 		A38D882B1AEA8CAB000881FD /* DeviceHistory.m in Sources */ = {isa = PBXBuildFile; fileRef = A38D882A1AEA8CAB000881FD /* DeviceHistory.m */; };
 		A38D882D1AEB8118000881FD /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A38D882C1AEB8118000881FD /* MessageUI.framework */; };
+		A38D88311AEBCF9F000881FD /* STAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = A38D88301AEBCF9F000881FD /* STAlertView.m */; };
 		A38FB1911A6F69B400DBA46C /* UserWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = A38FB1901A6F69B400DBA46C /* UserWrapper.m */; };
 		A38FB1971A722AEA00DBA46C /* AnaDbManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A38FB1961A722AEA00DBA46C /* AnaDbManager.m */; };
 		A399C9FB1A12E0CA00665917 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A399C9FA1A12E0CA00665917 /* Main.storyboard */; };
@@ -627,6 +628,8 @@
 		A38D88291AEA8CAB000881FD /* DeviceHistory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceHistory.h; sourceTree = "<group>"; };
 		A38D882A1AEA8CAB000881FD /* DeviceHistory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceHistory.m; sourceTree = "<group>"; };
 		A38D882C1AEB8118000881FD /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		A38D882F1AEBCF9F000881FD /* STAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STAlertView.h; sourceTree = "<group>"; };
+		A38D88301AEBCF9F000881FD /* STAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STAlertView.m; sourceTree = "<group>"; };
 		A38FB18F1A6F69B400DBA46C /* UserWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserWrapper.h; sourceTree = "<group>"; };
 		A38FB1901A6F69B400DBA46C /* UserWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserWrapper.m; sourceTree = "<group>"; };
 		A38FB1951A722AEA00DBA46C /* AnaDbManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnaDbManager.h; sourceTree = "<group>"; };
@@ -1419,6 +1422,7 @@
 		A34F01421A06699300F58C17 /* UIControl */ = {
 			isa = PBXGroup;
 			children = (
+				A38D882E1AEBCF9F000881FD /* STAlertView */,
 				A35C264D1A42C597005F6658 /* ScrollSegView */,
 				A3D0B4A81A2C64A80030B19E /* MPPlot */,
 				A32CF3FD1A24C380008EA051 /* XYPieChart */,
@@ -1984,6 +1988,15 @@
 				A382A4461A124CFF00974E7A /* PICircularProgressView.m */,
 			);
 			path = PICircularProgressView;
+			sourceTree = "<group>";
+		};
+		A38D882E1AEBCF9F000881FD /* STAlertView */ = {
+			isa = PBXGroup;
+			children = (
+				A38D882F1AEBCF9F000881FD /* STAlertView.h */,
+				A38D88301AEBCF9F000881FD /* STAlertView.m */,
+			);
+			path = STAlertView;
 			sourceTree = "<group>";
 		};
 		A399CA011A12F5EE00665917 /* TripManUnitTests */ = {
@@ -2715,6 +2728,7 @@
 				A3E289401ACE275D0043F14C /* SearchResultCell.m in Sources */,
 				A304053B1AE87FF70047E66B /* RouteOverlayView.m in Sources */,
 				A35C263A1A426F4B005F6658 /* RZAnimatedImageView.m in Sources */,
+				A38D88311AEBCF9F000881FD /* STAlertView.m in Sources */,
 				A3E0A3791ABE48C200E7456C /* GeoRectBound.m in Sources */,
 				A35C262D1A426F4B005F6658 /* UIColor+RZExtensions.m in Sources */,
 				A3E2892B1ACD2DC40043F14C /* SearchSuggestionCell.m in Sources */,

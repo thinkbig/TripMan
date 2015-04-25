@@ -7,8 +7,11 @@
 //
 
 #import "AboutViewController.h"
+#import "STAlertView.h"
 
 @interface AboutViewController ()
+
+@property (nonatomic, strong) STAlertView *     stAlert;
 
 @end
 
@@ -19,11 +22,33 @@
     // Do any additional setup after loading the view.
     
     self.title = @"关于我们";
+    
+    UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapSecret)];
+    tapGesture.numberOfTapsRequired = 5;
+    tapGesture.numberOfTouchesRequired = 2;
+    [self.navigationController.navigationBar addGestureRecognizer:tapGesture];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)tapSecret
+{
+    self.stAlert = [[[STAlertView alloc] initWithTitle:@"邀请码"
+                               message:@"请输入邀请码"
+                         textFieldHint:@"输入邀请码"
+                        textFieldValue:nil
+                     cancelButtonTitle:@"取消"
+                      otherButtonTitle:@"确定"
+                     cancelButtonBlock:nil otherButtonBlock:^(NSString * result){
+                         if ([result isEqualToString:@"321"]) {
+                             [self presentViewController:InstFirstVC(@"Debug") animated:YES completion:nil];
+                         } else {
+                             [self showToast:@"邀请码错误" onDismiss:nil];
+                         }
+                     }] show];
 }
 
 /*

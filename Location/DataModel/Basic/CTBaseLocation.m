@@ -63,4 +63,8 @@
     return [[self clLocation] distanceFromLocation:[loc clLocation]];
 }
 
+- (CGFloat) distanceFromLoc:(CLLocation*)loc {
+    return [[self clLocation] distanceFromLocation:loc];
+}
+
 @end

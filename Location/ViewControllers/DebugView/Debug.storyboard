@@ -33,65 +33,45 @@
                         <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="uid:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wl2-Ef-DOm">
-                                <rect key="frame" x="10" y="15" width="300" height="40"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="udid:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dbm-JN-aGu">
-                                <rect key="frame" x="10" y="56" width="300" height="40"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="env:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FmK-qD-5ZR">
-                                <rect key="frame" x="10" y="98" width="300" height="40"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="强行上报所有数据到当前服务器，用于内部测试时，同一个设备在不同环境之间同步数据。" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8af-jo-89t">
-                                <rect key="frame" x="10" y="343" width="230" height="40"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rqc-9P-0WP">
-                                <rect key="frame" x="245" y="348" width="65" height="30"/>
-                                <state key="normal" title="强制同步">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="4Sd-Ct-5CG">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <prototypes>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="DebugDetailCellId" textLabel="jYB-XR-S8u" detailTextLabel="JlE-Wj-S7d" rowHeight="60" style="IBUITableViewCellStyleSubtitle" id="7rK-OJ-LrP">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="7rK-OJ-LrP" id="9pv-I0-8K0">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="jYB-XR-S8u">
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Subtitle" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="JlE-Wj-S7d">
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
                                 <connections>
-                                    <action selector="forceReport:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="u0V-j1-YYC"/>
+                                    <outlet property="dataSource" destination="vXZ-lx-hvc" id="ytT-oX-S4R"/>
+                                    <outlet property="delegate" destination="vXZ-lx-hvc" id="i1g-Im-b9V"/>
                                 </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="上报停车位置：" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vl9-Os-S4K">
-                                <rect key="frame" x="10" y="137" width="300" height="40"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hfX-Eh-8kI">
-                                <rect key="frame" x="16" y="299" width="105" height="30"/>
-                                <state key="normal" title="更新本地数据库">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="reAnalyzeTrip:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="vyj-br-QfL"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z2V-SI-hOo">
-                                <rect key="frame" x="10" y="185" width="102" height="30"/>
-                                <state key="normal" title="实时拥堵地图">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="toJamMap:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="wRm-dD-cmb"/>
-                                </connections>
-                            </button>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="4Sd-Ct-5CG" firstAttribute="top" secondItem="Pvc-dq-wHg" secondAttribute="bottom" id="AlR-yK-IkP"/>
+                            <constraint firstItem="7hq-cc-KGp" firstAttribute="top" secondItem="4Sd-Ct-5CG" secondAttribute="bottom" id="CXq-Rq-tt1"/>
+                            <constraint firstItem="4Sd-Ct-5CG" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="TAQ-4K-r1m"/>
+                            <constraint firstAttribute="trailing" secondItem="4Sd-Ct-5CG" secondAttribute="trailing" id="VEA-kt-CaB"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Debug" id="2FY-UA-TQ1">
                         <barButtonItem key="leftBarButtonItem" title="Close" id="p6g-3p-GXQ">
@@ -99,24 +79,16 @@
                                 <action selector="closeDebug:" destination="vXZ-lx-hvc" id="2K6-Ws-htL"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Log" style="plain" id="dgA-2W-81j">
-                            <connections>
-                                <segue destination="BUC-nw-9sd" kind="push" id="N7j-Ke-dWR"/>
-                            </connections>
-                        </barButtonItem>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
                     <connections>
-                        <outlet property="envLabel" destination="FmK-qD-5ZR" id="rod-Il-s0h"/>
-                        <outlet property="reportLabel" destination="Vl9-Os-S4K" id="w8L-8R-j9v"/>
-                        <outlet property="udidLabel" destination="Dbm-JN-aGu" id="uUo-6A-EGv"/>
-                        <outlet property="uidLabel" destination="Wl2-Ef-DOm" id="4Dr-gH-C6m"/>
                         <segue destination="8Dq-Lv-r8e" kind="push" id="Pyz-LH-bYm"/>
+                        <segue destination="BUC-nw-9sd" kind="push" id="UJX-xc-Pqp"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="234" y="-185"/>
+            <point key="canvasLocation" x="317" y="-185"/>
         </scene>
         <!--Log File List View Controller-->
         <scene sceneID="Jlj-Ht-7q2">
