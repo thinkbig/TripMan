@@ -15,7 +15,9 @@
 #import "UIAlertView+RZCompletionBlocks.h"
 #import "GPSInstJamAnalyzer.h"
 
-@interface TicketDetailViewController ()
+@interface TicketDetailViewController () {
+    BOOL        _mayEditName;
+}
 
 @property (nonatomic, strong) NSArray *         speedSegs;
 @property (nonatomic, strong) AddressEditCell * editCell;
@@ -33,6 +35,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    _mayEditName = NO;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -104,7 +108,7 @@
 
 - (IBAction)goBack:(id)sender {
     [self.collectionView endEditing:YES];
-    if ([self addressModified]) {
+    if (_mayEditName && [self addressModified]) {
         UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"是否保存" message:@"修改的地址信息还没有保存，是否保存？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"保存", @"不保存退出", nil];
         [alert rz_showWithCompletionBlock:^(NSInteger dismissalButtonIndex) {
             if (1 == dismissalButtonIndex) {
@@ -119,6 +123,7 @@
 }
 
 - (void) textFieldDidChange:(UITextField*) textField {
+    _mayEditName = YES;
     BOOL isSameLoc = NO;
     if (_tripSum.region_group.start_region && _tripSum.region_group.start_region == _tripSum.region_group.end_region) {
         isSameLoc = YES;
@@ -140,6 +145,25 @@
     return YES;
 }
 
+- (void)deleteTrip
+{
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"是否删除？" message:@"删除后，这条旅程将无法找回" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"删除", nil];
+    [alert rz_showWithCompletionBlock:^(NSInteger dismissalButtonIndex) {
+        if (1 == dismissalButtonIndex) {
+            self.tripSum.is_valid = @NO;
+            [[AnaDbManager sharedInst] commit];
+            [self.navigationController popViewControllerAnimated:YES];
+        } else {
+            // 仅仅用于测试，可以恢复所有被删除的trip
+//            NSArray * arr = [TripSummary where:@"is_valid=0" inContext:[AnaDbManager deviceDb].tripAnalyzerContent];
+//            for (TripSummary * sum in arr) {
+//                sum.is_valid = @YES;
+//            }
+//            [[AnaDbManager sharedInst] commit];
+        }
+    }];
+}
+
 /*
 #pragma mark - Navigation
 
@@ -158,7 +182,7 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return 6;
+    return 7;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -240,6 +264,10 @@
         [realCell setLabel23Str:@"5秒最大减速" withValue:[NSString stringWithFormat:@"%.1f", -3.6*([_tripSum.driving_info.max_breaking_end_speed floatValue] - [_tripSum.driving_info.max_breaking_begin_speed floatValue])] andUnit:@"km/h"];
         
         cell = realCell;
+    } else if (6 == indexPath.row) {
+        TripDeleteCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"TripDeleteCellId" forIndexPath:indexPath];
+        [realCell.deleteBtn addTarget:self action:@selector(deleteTrip) forControlEvents:UIControlEventTouchUpInside];
+        cell = realCell;
     }
     if (0 == indexPath.row || indexPath.row % 2 == 1) {
         cell.backgroundColor = [UIColor clearColor];
@@ -257,6 +285,8 @@
         return CGSizeMake(320.f, 200.f);
     } else if (indexPath.row >= 2 && indexPath.row <= 5) {
         return CGSizeMake(320.f, 150.f);
+    } else if (6 == indexPath.row) {
+        return CGSizeMake(320.f, 60.f);
     }
     return CGSizeZero;
 }

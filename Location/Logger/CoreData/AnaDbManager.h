@@ -15,6 +15,8 @@
 + (TripsCoreDataManager *) deviceDb;
 + (TripsCoreDataManager *) userDb;
 
+- (void) commit;
+
 - (void) dropDbAll;
 
 // when login status change

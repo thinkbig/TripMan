@@ -95,3 +95,12 @@
 - (void) setLabel23Str:(NSString*)str withValue:(NSString*)val andUnit:(NSString*)unit;
 
 @end
+
+//////////////////////////////////////////////////////////////////////////////////
+
+@interface TripDeleteCell : UICollectionViewCell
+
+@property (weak, nonatomic) IBOutlet UIButton *deleteBtn;
+
+@end
+

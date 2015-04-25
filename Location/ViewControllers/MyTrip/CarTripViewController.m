@@ -379,6 +379,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
     {
         if (!force && self.sumTomorrow) {
             // means not today
+            [self reloadContentOfDay];
             return;
         }
         [self showLoading];
@@ -399,6 +400,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
     else if (1 == _currentIdx)
     {
         if (!force && self.sumNextWeek) {
+            [self reloadContentOfWeek];
             return;
         }
         [self showLoading];
@@ -419,6 +421,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
     else if (2 == _currentIdx)
     {
         if (!force && self.sumNextWeek) {
+            [self reloadContentOfMonth];
             return;
         }
         [self showLoading];

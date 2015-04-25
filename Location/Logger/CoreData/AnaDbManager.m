@@ -64,6 +64,11 @@
     return _userDbMgr;
 }
 
+- (void) commit {
+    [self.deviceDbMgr commit];
+    [self.userDbMgr commit];
+}
+
 - (void) dropDbAll {
     [self.deviceDbMgr dropDb];
     [self.userDbMgr dropDb];

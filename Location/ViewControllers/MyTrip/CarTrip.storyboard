@@ -1104,6 +1104,29 @@
                                             <outlet property="labelVal23" destination="yVa-2X-5v5" id="Ucs-UK-ePS"/>
                                         </connections>
                                     </collectionViewCell>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="TripDeleteCellId" id="IOJ-nF-mKy" customClass="TripDeleteCell">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="27G-7a-p4V">
+                                                    <rect key="frame" x="31" y="10" width="258" height="43"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                                                    <inset key="titleEdgeInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="4"/>
+                                                    <state key="normal" title="删除这张车票" backgroundImage="delete">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                </button>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <size key="customSize" width="320" height="60"/>
+                                        <connections>
+                                            <outlet property="deleteBtn" destination="27G-7a-p4V" id="qJ8-dd-KIJ"/>
+                                        </connections>
+                                    </collectionViewCell>
                                 </cells>
                                 <connections>
                                     <outlet property="dataSource" destination="Xiq-El-4It" id="YDi-5C-OXS"/>
@@ -1179,13 +1202,14 @@
         <image name="Slider" width="254" height="28"/>
         <image name="bluedot" width="15" height="23"/>
         <image name="blueicon" width="35" height="44"/>
+        <image name="delete" width="258" height="43"/>
         <image name="distanceicon" width="20" height="20"/>
         <image name="distancetotal" width="70" height="88"/>
         <image name="greenicon" width="35" height="44"/>
         <image name="main_bg" width="320" height="568"/>
         <image name="navbarshadow" width="320" height="14"/>
         <image name="nodrive" width="87" height="106"/>
-        <image name="shadow" width="266" height="6"/>
+        <image name="shadow" width="320" height="5"/>
         <image name="slowdriveicon" width="20" height="20"/>
         <image name="speedbar" width="160" height="118"/>
         <image name="speedicon" width="20" height="20"/>
