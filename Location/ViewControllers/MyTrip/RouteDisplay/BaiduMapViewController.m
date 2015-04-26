@@ -47,7 +47,7 @@
     }
     self.mapView.showsUserLocation = YES;
     
-    [[GPSLogger sharedLogger].offTimeAnalyzer analyzeTripForSum:self.tripSum withAnalyzer:nil];
+    //[[GPSLogger sharedLogger].offTimeAnalyzer analyzeTripForSum:self.tripSum withAnalyzer:nil];
     
     NSString * keyRouteStr = self.tripSum.addi_info;
     self.route = [[CTRoute alloc] initWithString:keyRouteStr error:nil];

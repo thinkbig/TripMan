@@ -14,6 +14,8 @@
 #import "ParkingRegion+Fetcher.h"
 #import "UIAlertView+RZCompletionBlocks.h"
 #import "GPSInstJamAnalyzer.h"
+#import "TripSummary+Fetcher.h"
+#import "ActionSheetStringPicker.h"
 
 @interface TicketDetailViewController () {
     BOOL        _mayEditName;
@@ -37,6 +39,36 @@
     // Do any additional setup after loading the view.
     
     _mayEditName = NO;
+    
+    if ([GToolUtil isEnableDebug]) {
+        UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapSecret)];
+        tapGesture.numberOfTapsRequired = 2;
+        [self.navigationController.navigationBar addGestureRecognizer:tapGesture];
+    }
+}
+
+- (void) tapSecret{
+    NSString * tripStr = [CommonFacade toJsonString:[self.tripSum toJsonDict] prettyPrint:NO];
+    NSString * stLocStr = [CommonFacade toJsonString:[self.tripSum.region_group.start_region toJsonDict] prettyPrint:NO];
+    NSString * edLocStr = [CommonFacade toJsonString:[self.tripSum.region_group.end_region toJsonDict] prettyPrint:NO];
+    
+    [ActionSheetStringPicker showPickerWithTitle:@"选择内容复制到剪切板" rows:@[@"车票Id", @"出发地点Id", @"到达地点Id", @"车票详情Json数据", @"出发地点Json数据", @"到达地点Json数据"] initialSelection:0 doneBlock:^(ActionSheetStringPicker *picker, NSInteger selectedIndex, id selectedValue) {
+        UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+        if (0 == selectedIndex) {
+            pasteboard.string = self.tripSum.trip_id;
+        } else if (1 == selectedIndex) {
+            pasteboard.string = self.tripSum.region_group.start_region.parking_id;
+        } else if (2 == selectedIndex) {
+            pasteboard.string = self.tripSum.region_group.end_region.parking_id;
+        } else if (3 == selectedIndex) {
+            pasteboard.string = tripStr;
+        } else if (4 == selectedIndex) {
+            pasteboard.string = stLocStr;
+        } else if (5 == selectedIndex) {
+            pasteboard.string = edLocStr;
+        }
+        [self showToast:[NSString stringWithFormat:@"%@ 已经拷贝到剪切板", selectedValue] onDismiss:nil];
+    } cancelBlock:nil origin:self.view];
 }
 
 - (void)didReceiveMemoryWarning {

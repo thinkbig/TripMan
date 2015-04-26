@@ -23,5 +23,6 @@
 #define kDeviceToken                @"kADeviceToken"
 #define kLocationForceRebuildKey    @"kLocationForceRebuildKey"
 #define kLastResignActiveDate       @"kLastResignActiveDate"
+#define kDebugEnable                @"kDebugEnable"
 
 #endif

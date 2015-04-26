@@ -93,6 +93,10 @@
 
 - (IBAction)logSwitch:(id)sender
 {
+    if (![MFMailComposeViewController canSendMail]) {
+        [self showToast:@"无法发送邮件，请确认正确设置了手机的邮件账号" onDismiss:nil];
+        return;
+    }
     if ([[NSFileManager defaultManager] fileExistsAtPath:self.logFile])
     {
         MFMailComposeViewController *mailCompose = [[MFMailComposeViewController alloc] init];

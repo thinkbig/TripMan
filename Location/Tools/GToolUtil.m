@@ -172,4 +172,12 @@ static GToolUtil * _sharedUtil = nil;
     return [[CLLocation alloc] initWithLatitude:coor.latitude longitude:coor.longitude];
 }
 
++ (BOOL)isEnableDebug {
+    NSNumber * enable = [[NSUserDefaults standardUserDefaults] objectForKey:kDebugEnable];
+    if (enable && [enable boolValue]) {
+        return YES;
+    }
+    return NO;
+}
+
 @end

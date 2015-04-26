@@ -24,4 +24,6 @@
 + (CGFloat) distFrom:(CLLocationCoordinate2D)from toCoor:(CLLocationCoordinate2D)to;
 + (CLLocation*) dictToLocation:(NSDictionary*)dict;
 
++ (BOOL) isEnableDebug;
+
 @end

@@ -1,4 +1,5 @@
 PODS:
+  - ActionSheetPicker-3.0 (1.6.1)
   - AFNetworking (2.4.1):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
@@ -40,6 +41,7 @@ PODS:
   - ObjectiveSugar (1.1.0)
 
 DEPENDENCIES:
+  - ActionSheetPicker-3.0
   - AFNetworking
   - CacheKit
   - CocoaLumberjack (= 1.9.2)
@@ -50,14 +52,15 @@ DEPENDENCIES:
   - ObjectiveRecord
 
 SPEC CHECKSUMS:
-  AFNetworking: 0aabc6fae66d6e5d039eeb21c315843c7aae51ab
-  CacheKit: 39500151b4964a37b12d27d53483ee4ca17ef7bf
-  CocoaLumberjack: 205769c032b5fef85b92472046bcc8b7e7c8a817
-  FMDB: 0b2fa25e5264ef177973c0cb8c02c711107979aa
-  FXKeychain: c97c352f1923809032339514ec4d6b0ed151bc3b
-  JGProgressHUD: a7c58f711eec0b67f257a0821c0bac9194c72398
-  JSONModel: 634100aaacbd89811bc8a03da209356e5989c569
-  ObjectiveRecord: 173527cdf923ee956f6b0a4430916534b54583f5
-  ObjectiveSugar: f48793f5902c77cfc02a4ce46d2e8ecddcad4dc2
+  ActionSheetPicker-3.0: f8da36f51ba109882a7cfa5979a4856b4e26fa37
+  AFNetworking: 41d45d2c14219af0fa5addf3cfd433a002c13c9f
+  CacheKit: a91c73455be4b0772837dcd65715111aeccdc811
+  CocoaLumberjack: 628fca2e88ef06f7cf6817309aa405f325d9a6fa
+  FMDB: d274d9ff773415735022ac57bfba9f6002f9fed8
+  FXKeychain: 1a711bddc04a2bd69850dcfe297b8a43027a9980
+  JGProgressHUD: 7860357e1185cb665b92d5145f3dbbd1cd1db9db
+  JSONModel: de5799179dd476f68e0de1be3a4a40c962cc535f
+  ObjectiveRecord: f290d17272e476b3c881300910e98284200c54b6
+  ObjectiveSugar: a6a25f23d657c19df0a0b972466d5b5ca9f5295c
 
 COCOAPODS: 0.34.4

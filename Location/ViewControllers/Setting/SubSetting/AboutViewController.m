@@ -26,6 +26,9 @@
     UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapSecret)];
     tapGesture.numberOfTapsRequired = 5;
     tapGesture.numberOfTouchesRequired = 2;
+#if (TARGET_IPHONE_SIMULATOR)
+    tapGesture.numberOfTouchesRequired = 1;
+#endif
     [self.navigationController.navigationBar addGestureRecognizer:tapGesture];
 }
 
