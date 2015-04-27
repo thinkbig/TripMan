@@ -33,7 +33,6 @@
     
     CLLocation *        _lastMonitorLoc;
     GPSLogItem *        _driveStart;
-    GPSLogItem *        _maxDistItem;
     CGFloat             _maxDist;
     CGFloat             _maxDist2Monitor;
     
@@ -177,14 +176,19 @@
     
     eMotionStat stat = [self checkStatus];
     
-    if (_driveStart) {
-        CGFloat distFromStart = [gps distanceFrom:_driveStart];
-        _maxDist = MAX(distFromStart, _maxDist);
+    if (eMotionStatDriving == stat) {
+        if (_driveStart) {
+            CGFloat distFromStart = [gps distanceFrom:_driveStart];
+            _maxDist = MAX(distFromStart, _maxDist);
+        } else {
+            _driveStart = gps;
+        }
+        if (_lastMonitorLoc) {
+            CGFloat distFromMonitor = [gps distanceFromCLLocation:_lastMonitorLoc];
+            _maxDist2Monitor = MAX(distFromMonitor, _maxDist2Monitor);
+        }
     }
-    if (_lastMonitorLoc) {
-        CGFloat distFromMonitor = [gps distanceFromCLLocation:_lastMonitorLoc];
-        _maxDist2Monitor = MAX(distFromMonitor, _maxDist2Monitor);
-    }
+    
     if ([_isInTrip boolValue] && [gps.horizontalAccuracy doubleValue] > kLowHorizontalAccuracy) {
         if ([gps.timestamp timeIntervalSinceDate:_driveStart.timestamp] > 10*60) {
             // the car should drive at least 400 meter after start drive 10 min
@@ -353,6 +357,7 @@
         __block GPSLogItem * item = nil;
         BOOL dropTrip = NO;
         CGFloat maxDist = _maxDist;
+        CGFloat maxDist2Monitor = _maxDist2Monitor;
         if (inTrip) {
             if (_startMoveTraceIdx < self.logArr.count) {
                 item = ((GPSLogItem*)(self.logArr[_startMoveTraceIdx]));
@@ -361,20 +366,20 @@
                 if (lastMonitorRegion) {
                     _lastMonitorLoc = [lastMonitorRegion location];
                 }
+                _maxDist2Monitor = 0;
                 _maxDist = 0;
-                _maxDistItem = nil;
             }
         } else {
             if (_endSpeedTraceIdx < self.logArr.count) {
                 item = ((GPSLogItem*)(self.logArr[_endSpeedTraceIdx]));
-                if (_maxDist < 400 && _maxDist2Monitor < 400) {
+                if (_maxDist > 0 && _maxDist < 400 && _maxDist2Monitor > 0 && _maxDist2Monitor < 400) {
                     dropTrip = YES;
                 }
-                _maxDist = 0;
-                _maxDist2Monitor = 0;
-                _driveStart = _maxDistItem = nil;
-                _lastMonitorLoc = nil;
             }
+            _maxDist = 0;
+            _maxDist2Monitor = 0;
+            _driveStart = nil;
+            _lastMonitorLoc = nil;
         }
         dispatch_async(dispatch_get_main_queue(), ^{
             //[[BussinessDataProvider sharedInstance] updateWeatherToday:[item location]];
@@ -387,7 +392,7 @@
             [[NSNotificationCenter defaultCenter] postNotificationName:kNotifyTripStatChange object:nil userInfo:dict];
         });
 
-        DDLogWarn(@"!!!!!!!!!!!!!!!!!!!!!!!! notify is driving %d at %@, if drop %d, maxDist %f", inTrip, item.timestamp, dropTrip, maxDist);
+        DDLogWarn(@"!!!!!!!!!!!!!!!!!!!!!!!! notify is driving %d at %@, if drop %d, maxDist %f,%f", inTrip, item.timestamp, dropTrip, maxDist, maxDist2Monitor);
     }
 }
 

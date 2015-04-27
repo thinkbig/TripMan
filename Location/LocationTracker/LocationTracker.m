@@ -49,6 +49,7 @@ typedef enum
     
     NSDate *                      _resumeGpsDate;      // each time call start location update, use to check if the gps is warn up
     NSDate *                      _maylostGpsDate;     // the date not getting good gps
+    NSDate *                      _lastStopGpsDate;
 }
 
 @property (nonatomic, strong) CMAccelerometerData *         lastAcceleraion;
@@ -349,8 +350,6 @@ typedef enum
     _setShoudlStop = YES;
     _lastLoc = _lastLastLoc = nil;
     
-    DDLogWarn(@"realStopLocationTracking");
-    
     CLLocation * lastGoodGPS = [BussinessDataProvider lastGoodLocation];
     if (lastGoodGPS) {
         [self setStillLocation:lastGoodGPS force:YES];
@@ -365,10 +364,15 @@ typedef enum
     if (!self.useSignificantLocationChange) {
         [locationManager stopMonitoringSignificantLocationChanges];
     }
+    _lastStopGpsDate = [NSDate date];
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    DDLogWarn(@"realStopLocationTracking");
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
         [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:kWakeUpBySystem];
         [[NSUserDefaults standardUserDefaults] synchronize];
+        DDLogWarn(@"real reset kWakeUpBySystem flag");
     });
     
     GPSEvent([NSDate date], eGPSEventStopGPS);
@@ -378,6 +382,8 @@ typedef enum
 {
     // Do not create regions if support is unavailable or disabled.
     if ( ![CLLocationManager isMonitoringAvailableForClass:[CLCircularRegion class]]) {
+        DDLogWarn(@"&&&&&&&&&&&&&& isMonitoringAvailableForClass = NO");
+        self.useSignificantLocationChange = YES;
         return NO;
     }
     
@@ -546,6 +552,15 @@ typedef enum
     NSLog(@"locationManager didUpdateLocations");
     
     _isDriving = [[[NSUserDefaults standardUserDefaults] objectForKey:kMotionIsInTrip] boolValue];
+    if (_keepMonitoring || _isDriving) {
+        _lastStopGpsDate = nil;
+    }
+    if (_lastStopGpsDate && [[NSDate date] timeIntervalSinceDate:_lastStopGpsDate] < 5) {
+        DDLogWarn(@"ignore location since we just close the gps sensor");
+        return;
+    } else {
+        _lastStopGpsDate = nil;
+    }
     
     NSNumber * wakeupBySys = [[NSUserDefaults standardUserDefaults] objectForKey:kWakeUpBySystem];
     if (!_shortUpdate && (nil == wakeupBySys || [wakeupBySys boolValue])) {
@@ -773,32 +788,37 @@ typedef enum
 
 - (void)setStillLocation:(CLLocation*)loc force:(BOOL)forceSet
 {
+    BOOL result = YES;
     if (forceSet || (loc && CLLocationCoordinate2DIsValid(loc.coordinate) && loc.speed <= cInsStationarySpeed))
     {
         CLLocation * lastLoc = [[CLLocation alloc] initWithLatitude:_lastStillRegion.center.latitude longitude:_lastStillRegion.center.longitude];
         if (forceSet || nil == _lastStillRegion || [lastLoc distanceFromLocation:loc] > 2*cReagionRadius)
         {
-            DDLogWarn(@"&&&&&&&&&&&&&& add still region monitor for location = %@", loc);
-            [self registerNotificationForLocation:loc withRadius:@(cReagionRadius) assignIdentifier:REGION_ID_LAST_STILL group:REGION_GROUP_LAST_STILL];
+            DDLogWarn(@"&&&&&&&&&&&&&& add still region monitor for location(%@) = %@", REGION_ID_LAST_STILL, loc);
+            result = [self registerNotificationForLocation:loc withRadius:@(cReagionRadius*1.8) assignIdentifier:REGION_ID_LAST_STILL group:REGION_GROUP_LAST_STILL];
         }
     }
     
-    if (self.locationManager.monitoredRegions.count < 3) {
-        // 至少开过一次车，起点一个，终点2个
-        self.useSignificantLocationChange = YES;
-    }
+    self.useSignificantLocationChange = (!result || (self.locationManager.monitoredRegions.count < 3));
 }
 
 - (void)setParkingLocation:(CLLocation*)loc;
 {
     if (loc && CLLocationCoordinate2DIsValid(loc.coordinate))
     {
-        DDLogWarn(@"&&&&&&&&&&&&&& add parking region monitor for location = %@", loc);
+        DDLogWarn(@"&&&&&&&&&&&&&& add parking region monitor for location(%@) = %@", REGION_ID_LAST_PARKING, loc);
         [self registerNotificationForLocation:loc withRadius:@(cReagionRadius*1.5) assignIdentifier:REGION_ID_LAST_PARKING group:REGION_GROUP_LAST_PARKING];
         
         NSInteger idCnt = 1;
         TripSummary * lastTrip = [[AnaDbManager sharedInst] lastTrip];
         ParkingRegion * lastSt = lastTrip.region_group.start_region;
+        
+        if (lastSt) {
+            CLLocation * lastStLoc = [[CLLocation alloc] initWithLatitude:[lastSt.center_lat doubleValue] longitude:[lastSt.center_lon doubleValue]];
+            if ([lastStLoc distanceFromLocation:loc] > 500) {
+                [self registerNotificationForLocation:lastStLoc withRadius:@(2*cReagionRadius) assignIdentifier:REGION_ID_MOST_PARKING(idCnt++) group:REGION_GROUP_MOST_STAY];
+            }
+        }
         
         NSArray * mostUsedLoc = [[AnaDbManager sharedInst] mostUsedParkingRegionLimit:5];
         for (ParkingRegionDetail * region in mostUsedLoc) {
@@ -807,13 +827,6 @@ typedef enum
                 if ([curLoc distanceFromLocation:loc] > 500) {
                     [self registerNotificationForLocation:curLoc withRadius:@(2*cReagionRadius) assignIdentifier:REGION_ID_MOST_PARKING(idCnt++) group:REGION_GROUP_MOST_STAY];
                 }
-            }
-        }
-        
-        if (lastSt) {
-            CLLocation * lastStLoc = [[CLLocation alloc] initWithLatitude:[lastSt.center_lat doubleValue] longitude:[lastSt.center_lon doubleValue]];
-            if ([lastStLoc distanceFromLocation:loc] > 500) {
-                [self registerNotificationForLocation:lastStLoc withRadius:@(2*cReagionRadius) assignIdentifier:REGION_ID_MOST_PARKING(idCnt++) group:REGION_GROUP_MOST_STAY];
             }
         }
     }

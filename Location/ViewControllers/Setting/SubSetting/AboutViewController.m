@@ -24,11 +24,16 @@
     self.title = @"关于我们";
     
     UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapSecret)];
-    tapGesture.numberOfTapsRequired = 5;
-    tapGesture.numberOfTouchesRequired = 2;
+    if ([GToolUtil isEnableDebug]) {
+        tapGesture.numberOfTapsRequired = 2;
+        tapGesture.numberOfTouchesRequired = 1;
+    } else {
+        tapGesture.numberOfTapsRequired = 5;
+        tapGesture.numberOfTouchesRequired = 2;
 #if (TARGET_IPHONE_SIMULATOR)
-    tapGesture.numberOfTouchesRequired = 1;
+        tapGesture.numberOfTouchesRequired = 1;
 #endif
+    }
     [self.navigationController.navigationBar addGestureRecognizer:tapGesture];
 }
 

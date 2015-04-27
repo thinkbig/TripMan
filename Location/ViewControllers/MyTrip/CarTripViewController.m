@@ -20,6 +20,7 @@
 #import "CarTripCell.h"
 #import "NSAttributedString+Style.h"
 #import "DataDebugPrinter.h"
+#import "ActionSheetDatePicker.h"
 
 typedef NS_ENUM(NSUInteger, eTripRange) {
     eTripRangeDay = 0,
@@ -59,6 +60,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
     [self.dateFormatter setTimeZone:[NSTimeZone localTimeZone]];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tripEnd) name:kNotifyTripDidEnd object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tripModify) name:kNotifyTripModify object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
 }
 
@@ -72,6 +74,11 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
     TripSummary * sum = [[AnaDbManager sharedInst] lastTrip];
     [[GPSLogger sharedLogger].offTimeAnalyzer analyzeTripForSum:sum withAnalyzer:nil];
     [self rebuildContent:NO];
+}
+
+- (void) tripModify
+{
+    [self rebuildContent:YES];
 }
 
 - (NSDate *)currentWeekDate {
@@ -112,8 +119,14 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
     self.switcher.labelTextColorOutsideSlider = [UIColor colorWithWhite:1 alpha:0.54];
     self.switcher.font = [UIFont boldSystemFontOfSize:14];
     [self.switcher setPressedHandler:^(NSUInteger index) {
-        NSLog(@"Did press position on first switch at index: %lu", (unsigned long)index);
-        weekSelf.currentIdx = index;
+        if (0 == index && 0 == weekSelf.currentIdx && [weekSelf.currentDate isToday]) {
+            [ActionSheetDatePicker showPickerWithTitle:@"选择日期" datePickerMode:UIDatePickerModeDate selectedDate:weekSelf.currentDate doneBlock:^(ActionSheetDatePicker *picker, id selectedDate, id origin) {
+                weekSelf.currentDate = selectedDate;
+                [weekSelf rebuildContent:YES];
+            } cancelBlock:nil origin:ROOT_VIEW_CONTROLLER.view];
+        } else {
+            weekSelf.currentIdx = index;
+        }
     }];
     
     if (nil == self.slideShow) {
@@ -377,9 +390,8 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
 {
     if (0 == _currentIdx)
     {
-        if (!force && self.sumTomorrow) {
+        if (!force && ![self.currentDate isToday]) {
             // means not today
-            [self reloadContentOfDay];
             return;
         }
         [self showLoading];
@@ -399,8 +411,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
     }
     else if (1 == _currentIdx)
     {
-        if (!force && self.sumNextWeek) {
-            [self reloadContentOfWeek];
+        if (!force && ![self.currentWeekDate isThisWeek]) {
             return;
         }
         [self showLoading];
@@ -420,8 +431,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
     }
     else if (2 == _currentIdx)
     {
-        if (!force && self.sumNextWeek) {
-            [self reloadContentOfMonth];
+        if (!force && ![self.currentMonthDate isThisMonth]) {
             return;
         }
         [self showLoading];

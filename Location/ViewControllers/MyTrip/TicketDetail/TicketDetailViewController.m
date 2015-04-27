@@ -130,6 +130,7 @@
     } completion:^(BOOL finished) {
         [self showToast:@"保存成功" onDismiss:nil];
         self.saveBtn.enabled = NO;
+        [[NSNotificationCenter defaultCenter] postNotificationName:kNotifyTripModify object:nil];
     }];
 }
 
@@ -184,6 +185,7 @@
         if (1 == dismissalButtonIndex) {
             self.tripSum.is_valid = @NO;
             [[AnaDbManager sharedInst] commit];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kNotifyTripModify object:nil];
             [self.navigationController popViewControllerAnimated:YES];
         }
     }];
