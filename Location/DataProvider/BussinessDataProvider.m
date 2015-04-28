@@ -267,16 +267,13 @@ static BussinessDataProvider * _sharedProvider = nil;
             region.street = result.addressDetail.streetName;
             region.street_num = result.addressDetail.streetNumber;
             region.address = result.address;
-            CGFloat dist = MAXFLOAT;
-            for (BMKPoiInfo * info in result.poiList) {
-                CGFloat thisDist = [GToolUtil distFrom:wrapper.coordinate toCoor:info.pt];
-                if (thisDist < dist) {
-                    dist = thisDist;
-                    region.nearby_poi = info.name;
-                }
-                break;
+            NSArray * poiList = result.poiList;
+            if (poiList.count > 0) {
+                region.nearby_poi = ((BMKPoiInfo*)poiList[0]).name;;
             }
-            region.is_analyzed = @YES;
+            if (![region.is_temp boolValue]) {
+                region.is_analyzed = @YES;
+            }
             [[AnaDbManager deviceDb] commit];
             if (success) {
                 success(region);

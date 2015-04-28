@@ -25,6 +25,7 @@ typedef NS_ENUM(NSUInteger, eDebugDisplayType) {
 typedef NS_ENUM(NSUInteger, eDebugActionType) {
     eDebugActionShowLog = 0,
     eDebugActionJamsMap,
+    eDebugActionUpdatePOIName,
     eDebugActionRevertDelete,
     eDebugActionAnalyzeAllTrip,
     eDebugActionForceUpload,
@@ -138,6 +139,10 @@ typedef NS_ENUM(NSUInteger, eDebugActionType) {
             cell.textLabel.text = @"查看实时拥堵地图";
             cell.detailTextLabel.text = @"显示8小时内的拥堵数据";
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        }  else if (eDebugActionUpdatePOIName == indexPath.row) {
+            cell = [tableView dequeueReusableCellWithIdentifier:@"DebugDetailCellId"];
+            cell.textLabel.text = @"更新停车地点的名称";
+            cell.detailTextLabel.text = @"调用百度接口重新获取POI名称，手动修改过的名字会保留";
         } else if (eDebugActionRevertDelete == indexPath.row) {
             cell = [tableView dequeueReusableCellWithIdentifier:@"DebugDetailCellId"];
             cell.accessoryType = UITableViewCellAccessoryNone;
@@ -201,6 +206,8 @@ typedef NS_ENUM(NSUInteger, eDebugActionType) {
         } else if (eDebugActionJamsMap == indexPath.row) {
             JamDisplayViewController * jamVC = [self.storyboard instantiateViewControllerWithIdentifier:@"JamDisplayVC"];
             [self.navigationController pushViewController:jamVC animated:YES];
+        } else if (eDebugActionUpdatePOIName == indexPath.row) {
+            [[BussinessDataProvider sharedInstance] updateAllRegionInfo:YES];
         } else if (eDebugActionRevertDelete == indexPath.row) {
             NSArray * arr = [TripSummary where:@"is_valid=0" inContext:[AnaDbManager deviceDb].tripAnalyzerContent];
             for (TripSummary * sum in arr) {

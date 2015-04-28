@@ -12,6 +12,13 @@
 #import "NSAttributedString+Style.h"
 #import "ParkingRegion+Fetcher.h"
 #import "TripSummary+Fetcher.h"
+#import "BaiduReverseGeocodingWrapper.h"
+
+@interface TripTicketView ()
+
+@property (nonatomic, strong) TripSummary * sum;
+
+@end
 
 @implementation TripTicketView
 
@@ -30,6 +37,8 @@
 
 - (void) updateWithTripSummary:(TripSummary*)sum
 {
+    self.sum = sum;
+    
     NSDateFormatter * formatter = [[BussinessDataProvider sharedInstance] dateFormatterForFormatStr:@"HH:mm"];
     
     self.fromPoi.text = [sum.region_group.start_region nameWithDefault:@"未知"];
@@ -41,10 +50,27 @@
         self.toStreet.text = [self safeText:sum.region_group.end_region.street withDefault:@"未知街道"];
         self.toDate.text = [formatter stringFromDate:sum.end_date];
     } else if (sum) {
-        self.toPoi.text = @"行驶中";
+        CLLocation * curLoc = [BussinessDataProvider lastGoodLocation];
+        ParkingRegionDetail * endLoc = [[AnaDbManager sharedInst] parkingDetailForCoordinate:curLoc.coordinate minDist:500];
+        if ([endLoc.coreDataItem.is_analyzed boolValue]) {
+            self.toPoi.text = [endLoc.coreDataItem nameWithDefault:@"当前位置"];
+            self.toStreet.text = @"可能在行驶中";
+        } else {
+            self.toPoi.text = @"当前位置";
+            self.toStreet.text = @"可能在行驶中";
+            BaiduReverseGeocodingWrapper * wrapper = [BaiduReverseGeocodingWrapper new];
+            wrapper.coordinate = [GeoTransformer earth2Baidu:curLoc.coordinate];
+            [wrapper requestWithSuccess:^(BMKReverseGeoCodeResult* result) {
+                if (sum == self.sum) {
+                    self.toPoi.text = @"当前位置";
+                    self.toStreet.text = result.addressDetail.streetName;
+                }
+            } failure:nil];
+        }
         self.toDate.text = [formatter stringFromDate:[NSDate date]];
     } else {
         self.toPoi.text = @"未知";
+        self.toStreet.text = nil;
         self.toDate.text = @"00:00";
     }
     
