@@ -2,7 +2,7 @@
 //  RegionGroup.h
 //  TripMan
 //
-//  Created by taq on 3/7/15.
+//  Created by taq on 4/28/15.
 //  Copyright (c) 2015 Location. All rights reserved.
 //
 
@@ -27,6 +27,7 @@
 @property (nonatomic, retain) ParkingRegion *end_region;
 @property (nonatomic, retain) ParkingRegion *start_region;
 @property (nonatomic, retain) NSSet *trips;
+@property (nonatomic, retain) NSManagedObject *extend;
 @end
 
 @interface RegionGroup (CoreDataGeneratedAccessors)

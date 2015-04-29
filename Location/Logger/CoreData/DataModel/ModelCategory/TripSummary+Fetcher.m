@@ -41,6 +41,7 @@
     mutableDict[@"total_during"] = self.total_during;
     mutableDict[@"max_speed"] = self.max_speed;
     mutableDict[@"avg_speed"] = self.avg_speed;
+    mutableDict[@"quality"] = self.quality;
     mutableDict[@"traffic_jam_dist"] = self.traffic_jam_dist;
     mutableDict[@"traffic_jam_during"] = self.traffic_jam_during;
     mutableDict[@"traffic_avg_speed"] = self.traffic_avg_speed;

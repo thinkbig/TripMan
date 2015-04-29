@@ -2,7 +2,7 @@
 //  TurningInfo.h
 //  TripMan
 //
-//  Created by taq on 3/7/15.
+//  Created by taq on 4/28/15.
 //  Copyright (c) 2015 Location. All rights reserved.
 //
 
@@ -26,5 +26,6 @@
 @property (nonatomic, retain) NSNumber * turn_round_cnt;
 @property (nonatomic, retain) NSNumber * turn_round_max_speed;
 @property (nonatomic, retain) TripSummary *trip_owner;
+@property (nonatomic, retain) NSManagedObject *extend;
 
 @end

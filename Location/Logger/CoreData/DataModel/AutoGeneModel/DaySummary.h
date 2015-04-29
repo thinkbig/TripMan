@@ -2,7 +2,7 @@
 //  DaySummary.h
 //  TripMan
 //
-//  Created by taq on 3/7/15.
+//  Created by taq on 4/28/15.
 //  Copyright (c) 2015 Location. All rights reserved.
 //
 
@@ -29,6 +29,7 @@
 @property (nonatomic, retain) NSSet *all_trips;
 @property (nonatomic, retain) MonthSummary *month_summary;
 @property (nonatomic, retain) WeekSummary *week_summary;
+@property (nonatomic, retain) NSManagedObject *extend;
 @end
 
 @interface DaySummary (CoreDataGeneratedAccessors)

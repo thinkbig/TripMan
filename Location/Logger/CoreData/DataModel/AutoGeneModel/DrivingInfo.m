@@ -2,7 +2,7 @@
 //  DrivingInfo.m
 //  TripMan
 //
-//  Created by taq on 3/7/15.
+//  Created by taq on 4/28/15.
 //  Copyright (c) 2015 Location. All rights reserved.
 //
 
@@ -31,5 +31,6 @@
 @dynamic shortest_60;
 @dynamic shortest_80;
 @dynamic trip_owner;
+@dynamic extend;
 
 @end

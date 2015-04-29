@@ -62,7 +62,7 @@
             wrapper.coordinate = [GeoTransformer earth2Baidu:curLoc.coordinate];
             [wrapper requestWithSuccess:^(BMKReverseGeoCodeResult* result) {
                 if (sum == self.sum) {
-                    self.toPoi.text = @"当前位置";
+                    self.toPoi.text = @"可能在行驶中";
                     self.toStreet.text = result.addressDetail.streetName;
                 }
             } failure:nil];

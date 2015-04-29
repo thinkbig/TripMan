@@ -2,7 +2,7 @@
 //  TurningInfo.m
 //  TripMan
 //
-//  Created by taq on 3/7/15.
+//  Created by taq on 4/28/15.
 //  Copyright (c) 2015 Location. All rights reserved.
 //
 
@@ -25,5 +25,6 @@
 @dynamic turn_round_cnt;
 @dynamic turn_round_max_speed;
 @dynamic trip_owner;
+@dynamic extend;
 
 @end

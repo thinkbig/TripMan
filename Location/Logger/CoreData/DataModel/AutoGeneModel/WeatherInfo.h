@@ -2,7 +2,7 @@
 //  WeatherInfo.h
 //  TripMan
 //
-//  Created by taq on 3/7/15.
+//  Created by taq on 4/28/15.
 //  Copyright (c) 2015 Location. All rights reserved.
 //
 
@@ -25,6 +25,7 @@
 @property (nonatomic, retain) NSString * weather;
 @property (nonatomic, retain) NSString * wind;
 @property (nonatomic, retain) NSSet *trip_owner;
+@property (nonatomic, retain) NSManagedObject *extend;
 @end
 
 @interface WeatherInfo (CoreDataGeneratedAccessors)

@@ -206,11 +206,13 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
 
 - (void)applicationBecomeActive
 {
-    NSDate * lastResignDate = [[NSUserDefaults standardUserDefaults] objectForKey:kLastResignActiveDate];
-    if (![lastResignDate isToday]) {
-        self.currentIdx = _currentIdx;
-    } else {
-        [self rebuildContent:NO];
+    if (!IS_UPDATING) {
+        NSDate * lastResignDate = [[NSUserDefaults standardUserDefaults] objectForKey:kLastResignActiveDate];
+        if (![lastResignDate isToday]) {
+            self.currentIdx = _currentIdx;
+        } else {
+            [self rebuildContent:NO];
+        }
     }
 }
 

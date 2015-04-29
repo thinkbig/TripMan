@@ -11,6 +11,15 @@
 #define TRAFFIC_YELLOW_THRESHOLD            (5*60)
 #define TRAFFIC_RED_THRESHOLD               (10*60)
 
+// refer to TripSummary.quality
+typedef NS_ENUM(NSUInteger, eTripQuality) {
+    eTripQualityUnknow = 0,
+    eTripQualityGood,
+    eTripQualityMedium,
+    eTripQualityLow,
+    eTripQualityPoor
+};
+
 @interface TripSummary (Fetcher)
 
 - (NSDictionary*) toJsonDict;

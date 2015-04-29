@@ -15,7 +15,7 @@
 #import "GPSOffTimeFilter.h"
 #import "BussinessDataProvider.h"
 #import <CoreLocation/CoreLocation.h>
-#import "TripSummary.h"
+#import "TripSummary+Fetcher.h"
 #import "DrivingInfo.h"
 #import "WeatherInfo.h"
 #import "EnvInfo.h"
@@ -295,23 +295,35 @@
         return;
     }
     
+    CGFloat distMissing = 0;
     GPSLogItem * stLogItem = [self modifyStartPoint:tripSum firstGPSLog:logArr[0]];
     if (stLogItem) {
         // check the modified start point is valid
         GPSLogItem * logItem = logArr[0];
-        CLLocationDistance distance = [stLogItem distanceFrom:logItem];
-        if (distance < cStartLocErrorDist*2.5) {
+        distMissing = [stLogItem distanceFrom:logItem];
+        if (distMissing < cStartLocErrorDist*1.6) {
             // the modified start point is valid, add to array
             [rawData addObject:stLogItem];
             // extimate the start time
-            stLogItem.timestamp = [logItem.timestamp dateByAddingTimeInterval:-(distance*1.44)/cAvgDrivingSpeed];
+            stLogItem.timestamp = [logItem.timestamp dateByAddingTimeInterval:-(distMissing*1.44)/cAvgDrivingSpeed];
             tripSum.start_date = stLogItem.timestamp;
         } else {
+            distMissing = 0;
             stLogItem = nil;
         }
     }
     if (nil == stLogItem) {
         stLogItem = logArr[0];
+    }
+    
+    if (distMissing > cStartLocErrorDist) {
+        tripSum.quality = @(eTripQualityLow);
+    } else if (distMissing > cStartLocErrorDist/2.0) {
+        tripSum.quality = @(eTripQualityMedium);
+    } else if (distMissing > 0) {
+        tripSum.quality = @(eTripQualityGood);
+    } else {
+        tripSum.quality = @(eTripQualityUnknow);
     }
     
     while (logArr.count > 0) {
@@ -338,7 +350,7 @@
     
     TripsCoreDataManager * manager = self.manager;
     NSArray * rawRoute = [rawData subarrayWithRange:NSMakeRange(0, realEndIdx)];
-    NSArray * smoothData = [GPSOffTimeFilter smoothGPSData:rawRoute iteratorCnt:3];
+    NSArray * smoothData = [GPSOffTimeFilter smoothGPSData:rawRoute iteratorCnt:1];
     
     // update analyze summary info
     GPSTripSummaryAnalyzer * oneTripAna = [GPSTripSummaryAnalyzer new];

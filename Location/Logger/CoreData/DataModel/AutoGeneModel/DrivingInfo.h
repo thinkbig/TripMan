@@ -2,7 +2,7 @@
 //  DrivingInfo.h
 //  TripMan
 //
-//  Created by taq on 3/7/15.
+//  Created by taq on 4/28/15.
 //  Copyright (c) 2015 Location. All rights reserved.
 //
 
@@ -32,5 +32,6 @@
 @property (nonatomic, retain) NSNumber * shortest_60;
 @property (nonatomic, retain) NSNumber * shortest_80;
 @property (nonatomic, retain) TripSummary *trip_owner;
+@property (nonatomic, retain) NSManagedObject *extend;
 
 @end

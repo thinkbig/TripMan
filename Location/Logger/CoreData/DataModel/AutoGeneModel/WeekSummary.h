@@ -2,7 +2,7 @@
 //  WeekSummary.h
 //  TripMan
 //
-//  Created by taq on 3/7/15.
+//  Created by taq on 4/28/15.
 //  Copyright (c) 2015 Location. All rights reserved.
 //
 
@@ -27,6 +27,7 @@
 @property (nonatomic, retain) NSNumber * traffic_light_waiting;
 @property (nonatomic, retain) NSNumber * trip_cnt;
 @property (nonatomic, retain) NSSet *all_days;
+@property (nonatomic, retain) NSManagedObject *extend;
 @end
 
 @interface WeekSummary (CoreDataGeneratedAccessors)

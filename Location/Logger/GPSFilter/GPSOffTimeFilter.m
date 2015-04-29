@@ -200,10 +200,10 @@
         
         CGFloat accuracy = [item.horizontalAccuracy doubleValue];
         // 如果该gpslog的gps精度无效（<0）或者大于100米，则丢弃
-        if (accuracy < 0 || accuracy > 100) {
+        if (accuracy < 0 || accuracy > 200) {
             continue;
         }
-        if (accuracy < 60) {
+        if (accuracy < 90) {
             // regard as good location, 精度小于30米，则直接使用不做去噪处理
             if (penddingData.count == 1) {
                 if (smoothData.count > 0) {

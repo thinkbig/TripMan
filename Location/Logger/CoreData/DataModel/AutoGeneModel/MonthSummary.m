@@ -2,7 +2,7 @@
 //  MonthSummary.m
 //  TripMan
 //
-//  Created by taq on 3/7/15.
+//  Created by taq on 4/28/15.
 //  Copyright (c) 2015 Location. All rights reserved.
 //
 
@@ -28,5 +28,6 @@
 @dynamic trip_most_dist;
 @dynamic trip_most_during;
 @dynamic trip_most_jam_during;
+@dynamic extend;
 
 @end
