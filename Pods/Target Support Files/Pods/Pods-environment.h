@@ -58,7 +58,7 @@
 #define COCOAPODS_POD_AVAILABLE_CacheKit
 #define COCOAPODS_VERSION_MAJOR_CacheKit 0
 #define COCOAPODS_VERSION_MINOR_CacheKit 1
-#define COCOAPODS_VERSION_PATCH_CacheKit 0
+#define COCOAPODS_VERSION_PATCH_CacheKit 1
 
 // CocoaLumberjack
 #define COCOAPODS_POD_AVAILABLE_CocoaLumberjack

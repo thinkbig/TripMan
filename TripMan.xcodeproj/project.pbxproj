@@ -831,6 +831,7 @@
 		A3FDD16E1A02814D007B3C65 /* UIControl+Blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIControl+Blocks.m"; sourceTree = "<group>"; };
 		A3FDD1781A028A6B007B3C65 /* GViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GViewController.h; sourceTree = "<group>"; };
 		A3FDD1791A028A6B007B3C65 /* GViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GViewController.m; sourceTree = "<group>"; };
+		EE2F27FDB2F428C117A6515A /* Pods.coverage.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.coverage.xcconfig; path = "Pods/Target Support Files/Pods/Pods.coverage.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2485,6 +2486,7 @@
 			children = (
 				93515B6ED517B0A75A7B458C /* Pods.debug.xcconfig */,
 				9CF3732F4F7B1B5DC081B37D /* Pods.release.xcconfig */,
+				EE2F27FDB2F428C117A6515A /* Pods.coverage.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -3201,7 +3203,7 @@
 		};
 		A399CA0C1A13160700665917 /* Coverage */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 93515B6ED517B0A75A7B458C /* Pods.debug.xcconfig */;
+			baseConfigurationReference = EE2F27FDB2F428C117A6515A /* Pods.coverage.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
