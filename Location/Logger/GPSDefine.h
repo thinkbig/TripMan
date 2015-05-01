@@ -41,7 +41,7 @@
 
 // common const define
 
-#define cAvgNoiceSpeed                         (500.0/3.6)     //  > 3000 km/h
+#define cAvgNoiceSpeed                         (500.0/3.6)     //  > 500 km/h
 #define cAvgDrivingSpeed                       (20.0/3.6)       //  > 15 km/h
 #define cAvgTrafficJamSpeed                    (10.0/3.6)        //  < 5 km/h
 #define cAvgRunningSpeed                       (8.0/3.6)        //  > 10 km/h
@@ -59,11 +59,11 @@
 #define cInsWalkingSpeed                       (5.0/3.6)        //  < 5 km/h
 #define cInsStationarySpeed                    (2/3.6)          //  < 2 km/h
 
-#define cDriveStartThreshold                    10
+#define cDriveStartThreshold                    30
 #define cMoveStartRecordThreshold               (60*3)          // must bigger than cDriveStartThreshold
 #define cDriveEndThreshold                      (60*8)
-#define cHeavyTrafficJamThreshold               (60*5)
-#define cTrafficJamThreshold                    (60*2)
+#define cHeavyTrafficJamThreshold               (60*6)
+#define cTrafficJamThreshold                    (60*3)
 
 #define cStartLocErrorDist                      2000
 #define cReagionRadius                          120

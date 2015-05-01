@@ -105,6 +105,12 @@
         
         // 处理堵车数据
         NSArray * filteredJamArr = [oneStep jamsWithThreshold:cTrafficJamThreshold];
+        if (filteredJamArr.count > 0) {
+            CTJam * firstJam = filteredJamArr[0];
+            if ([route.orig distanceFrom:firstJam.from] < 300) {
+                firstJam.coef = @(1.414*2);
+            }
+        }
         for (CTJam * jam in filteredJamArr) {
             NSArray * jamArr = [oneStep fullPathOfJam:jam];
             if (jamArr.count > 0) {
@@ -117,7 +123,13 @@
                 
                 eStepTraffic stat = [jam trafficStat];
                 RouteOverlay * jamOne = [RouteOverlay routeWithPoints:jamsToUse count:jamArr.count];
-                jamOne.title = (eStepTrafficVerySlow == stat) ? @"red" : @"yellow";
+                if (eStepTrafficVerySlow == stat) {
+                    jamOne.title = @"red";
+                } else if (eStepTrafficSlow == stat) {
+                    jamOne.title = @"yellow";
+                } else {
+                    jamOne.title = @"green";
+                }
                 [self.mapView addOverlay:jamOne];
                 
                 delete [] jamsToUse;

@@ -738,7 +738,7 @@
         <image name="roadcondition_shadow2" width="266" height="6"/>
         <image name="roadcondition_tagyellow" width="289" height="55"/>
         <image name="searchicon" width="25" height="25"/>
-        <image name="shadow" width="266" height="6"/>
+        <image name="shadow" width="320" height="5"/>
         <image name="timeicon" width="20" height="20"/>
         <image name="voiceicon" width="25" height="25"/>
     </resources>

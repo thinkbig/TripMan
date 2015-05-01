@@ -51,3 +51,22 @@
 @property (weak, nonatomic) IBOutlet UILabel *carMaintainLabel;
 
 @end
+
+
+//////////////////////////////////////////////////////////////////
+
+@interface HomeHealthCellNew : UICollectionViewCell
+
+@property (weak, nonatomic) IBOutlet UILabel *todayTripSum;
+@property (weak, nonatomic) IBOutlet UILabel *tripDurationLabel;
+
+@property (weak, nonatomic) IBOutlet PICircularProgressView *carHealthProgress;
+@property (weak, nonatomic) IBOutlet UIImageView *carHealthColorImage;
+@property (weak, nonatomic) IBOutlet UILabel *carHeathLabel;
+
+@property (weak, nonatomic) IBOutlet PICircularProgressView *carMaintainProgress;
+@property (weak, nonatomic) IBOutlet UIImageView *carMaintainImage;
+@property (weak, nonatomic) IBOutlet UILabel *carMaintainLabel;
+
+@end
+

@@ -123,6 +123,7 @@
 		A359E6081AEFC32C00D7FF10 /* WeekSummary.m in Sources */ = {isa = PBXBuildFile; fileRef = A359E6071AEFC32C00D7FF10 /* WeekSummary.m */; };
 		A359E60B1AEFC32C00D7FF10 /* WeatherInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A359E60A1AEFC32C00D7FF10 /* WeatherInfo.m */; };
 		A359E60E1AEFC32C00D7FF10 /* Extend.m in Sources */ = {isa = PBXBuildFile; fileRef = A359E60D1AEFC32C00D7FF10 /* Extend.m */; };
+		A359E6121AF0736000D7FF10 /* TripSimulator.m in Sources */ = {isa = PBXBuildFile; fileRef = A359E6111AF0736000D7FF10 /* TripSimulator.m */; };
 		A35BC7251AA2E98900D726D4 /* CTWakeupFacade.m in Sources */ = {isa = PBXBuildFile; fileRef = A35BC7241AA2E98900D726D4 /* CTWakeupFacade.m */; };
 		A35BC7291AA35B7D00D726D4 /* NSString+ShiftEncode.m in Sources */ = {isa = PBXBuildFile; fileRef = A35BC7281AA35B7D00D726D4 /* NSString+ShiftEncode.m */; };
 		A35BC72F1AA4244C00D726D4 /* DataReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = A35BC72E1AA4244C00D726D4 /* DataReporter.m */; };
@@ -496,6 +497,8 @@
 		A359E60A1AEFC32C00D7FF10 /* WeatherInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeatherInfo.m; sourceTree = "<group>"; };
 		A359E60C1AEFC32C00D7FF10 /* Extend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Extend.h; sourceTree = "<group>"; };
 		A359E60D1AEFC32C00D7FF10 /* Extend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Extend.m; sourceTree = "<group>"; };
+		A359E6101AF0736000D7FF10 /* TripSimulator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TripSimulator.h; sourceTree = "<group>"; };
+		A359E6111AF0736000D7FF10 /* TripSimulator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripSimulator.m; sourceTree = "<group>"; };
 		A35BC7201A9AE34500D726D4 /* UrlDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UrlDefine.h; sourceTree = "<group>"; };
 		A35BC7231AA2E98900D726D4 /* CTWakeupFacade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTWakeupFacade.h; sourceTree = "<group>"; };
 		A35BC7241AA2E98900D726D4 /* CTWakeupFacade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTWakeupFacade.m; sourceTree = "<group>"; };
@@ -1184,6 +1187,7 @@
 		A342849719C42081002DB0FD /* Logger */ = {
 			isa = PBXGroup;
 			children = (
+				A359E60F1AF0732E00D7FF10 /* Debug */,
 				A35BC72C1AA4242E00D726D4 /* Reporter */,
 				A31411661A0A4CCD0019F557 /* CoreData */,
 				A31FCA8919EBC1D400A3BB4C /* Helper */,
@@ -1485,6 +1489,15 @@
 				A37A1C811A0B6C6C00633E25 /* BaiduReverseGeocodingWrapper.m */,
 			);
 			path = geocoding;
+			sourceTree = "<group>";
+		};
+		A359E60F1AF0732E00D7FF10 /* Debug */ = {
+			isa = PBXGroup;
+			children = (
+				A359E6101AF0736000D7FF10 /* TripSimulator.h */,
+				A359E6111AF0736000D7FF10 /* TripSimulator.m */,
+			);
+			path = Debug;
 			sourceTree = "<group>";
 		};
 		A35BC7221AA2E94800D726D4 /* CTReport */ = {
@@ -2713,6 +2726,7 @@
 				A35C264A1A426F4B005F6658 /* RZWaiter.m in Sources */,
 				A35C262E1A426F4B005F6658 /* UIFont+RZExtensions.m in Sources */,
 				A39E30D11AAFE5CE004F0D95 /* CTGzipTestFacade.m in Sources */,
+				A359E6121AF0736000D7FF10 /* TripSimulator.m in Sources */,
 				A35C26291A426F4B005F6658 /* NSString+RZStringFormatting.m in Sources */,
 				5C90909C18B3A66A00510153 /* main.m in Sources */,
 				A34F011D1A04A7EF00F58C17 /* TSHttpClient.m in Sources */,

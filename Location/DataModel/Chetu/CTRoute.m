@@ -21,19 +21,30 @@
     return COLOR_STAT_GREEN;
 }
 
+- (NSNumber<Ignore> *)coef {
+    if (nil == _coef) {
+        return @1;
+    }
+    return _coef;
+}
+
 - (eStepTraffic) trafficStat
 {
     eStepTraffic curStat = eStepTrafficOk;
     CGFloat jamDuration = [self.duration floatValue];
+    CGFloat speed = [self avgSpeed];
+    speed *= [self.coef floatValue];
+    
     if (jamDuration > cHeavyTrafficJamThreshold) {
-        CGFloat speed = [self avgSpeed];
         if (speed < cInsTrafficJamSpeed) {
             curStat = eStepTrafficVerySlow;
         } else {
             curStat = eStepTrafficSlow;
         }
     } else if (jamDuration > cTrafficJamThreshold) {
-        curStat = eStepTrafficSlow;
+        if (speed < cInsTrafficJamSpeed) {
+            curStat = eStepTrafficSlow;
+        }
     }
     
     return curStat;
@@ -45,6 +56,10 @@
         return CLLocationCoordinate2DMake(([self.from.lat floatValue] + [self.to.lat floatValue])/2.0, ([self.from.lon floatValue] + [self.to.lon floatValue])/2.0);
     }
     return CLLocationCoordinate2DMake(0, 0);
+}
+
+- (CGFloat) distanceOfJam {
+    return [self.from distanceFrom:self.to];
 }
 
 - (NSNumber<Optional> *)duration {
@@ -263,7 +278,19 @@
 - (eStepTraffic) trafficStat
 {
     if (self.most_jam) {
+        if ([self.orig distanceFrom:self.most_jam.from] < 300) {
+            self.most_jam.coef = @(1.414*2);
+        }
         return [self.most_jam trafficStat];
+    }
+    if (self.steps.count > 0) {
+        CTStep * firstStep = self.steps[0];
+        if (firstStep.jams.count > 0) {
+            CTJam * firstJam = firstStep.jams[0];
+            if ([self.orig distanceFrom:firstJam.from] < 300) {
+                firstJam.coef = @(1.414*2);
+            }
+        }
     }
     NSInteger maxTraffic = eStepTrafficOk;
     for (CTStep * step in self.steps) {

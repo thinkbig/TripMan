@@ -16,7 +16,7 @@
 #import "NSString+MD5.h"
 #import "DataReporter.h"
 
-static NSString * rebuildVal = @"value_0000000000004"; // make sure it is different if this version should rebuild db
+static NSString * rebuildVal = @"value_0000000000005"; // make sure it is different if this version should rebuild db
 
 @implementation AppDelegate
 

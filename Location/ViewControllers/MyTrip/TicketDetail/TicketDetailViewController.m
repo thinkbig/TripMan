@@ -16,6 +16,7 @@
 #import "GPSInstJamAnalyzer.h"
 #import "TripSummary+Fetcher.h"
 #import "ActionSheetStringPicker.h"
+#import "TripSimulator.h"
 
 @interface TicketDetailViewController () {
     BOOL        _mayEditName;
@@ -51,6 +52,10 @@
     NSString * tripStr = [CommonFacade toJsonString:[self.tripSum toJsonDict] prettyPrint:NO];
     NSString * stLocStr = [CommonFacade toJsonString:[self.tripSum.region_group.start_region toJsonDict] prettyPrint:NO];
     NSString * edLocStr = [CommonFacade toJsonString:[self.tripSum.region_group.end_region toJsonDict] prettyPrint:NO];
+    if (nil == tripStr) {
+        [self showToast:@"该车票还没有上传，因此无法获得车票id，请等待上传结束后再试试" onDismiss:nil];
+        return;
+    }
     
     [ActionSheetStringPicker showPickerWithTitle:@"选择内容复制到剪切板" rows:@[@"车票Id", @"出发地点Id", @"到达地点Id", @"车票详情Json数据", @"出发地点Json数据", @"到达地点Json数据"] initialSelection:0 doneBlock:^(ActionSheetStringPicker *picker, NSInteger selectedIndex, id selectedValue) {
         UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
@@ -335,6 +340,20 @@
         for (GPSLogItem * item in logArr) {
             [ana appendGPSInfo:item];
         }
+    } else if (3 == indexPath.row) {
+        NSArray * pts = nil;
+        NSData * ptsData = self.tripSum.turning_info.addi_data;
+        if (ptsData) {
+            pts = [NSKeyedUnarchiver unarchiveObjectWithData:ptsData];
+        }
+        [[BussinessDataProvider sharedInstance] updateRoadMarkForTrips:self.tripSum ofTurningPoints:pts success:^(id cnt) {
+            NSLog(@"traffic light cnt = %@", cnt);
+        } failure:nil];
+    } else if (4 == indexPath.row) {
+        GPSFMDBLogger * loggerDB = [GPSLogger sharedLogger].dbLogger;
+        NSArray * logArr = [loggerDB selectLogFrom:[self.tripSum.start_date dateByAddingTimeInterval:-180] toDate:[self.tripSum.end_date dateByAddingTimeInterval:60*10] offset:0 limit:0];
+        TripSimulator * simulator = [TripSimulator new];
+        simulator.gpsLogs = logArr;
     }
 }
 

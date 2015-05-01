@@ -41,6 +41,9 @@ typedef NS_ENUM(NSUInteger, eTurningStat) {
 // 用来去噪，一般repeat为3
 + (NSArray*) smoothGPSData:(NSArray*)gpsData iteratorCnt:(NSInteger)repeat;
 
+// 模拟GPSAnalyzerRealTime中，过滤gps速度的方法，更新速度特别异常的点
++ (void) smoothGpsSpeed:(NSArray*)gpsData;
+
 // 计算拐点的入口
 - (void) calGPSDataForTurning:(NSArray*)gpsData smoothFirst:(BOOL)smooth;
 - (NSArray*) featurePointIndex;
@@ -52,7 +55,7 @@ typedef NS_ENUM(NSUInteger, eTurningStat) {
 + (CGPoint)coor2Point:(CLLocationCoordinate2D)coor;
 + (CGFloat) angleFromPoint:(CGPoint)fromPt toPoint:(CGPoint)toPt;
 
-+ (NSString*) routeToString:(NSArray*)route;    // lat,lon|lat,lon
++ (NSString*) routeToString:(NSArray*)route withTimeStamp:(BOOL)withTime;    // lat,lon|lat,lon
 + (NSArray*) stringToLocationRoute:(NSString*)routeStr; // lat,lon|lat,lon -->  CLLocation
 
 @end

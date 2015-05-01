@@ -32,5 +32,6 @@
 // api for gps event
 - (GPSEventItem*)selectLatestEventBefore:(NSDate*)beforeDate ofType:(eGPSEvent)eventType;
 - (GPSEventItem*)selectLatestEventAfter:(NSDate*)afterDate ofType:(eGPSEvent)eventType;
+- (GPSEventItem*)selectEvent:(eGPSEvent)eventType between:(NSDate*)fromDate andDate:(NSDate*)toDate;
 
 @end

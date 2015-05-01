@@ -1,24 +1,21 @@
 //
-//  DriveProcessAnalyzer.m
-//  Location
+//  TripSimulator.m
+//  TripMan
 //
-//  Created by taq on 9/15/14.
-//  Copyright (c) 2014 Location. All rights reserved.
+//  Created by taq on 4/29/15.
+//  Copyright (c) 2015 Location. All rights reserved.
 //
 
-#import "GPSAnalyzerRealTime.h"
-#import <CoreMotion/CoreMotion.h>
-#import "LocationTracker.h"
+#import "TripSimulator.h"
 #import "GPSOffTimeFilter.h"
+#import "GPSAnalyzerRealTime.h"
 
-@interface GPSAnalyzerRealTime () {
+@interface TripSimulator () {
     
     CGFloat     _startSpeedTrace;
     NSInteger   _startSpeedTraceCnt;
     NSInteger   _startSpeedTraceIdx;
-    
-    //CGFloat     _startMoveTrace;
-    //NSInteger   _startMoveTraceCnt;
+
     NSInteger   _startMoveTraceIdx;
     
     CGFloat     _endSpeedTrace;
@@ -31,26 +28,23 @@
     NSNumber *          _eStat;
     NSDate *            _lastExitReagionDate;
     
-    CLLocation *        _lastMonitorLoc;
     GPSLogItem *        _driveStart;
     CGFloat             _maxDist;
-    CGFloat             _maxDist2Monitor;
     
     CGFloat             _endThreshold;
     
 }
 
-@property (nonatomic, strong) NSTimer *                 lostGPSTimer;
-
 @property (nonatomic, strong) NSMutableArray *          logArr;
 @property (nonatomic, strong) GPSLogItem *              lastLogItem;
 @property (nonatomic, strong) GPSLogItem *              locChangeLogItem;
 @property (nonatomic) NSInteger                         removeThreshold;
+@property (nonatomic) eMoveStat moveStat;     // 是否是线性移动，还是gps不稳定跳动，根据最近的N（目前为10）个gps点的运动规律
 
 @end
 
 
-@implementation GPSAnalyzerRealTime
+@implementation TripSimulator
 
 - (instancetype)init
 {
@@ -63,27 +57,18 @@
         self.removeThreshold = 20;
         self.locChangeLogItem = nil;
         self.logArr = [NSMutableArray arrayWithCapacity:128];
-        self.jamAnalyzer = [GPSInstJamAnalyzer new];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didExitReagion:) name:kNotifyExitReagion object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didLostGPS) name:kNotifyGpsLost object:nil];
     }
     return self;
 }
 
-- (void)didExitReagion:(NSNotification*)notify
-{
-    _lastExitReagionDate = notify.userInfo[@"date"];
+- (void) setExitRegion:(NSDate*)exitDate {
+    _lastExitReagionDate = exitDate;
 }
 
-- (void)didLostGPS
-{
-    DDLogWarn(@"gps lost!!!!!!!!!!!!!!!!!");
-    [self.lostGPSTimer invalidate];
-    self.lostGPSTimer = nil;
-    if ([self isInTrip]) {
-        [self removeOldData:([self eStat]!=eMotionStatGPSLost)];
-        [self setEStat:eMotionStatGPSLost];
+- (void)setGpsLogs:(NSArray *)gpsLogs {
+    _gpsLogs = gpsLogs;
+    for (GPSLogItem * item in gpsLogs) {
+        [self appendGPSInfo:item];
     }
 }
 
@@ -93,25 +78,7 @@
         // 说明是重复点，忽略改点
         return;
     }
-    
-    if (gps.timestamp)
-    {
-        NSDictionary * lastDate = [[BussinessDataProvider sharedInstance] lastGoodGpsItem];
-        if (lastDate && [gps.timestamp timeIntervalSinceDate:lastDate[@"timestamp"]] > cOntOfDateThreshold) {
-            //[self removeOldData:YES];
-            _startSpeedTrace = _endSpeedTrace = 0;
-            _startSpeedTraceCnt = _endSpeedTraceCnt = 0;
-            _startSpeedTraceIdx = _endSpeedTraceIdx = _startMoveTraceIdx = 0;
-            [self.logArr removeAllObjects];
-            [self setEStat:eMotionStatGPSLost];
-        }
-        if ([gps.horizontalAccuracy doubleValue] < kPoorHorizontalAccuracy) {
-            [[BussinessDataProvider sharedInstance] updateLastGoodGpsItem:gps];
-        }
-    }
-    
-    [self.lostGPSTimer invalidate];
-    self.lostGPSTimer = nil;
+
     CGFloat accu = [gps.horizontalAccuracy doubleValue];
     
     CGFloat speed = [gps.speed floatValue] < 0 ? 0 : [gps.speed floatValue];
@@ -156,13 +123,10 @@
             speed = MIN(speed, avgSpeed*3.0);
         }
     }
-//    if (speed > cInsDrivingSpeed && accu > kLowHorizontalAccuracy && ![_isInTrip boolValue] && _startMoveTraceIdx < self.logArr.count) {
-//        GPSLogItem * firstItem = self.logArr[_startMoveTraceIdx];
-//        // lower the speed if it is a low accuracy and near the start move point
-//        if ([gps distanceFrom:firstItem] < 500) {
-//            speed /= 2.0;
-//        }
-//    }
+    
+    if (_maxSpeed < speed) {
+        _maxSpeed = speed;
+    }
     
     BOOL validSpeed = YES;
     if (self.lastLogItem && speed == 0 && accu > kGoodHorizontalAccuracy && [gps.timestamp timeIntervalSinceDate:self.lastLogItem.timestamp] < 1) {
@@ -204,12 +168,6 @@
             }
         }
 
-        if ([_isInTrip boolValue]) {
-            [self.jamAnalyzer appendGPSInfo:gps];
-        }
-        // 如果靠近常用的停车位置，则把停车检测的时间阈值减少一半
-        //_endThreshold = ([self.jamAnalyzer nearParkingLoc:5] ? cDriveEndThreshold*0.5 : cDriveEndThreshold);
-        
         [self.logArr addObject:gps];
         
         if (speed > cInsTrafficJamSpeed) {
@@ -225,10 +183,6 @@
             _maxDist = MAX(distFromStart, _maxDist);
         } else {
             _driveStart = gps;
-        }
-        if (_lastMonitorLoc) {
-            CGFloat distFromMonitor = [gps distanceFromCLLocation:_lastMonitorLoc];
-            _maxDist2Monitor = MAX(distFromMonitor, _maxDist2Monitor);
         }
     }
     
@@ -261,16 +215,9 @@
             
         }
     }
-
+    
     [self removeOldData:([self eStat]!=stat)];
     [self setEStat:stat];
-    
-    if (eMotionStatDriving == stat) {
-        self.lostGPSTimer = [NSTimer timerWithTimeInterval:20*60 target:self selector:@selector(didLostGPS) userInfo:nil repeats:NO];
-        [[NSRunLoop mainRunLoop] addTimer:self.lostGPSTimer forMode:NSDefaultRunLoopMode];
-    } else {
-        [self.jamAnalyzer driveEndAt:gps];
-    }
 }
 
 - (void) removeOldData:(BOOL)force
@@ -352,40 +299,8 @@
     }
 }
 
-- (CGFloat) avgSpeedFromDate:(NSDate*)fromDate minSampleCnt:(NSInteger)minCnt
-{
-    NSArray * tmpArr = self.logArr;
-    NSInteger tolCnt = tmpArr.count;
-    
-    if (tolCnt < minCnt) {
-        return -1;
-    }
-
-    __block NSInteger cnt = 0;
-    __block CGFloat tolSpeed = 0;
-    [tmpArr enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(GPSLogItem * obj, NSUInteger idx, BOOL *stop) {
-        if ([fromDate compare:obj.timestamp] == NSOrderedAscending) {
-            CGFloat speed = [obj.speed floatValue];
-            if (speed >= 0) {
-                tolSpeed += speed;
-                cnt++;
-            }
-        } else {
-            *stop = 0;
-        }
-    }];
-    
-    if (cnt < minCnt) {
-        return -1;
-    }
-    return tolSpeed/cnt;
-}
-
 - (BOOL)isInTrip
 {
-    if (nil == _isInTrip) {
-        _isInTrip = [[NSUserDefaults standardUserDefaults] objectForKey:kMotionIsInTrip];
-    }
     if (_isInTrip) {
         return [_isInTrip boolValue];
     }
@@ -396,55 +311,38 @@
 {
     if (nil == _isInTrip || inTrip != [_isInTrip boolValue]) {
         _isInTrip = @(inTrip);
-        [[NSUserDefaults standardUserDefaults] setObject:_isInTrip forKey:kMotionIsInTrip];
         
         __block GPSLogItem * item = nil;
         BOOL dropTrip = NO;
-        CGFloat maxDist = _maxDist;
-        CGFloat maxDist2Monitor = _maxDist2Monitor;
         if (inTrip) {
             if (_startMoveTraceIdx < self.logArr.count) {
                 item = ((GPSLogItem*)(self.logArr[_startMoveTraceIdx]));
                 _driveStart = item;
-                GPSEventItem * lastMonitorRegion = [[GPSLogger sharedLogger].dbLogger selectLatestEventBefore:item.timestamp ofType:eGPSEventMonitorRegion];
-                if (lastMonitorRegion) {
-                    _lastMonitorLoc = [lastMonitorRegion location];
-                }
-                _maxDist2Monitor = 0;
                 _maxDist = 0;
             }
         } else {
             if (_endSpeedTraceIdx < self.logArr.count) {
                 item = ((GPSLogItem*)(self.logArr[_endSpeedTraceIdx]));
-                if (_maxDist > 0 && _maxDist < 400 && _maxDist2Monitor > 0 && _maxDist2Monitor < 400) {
+                if (_maxDist > 0 && _maxDist < 400) {
                     dropTrip = YES;
                 }
             }
             _maxDist = 0;
-            _maxDist2Monitor = 0;
             _driveStart = nil;
-            _lastMonitorLoc = nil;
         }
-        dispatch_async(dispatch_get_main_queue(), ^{
-            //[[BussinessDataProvider sharedInstance] updateWeatherToday:[item location]];
-            NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:_isInTrip, @"inTrip", @(dropTrip), @"dropTrip", nil];
-            if (item) {
-                dict[@"date"] = item.timestamp;
-                dict[@"lat"] = item.latitude;
-                dict[@"lon"] = item.longitude;
+        
+        if (self.delegate) {
+            if (inTrip) {
+                [self.delegate tripSimulator:self tripDidStart:item];
+            } else {
+                [self.delegate tripSimulator:self tripDidEnd:item shouldDrop:dropTrip];
             }
-            [[NSNotificationCenter defaultCenter] postNotificationName:kNotifyTripStatChange object:nil userInfo:dict];
-        });
-
-        DDLogWarn(@"!!!!!!!!!!!!!!!!!!!!!!!! notify is driving %d at %@, if drop %d, maxDist %f,%f", inTrip, item.timestamp, dropTrip, maxDist, maxDist2Monitor);
+        }
     }
 }
 
 - (eMotionStat)eStat
 {
-    if (nil == _eStat) {
-        _eStat = [[NSUserDefaults standardUserDefaults] objectForKey:kMotionCurrentStat];
-    }
     if (_eStat) {
         return (eMotionStat)[_eStat integerValue];
     }
@@ -455,7 +353,6 @@
 {
     if (nil == _eStat || [_eStat integerValue] != eStat) {
         _eStat = @(eStat);
-        [[NSUserDefaults standardUserDefaults] setObject:_eStat forKey:kMotionCurrentStat];
     }
     
     BOOL isInTrip = [self isInTrip];
@@ -479,10 +376,6 @@
 
 - (eMotionStat) checkStatus
 {
-    if (DEBUG_MODE && IS_FORCE_DRIVING) {
-        NSLog(@"Debug mode: forse driving");
-        return eMotionStatDriving;
-    }
     eMotionStat newStat = [self eStat];
     if (![self isInTrip]) {
         // check if start driving
@@ -497,31 +390,14 @@
             } else {
                 newStat = eMotionStatStationary;
             }
-            NSLog(@"$$$$$$$$$$$$$$$$$$$$$ start speed = %f", avgSpeed);
         }
     } else {
-        // fast decide using M7 chrip
-        LocationTracker * tracker = ((AppDelegate*)([UIApplication sharedApplication].delegate)).locationTracker;
-        if (_lastestNormalSpeed && [[NSDate date] timeIntervalSinceDate:_lastestNormalSpeed] >= 20) {
-            NSTimeInterval driveDuring = [tracker duringForAutomationWithin:60];
-            if (driveDuring > 5) {
-                _endSpeedTrace = 0;
-                _endSpeedTraceCnt = 0;
-                _endSpeedTraceIdx = self.logArr.count-1;
-                return eMotionStatDriving;
-            } else if (driveDuring < 1 && [tracker duringForWalkRunWithin:60] > 30 && !tracker.rawMotionActivity.automotive) {
-                DDLogWarn(@"&&&&&&&&&&&&& motion regard as drive stop &&&&&&&&&&&&& ");
-                _endSpeedTrace = 0;
-                _endSpeedTraceCnt = 0;
-                _endSpeedTraceIdx = self.logArr.count-1;
-                return eMotionStatStationary;
-            }
-        }
         if (_endSpeedTraceCnt > cDirveEndSamplePoint && _endSpeedTraceIdx < self.logArr.count) {
             GPSLogItem * item = ((GPSLogItem*)(self.logArr[_endSpeedTraceIdx]));
-            if ([[NSDate date] timeIntervalSinceDate:item.timestamp] >= _endThreshold*0.6) {
+            GPSLogItem * lastItem = ((GPSLogItem*)([self.logArr lastObject]));
+            if ([lastItem.timestamp timeIntervalSinceDate:item.timestamp] >= _endThreshold*0.6) {
                 CGFloat avgSpeed = _endSpeedTrace/_endSpeedTraceCnt;
-                if (avgSpeed  < cAvgStationarySpeed && [tracker duringForAutomationWithin:60] < 30) {
+                if (avgSpeed  < cAvgStationarySpeed) {
                     newStat = eMotionStatStationary;
                 } else if (avgSpeed  < cAvgWalkingSpeed) {
                     newStat = eMotionStatWalking;
@@ -530,41 +406,10 @@
                 } else {
                     newStat = eMotionStatDriving;
                 }
-                NSLog(@"$$$$$$$$$$$$$$$$$$$$$ end speed = %f", avgSpeed);
             }
         }
     }
     return newStat;
-}
-
-
-#pragma mark - DDLogger
-
-- (void)logMessage:(DDLogMessage *)logMessage
-{
-    if (formatter && nil == [formatter formatLogMessage:logMessage]){
-        return;
-    }
-    switch (logMessage->logFlag) {
-        case LOG_FLAG_GPS_DATA:
-        {
-            GPSLogItem *logItem = [[GPSLogItem alloc] initWithLogMessage:logMessage];
-            if (logItem.isValid) {
-                [self appendGPSInfo:logItem];
-            }
-            break;
-        }
-        case LOG_FLAG_GPS_EVENT:
-            break;
-            
-        default:
-            break;
-    }
-}
-
-- (NSString *)loggerName
-{
-	return @"com.gps.logger.analyzer";
 }
 
 @end

@@ -3,6 +3,7 @@
 #import "FMDatabase.h"
 #import "DDContextFilterLogFormatter.h"
 #import "GPSLogItem.h"
+#import "NSDate+Utilities.h"
 
 @interface GPSFMDBLogger () {
     
@@ -107,6 +108,24 @@
     }
     GPSEventItem * item = nil;
     NSMutableString * cmd = [NSMutableString stringWithFormat:@"select * from gps_event where timestamp <= %f and eventType = %d order by timestamp desc limit 1", [beforeDate timeIntervalSince1970], (int)eventType];
+    FMResultSet *rs1 = [database executeQuery:cmd];
+    while ([rs1 next]) {
+        item = [[GPSEventItem alloc] initWithDBResultSet:rs1];
+        break;
+    }
+    [rs1 close];
+    
+    return item;
+}
+
+- (GPSEventItem*)selectEvent:(eGPSEvent)eventType between:(NSDate*)fromDate andDate:(NSDate*)toDate
+{
+    if (nil == toDate || nil == fromDate || [toDate isEarlierThanDate:fromDate]) {
+        return nil;
+    }
+
+    GPSEventItem * item = nil;
+    NSMutableString * cmd = [NSMutableString stringWithFormat:@"select * from gps_event where timestamp >= %f and timestamp <= %f and eventType = %d order by timestamp desc limit 1", [fromDate timeIntervalSince1970], [toDate timeIntervalSince1970], (int)eventType];
     FMResultSet *rs1 = [database executeQuery:cmd];
     while ([rs1 next]) {
         item = [[GPSEventItem alloc] initWithDBResultSet:rs1];

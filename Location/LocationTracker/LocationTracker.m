@@ -583,8 +583,13 @@ typedef enum
             continue;
         }
         
+        if (_lastLoc && [newLocation.timestamp timeIntervalSinceDate:_lastLoc.timestamp] < 1 && [_lastLoc distanceFromLocation:newLocation] < 20) {
+            // 说明是重复点，忽略
+            continue;
+        }
+        
         //Select only valid location and also location with good accuracy
-        if(newLocation!=nil && theAccuracy>0 && theAccuracy<400 && (!(theLocation.latitude==0.0 && theLocation.longitude==0.0)))
+        if(newLocation!=nil && theAccuracy>0 && theAccuracy<420 && (!(theLocation.latitude==0.0 && theLocation.longitude==0.0)))
         {
             BOOL isMost = NO;
             if (mostAccuracy > theAccuracy) {
@@ -599,22 +604,24 @@ typedef enum
             if (speed < 0 && _lastLoc) {
                 interval = [newLocation.timestamp timeIntervalSinceDate:_lastLoc.timestamp];
                 CGFloat dist = [newLocation distanceFromLocation:_lastLoc];
-                if (interval > 2 && newLocation.horizontalAccuracy < kPoorHorizontalAccuracy && _lastLoc.horizontalAccuracy < kPoorHorizontalAccuracy) {
+                if (interval > 2 && ((newLocation.horizontalAccuracy < kPoorHorizontalAccuracy && _lastLoc.horizontalAccuracy < kPoorHorizontalAccuracy) || dist > 50)) {
                     // if the gps signal is too low, we can not cal the speed
                     CGFloat tmpSpeed = dist/interval;
                     if (tmpSpeed < cAvgNoiceSpeed) {
                         if (!_isDriving) {
-                            BOOL skipModify = YES;
-                            if (tmpSpeed > cAvgDrivingSpeed*1.5) {
-                                if (newLocation.horizontalAccuracy < kGoodHorizontalAccuracy && _lastLoc.horizontalAccuracy < kGoodHorizontalAccuracy) {
-                                    skipModify = NO;
+                            BOOL skipModify = NO;
+                            if (newLocation.horizontalAccuracy > kPoorHorizontalAccuracy && _lastLoc.horizontalAccuracy > kPoorHorizontalAccuracy) {
+                                skipModify = YES;
+                            }
+                            CGFloat angleThres = 100;
+                            if (tmpSpeed > cAvgDrivingSpeed*2) {
+                                if (newLocation.horizontalAccuracy > kLowHorizontalAccuracy || _lastLoc.horizontalAccuracy > kLowHorizontalAccuracy) {
+                                    angleThres = 50;
                                 }
-                            } else {
-                                skipModify = NO;
                             }
                             if (!skipModify && _lastLastLoc) {
                                 CGFloat angle = [GPSOffTimeFilter checkPointAngle:[GPSOffTimeFilter coor2Point:_lastLastLoc.coordinate] antPt:[GPSOffTimeFilter coor2Point:_lastLoc.coordinate] antPt:[GPSOffTimeFilter coor2Point:newLocation.coordinate]];
-                                if (angle < 100) {
+                                if (angle < angleThres) {
                                     // filter the wrong gps
                                     speed = tmpSpeed;
                                 }
@@ -629,9 +636,7 @@ typedef enum
                 }
             }
             
-            if (_lastLoc && [_lastLoc.timestamp isEqualToDate:newLocation.timestamp] && [_lastLoc distanceFromLocation:newLocation] == 0) {
-                // 说明是重复点，忽略改点
-            } else if (nil == _lastLoc || speed >= 0 || interval >= 1) {
+            if (nil == _lastLoc || speed >= 0 || interval >= 1) {
                 _lastLastLoc = _lastLoc;
                 _lastLoc = newLocation;
                 
@@ -709,7 +714,7 @@ typedef enum
     if (!_isDriving)
     {
         if (_keepMonitoring) {
-            if (calSpeed > cInsDrivingSpeed || isWarming) {
+            if (calSpeed > cInsTrafficJamSpeed || isWarming) {
                 // already driving OR the gps is warming
                 _lastStationaryDate = nil;
             }
@@ -731,10 +736,12 @@ typedef enum
             if ([self duringForAutomationWithin:20] > 8) {
                 DDLogWarn(@"&&&&&&&&&&&&& motion regard as drive start &&&&&&&&&&&&& ");
                 _keepMonitoring = YES;
-            } else if ([self duringForWalkRunWithin:40] > 8 || 0 == [self duringForAutomationWithin:cCanStopMonitoringThreshold]) {
-                DDLogWarn(@"&&&&&&&&&&&&& motion regard as walking, stop monitor &&&&&&&&&&&&& ");
-                _keepMonitoring = NO;
             }
+//            else if ([self duringForWalkRunWithin:40] > 8 || 0 == [self duringForAutomationWithin:cCanStopMonitoringThreshold]) {
+//                // 如果开车时，正在使用或者路况不好造成颠簸，会误判断为走路，因此删除该逻辑
+//                DDLogWarn(@"&&&&&&&&&&&&& motion regard as walking, stop monitor &&&&&&&&&&&&& ");
+//                _keepMonitoring = NO;
+//            }
         }
         
         if (!_keepMonitoring || _shortUpdate) {

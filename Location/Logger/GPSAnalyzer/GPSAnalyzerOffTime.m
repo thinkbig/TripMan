@@ -289,7 +289,8 @@
     NSMutableArray * rawData = [NSMutableArray array];
     NSInteger offset = 0;
     NSInteger limit = 500;
-    NSArray * logArr = [loggerDB selectLogFrom:tripSum.start_date toDate:tripSum.end_date offset:offset limit:limit];
+    NSDate * detectStart = [tripSum.start_date dateByAddingMinutes:-3];
+    NSArray * logArr = [loggerDB selectLogFrom:detectStart toDate:tripSum.end_date offset:offset limit:limit];
     if (logArr.count == 0) {
         NSLog(@"not such trip from %@ to %@", tripSum.start_date, tripSum.end_date);
         return;
@@ -297,15 +298,43 @@
     
     CGFloat distMissing = 0;
     GPSLogItem * stLogItem = [self modifyStartPoint:tripSum firstGPSLog:logArr[0]];
-    if (stLogItem) {
+    if (stLogItem)
+    {
+        // logArr[0] 不一定是检测开始点，有可能是用户起点附近开车前打开过，因此要去除这些点的影响
+        CGFloat dist2Start = [stLogItem distanceFrom:logArr[0]];
+        if (dist2Start < 300) {
+            NSInteger realStartIdx = 0;
+            GPSLogItem * firstItem = logArr[0];
+            GPSLogItem * lastItem = firstItem;
+            for (int i = 1; i < logArr.count; i++) {
+                GPSLogItem * curItem = logArr[i];
+                CGFloat during = [curItem.timestamp timeIntervalSinceDate:lastItem.timestamp];
+                if (during >= cTrafficJamThreshold) {
+                    realStartIdx = i;
+                    break;
+                }
+                
+                lastItem = curItem;
+                
+                CGFloat during2First = [curItem.timestamp timeIntervalSinceDate:firstItem.timestamp];
+                CGFloat dist2First = [curItem distanceFrom:stLogItem];
+                if (dist2First > 300 || during2First > 10*60) {
+                    break;
+                }
+            }
+            if (realStartIdx > 0) {
+                logArr = [logArr subarrayWithRange:NSMakeRange(realStartIdx, logArr.count-realStartIdx)];
+            }
+        }
+        
         // check the modified start point is valid
         GPSLogItem * logItem = logArr[0];
         distMissing = [stLogItem distanceFrom:logItem];
-        if (distMissing < cStartLocErrorDist*1.6) {
+        if (distMissing > 0 && distMissing < cStartLocErrorDist*1.6) {
             // the modified start point is valid, add to array
             [rawData addObject:stLogItem];
             // extimate the start time
-            stLogItem.timestamp = [logItem.timestamp dateByAddingTimeInterval:-(distMissing*1.44)/cAvgDrivingSpeed];
+            stLogItem.timestamp = [logItem.timestamp dateByAddingTimeInterval:-(distMissing*1.414)/cAvgDrivingSpeed];
             tripSum.start_date = stLogItem.timestamp;
         } else {
             distMissing = 0;
@@ -350,6 +379,7 @@
     
     TripsCoreDataManager * manager = self.manager;
     NSArray * rawRoute = [rawData subarrayWithRange:NSMakeRange(0, realEndIdx)];
+    [GPSOffTimeFilter smoothGpsSpeed:rawRoute];
     NSArray * smoothData = [GPSOffTimeFilter smoothGPSData:rawRoute iteratorCnt:1];
     
     // update analyze summary info
@@ -461,6 +491,7 @@
     turning_info.is_analyzed = @YES;
     
     NSArray * featurePts = [turningAnalyzer.filter featurePoints];
+    //NSString * debugStr = [GPSOffTimeFilter routeToString:featurePts withTimeStamp:NO];
     NSMutableArray * ptsArr = [NSMutableArray arrayWithCapacity:featurePts.count];
     for (GPSLogItem * item in featurePts) {
         if (item.latitude && item.longitude) {
@@ -583,7 +614,7 @@
     if (stRegion) {
         return [[GPSLogItem alloc] initWithEventItem:stRegion];
     }
-    return nil;
+    return firstLog;
 }
 
 @end

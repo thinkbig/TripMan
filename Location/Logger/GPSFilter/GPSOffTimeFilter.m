@@ -8,6 +8,7 @@
 
 #import "GPSOffTimeFilter.h"
 #import "GPSLogItem.h"
+#import "TripSimulator.h"
 
 #define ANGLE(r)   (180.0*(r)/M_PI)
 
@@ -151,13 +152,18 @@
     return rawRoute;
 }
 
-+ (NSString*) routeToString:(NSArray*)route
++ (NSString*) routeToString:(NSArray*)route withTimeStamp:(BOOL)withTime
 {
     if (route.count > 0) {
         NSString * seg = @"";
         NSMutableString * wayStr = [[NSMutableString alloc] init];
         for (GPSLogItem * item in route) {
-            [wayStr appendFormat:@"%@%.f,%.5f,%.5f", seg, [item.timestamp timeIntervalSince1970], [item.latitude doubleValue], [item.longitude doubleValue]];
+            if (withTime) {
+                [wayStr appendFormat:@"%@%.f,%.5f,%.5f", seg, [item.timestamp timeIntervalSince1970], [item.latitude doubleValue], [item.longitude doubleValue]];
+            } else {
+                [wayStr appendFormat:@"%@%.5f,%.5f", seg, [item.latitude doubleValue], [item.longitude doubleValue]];
+            }
+            
             seg = @"|";
         }
         return wayStr;
@@ -180,6 +186,13 @@
         }
     }
     return ptArr;
+}
+
++ (void) smoothGpsSpeed:(NSArray*)gpsData
+{
+    TripSimulator * simulator = [TripSimulator new];
+    simulator.gpsLogs = gpsData;
+    
 }
 
 + (NSArray*) smoothGPSData:(NSArray*)gpsData iteratorCnt:(NSInteger)repeat
@@ -434,7 +447,12 @@
         NSInteger delIdx = -1;
         NSInteger nextIdx = idx+1;
         // 二次筛选拐点，如果相邻拐点的角度小于15度，则认为不是拐点，删除改拐点，递归查找下一个
-        if ([GPSOffTimeFilter checkPointAngle:pt1 antPt:pt2 antPt:pt3] < 15) {
+        CGFloat filterThres = 30;
+        if (idx < 2) {
+            // 起点位置因为精度比较低，并且有一段缺失，因此减少判断阈值
+            filterThres = 15;
+        }
+        if ([GPSOffTimeFilter checkPointAngle:pt1 antPt:pt2 antPt:pt3] < filterThres) {
             delIdx = idx+1;
             nextIdx = idx;
         }

@@ -328,6 +328,9 @@
 
 + (NSString*) toJsonString:(NSDictionary*)dict prettyPrint:(BOOL)prettyPrint
 {
+    if (nil == dict) {
+        return nil;
+    }
     NSError *error;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict
                                                        options:(NSJSONWritingOptions)(prettyPrint ? NSJSONWritingPrettyPrinted : 0)

@@ -52,7 +52,10 @@
         }
         [facade requestWithSuccess:^(CTRoute * result) {
             if (favLoc == self.favLoc) {
-                BOOL hasJam = [result.most_jam.duration floatValue] > cTrafficJamThreshold;
+                if ([result.most_jam.from distanceFromLoc:mLoc] < 300) {
+                    result.most_jam.coef = @(1.414*2);
+                }
+                BOOL hasJam = [result.most_jam trafficStat] > eStepTrafficOk;
                 [self updateTimeDuring:[result.duration floatValue] andJamCnt:hasJam];
             }
         } failure:^(NSError * err) {

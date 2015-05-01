@@ -25,7 +25,7 @@
 
 @property (nonatomic, strong) HomeTripHeader *          header;
 @property (nonatomic, strong) HomeTripCell *            tripCell;
-@property (nonatomic, strong) HomeHealthCell *          healthCell;
+@property (nonatomic, strong) HomeHealthCellNew *       healthCell;
 
 @end
 
@@ -228,6 +228,9 @@
     self.tripCell.statusLabel.text = @"目前道路无特殊情况";
     self.tripCell.statusColorView.backgroundColor = COLOR_STAT_GREEN;
     if (self.bestRoute.most_jam) {
+        if ([self.bestRoute.orig distanceFrom:self.bestRoute.most_jam.from] < 300) {
+            self.bestRoute.most_jam.coef = @(1.414*2);
+        }
         eStepTraffic status = [self.bestRoute.most_jam trafficStat];
         if (self.bestRoute.most_jam.intro.length > 0) {
             self.tripCell.statusLabel.text = self.bestRoute.most_jam.intro;
@@ -275,21 +278,33 @@
         totalDuring += [histDaySum.total_during floatValue];
     }
     
-    NSString * rawStr = [NSString stringWithFormat:@"%.1f km  %.f min", totalDist/1000.0, totalDuring/60.0];
-    NSRange kmRange = [rawStr rangeOfString:@" km "];
-    NSRange minRange = [rawStr rangeOfString:@" min"];
-    NSMutableAttributedString *todayStr = [[NSMutableAttributedString alloc] initWithString:rawStr];
-    [todayStr addAttribute:NSForegroundColorAttributeName value:UIColorFromRGB(0x7bce33) range:NSMakeRange(0, kmRange.location)];
-    [todayStr addAttribute:NSForegroundColorAttributeName value:UIColorFromRGB(0x7bce33) range:NSMakeRange(kmRange.location+kmRange.length, minRange.location-(kmRange.location+kmRange.length))];
-    [todayStr addAttribute:NSFontAttributeName value:DigitalFontSize(14) range:NSMakeRange(0, kmRange.location)];
-    [todayStr addAttribute:NSFontAttributeName value:DigitalFontSize(14) range:NSMakeRange(kmRange.location+kmRange.length, minRange.location-(kmRange.location+kmRange.length))];
+    NSString * rawDistStr = [NSString stringWithFormat:@"%.f km", totalDist/1000.0];
+    NSRange kmRange = [rawDistStr rangeOfString:@" km"];
+    NSMutableAttributedString *distStr = [[NSMutableAttributedString alloc] initWithString:rawDistStr];
+    [distStr addAttribute:NSForegroundColorAttributeName value:COLOR_STAT_GREEN range:NSMakeRange(0, kmRange.location)];
+    [distStr addAttribute:NSFontAttributeName value:DigitalFontSize(20) range:NSMakeRange(0, kmRange.location)];
+    self.healthCell.todayTripSum.attributedText = distStr;
     
-    self.healthCell.todayTripSum.attributedText = todayStr;
+    NSString * rawDurationStr = [NSString stringWithFormat:@"%.f min", totalDuring/60.0];
+    NSRange minRange = [rawDurationStr rangeOfString:@" min"];
+    NSMutableAttributedString *timeStr = [[NSMutableAttributedString alloc] initWithString:rawDurationStr];
+    [timeStr addAttribute:NSForegroundColorAttributeName value:COLOR_STAT_GREEN range:NSMakeRange(0, minRange.location)];
+    [timeStr addAttribute:NSFontAttributeName value:DigitalFontSize(20) range:NSMakeRange(0, minRange.location)];
+    self.healthCell.tripDurationLabel.attributedText = timeStr;
     
-    // update illegal
-    UIFont * font12 = [UIFont boldSystemFontOfSize:11];
-    self.healthCell.IllegalCount.attributedText = [NSAttributedString stringWithNumber:@"0" font:DigitalFontSize(14) color:COLOR_STAT_RED andUnit:@" 新违章" font:font12 color:[UIColor whiteColor]];
-    self.healthCell.IllegalPendingCount.attributedText = [NSAttributedString stringWithNumber:@"0" font:DigitalFontSize(14) color:COLOR_STAT_RED andUnit:@" 未处理违章" font:font12 color:[UIColor whiteColor]];
+//    NSString * rawStr = [NSString stringWithFormat:@"%.1f km  %.f min", totalDist/1000.0, totalDuring/60.0];
+//    NSRange kmRange = [rawStr rangeOfString:@" km "];
+//    NSRange minRange = [rawStr rangeOfString:@" min"];
+//    NSMutableAttributedString *todayStr = [[NSMutableAttributedString alloc] initWithString:rawStr];
+//    [todayStr addAttribute:NSForegroundColorAttributeName value:UIColorFromRGB(0x7bce33) range:NSMakeRange(0, kmRange.location)];
+//    [todayStr addAttribute:NSForegroundColorAttributeName value:UIColorFromRGB(0x7bce33) range:NSMakeRange(kmRange.location+kmRange.length, minRange.location-(kmRange.location+kmRange.length))];
+//    [todayStr addAttribute:NSFontAttributeName value:DigitalFontSize(14) range:NSMakeRange(0, kmRange.location)];
+//    [todayStr addAttribute:NSFontAttributeName value:DigitalFontSize(14) range:NSMakeRange(kmRange.location+kmRange.length, minRange.location-(kmRange.location+kmRange.length))];
+//    
+//    // update illegal
+//    UIFont * font12 = [UIFont boldSystemFontOfSize:11];
+//    self.healthCell.IllegalCount.attributedText = [NSAttributedString stringWithNumber:@"0" font:DigitalFontSize(14) color:COLOR_STAT_RED andUnit:@" 新违章" font:font12 color:[UIColor whiteColor]];
+//    self.healthCell.IllegalPendingCount.attributedText = [NSAttributedString stringWithNumber:@"0" font:DigitalFontSize(14) color:COLOR_STAT_RED andUnit:@" 未处理违章" font:font12 color:[UIColor whiteColor]];
     
     self.healthCell.carMaintainProgress.progressFillColor = COLOR_STAT_RED;
 }
@@ -325,7 +340,7 @@
             [self updateTrip];
             cell = self.tripCell;
         } else {
-            self.healthCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"HomeHealthCellId" forIndexPath:indexPath];
+            self.healthCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"HomeHealthCellIdNew" forIndexPath:indexPath];
             [self updateHealth];
             cell = self.healthCell;
         }

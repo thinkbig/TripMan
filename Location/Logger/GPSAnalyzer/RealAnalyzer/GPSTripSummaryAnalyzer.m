@@ -63,18 +63,6 @@
     }
     
     [self appendVerifiedTrafficJamItem];
-    if (gpsLogs.count > 1) {
-        self.total_during = [((GPSLogItem*)[gpsLogs lastObject]).timestamp timeIntervalSinceDate:((GPSLogItem*)gpsLogs[0]).timestamp];
-    }
-    if (self.total_during > 0) {
-        self.avg_speed = _total_dist/_total_during;
-    }
-    if (self.day_during > 0) {
-        self.day_avg_speed = _day_dist/_day_during;
-    }
-    if (self.night_during > 0) {
-        self.night_avg_speed = _night_dist/_night_during;
-    }
     
     [self filterJamData];
     [self analyzeTrafficSum];
@@ -98,6 +86,21 @@
         lastRoute = filteredRoute;
         filteredRoute = [GPSOffTimeFilter filterWithTurning:filteredRoute];
     } while (filteredRoute.count != lastRoute.count);
+    
+    // 这里计算totledist等全局信息
+    [self calculateTotalInfo:filteredRoute];
+    if (gpsLogs.count > 1) {
+        self.total_during = [((GPSLogItem*)[gpsLogs lastObject]).timestamp timeIntervalSinceDate:((GPSLogItem*)gpsLogs[0]).timestamp];
+    }
+    if (self.total_during > 0) {
+        self.avg_speed = _total_dist/_total_during;
+    }
+    if (self.day_during > 0) {
+        self.day_avg_speed = _day_dist/_day_during;
+    }
+    if (self.night_during > 0) {
+        self.night_avg_speed = _night_dist/_night_during;
+    }
     
     if (filteredRoute.count < 2) {
         // 不可能发生，仅仅是保护
@@ -214,38 +217,35 @@
         // regard as noise
         during = distance/cAvgDrivingSpeed;
     }
-    
-    if (_total_dist <= 0) {
-        // first point
-        distance *= 1.414;
-        during = distance/cAvgDrivingSpeed;
-    }
-    _total_dist += distance;
-    _total_during += during;
+
+    //_total_dist += distance;
+    //_total_during += during;
     
     CGFloat curSpeed = ([item.speed floatValue] < 0 ? 0 : [item.speed floatValue]);
     if (curSpeed <= 0 && during > 5) {
         curSpeed = distance/during;
-    }
-    // filter the speed for noise
-    if (curSpeed > 30) {
-        if ([item.horizontalAccuracy doubleValue] > 100 || [self.lastItem.horizontalAccuracy doubleValue] > 100 || [item.timestamp timeIntervalSinceDate:self.lastItem.timestamp] > 60) {
-            curSpeed = 10;
-        } else if (curSpeed > 300/3.6) {
-            curSpeed = 30;
+        
+        // filter the speed for noise
+        if (curSpeed > 30) {
+            if ([item.horizontalAccuracy doubleValue] > 100 || [self.lastItem.horizontalAccuracy doubleValue] > 100 || [item.timestamp timeIntervalSinceDate:self.lastItem.timestamp] > 60) {
+                curSpeed = 10;
+            } else if (curSpeed > 60/3.6) {
+                curSpeed = 60/3.6;
+            }
         }
     }
+
     if (_max_speed < curSpeed) {
         _max_speed = curSpeed;
     }
     
     if ([self checkDayOrNight:item.timestamp]) {
-        _day_dist += distance;
-        _day_during += during;
+        //_day_dist += distance;
+        //_day_during += during;
         _day_max_speed = MAX(_day_max_speed, curSpeed);
     } else {
-        _night_dist += distance;
-        _night_during += during;
+        //_night_dist += distance;
+        //_night_during += during;
         _night_max_speed = MAX(_night_max_speed, curSpeed);
     }
     
@@ -257,6 +257,33 @@
     
     self.lastItem = item;
     self.lastLoc = curLoc;
+}
+
+- (void) calculateTotalInfo:(NSArray*)routeArr
+{
+    if (routeArr.count < 2) {
+        return;
+    }
+    
+    GPSLogItem * lastItem = routeArr[0];
+    for (int i = 1; i < routeArr.count; i++) {
+        GPSLogItem * curItem = routeArr[i];
+        CLLocationDistance distance = [curItem distanceFrom:lastItem];
+        NSTimeInterval during = [curItem.timestamp timeIntervalSinceDate:lastItem.timestamp];
+        
+        _total_dist += distance;
+        _total_during += during;
+        
+        if ([self checkDayOrNight:curItem.timestamp]) {
+            _day_dist += distance;
+            _day_during += during;
+        } else {
+            _night_dist += distance;
+            _night_during += during;
+        }
+        
+        lastItem = curItem;
+    }
 }
 
 - (NSArray*) getTrafficJams
