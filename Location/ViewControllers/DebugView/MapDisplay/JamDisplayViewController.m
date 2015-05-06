@@ -101,13 +101,8 @@ typedef NS_ENUM(NSUInteger, eDispMapType) {
 
 - (void) requestJamWithZone
 {
-    GeoRectBound * bound = [GeoRectBound new];
-    BMKCoordinateRegion region = self.mapView.region;
-    bound.minLat = region.center.latitude - region.span.latitudeDelta;
-    bound.maxLat = region.center.latitude + region.span.latitudeDelta;
-    bound.minLon = region.center.longitude - region.span.longitudeDelta;
-    bound.maxLon = region.center.longitude + region.span.longitudeDelta;
-    
+    GeoRectBound * bound = [BaiduHelper getBoundingBox:self.mapView.visibleMapRect];
+
     CTRealtimeJamFacade * facade = [[CTRealtimeJamFacade alloc] init];
     facade.geoBound = bound;
     [facade requestWithSuccess:^(NSArray * jamArr) {
@@ -141,13 +136,8 @@ typedef NS_ENUM(NSUInteger, eDispMapType) {
 
 - (void) requestTestDataWithZone
 {
-    GeoRectBound * bound = [GeoRectBound new];
-    BMKCoordinateRegion region = self.mapView.region;
-    bound.minLat = region.center.latitude - region.span.latitudeDelta;
-    bound.maxLat = region.center.latitude + region.span.latitudeDelta;
-    bound.minLon = region.center.longitude - region.span.longitudeDelta;
-    bound.maxLon = region.center.longitude + region.span.longitudeDelta;
-    
+    GeoRectBound * bound = [BaiduHelper getBoundingBox:self.mapView.visibleMapRect];
+
     CTTestFacade * facade = [[CTTestFacade alloc] init];
     facade.geoBound = bound;
     [facade requestWithSuccess:^(NSArray * jamArr) {

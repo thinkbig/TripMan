@@ -104,14 +104,10 @@
         delete [] pointsToUse;
         
         // 处理堵车数据
+        CLLocation * origLoc = [route.orig clLocation];
         NSArray * filteredJamArr = [oneStep jamsWithThreshold:cTrafficJamThreshold];
-        if (filteredJamArr.count > 0) {
-            CTJam * firstJam = filteredJamArr[0];
-            if ([route.orig distanceFrom:firstJam.from] < 300) {
-                firstJam.coef = @(1.414*2);
-            }
-        }
         for (CTJam * jam in filteredJamArr) {
+            [jam calCoefWithStartLoc:origLoc];
             NSArray * jamArr = [oneStep fullPathOfJam:jam];
             if (jamArr.count > 0) {
                 BMKMapPoint * jamsToUse = new BMKMapPoint[jamArr.count];

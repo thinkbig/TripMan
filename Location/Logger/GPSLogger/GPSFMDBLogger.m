@@ -107,7 +107,12 @@
         beforeDate = [NSDate distantFuture];
     }
     GPSEventItem * item = nil;
-    NSMutableString * cmd = [NSMutableString stringWithFormat:@"select * from gps_event where timestamp <= %f and eventType = %d order by timestamp desc limit 1", [beforeDate timeIntervalSince1970], (int)eventType];
+    NSMutableString * cmd = nil;
+    if (eGPSEventMonitorRegion == eventType) {
+        cmd = [NSMutableString stringWithFormat:@"select * from gps_event where timestamp <= %f and eventType = %d and (groupName = '%@' or groupName = '%@') order by timestamp desc limit 1", [beforeDate timeIntervalSince1970], (int)eventType, REGION_GROUP_LAST_STILL, REGION_GROUP_LAST_PARKING];
+    } else {
+        cmd = [NSMutableString stringWithFormat:@"select * from gps_event where timestamp <= %f and eventType = %d order by timestamp desc limit 1", [beforeDate timeIntervalSince1970], (int)eventType];
+    }
     FMResultSet *rs1 = [database executeQuery:cmd];
     while ([rs1 next]) {
         item = [[GPSEventItem alloc] initWithDBResultSet:rs1];
@@ -125,7 +130,12 @@
     }
 
     GPSEventItem * item = nil;
-    NSMutableString * cmd = [NSMutableString stringWithFormat:@"select * from gps_event where timestamp >= %f and timestamp <= %f and eventType = %d order by timestamp desc limit 1", [fromDate timeIntervalSince1970], [toDate timeIntervalSince1970], (int)eventType];
+    NSMutableString * cmd = nil;
+    if (eGPSEventMonitorRegion == eventType) {
+        cmd = [NSMutableString stringWithFormat:@"select * from gps_event where timestamp >= %f and timestamp <= %f and eventType = %d and (groupName = '%@' or groupName = '%@') order by timestamp desc limit 1", [fromDate timeIntervalSince1970], [toDate timeIntervalSince1970], (int)eventType, REGION_GROUP_LAST_STILL, REGION_GROUP_LAST_PARKING];
+    } else {
+        cmd = [NSMutableString stringWithFormat:@"select * from gps_event where timestamp >= %f and timestamp <= %f and eventType = %d order by timestamp desc limit 1", [fromDate timeIntervalSince1970], [toDate timeIntervalSince1970], (int)eventType];
+    }
     FMResultSet *rs1 = [database executeQuery:cmd];
     while ([rs1 next]) {
         item = [[GPSEventItem alloc] initWithDBResultSet:rs1];
@@ -142,7 +152,12 @@
         afterDate = [NSDate date];
     }
     GPSEventItem * item = nil;
-    NSMutableString * cmd = [NSMutableString stringWithFormat:@"select * from gps_event where timestamp >= %f and eventType = %d order by timestamp asc limit 1", [afterDate timeIntervalSince1970], (int)eventType];
+    NSMutableString * cmd = nil;
+    if (eGPSEventMonitorRegion == eventType) {
+        cmd = [NSMutableString stringWithFormat:@"select * from gps_event where timestamp >= %f and eventType = %d and (groupName = '%@' or groupName = '%@') order by timestamp asc limit 1", [afterDate timeIntervalSince1970], (int)eventType, REGION_GROUP_LAST_STILL, REGION_GROUP_LAST_PARKING];
+    } else {
+        cmd = [NSMutableString stringWithFormat:@"select * from gps_event where timestamp >= %f and eventType = %d order by timestamp asc limit 1", [afterDate timeIntervalSince1970], (int)eventType];
+    }
     FMResultSet *rs1 = [database executeQuery:cmd];
     while ([rs1 next]) {
         item = [[GPSEventItem alloc] initWithDBResultSet:rs1];

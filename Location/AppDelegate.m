@@ -10,7 +10,7 @@
 #import "DDASLLogger.h"
 #import "DDTTYLogger.h"
 #import "GPSLogger.h"
-#import <Parse/Parse.h>
+//#import <Parse/Parse.h>
 #import <Crashlytics/Crashlytics.h>
 #import "UserWrapper.h"
 #import "NSString+MD5.h"
@@ -96,7 +96,7 @@ static NSString * rebuildVal = @"value_0000000000005"; // make sure it is differ
     
     IS_UPDATING = NO;
     
-    BOOL ret = [self.baiduMapManager start:@"dKDmWAUwp4b0BhsxG6IGmiNn" generalDelegate:self];
+    BOOL ret = [self.baiduMapManager start:@"9NBl87wrIw0YYwwsp9SaGqNy" generalDelegate:self];
     if (!ret) {
         DDLogWarn(@"baidu mapmanager start failed!");
     }

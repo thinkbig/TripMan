@@ -290,7 +290,7 @@
     NSInteger offset = 0;
     NSInteger limit = 500;
     NSDate * detectStart = [tripSum.start_date dateByAddingMinutes:-3];
-    NSDate * detectEnd = [tripSum.end_date dateByAddingMinutes:10];
+    NSDate * detectEnd = tripSum.end_date;//[tripSum.end_date dateByAddingMinutes:10];
     NSArray * logArr = [loggerDB selectLogFrom:detectStart toDate:detectEnd offset:offset limit:limit];
     if (logArr.count == 0) {
         NSLog(@"not such trip from %@ to %@", tripSum.start_date, tripSum.end_date);

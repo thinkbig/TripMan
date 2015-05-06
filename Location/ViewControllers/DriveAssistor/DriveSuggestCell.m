@@ -52,9 +52,8 @@
         }
         [facade requestWithSuccess:^(CTRoute * result) {
             if (favLoc == self.favLoc) {
-                if ([result.most_jam.from distanceFromLoc:mLoc] < 300) {
-                    result.most_jam.coef = @(1.414*2);
-                }
+                [result.most_jam calCoefWithStartLoc:mLoc];
+
                 BOOL hasJam = [result.most_jam trafficStat] > eStepTrafficOk;
                 [self updateTimeDuring:[result.duration floatValue] andJamCnt:hasJam];
             }

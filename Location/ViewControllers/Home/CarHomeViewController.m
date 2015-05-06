@@ -171,9 +171,8 @@
     self.tripCell.statusLabel.text = @"目前道路无特殊情况";
     self.tripCell.statusColorView.backgroundColor = COLOR_STAT_GREEN;
     if (self.bestRoute.most_jam) {
-        if ([self.bestRoute.orig distanceFrom:self.bestRoute.most_jam.from] < 300) {
-            self.bestRoute.most_jam.coef = @(1.414*2);
-        }
+        [self.bestRoute.most_jam calCoefWithStartLoc:[self.bestRoute.orig clLocation]];
+
         eStepTraffic status = [self.bestRoute.most_jam trafficStat];
         if (self.bestRoute.most_jam.intro.length > 0) {
             self.tripCell.statusLabel.text = self.bestRoute.most_jam.intro;

@@ -62,6 +62,17 @@
     return [self.from distanceFrom:self.to];
 }
 
+- (void) calCoefWithStartLoc:(CLLocation*)stLoc
+{
+    if (stLoc) {
+        if ([self.to distanceFromLoc:stLoc] < 300) {
+            self.coef = @(10000);   // too close to start loc, just ignore
+        } else if ([self.from distanceFromLoc:stLoc] < 400) {
+            self.coef = @(1.414*2);
+        }
+    }
+}
+
 - (NSNumber<Optional> *)duration {
     if (nil == _duration) {
         if (self.from && self.to) {
@@ -277,21 +288,18 @@
 
 - (eStepTraffic) trafficStat
 {
+    CLLocation * origLoc = [self.orig clLocation];
     if (self.most_jam) {
-        if ([self.orig distanceFrom:self.most_jam.from] < 300) {
-            self.most_jam.coef = @(1.414*2);
-        }
+        [self.most_jam calCoefWithStartLoc:origLoc];
+
         return [self.most_jam trafficStat];
     }
-    if (self.steps.count > 0) {
-        CTStep * firstStep = self.steps[0];
-        if (firstStep.jams.count > 0) {
-            CTJam * firstJam = firstStep.jams[0];
-            if ([self.orig distanceFrom:firstJam.from] < 300) {
-                firstJam.coef = @(1.414*2);
-            }
+    for (CTStep * step in self.steps) {
+        for (CTJam * jam in step.jams) {
+            [jam calCoefWithStartLoc:origLoc];
         }
     }
+
     NSInteger maxTraffic = eStepTrafficOk;
     for (CTStep * step in self.steps) {
         eStepTraffic curStat = [step trafficStat];

@@ -46,14 +46,10 @@
         }
     }
     
-    if (jamInfo.count > 0) {
-        CTJam * firstJam = jamInfo[0];
-        if ([route.orig distanceFrom:firstJam.from] < 300) {
-            firstJam.coef = @(1.414*2);
-        }
-    }
+    CLLocation * origLoc = [route.orig clLocation];
     NSMutableArray * filterdArr = [NSMutableArray arrayWithCapacity:jamInfo.count];
     for (CTJam * jam in jamInfo) {
+        [jam calCoefWithStartLoc:origLoc];
         if ([jam trafficStat] > eStepTrafficOk) {
             [filterdArr addObject:jam];
         }

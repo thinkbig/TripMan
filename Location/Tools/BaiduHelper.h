@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "GeoRectBound.h"
 
 #define BDBUNDLE_NAME @ "mapapi.bundle"
 #define BDBUNDLE_PATH [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: BDBUNDLE_NAME]
@@ -18,5 +19,7 @@
 
 - (UIImage*) imageNamed:(NSString*)filename;
 + (CGFloat) mapAngleFromPoint:(CGPoint)fromPt toPoint:(CGPoint)toPt;
+
++ (GeoRectBound*) getBoundingBox:(BMKMapRect)mRect;
 
 @end
