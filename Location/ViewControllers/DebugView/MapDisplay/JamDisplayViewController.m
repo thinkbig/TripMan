@@ -9,13 +9,22 @@
 #import "JamDisplayViewController.h"
 #import "BaiduHelper.h"
 #import "CTRealtimeJamFacade.h"
+#import "CTTestFacade.h"
 #import "RouteAnnotation.h"
 #import "UIImage+Rotate.h"
 #import "JamZone.h"
+#import "RouteOverlayView.h"
+#import "ActionSheetStringPicker.h"
+
+typedef NS_ENUM(NSUInteger, eDispMapType) {
+    eDispMapTypeJam = 0,
+    eDispMapTypeTest,
+};
 
 @interface JamDisplayViewController ()
 
 @property (nonatomic, strong) BaiduHelper *     bdHelper;
+@property (nonatomic) eDispMapType              dispType;
 
 @end
 
@@ -31,6 +40,7 @@
     // Do any additional setup after loading the view.
     
     self.title = @"实时拥堵地图";
+    self.dispType = eDispMapTypeJam;
     
     if (nil == self.mapView) {
         self.mapView = [[BMKMapView alloc] initWithFrame:self.view.bounds];
@@ -38,7 +48,7 @@
         self.mapView.zoomEnabled = YES;
         self.mapView.scrollEnabled = YES;
         self.mapView.showsUserLocation = YES;
-        self.mapView.userTrackingMode = BMKUserTrackingModeFollow;
+        self.mapView.userTrackingMode = BMKUserTrackingModeNone;
         [self.view addSubview:self.mapView];
     }
     self.mapView.showsUserLocation = YES;
@@ -48,7 +58,9 @@
     BMKCoordinateRegion adjustedRegion = [_mapView regionThatFits:viewRegion];
     [_mapView setRegion:adjustedRegion animated:YES];
     
-    [self requestJamWithZone];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self requestJamWithZone];
+    });
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -75,7 +87,16 @@
 }
 
 - (IBAction)refresh:(id)sender {
-    [self requestJamWithZone];
+    [ActionSheetStringPicker showPickerWithTitle:@"选择要显示的内容" rows:@[@"实时拥堵地图", @"路径拆分"] initialSelection:0 doneBlock:^(ActionSheetStringPicker *picker, NSInteger selectedIndex, id selectedValue) {
+        self.title = selectedValue;
+        if (0 == selectedIndex) {
+            self.dispType = eDispMapTypeJam;
+            [self requestJamWithZone];
+        } else if (1 == selectedIndex) {
+            self.dispType = eDispMapTypeTest;
+            [self requestTestDataWithZone];
+        }
+    } cancelBlock:nil origin:self.view];
 }
 
 - (void) requestJamWithZone
@@ -118,6 +139,53 @@
     [self.mapView reloadInputViews];
 }
 
+- (void) requestTestDataWithZone
+{
+    GeoRectBound * bound = [GeoRectBound new];
+    BMKCoordinateRegion region = self.mapView.region;
+    bound.minLat = region.center.latitude - region.span.latitudeDelta;
+    bound.maxLat = region.center.latitude + region.span.latitudeDelta;
+    bound.minLon = region.center.longitude - region.span.longitudeDelta;
+    bound.maxLon = region.center.longitude + region.span.longitudeDelta;
+    
+    CTTestFacade * facade = [[CTTestFacade alloc] init];
+    facade.geoBound = bound;
+    [facade requestWithSuccess:^(NSArray * jamArr) {
+        [self updateWithTestArr:jamArr];
+    } failure:^(NSError * err) {
+        NSLog(@"err = %@", err);
+    }];
+}
+
+- (void) updateWithTestArr:(NSArray*)jamArr
+{
+    [self.mapView removeAnnotations:self.mapView.annotations];
+    [self.mapView removeOverlays:self.mapView.overlays];
+    
+    for (CTJam * jam in jamArr) {
+        CLLocationCoordinate2D fromCoor = jam.from.coordinate;//[GeoTransformer earth2Baidu:jam.from.coordinate];
+        CLLocationCoordinate2D toCoor = jam.to.coordinate;//[GeoTransformer earth2Baidu:jam.to.coordinate];
+        
+        BMKMapPoint jamsToUse[2];
+        jamsToUse[0] = BMKMapPointForCoordinate(fromCoor);
+        jamsToUse[1] = BMKMapPointForCoordinate(toCoor);
+        
+        RouteOverlay * jamOne = [RouteOverlay routeWithPoints:jamsToUse count:2];
+        jamOne.title = @"route_arrow";
+        [self.mapView addOverlay:jamOne];
+        
+        BMKCircle * circleSt = [BMKCircle circleWithCenterCoordinate:fromCoor radius:10];
+        circleSt.title = @"start";
+        [self.mapView addOverlay:circleSt];
+        
+        BMKCircle * circleEd = [BMKCircle circleWithCenterCoordinate:toCoor radius:10];
+        circleEd.title = @"end";
+        [self.mapView addOverlay:circleEd];
+    }
+    
+    [self.mapView reloadInputViews];
+}
+
 /*
 #pragma mark - Navigation
 
@@ -134,25 +202,21 @@
 - (BMKOverlayView *)mapView:(BMKMapView *)mapView viewForOverlay:(id <BMKOverlay>)overlay
 {
     BMKOverlayView* overlayView = nil;
-    if ([overlay isKindOfClass:[BMKPolyline class]])
+    if ([overlay isKindOfClass:[RouteOverlay class]])
     {
-        BMKPolyline * line = (BMKPolyline*)overlay;
-        BMKPolylineView * routeLineView = [[BMKPolylineView alloc] initWithPolyline:line];
-        routeLineView.lineWidth = 8;
-        if ([line.title isEqualToString:@"green"]) {
-            routeLineView.strokeColor = [UIColor colorWithRed:20.0f/255.0f green:220.0f/255.0f blue:255.0f/255.0f alpha:0.8];
-        } else if ([line.title isEqualToString:@"yellow"]) {
-            routeLineView.strokeColor = [UIColor colorWithRed:210.0f/255.0f green:225.0f/255.0f blue:15.0f/255.0f alpha:0.8];
-        } else if ([line.title isEqualToString:@"red"]) {
-            routeLineView.strokeColor = [UIColor colorWithRed:255.0f/255.0f green:12.0f/255.0f blue:55.0f/255.0f alpha:0.8];
-        }
-        
-        overlayView = routeLineView;
+        RouteOverlayView * routeView = [[RouteOverlayView alloc] initWithOverlay:overlay];
+        routeView.lineWidth = 8;
+        return routeView;
     }
     else if ([overlay isKindOfClass:[BMKCircle class]])
     {
-        BMKCircleView * circleRender=[[BMKCircleView alloc] initWithOverlay:overlay] ;
-        circleRender.strokeColor=[UIColor colorWithRed:255.0f/255.0f green:112.0f/255.0f blue:155.0f/255.0f alpha:0.9];
+        BMKCircleView * circleRender=[[BMKCircleView alloc] initWithOverlay:overlay];
+        BMKCircle * circleOverlay = (BMKCircle*)overlay;
+        if ([circleOverlay.title isEqualToString:@"start"]) {
+            circleRender.strokeColor = [UIColor redColor];
+        } else {
+            circleRender.strokeColor = [UIColor greenColor];
+        }
         circleRender.lineWidth = 3.0;
         return circleRender;
     }
@@ -232,6 +296,17 @@
     }
     
     return view;
+}
+
+- (void)mapView:(BMKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
+{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        if (eDispMapTypeJam == self.dispType) {
+            [self requestJamWithZone];
+        } else if (eDispMapTypeTest == self.dispType) {
+            [self requestTestDataWithZone];
+        }
+    });
 }
 
 @end

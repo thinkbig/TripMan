@@ -124,6 +124,10 @@
 		A359E60B1AEFC32C00D7FF10 /* WeatherInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A359E60A1AEFC32C00D7FF10 /* WeatherInfo.m */; };
 		A359E60E1AEFC32C00D7FF10 /* Extend.m in Sources */ = {isa = PBXBuildFile; fileRef = A359E60D1AEFC32C00D7FF10 /* Extend.m */; };
 		A359E6121AF0736000D7FF10 /* TripSimulator.m in Sources */ = {isa = PBXBuildFile; fileRef = A359E6111AF0736000D7FF10 /* TripSimulator.m */; };
+		A359E6151AF31D3500D7FF10 /* EditCarinfo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A359E6141AF31D3500D7FF10 /* EditCarinfo.storyboard */; };
+		A359E6181AF3215F00D7FF10 /* CarMaintainInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A359E6171AF3215F00D7FF10 /* CarMaintainInfoViewController.m */; };
+		A359E61B1AF395D600D7FF10 /* CarMaintainInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A359E61A1AF395D600D7FF10 /* CarMaintainInfo.m */; };
+		A359E6241AF8FAA200D7FF10 /* CTTestFacade.m in Sources */ = {isa = PBXBuildFile; fileRef = A359E6231AF8FAA200D7FF10 /* CTTestFacade.m */; };
 		A35BC7251AA2E98900D726D4 /* CTWakeupFacade.m in Sources */ = {isa = PBXBuildFile; fileRef = A35BC7241AA2E98900D726D4 /* CTWakeupFacade.m */; };
 		A35BC7291AA35B7D00D726D4 /* NSString+ShiftEncode.m in Sources */ = {isa = PBXBuildFile; fileRef = A35BC7281AA35B7D00D726D4 /* NSString+ShiftEncode.m */; };
 		A35BC72F1AA4244C00D726D4 /* DataReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = A35BC72E1AA4244C00D726D4 /* DataReporter.m */; };
@@ -499,6 +503,13 @@
 		A359E60D1AEFC32C00D7FF10 /* Extend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Extend.m; sourceTree = "<group>"; };
 		A359E6101AF0736000D7FF10 /* TripSimulator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TripSimulator.h; sourceTree = "<group>"; };
 		A359E6111AF0736000D7FF10 /* TripSimulator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripSimulator.m; sourceTree = "<group>"; };
+		A359E6141AF31D3500D7FF10 /* EditCarinfo.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = EditCarinfo.storyboard; sourceTree = "<group>"; };
+		A359E6161AF3215F00D7FF10 /* CarMaintainInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CarMaintainInfoViewController.h; sourceTree = "<group>"; };
+		A359E6171AF3215F00D7FF10 /* CarMaintainInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CarMaintainInfoViewController.m; sourceTree = "<group>"; };
+		A359E6191AF395D600D7FF10 /* CarMaintainInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CarMaintainInfo.h; sourceTree = "<group>"; };
+		A359E61A1AF395D600D7FF10 /* CarMaintainInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CarMaintainInfo.m; sourceTree = "<group>"; };
+		A359E6221AF8FAA200D7FF10 /* CTTestFacade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTTestFacade.h; sourceTree = "<group>"; };
+		A359E6231AF8FAA200D7FF10 /* CTTestFacade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTTestFacade.m; sourceTree = "<group>"; };
 		A35BC7201A9AE34500D726D4 /* UrlDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UrlDefine.h; sourceTree = "<group>"; };
 		A35BC7231AA2E98900D726D4 /* CTWakeupFacade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTWakeupFacade.h; sourceTree = "<group>"; };
 		A35BC7241AA2E98900D726D4 /* CTWakeupFacade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTWakeupFacade.m; sourceTree = "<group>"; };
@@ -1500,6 +1511,16 @@
 			path = Debug;
 			sourceTree = "<group>";
 		};
+		A359E6131AF31BAA00D7FF10 /* InputCarInfo */ = {
+			isa = PBXGroup;
+			children = (
+				A359E6141AF31D3500D7FF10 /* EditCarinfo.storyboard */,
+				A359E6161AF3215F00D7FF10 /* CarMaintainInfoViewController.h */,
+				A359E6171AF3215F00D7FF10 /* CarMaintainInfoViewController.m */,
+			);
+			path = InputCarInfo;
+			sourceTree = "<group>";
+		};
 		A35BC7221AA2E94800D726D4 /* CTReport */ = {
 			isa = PBXGroup;
 			children = (
@@ -2231,6 +2252,8 @@
 				A39E31471AB6D395004F0D95 /* CTTrafficLightFacade.m */,
 				A301EB631AE0F77C00CC6412 /* CTRealtimeJamFacade.h */,
 				A301EB641AE0F77C00CC6412 /* CTRealtimeJamFacade.m */,
+				A359E6221AF8FAA200D7FF10 /* CTTestFacade.h */,
+				A359E6231AF8FAA200D7FF10 /* CTTestFacade.m */,
 				A301EB691AE3A70300CC6412 /* CTTimePredictFacade.h */,
 				A301EB6A1AE3A70300CC6412 /* CTTimePredictFacade.m */,
 			);
@@ -2342,6 +2365,8 @@
 				A3E289201ACB994A0043F14C /* CTInstReportModel.m */,
 				A301EB661AE0FE6300CC6412 /* JamZone.h */,
 				A301EB671AE0FE6300CC6412 /* JamZone.m */,
+				A359E6191AF395D600D7FF10 /* CarMaintainInfo.h */,
+				A359E61A1AF395D600D7FF10 /* CarMaintainInfo.m */,
 			);
 			path = Chetu;
 			sourceTree = "<group>";
@@ -2387,6 +2412,7 @@
 		A3E2894A1AD132050043F14C /* UserGuide */ = {
 			isa = PBXGroup;
 			children = (
+				A359E6131AF31BAA00D7FF10 /* InputCarInfo */,
 				A3E2894B1AD13B780043F14C /* NoGpsHint */,
 			);
 			path = UserGuide;
@@ -2612,6 +2638,7 @@
 				A3E289361ACD31B60043F14C /* SearchHistoryCell.xib in Resources */,
 				A34F00FE1A03D0BD00F58C17 /* CarTrip.storyboard in Resources */,
 				A3E289571AD16FC70043F14C /* OpenGps.storyboard in Resources */,
+				A359E6151AF31D3500D7FF10 /* EditCarinfo.storyboard in Resources */,
 				A34F00FC1A03D0B200F58C17 /* CarHome.storyboard in Resources */,
 				A34F00F81A03CFDB00F58C17 /* CarAssistor.storyboard in Resources */,
 			);
@@ -2683,6 +2710,7 @@
 				A3FDD16F1A02814D007B3C65 /* UIControl+Blocks.m in Sources */,
 				A3BD72AF1A15A9950007ECA1 /* BaiduMarkModel.m in Sources */,
 				A34890681A3FCB6F002DE948 /* AJJson2ObjectSerializer.m in Sources */,
+				A359E6181AF3215F00D7FF10 /* CarMaintainInfoViewController.m in Sources */,
 				A30405461AE911E90047E66B /* VersionInfoViewController.m in Sources */,
 				A35C26261A426F4B005F6658 /* NSDate+RZExtensions.m in Sources */,
 				A35C26411A426F4B005F6658 /* RZProgressView.m in Sources */,
@@ -2694,6 +2722,7 @@
 				A3CD360E19C9767F0039F6E1 /* GPSAnalyzerOffTime.m in Sources */,
 				A35BC7251AA2E98900D726D4 /* CTWakeupFacade.m in Sources */,
 				A30405431AE911D50047E66B /* FeedbackViewController.m in Sources */,
+				A359E6241AF8FAA200D7FF10 /* CTTestFacade.m in Sources */,
 				A35C26421A426F4B005F6658 /* RZRevealViewController.m in Sources */,
 				A38D88341AEC8B8B000881FD /* DebugTableCell.m in Sources */,
 				A3FDD17A1A028A6B007B3C65 /* GViewController.m in Sources */,
@@ -2781,6 +2810,7 @@
 				A3B5DFC91A49200C00576F77 /* FXLabel.m in Sources */,
 				A35C26301A426F4B005F6658 /* UIImage+RZResize.m in Sources */,
 				A3326B281A2DFAA800C9F1C9 /* GToolUtil.m in Sources */,
+				A359E61B1AF395D600D7FF10 /* CarMaintainInfo.m in Sources */,
 				A35C263C1A426F4B005F6658 /* RZCollectionTableView.m in Sources */,
 				A3CD361219C9CDC90039F6E1 /* GPSTripSummaryAnalyzer.m in Sources */,
 				A34F00F61A03CC5600F58C17 /* MainTabViewController.m in Sources */,

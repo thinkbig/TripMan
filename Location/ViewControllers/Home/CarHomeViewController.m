@@ -95,63 +95,6 @@
         
         [self.homeCollection reloadData];
     }
-    
-//    self.bestTrip = nil;
-//    NSDate * now = [NSDate date];
-//    CLLocation * curLoc = [BussinessDataProvider lastGoodLocation];
-//    if (curLoc) {
-//        ParkingRegionDetail * parkingDetail = [[AnaDbManager sharedInst] parkingDetailForCoordinate:curLoc.coordinate minDist:500];
-//        NSArray * mostTrips = [[AnaDbManager sharedInst] tripsWithStartRegion:parkingDetail.coreDataItem tripLimit:10 startDate:now];
-//        if (mostTrips.count > 0) {
-//            self.bestTrip = mostTrips[0];
-//            NSArray * timeFilterArr = [TripFilter filterTrips:mostTrips byTime:now between:-60 toMinute:60];
-//            if (timeFilterArr.count > 0) {
-//                self.bestTrip = timeFilterArr[0];
-//                NSArray * weekendFilterArr = [TripFilter filterTrips:mostTrips byDayType:[TripFilter dayTypeByDate:now]];
-//                if (weekendFilterArr.count > 0) {
-//                    self.bestTrip = weekendFilterArr[0];
-//                }
-//            }
-//        }
-//        if (nil == self.bestTrip) {
-//            // 取这次旅程的起点作为猜测
-//            TripSummary * lastTrip = [[AnaDbManager sharedInst] lastTrip];
-//            if (lastTrip && lastTrip.region_group.start_region != lastTrip.region_group.end_region) {
-//                self.bestGuessDest = lastTrip.region_group.start_region;
-//            }
-//        } else {
-//            self.bestGuessDest = self.bestTrip.region_group.end_region;
-//        }
-//        
-//        if (nil == self.bestGuessDest) {
-//            // 所以停车位置中，去过最多的那个作为猜测，去除当前位置点
-//            NSArray * parkLoc = [[AnaDbManager sharedInst] mostUsedParkingRegionLimit:2];
-//            for (ParkingRegionDetail * locDetail in parkLoc) {
-//                if (parkingDetail != locDetail) {
-//                    self.bestGuessDest = locDetail.coreDataItem;
-//                    break;
-//                }
-//            }
-//        }
-//        
-//        if (self.bestGuessDest) {
-//            CTTrafficAbstractFacade * facade = [[CTTrafficAbstractFacade alloc] init];
-//            facade.fromCoorBaidu = [GeoTransformer earth2Baidu:curLoc.coordinate];
-//            facade.toCoorBaidu = [GeoTransformer earth2Baidu:self.bestGuessDest.centerCoordinate];
-//            if (parkingDetail) {
-//                facade.fromParkingId = parkingDetail.coreDataItem.parking_id;
-//                facade.toParkingId = self.bestGuessDest.parking_id;
-//            }
-//            [facade requestWithSuccess:^(CTRoute * result) {
-//                self.bestRoute = result;
-//                [self.homeCollection reloadData];
-//            } failure:^(NSError * err) {
-//                //NSLog(@"asdfasdf = %@", err);
-//            }];
-//        }
-//    }
-//    
-//    [self.homeCollection reloadData];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -214,9 +157,9 @@
         self.tripCell.duringLabel.text = [NSString stringWithFormat:@"%02d", (int)([self.bestRoute.duration floatValue]/60.0)];
         BOOL hasJam = [self.bestRoute.most_jam.duration floatValue] > cTrafficJamThreshold;
         self.tripCell.jamLabel.text = [NSString stringWithFormat:@"%ld", (long)hasJam];
-        NSDate * dateNow = [NSDate date];
+        NSDate * dateArrive = [NSDate dateWithTimeIntervalSinceNow:[self.bestRoute.duration floatValue]];
         NSDateFormatter * formatter = [[BussinessDataProvider sharedInstance] dateFormatterForFormatStr:@"HH:mm"];
-        self.tripCell.suggestLabel.text = dateNow ? [formatter stringFromDate:dateNow] : @"00:00";
+        self.tripCell.suggestLabel.text = dateArrive ? [formatter stringFromDate:dateArrive] : @"00:00";
     }
     else
     {

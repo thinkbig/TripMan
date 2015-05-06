@@ -262,7 +262,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="5x2-iU-ofY">
-                        <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="PLP-hJ-Y2x">
+                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="PLP-hJ-Y2x">
                             <connections>
                                 <action selector="refresh:" destination="8Dq-Lv-r8e" id="qxt-qi-zoO"/>
                             </connections>

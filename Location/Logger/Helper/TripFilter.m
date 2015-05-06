@@ -25,7 +25,7 @@
     NSMutableArray * backupSums = [NSMutableArray array];
     for (TripSummary * sum in rawArr) {
         NSTimeInterval timetoRef = [sum.start_date minutesFromDateIgnoreDay:refTime];
-        if (timetoRef >= fromMinute || timetoRef <= toMinute) {
+        if (timetoRef >= fromMinute && timetoRef <= toMinute) {
             [backupSums addObject:sum];
         }
     }

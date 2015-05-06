@@ -485,7 +485,10 @@ static BussinessDataProvider * _sharedProvider = nil;
                     break;
                 }
             }
-            if (!hasAdded) {
+            if (stRegion) {
+                if (!hasAdded) {
+                    [finalArr addObject:stRegion];
+                }
                 ParkingRegionDetail * findDetail = nil;
                 for (ParkingRegionDetail * detail in otherRegions) {
                     if (detail.coreDataItem == stRegion) {
@@ -493,10 +496,8 @@ static BussinessDataProvider * _sharedProvider = nil;
                         break;
                     }
                 }
-                // 把出发地址点移到队列最前面
                 if (findDetail) {
                     [otherRegions removeObject:findDetail];
-                    [otherRegions insertObject:findDetail atIndex:0];
                 }
             }
         }

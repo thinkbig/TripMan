@@ -47,6 +47,9 @@
         if ([item.horizontalAccuracy doubleValue] > 1000 || [last distanceFrom:item] < 30 || [last.timestamp timeIntervalSinceDate:item.timestamp] < 10) {
             continue;
         }
+        if (prevLog && [item.timestamp timeIntervalSinceDate:prevLog.timestamp] < 3) {
+            continue;
+        }
         
         GPSLogItem * windowBegin = gpsLogs[windowBeginIdx];
         if ([item.timestamp timeIntervalSinceDate:windowBegin.timestamp] >= window) {
@@ -100,9 +103,9 @@
         }
         
         if (prevLog && [prevLog.speed floatValue] >= 0) {
-            //CGFloat during = [item.timestamp timeIntervalSinceDate:prevLog.timestamp];
-            CGFloat dist = [item distanceFrom:prevLog];
             CGFloat prevSpeed = [prevLog.speed floatValue];
+            CGFloat during = [item.timestamp timeIntervalSinceDate:prevLog.timestamp];
+            CGFloat dist = prevSpeed*during;
             if (prevSpeed > 80.0/3.6) {
                 self.during_80_NA += dist;
             } else if (prevSpeed > 40.0/3.6) {

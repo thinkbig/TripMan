@@ -38,7 +38,7 @@
     if (jamDuration > cHeavyTrafficJamThreshold) {
         if (speed < cInsTrafficJamSpeed) {
             curStat = eStepTrafficVerySlow;
-        } else {
+        } else if (speed < cInsTrafficJamSpeed/2.0) {
             curStat = eStepTrafficSlow;
         }
     } else if (jamDuration > cTrafficJamThreshold) {

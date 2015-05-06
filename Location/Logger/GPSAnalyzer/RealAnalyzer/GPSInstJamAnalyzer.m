@@ -103,9 +103,9 @@
     GPSLogItem * jamEnd = jamPair.second;
     CGFloat thisDuring = [jamEnd.timestamp timeIntervalSinceDate:jamStart.timestamp];
     
-    if (thisDuring > 60*3) {
+    if (thisDuring > 60*5) {
         return eJamAnalyzeStatConfirmed;
-    } else if (thisDuring > 60) {
+    } else if (thisDuring > 60*2) {
         return eJamAnalyzeStatMaybe;
     } else if (self.trafficJamArr.count > 0) {
         return eJamAnalyzeStatPendding;

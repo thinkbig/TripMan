@@ -13,6 +13,7 @@
 @interface GPSLogger () {
     
     NSString *      _rootDir;
+    NSString *      _tempDir;
     
 }
 
@@ -37,27 +38,57 @@
 - (NSString *)logRootDirectory
 {
     if (nil == _rootDir) {
-        //NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         _rootDir = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
     }
     return _rootDir;
 }
 
+- (NSString *)logTempDirectory
+{
+    if (nil == _tempDir) {
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+        _tempDir = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
+    }
+    return _tempDir;
+}
+
 - (NSString *)dbLogRootDirectory
 {
-    return [[self logRootDirectory] stringByAppendingPathComponent:@"gpslog"];
+    return [[self logRootDirectory] stringByAppendingPathComponent:@"gpsDB"];
+    //return [[self logRootDirectory] stringByAppendingPathComponent:@"gpslog"];
 }
 
 - (NSString *)fileLogRootDirectory
 {
-    return [[self logRootDirectory] stringByAppendingPathComponent:@"fileLog"];;
+    return [[self logTempDirectory] stringByAppendingPathComponent:@"fileLog"];
+}
+
+- (void) renameDir
+{
+    // 用来修改文件夹名字，最初的命名有问题，可能会被苹果认为是log文件不允许放到document文件夹里面
+    // 修改gpslog路径，gpslog改为gpsdb
+    NSString * dbLogDir = [self dbLogRootDirectory];
+    BOOL isDirectory;
+    if (![[NSFileManager defaultManager] fileExistsAtPath:dbLogDir isDirectory:&isDirectory]) {
+        [[NSFileManager defaultManager] createDirectoryAtPath:dbLogDir withIntermediateDirectories:YES attributes:nil error:nil];
+    }
+    
+    NSString * dbPath = [dbLogDir stringByAppendingPathComponent:@"gps.sqlite"];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:dbPath isDirectory:&isDirectory]) {
+        NSString * oldDir = [[self logRootDirectory] stringByAppendingPathComponent:@"gpslog"];
+        NSString * oldPath = [oldDir stringByAppendingPathComponent:@"gps.sqlite"];
+        
+        [[NSFileManager defaultManager] copyItemAtPath:oldPath toPath:dbPath error:nil];
+    }
 }
 
 - (id)init
 {
     self = [super init];
     if (self) {
+        [self renameDir];
+        
         NSDictionary * lastGoodGPS = [[NSUserDefaults standardUserDefaults] objectForKey:kLastestGoodGPSData];
         if (lastGoodGPS[@"timestamp"]) {
             if ([[NSDate date] timeIntervalSinceDate:lastGoodGPS[@"timestamp"]] > cOntOfDateThreshold) {

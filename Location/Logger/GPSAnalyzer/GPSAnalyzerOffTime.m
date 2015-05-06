@@ -290,7 +290,8 @@
     NSInteger offset = 0;
     NSInteger limit = 500;
     NSDate * detectStart = [tripSum.start_date dateByAddingMinutes:-3];
-    NSArray * logArr = [loggerDB selectLogFrom:detectStart toDate:tripSum.end_date offset:offset limit:limit];
+    NSDate * detectEnd = [tripSum.end_date dateByAddingMinutes:10];
+    NSArray * logArr = [loggerDB selectLogFrom:detectStart toDate:detectEnd offset:offset limit:limit];
     if (logArr.count == 0) {
         NSLog(@"not such trip from %@ to %@", tripSum.start_date, tripSum.end_date);
         return;
@@ -358,7 +359,7 @@
     while (logArr.count > 0) {
         [rawData addObjectsFromArray:logArr];
         offset += logArr.count;
-        logArr = [loggerDB selectLogFrom:tripSum.start_date toDate:tripSum.end_date offset:offset limit:limit];
+        logArr = [loggerDB selectLogFrom:detectStart toDate:detectEnd offset:offset limit:limit];
     }
     
     NSUInteger realEndIdx = rawData.count - 1;

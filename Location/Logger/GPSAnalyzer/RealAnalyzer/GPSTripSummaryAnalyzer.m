@@ -127,16 +127,14 @@
         NSMutableArray * realSteps = [NSMutableArray arrayWithCapacity:mergedRoute.count];
         lastItem = mergedRoute[0];
         NSUInteger routeIdx = 0;
+        CTJam * curJam = nil;
         for (int i = 1; i < mergedRoute.count; i++) {
             GPSLogItem * curItem = mergedRoute[i];
             CTStep * step = [[CTStep alloc] init];
             step.from = [[CTBaseLocation alloc] initWithLogItem:lastItem];
             step.to = [[CTBaseLocation alloc] initWithLogItem:curItem];
             NSMutableArray * curJams = [NSMutableArray array];
-            
-            // jam info
-            CTJam * curJam = nil;
-            
+
             // match curItem
             NSString * seg = @"";
             NSMutableString * pathString = [NSMutableString string];
@@ -319,7 +317,7 @@
         CGFloat jamDist = [anotherItem distanceFrom:oneItem];
         CGFloat jamDuring = [anotherItem.timestamp timeIntervalSinceDate:oneItem.timestamp];
         
-        if (jamDist < 200 || jamDuring < 30) {
+        if (jamDist < 100 || jamDuring < 20) {
             lastPair.second = curPair.second;
         } else {
             if ([self isValidJam:lastPair]) {

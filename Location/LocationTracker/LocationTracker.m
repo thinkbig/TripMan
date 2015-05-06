@@ -580,10 +580,16 @@ typedef enum
         NSTimeInterval locationAge = -[newLocation.timestamp timeIntervalSinceNow];
         
         if (locationAge > 60.0) {
+            if (i == locations.count-1) {
+                return;
+            }
             continue;
         }
         
-        if (_lastLoc && [newLocation.timestamp timeIntervalSinceDate:_lastLoc.timestamp] < 1 && [_lastLoc distanceFromLocation:newLocation] < 20) {
+        if (_lastLoc && [newLocation.timestamp timeIntervalSinceDate:_lastLoc.timestamp] < 1) {
+            if (i == locations.count-1) {
+                return;
+            }
             // 说明是重复点，忽略
             continue;
         }
@@ -600,49 +606,51 @@ typedef enum
             }
             
             CGFloat speed = newLocation.speed;
-            NSTimeInterval interval = 0;
-            if (speed < 0 && _lastLoc) {
-                interval = [newLocation.timestamp timeIntervalSinceDate:_lastLoc.timestamp];
-                CGFloat dist = [newLocation distanceFromLocation:_lastLoc];
-                if (interval > 2 && ((newLocation.horizontalAccuracy < kPoorHorizontalAccuracy && _lastLoc.horizontalAccuracy < kPoorHorizontalAccuracy) || dist > 50)) {
-                    // if the gps signal is too low, we can not cal the speed
-                    CGFloat tmpSpeed = dist/interval;
-                    if (tmpSpeed < cAvgNoiceSpeed) {
-                        if (!_isDriving) {
-                            BOOL skipModify = NO;
-                            if (newLocation.horizontalAccuracy > kPoorHorizontalAccuracy && _lastLoc.horizontalAccuracy > kPoorHorizontalAccuracy) {
-                                skipModify = YES;
-                            }
-                            CGFloat angleThres = 100;
-                            if (tmpSpeed > cAvgDrivingSpeed*2) {
-                                if (newLocation.horizontalAccuracy > kLowHorizontalAccuracy || _lastLoc.horizontalAccuracy > kLowHorizontalAccuracy) {
-                                    angleThres = 50;
-                                }
-                            }
-                            if (!skipModify && _lastLastLoc) {
-                                CGFloat angle = [GPSOffTimeFilter checkPointAngle:[GPSOffTimeFilter coor2Point:_lastLastLoc.coordinate] antPt:[GPSOffTimeFilter coor2Point:_lastLoc.coordinate] antPt:[GPSOffTimeFilter coor2Point:newLocation.coordinate]];
-                                if (angle < angleThres) {
-                                    // filter the wrong gps
-                                    speed = tmpSpeed;
-                                }
-                            }
-                        } else {
-                            speed = tmpSpeed;
-                        }
-                        if (isMost) {
-                            calSpeed = speed;
-                        }
-                    }
-                }
-            }
+//            NSTimeInterval interval = 0;
+//            if (speed < 0 && _lastLoc) {
+//                interval = [newLocation.timestamp timeIntervalSinceDate:_lastLoc.timestamp];
+//                CGFloat dist = [newLocation distanceFromLocation:_lastLoc];
+//                if (interval > 3 && ((newLocation.horizontalAccuracy < kPoorHorizontalAccuracy && _lastLoc.horizontalAccuracy < kPoorHorizontalAccuracy) || dist > 50)) {
+//                    // if the gps signal is too low, we can not cal the speed
+//                    CGFloat tmpSpeed = dist/interval;
+//                    if (tmpSpeed < cAvgNoiceSpeed) {
+//                        if (!_isDriving) {
+//                            BOOL skipModify = NO;
+//                            if (newLocation.horizontalAccuracy > kPoorHorizontalAccuracy && _lastLoc.horizontalAccuracy > kPoorHorizontalAccuracy) {
+//                                skipModify = YES;
+//                            }
+//                            CGFloat angleThres = 100;
+//                            if (tmpSpeed > cAvgDrivingSpeed*2) {
+//                                if (newLocation.horizontalAccuracy > kLowHorizontalAccuracy || _lastLoc.horizontalAccuracy > kLowHorizontalAccuracy) {
+//                                    angleThres = 50;
+//                                }
+//                            }
+//                            if (!skipModify && _lastLastLoc) {
+//                                CGFloat angle = [GPSOffTimeFilter checkPointAngle:[GPSOffTimeFilter coor2Point:_lastLastLoc.coordinate] antPt:[GPSOffTimeFilter coor2Point:_lastLoc.coordinate] antPt:[GPSOffTimeFilter coor2Point:newLocation.coordinate]];
+//                                if (angle < angleThres) {
+//                                    // filter the wrong gps
+//                                    speed = tmpSpeed;
+//                                }
+//                            }
+//                        } else {
+//                            if (interval < 5 || tmpSpeed > cAvgDrivingSpeed*6) {
+//                                tmpSpeed = MIN(tmpSpeed/2.0, cAvgDrivingSpeed*6.1);
+//                            }
+//                            speed = tmpSpeed;
+//                        }
+//                        if (isMost) {
+//                            calSpeed = speed;
+//                        }
+//                    }
+//                }
+//            }
             
-            if (nil == _lastLoc || speed >= 0 || interval >= 1) {
+            if (nil == _lastLoc) {
                 _lastLastLoc = _lastLoc;
                 _lastLoc = newLocation;
-                
-                GPSLog2(newLocation, self.lastAcceleraion, speed);
-                DDLogWarn(@"location is: <%f, %f>, speed=%f, accuracy=%f, origSpeed=%f", newLocation.coordinate.latitude, newLocation.coordinate.longitude, speed, newLocation.horizontalAccuracy, newLocation.speed);
             }
+            GPSLog2(newLocation, self.lastAcceleraion, speed);
+            //DDLogWarn(@"location is: <%f, %f>, speed=%f, accuracy=%f, origSpeed=%f", newLocation.coordinate.latitude, newLocation.coordinate.longitude, speed, newLocation.horizontalAccuracy, newLocation.speed);
         }
     }
     
@@ -657,7 +665,11 @@ typedef enum
                 didLostGps = YES;
             }
         }
-        DDLogWarn(@"good location is not valid, keep start");
+        CLLocation * badLoc = nil;
+        if (locations.count > 0) {
+            badLoc = [locations lastObject];
+        }
+        DDLogWarn(@"good location is not valid, keep start, <%f,%f>, accu=%f", badLoc.coordinate.latitude, badLoc.coordinate.longitude, badLoc.horizontalAccuracy);
         self.signalStrength = eGPSSignalStrengthInvalid;
         if (didLostGps) {
             DDLogWarn(@"didLostGps ###########");
@@ -706,10 +718,6 @@ typedef enum
         self.isDriving = _isDriving;
         _recordCnt = 20;
     }
-//    static NSInteger recordInterval = 0;
-//    if (_recordCnt-- > 0 || recordInterval++%5 == 0) {
-//        DDLogWarn(@"location is: <%f, %f>, speed=%f, accuracy=%f, altitude=%f", mostAccuracyLocation.coordinate.latitude, mostAccuracyLocation.coordinate.longitude, calSpeed, mostAccuracyLocation.horizontalAccuracy, mostAccuracyLocation.altitude);
-//    }
     
     if (!_isDriving)
     {
@@ -737,11 +745,11 @@ typedef enum
                 DDLogWarn(@"&&&&&&&&&&&&& motion regard as drive start &&&&&&&&&&&&& ");
                 _keepMonitoring = YES;
             }
-//            else if ([self duringForWalkRunWithin:40] > 8 || 0 == [self duringForAutomationWithin:cCanStopMonitoringThreshold]) {
-//                // 如果开车时，正在使用或者路况不好造成颠簸，会误判断为走路，因此删除该逻辑
-//                DDLogWarn(@"&&&&&&&&&&&&& motion regard as walking, stop monitor &&&&&&&&&&&&& ");
-//                _keepMonitoring = NO;
-//            }
+            else if ([self duringForWalkRunWithin:40] > 8 || 0 == [self duringForAutomationWithin:cCanStopMonitoringThreshold]) {
+                // 如果开车时，正在使用或者路况不好造成颠簸，会误判断为走路，因此删除该逻辑
+                DDLogWarn(@"&&&&&&&&&&&&& motion regard as walking, stop monitor &&&&&&&&&&&&& ");
+                //_keepMonitoring = NO;
+            }
         }
         
         if (!_keepMonitoring || _shortUpdate) {

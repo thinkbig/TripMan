@@ -35,11 +35,13 @@
 - (void)glRender
 {
     RouteOverlay *customOverlay = [self routeOverlay];
-    NSString * textureImg = @"map_green.png";
+    NSString * textureImg = customOverlay.title;
     if ([customOverlay.title isEqualToString:@"yellow"]) {
         textureImg = @"map_yellow.png";
     } else if ([customOverlay.title isEqualToString:@"red"]) {
         textureImg = @"map_red.png";
+    } else if ([customOverlay.title isEqualToString:@"green"]) {
+        textureImg = @"map_green.png";
     }
     
     GLuint testureID = [self loadStrokeTextureImage:[UIImage imageNamed:textureImg]];

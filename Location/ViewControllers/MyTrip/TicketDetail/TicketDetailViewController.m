@@ -350,10 +350,21 @@
             NSLog(@"traffic light cnt = %@", cnt);
         } failure:nil];
     } else if (4 == indexPath.row) {
-        GPSFMDBLogger * loggerDB = [GPSLogger sharedLogger].dbLogger;
-        NSArray * logArr = [loggerDB selectLogFrom:[self.tripSum.start_date dateByAddingTimeInterval:-180] toDate:[self.tripSum.end_date dateByAddingTimeInterval:60*10] offset:0 limit:0];
-        TripSimulator * simulator = [TripSimulator new];
-        simulator.gpsLogs = logArr;
+        
+//        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+//        [dateFormatter setDateFormat: @"yyyy-MM-dd HH:mm:ss"];
+//        NSDate * origDate= [dateFormatter dateFromString:@"2015-05-05 18:03:00"];
+//        NSDate * destDate= [dateFormatter dateFromString:@"2015-05-05 18:23:00"];
+//        
+//        GPSFMDBLogger * loggerDB = [GPSLogger sharedLogger].dbLogger;
+//        NSArray * logArr = [loggerDB selectLogFrom:origDate toDate:destDate offset:0 limit:0];
+//        TripSimulator * simulator = [TripSimulator new];
+//        simulator.gpsLogs = logArr;
+        
+//        GPSFMDBLogger * loggerDB = [GPSLogger sharedLogger].dbLogger;
+//        NSArray * logArr = [loggerDB selectLogFrom:[self.tripSum.start_date dateByAddingTimeInterval:-180] toDate:[self.tripSum.end_date dateByAddingTimeInterval:60*10] offset:0 limit:0];
+//        TripSimulator * simulator = [TripSimulator new];
+//        simulator.gpsLogs = logArr;
     }
 }
 
