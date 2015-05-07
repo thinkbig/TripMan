@@ -128,6 +128,8 @@
 		A359E6181AF3215F00D7FF10 /* CarMaintainInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A359E6171AF3215F00D7FF10 /* CarMaintainInfoViewController.m */; };
 		A359E61B1AF395D600D7FF10 /* CarMaintainInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = A359E61A1AF395D600D7FF10 /* CarMaintainInfo.m */; };
 		A359E6241AF8FAA200D7FF10 /* CTTestFacade.m in Sources */ = {isa = PBXBuildFile; fileRef = A359E6231AF8FAA200D7FF10 /* CTTestFacade.m */; };
+		A359E6271AFAFFE800D7FF10 /* BMKPoiResult+Encode.m in Sources */ = {isa = PBXBuildFile; fileRef = A359E6261AFAFFE800D7FF10 /* BMKPoiResult+Encode.m */; };
+		A359E62A1AFB002A00D7FF10 /* BMKCityListInfo+Encode.m in Sources */ = {isa = PBXBuildFile; fileRef = A359E6291AFB002A00D7FF10 /* BMKCityListInfo+Encode.m */; };
 		A35BC7251AA2E98900D726D4 /* CTWakeupFacade.m in Sources */ = {isa = PBXBuildFile; fileRef = A35BC7241AA2E98900D726D4 /* CTWakeupFacade.m */; };
 		A35BC7291AA35B7D00D726D4 /* NSString+ShiftEncode.m in Sources */ = {isa = PBXBuildFile; fileRef = A35BC7281AA35B7D00D726D4 /* NSString+ShiftEncode.m */; };
 		A35BC72F1AA4244C00D726D4 /* DataReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = A35BC72E1AA4244C00D726D4 /* DataReporter.m */; };
@@ -510,6 +512,10 @@
 		A359E61A1AF395D600D7FF10 /* CarMaintainInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CarMaintainInfo.m; sourceTree = "<group>"; };
 		A359E6221AF8FAA200D7FF10 /* CTTestFacade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTTestFacade.h; sourceTree = "<group>"; };
 		A359E6231AF8FAA200D7FF10 /* CTTestFacade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTTestFacade.m; sourceTree = "<group>"; };
+		A359E6251AFAFFE800D7FF10 /* BMKPoiResult+Encode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "BMKPoiResult+Encode.h"; sourceTree = "<group>"; };
+		A359E6261AFAFFE800D7FF10 /* BMKPoiResult+Encode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "BMKPoiResult+Encode.m"; sourceTree = "<group>"; };
+		A359E6281AFB002A00D7FF10 /* BMKCityListInfo+Encode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "BMKCityListInfo+Encode.h"; sourceTree = "<group>"; };
+		A359E6291AFB002A00D7FF10 /* BMKCityListInfo+Encode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "BMKCityListInfo+Encode.m"; sourceTree = "<group>"; };
 		A35BC7201A9AE34500D726D4 /* UrlDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UrlDefine.h; sourceTree = "<group>"; };
 		A35BC7231AA2E98900D726D4 /* CTWakeupFacade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTWakeupFacade.h; sourceTree = "<group>"; };
 		A35BC7241AA2E98900D726D4 /* CTWakeupFacade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTWakeupFacade.m; sourceTree = "<group>"; };
@@ -982,8 +988,12 @@
 				A304052C1AE7C84A0047E66B /* BMKAddressComponent+Encode.m */,
 				A304052E1AE7CB910047E66B /* BMKPoiInfo+Encode.h */,
 				A304052F1AE7CB910047E66B /* BMKPoiInfo+Encode.m */,
+				A359E6281AFB002A00D7FF10 /* BMKCityListInfo+Encode.h */,
+				A359E6291AFB002A00D7FF10 /* BMKCityListInfo+Encode.m */,
 				A30405311AE7CE5F0047E66B /* BMKReverseGeoCodeResult+Encode.h */,
 				A30405321AE7CE5F0047E66B /* BMKReverseGeoCodeResult+Encode.m */,
+				A359E6251AFAFFE800D7FF10 /* BMKPoiResult+Encode.h */,
+				A359E6261AFAFFE800D7FF10 /* BMKPoiResult+Encode.m */,
 			);
 			path = Category;
 			sourceTree = "<group>";
@@ -2746,6 +2756,7 @@
 				A34F00EF1A03C8F800F58C17 /* CarSettingViewController.m in Sources */,
 				A37E03F21A0DE19B00B0B0EC /* TripTicketView.m in Sources */,
 				A35BC7291AA35B7D00D726D4 /* NSString+ShiftEncode.m in Sources */,
+				A359E6271AFAFFE800D7FF10 /* BMKPoiResult+Encode.m in Sources */,
 				A359E60B1AEFC32C00D7FF10 /* WeatherInfo.m in Sources */,
 				A301EB5C1ADD03C400CC6412 /* JSONValueTransformer+CustomTransformer.m in Sources */,
 				A359E5F61AEFC32B00D7FF10 /* TurningInfo.m in Sources */,
@@ -2829,6 +2840,7 @@
 				A33544141A23759F0023815B /* SuggestDetailCell.m in Sources */,
 				A3D0B4BD1A2C64A80030B19E /* UIBezierPath+curved.m in Sources */,
 				A348906B1A3FCB6F002DE948 /* AJSerializer.m in Sources */,
+				A359E62A1AFB002A00D7FF10 /* BMKCityListInfo+Encode.m in Sources */,
 				A34890571A3FC600002DE948 /* AFgzipRequestSerializer.m in Sources */,
 				A3C011FE1AC3D4830088EFF3 /* GRoadSnapFacade.m in Sources */,
 				A34F00EC1A03C8E900F58C17 /* CarTripViewController.m in Sources */,

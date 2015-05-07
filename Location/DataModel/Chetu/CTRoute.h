@@ -52,11 +52,14 @@ typedef NS_ENUM(NSUInteger, eStepTraffic) {
 @property (nonatomic, strong) CTBaseLocation<Optional> * from;
 @property (nonatomic, strong) CTBaseLocation<Optional> * to;
 @property (nonatomic, strong) NSArray<CTJam, Optional> * jams;
+@property (nonatomic, strong) NSNumber<Optional> * quality;         // 参考的精度范围，负数或者nil表示未知
 
 - (eStepTraffic) trafficStat;
 - (NSArray*) jamsWithThreshold:(CGFloat)threshold;
 - (NSArray*) fullPathOfJam:(CTJam*)jam;
 - (NSArray*) pathArray;
+
+- (void) calculateQuality:(NSArray*)refAccu;
 
 @end
 

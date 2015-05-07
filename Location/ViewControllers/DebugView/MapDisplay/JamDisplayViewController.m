@@ -164,11 +164,11 @@ typedef NS_ENUM(NSUInteger, eDispMapType) {
         jamOne.title = @"route_arrow";
         [self.mapView addOverlay:jamOne];
         
-        BMKCircle * circleSt = [BMKCircle circleWithCenterCoordinate:fromCoor radius:10];
+        BMKCircle * circleSt = [BMKCircle circleWithCenterCoordinate:fromCoor radius:100];
         circleSt.title = @"start";
         [self.mapView addOverlay:circleSt];
         
-        BMKCircle * circleEd = [BMKCircle circleWithCenterCoordinate:toCoor radius:10];
+        BMKCircle * circleEd = [BMKCircle circleWithCenterCoordinate:toCoor radius:100];
         circleEd.title = @"end";
         [self.mapView addOverlay:circleEd];
     }
@@ -207,7 +207,7 @@ typedef NS_ENUM(NSUInteger, eDispMapType) {
         } else {
             circleRender.strokeColor = [UIColor greenColor];
         }
-        circleRender.lineWidth = 3.0;
+        circleRender.lineWidth = 5.0;
         return circleRender;
     }
     return overlayView;

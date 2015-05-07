@@ -18,6 +18,7 @@
 @property (nonatomic, strong) NSDate<Optional> *   ts;
 @property (nonatomic, strong) NSNumber<Optional> * lon;
 @property (nonatomic, strong) NSNumber<Optional> * lat;
+@property (nonatomic, strong) NSNumber<Optional> * accu;    // 如果是用户gps，则这个表示精度。负数表示可信数据，比如地图数据
 @property (nonatomic, strong) NSString<Optional> * name;
 @property (nonatomic, strong) NSString<Optional> * street;
 @property (nonatomic, strong) NSString<Optional> * city;

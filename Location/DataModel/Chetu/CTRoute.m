@@ -208,6 +208,40 @@
     return _pathArr;
 }
 
+- (void) calculateQuality:(NSArray*)refAccu
+{
+    CGFloat tolAccu = 0;
+    for (NSNumber * accu in refAccu) {
+        tolAccu += [accu floatValue];
+    }
+    CGFloat avgAccu = -1;
+    if (refAccu.count > 0) {
+        avgAccu = tolAccu/refAccu.count;
+    }
+    
+    CGFloat realAccu = -1;
+    if (self.from.accu || self.to.accu) {
+        if (nil == self.to.accu) {
+            self.to.accu = self.from.accu;
+        } else if (nil == self.from.accu) {
+            self.from.accu = self.to.accu;
+        }
+        if (avgAccu >= 0) {
+            realAccu = 0.3*[self.from.accu floatValue] + 0.3*[self.to.accu floatValue] + 0.4*avgAccu;
+        } else {
+            realAccu = 0.5*[self.from.accu floatValue] + 0.5*[self.to.accu floatValue];
+        }
+    } else {
+        realAccu = avgAccu;
+    }
+    
+    if (realAccu >= 0) {
+        self.quality = @(realAccu);
+    } else {
+        self.quality = nil;
+    }
+}
+
 @end
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////

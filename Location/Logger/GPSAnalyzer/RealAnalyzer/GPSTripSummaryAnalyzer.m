@@ -112,7 +112,7 @@
         for (int i = 1; i < filteredRoute.count-1; i++) {
             GPSLogItem * item = filteredRoute[i];
             CGFloat dist = [lastItem distanceFrom:item];
-            if (dist > 300) {
+            if (dist > 150) {
                 [mergedRoute addObject:item];
                 lastItem = item;
             }
@@ -138,6 +138,7 @@
             // match curItem
             NSString * seg = @"";
             NSMutableString * pathString = [NSMutableString string];
+            NSMutableArray * accuArr = [NSMutableArray array];
             for (; routeIdx < keyRoute.count; routeIdx++)
             {
                 GPSLogItem * rawItem = keyRoute[routeIdx];
@@ -151,6 +152,9 @@
                     }
                     break;
                 } else {
+                    if (rawItem.horizontalAccuracy) {
+                        [accuArr addObject:rawItem.horizontalAccuracy];
+                    }
                     CLLocationCoordinate2D coor = [rawItem coordinate];
                     [pathString appendFormat:@"%@%.5f,%.5f", seg, coor.longitude, coor.latitude];
                     seg = @";";
@@ -173,6 +177,7 @@
             if (curJams.count > 0) {
                 step.jams = [curJams copy];
             }
+            [step calculateQuality:accuArr];
             
             lastItem = curItem;
             

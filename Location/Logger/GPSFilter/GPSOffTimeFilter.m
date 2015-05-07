@@ -96,12 +96,41 @@
     return route;
 }
 
+//+ (GPSLogItem*) angleForSteps:(NSArray*)steps
+//{
+//    if (steps.count <= 2) {
+//        return nil;
+//    }
+//    CGFloat maxDist = 0;
+//    GPSLogItem * maxItem = nil;
+//    GPSLogItem * first = steps[0];
+//    GPSLogItem * last = [steps lastObject];
+//    CGFloat dist = [last distanceFrom:first];
+//    if (dist == 0) {
+//        return nil;
+//    }
+//    for (int i = 1; i < steps.count-1; i++) {
+//        GPSLogItem * cur = steps[i];
+//        CGFloat curDist = [cur distanceFrom:first] + [cur distanceFrom:last];
+//        if (maxDist < curDist) {
+//            maxDist = curDist;
+//            maxItem = cur;
+//        }
+//    }
+//    
+//    
+//    if (maxDist/dist > 2.0/1.73205) {
+//        return maxItem;
+//    }
+//    return nil;
+//}
+
 + (NSArray*) keyRouteFromGPS:(NSArray*)gpsData autoFilter:(BOOL)filter
 {
     CGFloat gpsErrSmall = 30;
     CGFloat gpsErrBig = 100;
-    CGFloat thresShort = 100;
-    CGFloat thresShortMax = 1000;
+    CGFloat thresShort = 50;
+    CGFloat thresShortMax = 800;
     
     if (gpsData.count <= 2) {
         return gpsData;
@@ -112,10 +141,12 @@
     
     // 第一次筛选，使用thresShort
     NSMutableArray * rawRoute1 = [NSMutableArray array];
+    NSMutableArray * tmpAngleArr = [NSMutableArray array];
     NSUInteger tolCnt1 = gpsData.count;
     [gpsData enumerateObjectsUsingBlock:^(GPSLogItem * obj, NSUInteger idx, BOOL *stop) {
         if (idx == 0 || obj.isKeyPoint) {
             [rawRoute1 addObject:obj];
+            [tmpAngleArr addObject:obj];
         } else if (idx == tolCnt1-1) {
             GPSLogItem * lastGps = [rawRoute1 lastObject];
             CGFloat dist = [lastGps distanceFrom:obj];
@@ -124,6 +155,11 @@
             }
             [rawRoute1 addObject:obj];
         } else {
+            GPSLogItem * lastTmp = [tmpAngleArr lastObject];
+            if ([obj distanceFrom:lastTmp] > 10) {
+                [tmpAngleArr addObject:obj];
+            }
+            
             GPSLogItem * lastGps = [rawRoute1 lastObject];
             CGFloat distToLast = [lastGps distanceFrom:obj];
             
@@ -134,7 +170,12 @@
                 gpsErr = gpsErrBig;
             }
             if ((distToLast > thresShortMax && [obj.horizontalAccuracy doubleValue] < gpsErrBig*2) || (distToLast > thresShort && [obj.horizontalAccuracy doubleValue] < gpsErr)) {
+//                GPSLogItem * turnItem = [self angleForSteps:tmpAngleArr];
+//                if (turnItem) {
+//                    [rawRoute1 addObject:turnItem];
+//                }
                 [rawRoute1 addObject:obj];
+                [tmpAngleArr removeAllObjects];
             }
         }
     }];

@@ -10,7 +10,7 @@
 #import "GPSOffTimeFilter.h"
 #import "GPSAnalyzerRealTime.h"
 
-//#define NSLog(...) {}
+#define NSLog(...) {}
 
 @interface TripSimulator () {
     

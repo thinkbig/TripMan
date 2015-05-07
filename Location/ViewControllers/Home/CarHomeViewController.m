@@ -15,6 +15,7 @@
 #import "TripFilter.h"
 #import "CTTrafficAbstractFacade.h"
 #import "SuggestDetailViewController.h"
+#import "BaiduPOISearchWrapper.h"
 #import "BaiduReverseGeocodingWrapper.h"
 
 @interface CarHomeViewController ()
@@ -22,6 +23,7 @@
 @property (nonatomic, strong) CTRoute *                 bestRoute;
 @property (nonatomic, strong) ParkingRegion *           bestGuessDest;
 @property (nonatomic, strong) TripSummary *             bestTrip;
+@property (nonatomic, strong) BMKPoiInfo *              defaultDest;
 
 @property (nonatomic, strong) HomeTripHeader *          header;
 @property (nonatomic, strong) HomeTripCell *            tripCell;
@@ -74,7 +76,8 @@
         }
         
         CLLocation * curLoc = [BussinessDataProvider lastGoodLocation];
-        if (curLoc) {
+        if (curLoc)
+        {
             if (self.bestGuessDest) {
                 ParkingRegionDetail * parkingDetail = [[AnaDbManager sharedInst] parkingDetailForCoordinate:curLoc.coordinate minDist:500];
                 CTTrafficAbstractFacade * facade = [[CTTrafficAbstractFacade alloc] init];
@@ -90,6 +93,31 @@
                 } failure:^(NSError * err) {
                     //NSLog(@"asdfasdf = %@", err);
                 }];
+            } else {
+                [[BussinessDataProvider sharedInstance] updateCurrentCity:^(NSString * city) {
+                    if (city) {
+                        BaiduPOISearchWrapper * wrapper = [BaiduPOISearchWrapper new];
+                        wrapper.city = city;
+                        wrapper.searchName = @"火车站";
+                        [wrapper requestWithSuccess:^(BMKPoiResult * result) {
+                            if (result.poiInfoList.count > 0) {
+                                BMKPoiInfo * info = result.poiInfoList[0];
+                                self.defaultDest = info;
+                                
+                                CTTrafficAbstractFacade * facade = [[CTTrafficAbstractFacade alloc] init];
+                                facade.fromCoorBaidu = [GeoTransformer earth2Baidu:curLoc.coordinate];
+                                facade.toCoorBaidu = info.pt;
+                                
+                                [facade requestWithSuccess:^(CTRoute * result) {
+                                    self.bestRoute = result;
+                                    [self.homeCollection reloadData];
+                                } failure:nil];
+                            }
+                        } failure:^(NSError * err) {
+                            NSLog(@"fail to get baidu poi info for 商圈");
+                        }];
+                    }
+                } forceUpdate:YES];
             }
         }
         
@@ -118,16 +146,7 @@
         return;
     }
     
-    if (self.bestGuessDest) {
-        NSString * destStr = [self.bestGuessDest nameWithDefault:nil];
-        if (self.bestGuessDest.street) {
-            if (destStr) {
-                destStr = [NSString stringWithFormat:@"%@ %@", self.bestGuessDest.street, destStr];
-            } else {
-                destStr = self.bestGuessDest.street;
-            }
-        }
-        self.header.suggestDest.text = destStr.length > 0 ? destStr : @"未知地点";
+    if (self.bestRoute) {
         NSString * mostDest = nil;
         if (self.bestRoute) {
             mostDest = [NSString stringWithFormat:@"距我的地点约 %.1fkm", [self.bestRoute.distance floatValue]/1000.0];
@@ -141,6 +160,28 @@
         [mostTripDest addAttribute:NSFontAttributeName value:DigitalFontSize(13) range:NSMakeRange(6, mostDest.length-6)];
         self.header.suggestDistFrom.attributedText = mostTripDest;
     } else {
+        self.header.suggestDistFrom.text = @"您还没有行程记录";
+    }
+    
+    if (self.bestGuessDest)
+    {
+        NSString * destStr = [self.bestGuessDest nameWithDefault:nil];
+        if (self.bestGuessDest.street) {
+            if (destStr) {
+                destStr = [NSString stringWithFormat:@"%@ %@", self.bestGuessDest.street, destStr];
+            } else {
+                destStr = self.bestGuessDest.street;
+            }
+        }
+        self.header.suggestDest.text = destStr.length > 0 ? destStr : @"未知地点";
+    }
+    else if (self.defaultDest)
+    {
+        NSString * destStr = self.defaultDest.name;
+        self.header.suggestDest.text = destStr.length > 0 ? destStr : @"未知地点";
+    }
+    else
+    {
         self.header.suggestDest.text = @"当前位置";
         self.header.suggestDistFrom.text = @"您还没有行程记录";
     }
@@ -166,6 +207,12 @@
         self.tripCell.duringLabel.text = @"--";
         self.tripCell.jamLabel.text = @"-";
         self.tripCell.suggestLabel.text = @"--:--";
+    }
+    
+    CLLocation * curLoc = [BussinessDataProvider lastGoodLocation];
+    if (nil == curLoc) {
+        self.tripCell.statusLabel.text = @"GPS可能正在启动中...";
+        return;
     }
     
     self.tripCell.statusLabel.text = @"目前道路无特殊情况";

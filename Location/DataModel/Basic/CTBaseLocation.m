@@ -17,6 +17,7 @@
     if (self) {
         self.lat = item.latitude;
         self.lon = item.longitude;
+        self.accu = item.horizontalAccuracy;
         self.ts = item.timestamp;
     }
     return self;

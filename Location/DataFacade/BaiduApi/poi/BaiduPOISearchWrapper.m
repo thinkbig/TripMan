@@ -50,12 +50,24 @@
 - (void)onGetPoiResult:(BMKPoiSearch*)searcher result:(BMKPoiResult*)poiResult errorCode:(BMKSearchErrorCode)errorCode
 {
     if (errorCode == 0) {
+        [[TSCache sharedInst] setSqlitCache:poiResult forKey:[self keyForRequest] expiresIn:60*60*24*30];
         if (self.successBlock) {
             self.successBlock(poiResult);
         }
     } else if (self.failureBlock) {
         self.failureBlock(ERR_MAKE(errorCode, @"查询失败"));
     }
+}
+
+- (NSString*) keyForRequest
+{
+    // 经纬度，一度大约为80~111km，所有取近似地点的时候，取小数点后3位，也就是百米作为误差
+    return [NSString stringWithFormat:@"poi-%@_%@", self.city, self.searchName];
+}
+
+- (id)cachedResult
+{
+    return [[TSCache sharedInst] sqliteCacheForKey:[self keyForRequest]];
 }
 
 @end
