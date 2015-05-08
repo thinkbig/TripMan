@@ -20,6 +20,7 @@
 #define kWakeUpBySystem             @"kWakeUpBySystem"
 #define kLocationAccu               kCLLocationAccuracyBest
 #define kLocationAccuNotDriving     kCLLocationAccuracyBest
+#define kLocationDistFilter         kCLDistanceFilterNone
 
 typedef enum
 {
@@ -72,7 +73,7 @@ typedef enum
         _locationManager = [[CLLocationManager alloc] init];
         _locationManager.delegate = self;
         _locationManager.desiredAccuracy = kLocationAccu;
-        _locationManager.distanceFilter = kCLDistanceFilterNone;
+        _locationManager.distanceFilter = kLocationDistFilter;
         _locationManager.pausesLocationUpdatesAutomatically = NO;
     }
     return _locationManager;
