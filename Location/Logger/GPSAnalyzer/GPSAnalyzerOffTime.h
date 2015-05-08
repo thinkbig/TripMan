@@ -24,6 +24,7 @@
 
 // analyzer dict key (TurningAnalyzer, AcceleratorAnalyzer)
 - (void)analyzeTripForSum:(TripSummary*)tripSum withAnalyzer:(NSDictionary*)anaDict;
+- (BOOL)checkValid:(TripSummary*)sum;
 
 - (NSArray*)analyzeTripStartFrom:(NSDate*)fromDate toDate:(NSDate*)toDate shouldUpdateGlobalInfo:(BOOL)update;
 

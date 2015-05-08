@@ -139,6 +139,7 @@ static BussinessDataProvider * _sharedProvider = nil;
         [[GToolUtil sharedInstance] showPieHUDWithText:@"升级中..." andProgress:5];
         
         [[GPSLogger sharedLogger].offTimeAnalyzer analyzeTripStartFrom:nil toDate:nil shouldUpdateGlobalInfo:YES];
+        [manager commit];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [[NSNotificationCenter defaultCenter] postNotificationName:kNotifyUpgradeComplete object:nil];

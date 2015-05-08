@@ -60,7 +60,7 @@
         _startSpeedTraceIdx = 0;
         _endSpeedTraceIdx = 0;
         _endThreshold = cDriveEndThreshold;
-        self.removeThreshold = 20;
+        self.removeThreshold = cDirveStartSamplePoint*2;
         self.locChangeLogItem = nil;
         self.logArr = [NSMutableArray arrayWithCapacity:128];
         self.jamAnalyzer = [GPSInstJamAnalyzer new];

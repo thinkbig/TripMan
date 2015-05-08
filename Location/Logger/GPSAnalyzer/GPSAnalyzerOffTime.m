@@ -76,18 +76,24 @@
         if (dropTrip && [dropTrip boolValue]) {
             [unfinishedSum delete];
         }
-        [manger commit];
         
         if (unfinishedSum) {
             if (![dropTrip boolValue]) {
                 [self analyzeTripForSum:unfinishedSum withAnalyzer:nil];
+                if (![self checkValid:unfinishedSum]) {
+                    [unfinishedSum delete];
+                }
             }
+        }
+        [manger commit];
+        
+        if (unfinishedSum) {
             [[NSNotificationCenter defaultCenter] postNotificationName:kNotifyTripDidEnd object:nil];
         }
     }
 }
 
-- (void)rollOutOfDateTrip
+- (void) rollOutOfDateTrip
 {
     [self.dbLogger flush];
     BOOL isDriving = [[[NSUserDefaults standardUserDefaults] objectForKey:kMotionIsInTrip] boolValue];
@@ -133,7 +139,7 @@
 }
 
 
-- (void)analyzeDaySum:(DaySummary*)daySum
+- (void) analyzeDaySum:(DaySummary*)daySum
 {
     if (nil == daySum) {
         return;
@@ -179,7 +185,7 @@
     [manager commit];
 }
 
-- (void)analyzeWeekSum:(WeekSummary*)weekSum
+- (void) analyzeWeekSum:(WeekSummary*)weekSum
 {
     if (nil == weekSum) {
         return;
@@ -279,7 +285,7 @@
     [self.manager commit];
 }
 
-- (void)analyzeTripForSum:(TripSummary*)tripSum withAnalyzer:(NSDictionary*)anaDict
+- (void) analyzeTripForSum:(TripSummary*)tripSum withAnalyzer:(NSDictionary*)anaDict
 {
     if (nil == tripSum) {
         return;
@@ -519,7 +525,20 @@
     [manager commit];
 }
 
-- (void)analyzeAllFinishedTrip:(BOOL)force
+- (BOOL) checkValid:(TripSummary*)sum
+{
+    if ([sum.is_analyzed boolValue]) {
+        CGFloat avgSpeed = [sum.avg_speed floatValue];
+        CGFloat tolDuration = [sum.total_during floatValue];
+        CGFloat maxSpeed = [sum.max_speed floatValue];
+        if (avgSpeed < 9/3.6 || tolDuration < 4*60 || (avgSpeed < 15/3.6 && avgSpeed * 10 < maxSpeed)) {
+            return NO;
+        }
+    }
+    return YES;
+}
+
+- (void) analyzeAllFinishedTrip:(BOOL)force
 {
     [self rollOutOfDateTrip];
     
@@ -568,10 +587,16 @@
             }
         }
         [self analyzeTripForSum:sum withAnalyzer:nil];
-        lastSum = sum;
         
         if (update) [[GToolUtil sharedInstance] showPieHUDWithText:@"升级中..." andProgress:20+70*((CGFloat)curIdx/(CGFloat)tolCnt)];
         curIdx++;
+        
+        if (![self checkValid:sum]) {
+            [sum delete];
+            continue;
+        }
+        
+        lastSum = sum;
     }
     if (lastSum) {
         [self analyzeDaySum:lastSum.day_summary];

@@ -20,7 +20,8 @@
 #define kWakeUpBySystem             @"kWakeUpBySystem"
 #define kLocationAccu               kCLLocationAccuracyBest
 #define kLocationAccuNotDriving     kCLLocationAccuracyBest
-#define kLocationDistFilter         kCLDistanceFilterNone
+#define kLocationDistFilter         30
+//#define kLocationDistFilter         kCLDistanceFilterNone
 
 typedef enum
 {
@@ -75,6 +76,7 @@ typedef enum
         _locationManager.desiredAccuracy = kLocationAccu;
         _locationManager.distanceFilter = kLocationDistFilter;
         _locationManager.pausesLocationUpdatesAutomatically = NO;
+        _locationManager.activityType = CLActivityTypeAutomotiveNavigation;
     }
     return _locationManager;
 }
