@@ -289,7 +289,9 @@
     NSMutableArray * rawData = [NSMutableArray array];
     NSInteger offset = 0;
     NSInteger limit = 500;
-    NSDate * detectStart = [tripSum.start_date dateByAddingMinutes:-3];
+    
+    GPSEventItem * stRegion = [loggerDB selectLatestEventBefore:tripSum.start_date ofType:eGPSEventDriveEnd];
+    NSDate * detectStart = [[tripSum.start_date dateByAddingMinutes:-10] laterDate:stRegion.timestamp];
     NSDate * detectEnd = tripSum.end_date;//[tripSum.end_date dateByAddingMinutes:10];
     NSArray * logArr = [loggerDB selectLogFrom:detectStart toDate:detectEnd offset:offset limit:limit];
     if (logArr.count == 0) {
