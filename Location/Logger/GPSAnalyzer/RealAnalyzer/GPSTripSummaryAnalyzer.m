@@ -109,14 +109,26 @@
         // 如果相邻filteredRoute，都很接近，则可能是转角点，合并这些点为一个step
         GPSLogItem * lastItem = filteredRoute[0];
         NSMutableArray * mergedRoute = [NSMutableArray arrayWithObject:lastItem];
+        
         for (int i = 1; i < filteredRoute.count-1; i++) {
             GPSLogItem * item = filteredRoute[i];
-            CGFloat dist = [lastItem distanceFrom:item];
-            if (dist > 150) {
-                [mergedRoute addObject:item];
-                lastItem = item;
+            GPSLogItem * itemNext = filteredRoute[i+1];
+            CGFloat dist2Last = [item distanceFrom:lastItem];
+            if (dist2Last > 150) {
+                CGFloat dist2Next = [item distanceFrom:itemNext];
+                CGFloat last2Next = [lastItem distanceFrom:itemNext];
+                if (dist2Next < 150) {
+                    if (dist2Last+dist2Next > last2Next*1.1) {
+                        [mergedRoute addObject:item];
+                        lastItem = item;
+                    }
+                } else {
+                    [mergedRoute addObject:item];
+                    lastItem = item;
+                }
             }
         }
+
         [mergedRoute addObject:[filteredRoute lastObject]];
         
         self.route = [CTRoute new];

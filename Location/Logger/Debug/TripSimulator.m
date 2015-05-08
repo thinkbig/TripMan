@@ -123,7 +123,8 @@
     if (speed < 0) {
         speed = 0;
     }
-    if (speed > cInsDrivingSpeed*5 && _startMoveTraceIdx < self.logArr.count) {
+
+    if (speed > cInsDrivingSpeed*3.5 && _startMoveTraceIdx < self.logArr.count) {
         CGFloat maxAccu = MAX(gpsAccu, [self.lastLogItem.horizontalAccuracy floatValue]);
         if (maxAccu > kPoorHorizontalAccuracy) {
             speed /= 4.0;

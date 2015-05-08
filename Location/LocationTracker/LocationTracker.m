@@ -645,10 +645,9 @@ typedef enum
 //                }
 //            }
             
-            if (nil == _lastLoc) {
-                _lastLastLoc = _lastLoc;
-                _lastLoc = newLocation;
-            }
+            _lastLastLoc = _lastLoc;
+            _lastLoc = newLocation;
+            
             GPSLog2(newLocation, self.lastAcceleraion, speed);
             //DDLogWarn(@"location is: <%f, %f>, speed=%f, accuracy=%f, origSpeed=%f", newLocation.coordinate.latitude, newLocation.coordinate.longitude, speed, newLocation.horizontalAccuracy, newLocation.speed);
         }

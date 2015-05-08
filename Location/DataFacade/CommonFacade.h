@@ -17,6 +17,7 @@ typedef NS_ENUM(NSUInteger, eRequestType) {
     eRequestTypePut,
     eRequestTypeDelete
 };
+#define RequestTypeStr(_enum) [@[@"GET",@"POST",@"PUT", @"DELETE"] objectAtIndex:(_enum)]
 
 typedef NS_ENUM(NSUInteger, eCacheStrategy) {
     eCacheStrategyNone = 0,
@@ -33,8 +34,9 @@ typedef NS_ENUM(NSUInteger, eCallbackStrategy) {
 
 @interface CommonFacade : NSObject
 
-@property (readonly, nonatomic) NSUInteger statusCode;
-@property (nonatomic) NSUInteger    retryCnt;       // default 0
+@property (readonly, nonatomic) NSUInteger          statusCode;
+@property (readonly, nonatomic) NSDictionary *      responseHeaders;
+@property (nonatomic) NSUInteger                    retryCnt;       // default 0
 
 // for public use
 - (void)requestWithSuccess:(successFacadeBlock)success failure:(failureFacadeBlock)failure;

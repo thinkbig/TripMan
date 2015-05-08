@@ -13,7 +13,7 @@
     NSUInteger _realRetryCnt;
 }
 
-@property (readwrite, nonatomic) NSUInteger statusCode;
+@property (readwrite, nonatomic) NSHTTPURLResponse * response;
 @property (nonatomic) NSUInteger realRetryCnt;
 
 @end
@@ -24,6 +24,14 @@
 {
     _retryCnt = retryCnt;
     _realRetryCnt = retryCnt;
+}
+
+- (NSUInteger)statusCode {
+    return [self.response statusCode];
+}
+
+- (NSDictionary *)responseHeaders {
+    return [self.response allHeaderFields];
 }
 
 - (void)requestWithSuccess:(successFacadeBlock)success failure:(failureFacadeBlock)failure
@@ -149,10 +157,10 @@
             [client GET:resPath
              parameters:realParam
                 success:^(NSURLSessionDataTask *task, id responseObject) {
-                    self.statusCode = [(NSHTTPURLResponse *)task.response statusCode];
+                    self.response = (NSHTTPURLResponse *)task.response;
                     successBlock(responseObject);
                 } failure:^(NSURLSessionDataTask *task, NSError *error) {
-                    self.statusCode = [(NSHTTPURLResponse *)task.response statusCode];
+                    self.response = (NSHTTPURLResponse *)task.response;
                     failureBlock(error);
                 }];
         }
@@ -160,18 +168,18 @@
         case eRequestTypePost:
             if (block) {
                 [client POST:resPath parameters:realParam constructingBodyWithBlock:block success:^(NSURLSessionDataTask *task, id responseObject) {
-                    self.statusCode = [(NSHTTPURLResponse *)task.response statusCode];
+                    self.response = (NSHTTPURLResponse *)task.response;
                     successBlock(responseObject);
                 } failure:^(NSURLSessionDataTask *task, NSError *error) {
-                    self.statusCode = [(NSHTTPURLResponse *)task.response statusCode];
+                    self.response = (NSHTTPURLResponse *)task.response;
                     failureBlock(error);
                 }];
             } else {
                 [client POST:resPath parameters:realParam success:^(NSURLSessionDataTask *task, id responseObject) {
-                    self.statusCode = [(NSHTTPURLResponse *)task.response statusCode];
+                    self.response = (NSHTTPURLResponse *)task.response;
                     successBlock(responseObject);
                 } failure:^(NSURLSessionDataTask *task, NSError *error) {
-                    self.statusCode = [(NSHTTPURLResponse *)task.response statusCode];
+                    self.response = (NSHTTPURLResponse *)task.response;
                     failureBlock(error);
                 }];
             }
@@ -179,10 +187,10 @@
         case eRequestTypePut:
         {
             [client PUT:resPath parameters:realParam success:^(NSURLSessionDataTask *task, id responseObject) {
-                self.statusCode = [(NSHTTPURLResponse *)task.response statusCode];
+                self.response = (NSHTTPURLResponse *)task.response;
                 successBlock(responseObject);
             } failure:^(NSURLSessionDataTask *task, NSError *error) {
-                self.statusCode = [(NSHTTPURLResponse *)task.response statusCode];
+                self.response = (NSHTTPURLResponse *)task.response;
                 failureBlock(error);
             }];
         }
@@ -190,10 +198,10 @@
         case eRequestTypeDelete:
         {
             [client DELETE:resPath parameters:realParam success:^(NSURLSessionDataTask *task, id responseObject) {
-                self.statusCode = [(NSHTTPURLResponse *)task.response statusCode];
+                self.response = (NSHTTPURLResponse *)task.response;
                 successBlock(responseObject);
             } failure:^(NSURLSessionDataTask *task, NSError *error) {
-                self.statusCode = [(NSHTTPURLResponse *)task.response statusCode];
+                self.response = (NSHTTPURLResponse *)task.response;
                 failureBlock(error);
             }];
         }
@@ -270,7 +278,9 @@
             [key appendString:paramStr];
         }
     }
-    return key;
+    // for restful api, the url is always the same for different requestMethod
+    // so add the request type string before url as key
+    return [NSString stringWithFormat:@"%@-%@", RequestTypeStr(self.requestType), key];
 }
 
 - (eCacheStrategy) cacheStrategy {
