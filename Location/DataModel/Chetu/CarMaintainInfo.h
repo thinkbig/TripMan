@@ -8,6 +8,8 @@
 
 #import "JSONModel.h"
 
+// !!!!!!! 注意这里的单位是km
+
 @interface CarMaintainInfo : JSONModel
 
 // 用户手动输入的信息
@@ -26,6 +28,9 @@
 // dynamicEndDate不会统计今天，因为可能正在行驶中
 @property (nonatomic, strong) NSDate<Optional> *            dynamicEndDate;
 @property (nonatomic, strong) NSNumber<Optional> *          dynamicDist;    // 截止到昨天的数据，和dynamicEndDate对应
+
+- (NSInteger) totalDist;
+- (NSInteger) distSinceLastMaintain;
 
 - (void) updateDynamicInfo;
 - (void) load;

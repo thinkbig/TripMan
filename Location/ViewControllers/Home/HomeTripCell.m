@@ -91,4 +91,26 @@
     self.carMaintainProgress.progress = 0.7;
 }
 
+- (void) updateWithMaintainInfo:(CarMaintainInfo*)info
+{
+    NSInteger distSinceLastMaintain = [info distSinceLastMaintain];
+    NSInteger maintainThres = [info.thresMaintainDist integerValue];
+    CGFloat coef = (CGFloat)distSinceLastMaintain/(CGFloat)maintainThres;
+    
+    CGFloat maintainProgress = coef * 0.87 + 0.1;
+    if (maintainProgress < 0.1) {
+        maintainProgress = 0.1;
+    }
+    CGFloat healthProgress = (1-coef) * 0.87;
+    if (healthProgress < 0.1) {
+        healthProgress = 0.1;
+    }
+    
+    self.carMaintainProgress.progress = maintainProgress;
+    self.carMaintainLabel.text = [NSString stringWithFormat:@"%ld", distSinceLastMaintain/100];
+    
+    self.carHealthProgress.progress = healthProgress;
+    self.carHeathLabel.text = healthProgress > 0.3 ? @"优" : @"良";
+}
+
 @end

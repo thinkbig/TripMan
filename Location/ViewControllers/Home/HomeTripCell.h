@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "FXLabel.h"
 #import "PICircularProgressView.h"
+#import "CarMaintainInfo.h"
 
 @interface HomeTripHeader : UICollectionReusableView
 
@@ -60,13 +61,17 @@
 @property (weak, nonatomic) IBOutlet UILabel *todayTripSum;
 @property (weak, nonatomic) IBOutlet UILabel *tripDurationLabel;
 
+@property (weak, nonatomic) IBOutlet UIView *carHealthView;
 @property (weak, nonatomic) IBOutlet PICircularProgressView *carHealthProgress;
 @property (weak, nonatomic) IBOutlet UIImageView *carHealthColorImage;
 @property (weak, nonatomic) IBOutlet UILabel *carHeathLabel;
 
+@property (weak, nonatomic) IBOutlet UIView *carMaintainView;
 @property (weak, nonatomic) IBOutlet PICircularProgressView *carMaintainProgress;
 @property (weak, nonatomic) IBOutlet UIImageView *carMaintainImage;
 @property (weak, nonatomic) IBOutlet UILabel *carMaintainLabel;
+
+- (void) updateWithMaintainInfo:(CarMaintainInfo*)info;
 
 @end
 

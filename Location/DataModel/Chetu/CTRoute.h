@@ -33,7 +33,7 @@ typedef NS_ENUM(NSUInteger, eStepTraffic) {
 - (CLLocationCoordinate2D) centerCoordenate;
 - (CGFloat) distanceOfJam;
 
-- (void) calCoefWithStartLoc:(CLLocation*)stLoc;
+- (void) calCoefWithStartLoc:(CLLocation*)stLoc andEndLoc:(CLLocation*)edLoc;
 
 @end
 

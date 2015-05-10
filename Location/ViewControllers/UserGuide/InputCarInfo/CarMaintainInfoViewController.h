@@ -7,7 +7,14 @@
 //
 
 #import "GViewController.h"
+#import "CarMaintainInfo.h"
 
 @interface CarMaintainInfoViewController : GViewController
+
+@property (weak, nonatomic) IBOutlet UICollectionView *collectView;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *saveBtn;
+@property (nonatomic, strong) CarMaintainInfo *     maintainInfo;
+
+- (IBAction)saveInfo:(id)sender;
 
 @end

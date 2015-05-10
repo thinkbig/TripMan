@@ -62,13 +62,20 @@
     return [self.from distanceFrom:self.to];
 }
 
-- (void) calCoefWithStartLoc:(CLLocation*)stLoc
+- (void) calCoefWithStartLoc:(CLLocation*)stLoc andEndLoc:(CLLocation*)edLoc
 {
     if (stLoc) {
         if ([self.to distanceFromLoc:stLoc] < 300) {
             self.coef = @(10000);   // too close to start loc, just ignore
         } else if ([self.from distanceFromLoc:stLoc] < 400) {
             self.coef = @(1.414*2);
+        }
+    }
+    if (edLoc) {
+        CGFloat first2Ed = [self.from distanceFromLoc:edLoc];
+        CGFloat second2Ed = [self.from distanceFromLoc:edLoc];
+        if (first2Ed < 300 || MAX(first2Ed, second2Ed) < 500) {
+            self.coef = @(10000);   // too close to start loc, just ignore
         }
     }
 }
@@ -323,14 +330,15 @@
 - (eStepTraffic) trafficStat
 {
     CLLocation * origLoc = [self.orig clLocation];
+    CLLocation * destLoc = [self.dest clLocation];
     if (self.most_jam) {
-        [self.most_jam calCoefWithStartLoc:origLoc];
+        [self.most_jam calCoefWithStartLoc:origLoc andEndLoc:destLoc];
 
         return [self.most_jam trafficStat];
     }
     for (CTStep * step in self.steps) {
         for (CTJam * jam in step.jams) {
-            [jam calCoefWithStartLoc:origLoc];
+            [jam calCoefWithStartLoc:origLoc andEndLoc:destLoc];
         }
     }
 

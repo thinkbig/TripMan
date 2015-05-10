@@ -52,7 +52,7 @@
         }
         [facade requestWithSuccess:^(CTRoute * result) {
             if (favLoc == self.favLoc) {
-                [result.most_jam calCoefWithStartLoc:mLoc];
+                [result.most_jam calCoefWithStartLoc:mLoc andEndLoc:[favLoc clLocation]];
 
                 BOOL hasJam = [result.most_jam trafficStat] > eStepTrafficOk;
                 [self updateTimeDuring:[result.duration floatValue] andJamCnt:hasJam];

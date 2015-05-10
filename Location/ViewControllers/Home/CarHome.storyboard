@@ -250,7 +250,7 @@
                                                         <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bKE-pt-h7Z" customClass="PICircularProgressView">
                                                             <rect key="frame" x="35" y="5" width="90" height="90"/>
                                                             <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="保养剩余" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="96p-uU-sBd">
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="距上次保养" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="96p-uU-sBd">
                                                                     <rect key="frame" x="5" y="24" width="80" height="21"/>
                                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -259,7 +259,7 @@
                                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="smallballred" translatesAutoresizingMaskIntoConstraints="NO" id="XiE-pn-kGq">
                                                                     <rect key="frame" x="32" y="73" width="25" height="25"/>
                                                                 </imageView>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="单位: 公里" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LA9-SR-Xiw">
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="单位: 百公里" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LA9-SR-Xiw">
                                                                     <rect key="frame" x="5" y="42" width="80" height="21"/>
                                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="11"/>
                                                                     <color key="textColor" red="0.66666666666666663" green="0.69803921568627447" blue="0.74117647058823533" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -289,10 +289,12 @@
                                         <connections>
                                             <outlet property="carHealthColorImage" destination="SzA-No-Vea" id="W3w-Uv-M6f"/>
                                             <outlet property="carHealthProgress" destination="T3G-1D-LRW" id="1Ja-Xa-OLl"/>
+                                            <outlet property="carHealthView" destination="WzY-LI-iik" id="3k7-uB-cqY"/>
                                             <outlet property="carHeathLabel" destination="Qkk-Y0-zXn" id="wYY-Bl-bXK"/>
                                             <outlet property="carMaintainImage" destination="XiE-pn-kGq" id="yc0-TT-yNm"/>
                                             <outlet property="carMaintainLabel" destination="qUL-pp-PaG" id="Znb-dH-vhM"/>
                                             <outlet property="carMaintainProgress" destination="bKE-pt-h7Z" id="R7d-CS-tFB"/>
+                                            <outlet property="carMaintainView" destination="juv-VQ-Gii" id="4VM-3O-S5a"/>
                                             <outlet property="todayTripSum" destination="7Jn-rL-2f0" id="Odb-Sc-KBb"/>
                                             <outlet property="tripDurationLabel" destination="yTK-C3-eJu" id="Vuz-2m-3zG"/>
                                         </connections>

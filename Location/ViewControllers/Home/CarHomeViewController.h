@@ -8,9 +8,12 @@
 
 #import "GViewController.h"
 #import "PICircularProgressView.h"
+#import "CarMaintainInfo.h"
 
 @interface CarHomeViewController : GViewController
 
 @property (weak, nonatomic) IBOutlet UICollectionView *homeCollection;
+
+@property (nonatomic, strong) CarMaintainInfo *     maintainInfo;
 
 @end

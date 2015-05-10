@@ -312,8 +312,9 @@
         // 处理堵车数据
         NSArray * filteredJamArr = [oneStep jamsWithThreshold:cTrafficJamThreshold];
         CLLocation * origLoc = [route.orig clLocation];
+        CLLocation * destLoc = [route.dest clLocation];
         for (CTJam * jam in filteredJamArr) {
-            [jam calCoefWithStartLoc:origLoc];
+            [jam calCoefWithStartLoc:origLoc andEndLoc:destLoc];
             NSArray * jamArr = [oneStep fullPathOfJam:jam];
             if (jamArr.count > 0) {
                 BMKMapPoint * jamsToUse = new BMKMapPoint[jamArr.count];

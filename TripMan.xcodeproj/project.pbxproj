@@ -243,6 +243,7 @@
 		A3D0B4BC1A2C64A80030B19E /* MPPlot.m in Sources */ = {isa = PBXBuildFile; fileRef = A3D0B4B31A2C64A80030B19E /* MPPlot.m */; };
 		A3D0B4BD1A2C64A80030B19E /* UIBezierPath+curved.m in Sources */ = {isa = PBXBuildFile; fileRef = A3D0B4B51A2C64A80030B19E /* UIBezierPath+curved.m */; };
 		A3D0B4BE1A2C64A80030B19E /* UIView+Frame.m in Sources */ = {isa = PBXBuildFile; fileRef = A3D0B4B71A2C64A80030B19E /* UIView+Frame.m */; };
+		A3D1719C1AFE030F0095CC58 /* CarMaintainCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A3D1719B1AFE030F0095CC58 /* CarMaintainCell.m */; };
 		A3E0A3701ABC0A0C00E7456C /* POICategory.m in Sources */ = {isa = PBXBuildFile; fileRef = A3E0A36F1ABC0A0C00E7456C /* POICategory.m */; };
 		A3E0A3731ABC0A3000E7456C /* CTRoute.m in Sources */ = {isa = PBXBuildFile; fileRef = A3E0A3721ABC0A3000E7456C /* CTRoute.m */; };
 		A3E0A3761ABC176600E7456C /* CTTrafficFullFacade.m in Sources */ = {isa = PBXBuildFile; fileRef = A3E0A3751ABC176600E7456C /* CTTrafficFullFacade.m */; };
@@ -796,6 +797,8 @@
 		A3D0B4B51A2C64A80030B19E /* UIBezierPath+curved.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+curved.m"; sourceTree = "<group>"; };
 		A3D0B4B61A2C64A80030B19E /* UIView+Frame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Frame.h"; sourceTree = "<group>"; };
 		A3D0B4B71A2C64A80030B19E /* UIView+Frame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Frame.m"; sourceTree = "<group>"; };
+		A3D1719A1AFE030F0095CC58 /* CarMaintainCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CarMaintainCell.h; sourceTree = "<group>"; };
+		A3D1719B1AFE030F0095CC58 /* CarMaintainCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CarMaintainCell.m; sourceTree = "<group>"; };
 		A3E0A36E1ABC0A0C00E7456C /* POICategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POICategory.h; sourceTree = "<group>"; };
 		A3E0A36F1ABC0A0C00E7456C /* POICategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = POICategory.m; sourceTree = "<group>"; };
 		A3E0A3711ABC0A3000E7456C /* CTRoute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTRoute.h; sourceTree = "<group>"; };
@@ -1527,6 +1530,8 @@
 				A359E6141AF31D3500D7FF10 /* EditCarinfo.storyboard */,
 				A359E6161AF3215F00D7FF10 /* CarMaintainInfoViewController.h */,
 				A359E6171AF3215F00D7FF10 /* CarMaintainInfoViewController.m */,
+				A3D1719A1AFE030F0095CC58 /* CarMaintainCell.h */,
+				A3D1719B1AFE030F0095CC58 /* CarMaintainCell.m */,
 			);
 			path = InputCarInfo;
 			sourceTree = "<group>";
@@ -2911,6 +2916,7 @@
 				A34284A019C6770A002DB0FD /* GPSFileLogFormatter.m in Sources */,
 				A34F01121A03D78900F58C17 /* LogFileContentViewController.m in Sources */,
 				5C9090A018B3A66A00510153 /* AppDelegate.m in Sources */,
+				A3D1719C1AFE030F0095CC58 /* CarMaintainCell.m in Sources */,
 				A304054F1AE91E5A0047E66B /* MVTextInputsScroller.m in Sources */,
 				A3C011FA1AC3D2FC0088EFF3 /* BaseGoogleFacade.m in Sources */,
 				A34890741A3FCCAF002DE948 /* NSFileManager+Godzippa.m in Sources */,

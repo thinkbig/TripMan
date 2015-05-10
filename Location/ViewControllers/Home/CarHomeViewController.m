@@ -17,6 +17,7 @@
 #import "SuggestDetailViewController.h"
 #import "BaiduPOISearchWrapper.h"
 #import "BaiduReverseGeocodingWrapper.h"
+#import "CarMaintainInfoViewController.h"
 
 @interface CarHomeViewController ()
 
@@ -43,12 +44,19 @@
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadContent) name:kNotifyNeedUpdate object:nil];
     
+    if (nil == self.maintainInfo) {
+        self.maintainInfo = [[CarMaintainInfo alloc] init];
+        [self.maintainInfo load];
+        [self.maintainInfo updateDynamicInfo];
+    }
+    
     [self reloadContent];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [self.navigationController setNavigationBarHidden:YES animated:animated];
     [super viewWillAppear:animated];
+    [self.maintainInfo updateDynamicInfo];
     [self reloadContent];
 }
 
@@ -140,6 +148,16 @@
 }
 */
 
+- (void) tapHealth {
+    [self tapMaintain];
+}
+
+- (void) tapMaintain {
+    CarMaintainInfoViewController * maintainVC = InstVC(@"EditCarinfo", @"CarMaintainInfoViewController");
+    maintainVC.maintainInfo = self.maintainInfo;
+    [self.navigationController pushViewController:maintainVC animated:YES];
+}
+
 - (void) updateHeader
 {
     if (IS_UPDATING) {
@@ -218,7 +236,7 @@
     self.tripCell.statusLabel.text = @"目前道路无特殊情况";
     self.tripCell.statusColorView.backgroundColor = COLOR_STAT_GREEN;
     if (self.bestRoute.most_jam) {
-        [self.bestRoute.most_jam calCoefWithStartLoc:[self.bestRoute.orig clLocation]];
+        [self.bestRoute.most_jam calCoefWithStartLoc:[self.bestRoute.orig clLocation] andEndLoc:[self.bestRoute.dest clLocation]];
 
         eStepTraffic status = [self.bestRoute.most_jam trafficStat];
         if (self.bestRoute.most_jam.intro.length > 0) {
@@ -295,7 +313,10 @@
 //    self.healthCell.IllegalCount.attributedText = [NSAttributedString stringWithNumber:@"0" font:DigitalFontSize(14) color:COLOR_STAT_RED andUnit:@" 新违章" font:font12 color:[UIColor whiteColor]];
 //    self.healthCell.IllegalPendingCount.attributedText = [NSAttributedString stringWithNumber:@"0" font:DigitalFontSize(14) color:COLOR_STAT_RED andUnit:@" 未处理违章" font:font12 color:[UIColor whiteColor]];
     
+    
+    // car maintain info and health
     self.healthCell.carMaintainProgress.progressFillColor = COLOR_STAT_RED;
+    [self.healthCell updateWithMaintainInfo:self.maintainInfo];
 }
 
 - (void) gotoDetail:(ParkingRegion*)region fromLoc:(CLLocation*)curLoc
@@ -331,6 +352,16 @@
         } else {
             self.healthCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"HomeHealthCellIdNew" forIndexPath:indexPath];
             [self updateHealth];
+            
+            if (self.healthCell.carHealthView.gestureRecognizers.count == 0) {
+                UITapGestureRecognizer * gestureHealth = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapHealth)];
+                [self.healthCell.carHealthView addGestureRecognizer:gestureHealth];
+            }
+            if (self.healthCell.carMaintainView.gestureRecognizers.count == 0) {
+                UITapGestureRecognizer * gestureMaintain = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapMaintain)];
+                [self.healthCell.carMaintainView addGestureRecognizer:gestureMaintain];
+            }
+            
             cell = self.healthCell;
         }
     }

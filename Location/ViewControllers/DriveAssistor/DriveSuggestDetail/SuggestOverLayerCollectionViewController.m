@@ -47,9 +47,10 @@
     }
     
     CLLocation * origLoc = [route.orig clLocation];
+    CLLocation * destLoc = [route.dest clLocation];
     NSMutableArray * filterdArr = [NSMutableArray arrayWithCapacity:jamInfo.count];
     for (CTJam * jam in jamInfo) {
-        [jam calCoefWithStartLoc:origLoc];
+        [jam calCoefWithStartLoc:origLoc andEndLoc:destLoc];
         if ([jam trafficStat] > eStepTrafficOk) {
             [filterdArr addObject:jam];
         }
