@@ -107,7 +107,7 @@
     
     self.recentSearch = [NSMutableArray arrayWithArray:[[BussinessDataProvider sharedInstance] recentSearches]];
     
-    self.mostParkingLoc = [[BussinessDataProvider sharedInstance] bestGuessLocations:0 formatToDetail:YES];
+    self.mostParkingLoc = [[BussinessDataProvider sharedInstance] bestGuessLocations:0 formatToDetail:YES thresDist:IGNORE_NAVIGATION_DIST];
     
     [self.suggestCollectionView reloadData];
     [self updateSuggestionByKeyword:self.searchBar.text];

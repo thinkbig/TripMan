@@ -18,6 +18,8 @@
 #import "RouteAnnotation.h"
 #import "CTTimePredictFacade.h"
 #import "RouteOverlayView.h"
+#import "BCarAnnotationView.h"
+#import "CTRealtimeJamFacade.h"
 
 #define OVER_HEADER_HEIGHT      114
 
@@ -30,12 +32,19 @@
 @property (nonatomic) BOOL                      isOpen;
 @property (nonatomic, strong) BaiduHelper *     bdHelper;
 
+@property (nonatomic, strong) NSMutableArray *         routeAnnos;
+@property (nonatomic, strong) NSMutableArray *         carAnnos;
+
 @end
 
 @implementation SuggestDetailViewController
 
-- (void)internalInit {
+- (void)internalInit
+{
     [super internalInit];
+
+    self.routeAnnos = [NSMutableArray array];
+    self.carAnnos = [NSMutableArray array];
     self.bdHelper = [BaiduHelper new];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateUserLocation) name:kNotifyGoodLocationUpdated object:nil];
 }
@@ -165,46 +174,83 @@
     }
 }
 
-- (void) requestRouteFromApple
+//- (void) requestRouteFromApple
+//{
+//    CLLocationCoordinate2D sourceCoords = [GeoTransformer baidu2Mars:[self.route.orig clLocation].coordinate];
+//    MKPlacemark *sourcePlacemark = [[MKPlacemark alloc] initWithCoordinate:sourceCoords addressDictionary:nil];
+//    MKMapItem *source = [[MKMapItem alloc] initWithPlacemark:sourcePlacemark];
+//    
+//    CLLocationCoordinate2D destinationCoords = [GeoTransformer baidu2Mars:[self.route.dest clLocation].coordinate];
+//    MKPlacemark *destinationPlacemark = [[MKPlacemark alloc] initWithCoordinate:destinationCoords addressDictionary:nil];
+//    MKMapItem *destination = [[MKMapItem alloc] initWithPlacemark:destinationPlacemark];
+//    
+//    MKDirectionsRequest *directionsRequest = [MKDirectionsRequest new];
+//    [directionsRequest setSource:source];
+//    [directionsRequest setDestination:destination];
+//    
+//    MKDirections *directions = [[MKDirections alloc] initWithRequest:directionsRequest];
+//    [directions calculateDirectionsWithCompletionHandler:^(MKDirectionsResponse *response, NSError *error) {
+//        // Handle the response here
+//        [self.mapView removeOverlays:self.mapView.overlays];
+//        
+//        for (MKRoute * route in response.routes)
+//        {
+//            NSUInteger ptCnt = route.polyline.pointCount;
+//            CLLocationCoordinate2D routeCoordinates[ptCnt];
+//            [route.polyline getCoordinates:routeCoordinates range:NSMakeRange(0, ptCnt)];
+//            
+//            BMKMapPoint pointsToUse[ptCnt];
+//            for (int i=0; i < ptCnt; i++) {
+//                CLLocationCoordinate2D coor = routeCoordinates[i];
+//                CLLocationCoordinate2D bdCoor = [GeoTransformer mars2Baidu:coor];
+//                BMKMapPoint bdMapPt = BMKMapPointForCoordinate(bdCoor);
+//                pointsToUse[i] = bdMapPt;
+//            }
+//            
+//            BMKPolyline * lineOne = [BMKPolyline polylineWithPoints:pointsToUse count:ptCnt];
+//            lineOne.title = @"green";
+//            [self.mapView addOverlay:lineOne];
+//        }
+//        
+//        [self.mapView reloadInputViews];
+//    }];
+//}
+
+- (void) requestJamWithZone
 {
-    CLLocationCoordinate2D sourceCoords = [GeoTransformer baidu2Mars:[self.route.orig clLocation].coordinate];
-    MKPlacemark *sourcePlacemark = [[MKPlacemark alloc] initWithCoordinate:sourceCoords addressDictionary:nil];
-    MKMapItem *source = [[MKMapItem alloc] initWithPlacemark:sourcePlacemark];
+    GeoRectBound * bound = [BaiduHelper getBoundingBox:self.mapView.visibleMapRect];
     
-    CLLocationCoordinate2D destinationCoords = [GeoTransformer baidu2Mars:[self.route.dest clLocation].coordinate];
-    MKPlacemark *destinationPlacemark = [[MKPlacemark alloc] initWithCoordinate:destinationCoords addressDictionary:nil];
-    MKMapItem *destination = [[MKMapItem alloc] initWithPlacemark:destinationPlacemark];
-    
-    MKDirectionsRequest *directionsRequest = [MKDirectionsRequest new];
-    [directionsRequest setSource:source];
-    [directionsRequest setDestination:destination];
-    
-    MKDirections *directions = [[MKDirections alloc] initWithRequest:directionsRequest];
-    [directions calculateDirectionsWithCompletionHandler:^(MKDirectionsResponse *response, NSError *error) {
-        // Handle the response here
-        [self.mapView removeOverlays:self.mapView.overlays];
-        
-        for (MKRoute * route in response.routes)
-        {
-            NSUInteger ptCnt = route.polyline.pointCount;
-            CLLocationCoordinate2D routeCoordinates[ptCnt];
-            [route.polyline getCoordinates:routeCoordinates range:NSMakeRange(0, ptCnt)];
-            
-            BMKMapPoint pointsToUse[ptCnt];
-            for (int i=0; i < ptCnt; i++) {
-                CLLocationCoordinate2D coor = routeCoordinates[i];
-                CLLocationCoordinate2D bdCoor = [GeoTransformer mars2Baidu:coor];
-                BMKMapPoint bdMapPt = BMKMapPointForCoordinate(bdCoor);
-                pointsToUse[i] = bdMapPt;
-            }
-            
-            BMKPolyline * lineOne = [BMKPolyline polylineWithPoints:pointsToUse count:ptCnt];
-            lineOne.title = @"green";
-            [self.mapView addOverlay:lineOne];
-        }
-        
-        [self.mapView reloadInputViews];
+    CTRealtimeJamFacade * facade = [[CTRealtimeJamFacade alloc] init];
+    facade.geoBound = bound;
+    [facade requestWithSuccess:^(NSArray * jamArr) {
+        [self updateWithJamArr:jamArr];
+    } failure:^(NSError * err) {
+        NSLog(@"err = %@", err);
     }];
+}
+
+- (void) updateWithJamArr:(NSArray*)jamArr
+{
+    [self.mapView removeAnnotations:self.carAnnos];
+    [self.carAnnos removeAllObjects];
+    
+    NSInteger idx = 1;
+    for (JamZone * zone in jamArr) {
+        CLLocationCoordinate2D bdCoor = [GeoTransformer earth2Baidu:zone.position.coordinate];
+
+        RouteAnnotation* carAnnotation = [[RouteAnnotation alloc] init];
+        carAnnotation.coordinate = bdCoor;
+        carAnnotation.degree = [zone headingDegree];
+        carAnnotation.type = 4;
+        carAnnotation.title = [NSString stringWithFormat:@"%ld", idx++];
+        [self.carAnnos addObject:carAnnotation];
+    }
+    
+    for (RouteAnnotation * anno in self.carAnnos) {
+        [_mapView addAnnotation:anno];
+    }
+    
+    [self.mapView reloadInputViews];
 }
 
 - (void)updateTripInfo
@@ -267,7 +313,8 @@
 - (void) updateRouteViewWithRoute:(CTRoute*)route
 {
     [self.mapView removeOverlays:self.mapView.overlays];
-    [self.mapView removeAnnotations:self.mapView.annotations];
+    [self.mapView removeAnnotations:self.routeAnnos];
+    [self.routeAnnos removeAllObjects];
     
     eCoorType coorType = [route coorType];
     NSArray * steps = route.steps;
@@ -294,7 +341,7 @@
         itemNode.coordinate = bdCoorFrom;
         itemNode.degree = [BaiduHelper mapAngleFromPoint:CGPointMake(bdCoorFrom.longitude, bdCoorFrom.latitude) toPoint:CGPointMake(btCoorTo.longitude, btCoorTo.latitude)];
         itemNode.type = 2;
-        [_mapView addAnnotation:itemNode];
+        [self.routeAnnos addObject:itemNode];
         
         [pathArr enumerateObjectsUsingBlock:^(CTBaseLocation * obj, NSUInteger idx, BOOL *stop) {
             CLLocationCoordinate2D btCoor = [GeoTransformer baiduCoor:[obj coordinate] fromType:coorType];
@@ -347,19 +394,25 @@
     itemSt.coordinate = [startLoc coordinate];
     itemSt.title = @"起点";
     itemSt.type = 0;
-    [_mapView addAnnotation:itemSt];
+    [self.routeAnnos addObject:itemSt];
     [regionBound updateBoundsWithCoor:itemSt.coordinate];
     
     RouteAnnotation* itemEd = [[RouteAnnotation alloc] init];
     itemEd.coordinate = [endLoc coordinate];
     itemEd.title = @"终点";
     itemEd.type = 1;
-    [_mapView addAnnotation:itemEd];
+    [self.routeAnnos addObject:itemEd];
     [regionBound updateBoundsWithCoor:itemEd.coordinate];
+    
+    for (RouteAnnotation * anno in self.routeAnnos) {
+        [_mapView addAnnotation:anno];
+    }
     
     [self.mapView setRegion:[regionBound baiduRegion] animated:YES];
     
     [self.mapView reloadInputViews];
+    
+    [self requestJamWithZone];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath
@@ -484,7 +537,6 @@
             view = [mapview dequeueReusableAnnotationViewWithIdentifier:@"route_node"];
             if (view == nil) {
                 view = [[BMKAnnotationView alloc]initWithAnnotation:routeAnnotation reuseIdentifier:@"route_node"];
-                view.canShowCallout = TRUE;
             } else {
                 [view setNeedsDisplay];
             }
@@ -500,7 +552,6 @@
             view = [mapview dequeueReusableAnnotationViewWithIdentifier:@"waypoint_node"];
             if (view == nil) {
                 view = [[BMKAnnotationView alloc]initWithAnnotation:routeAnnotation reuseIdentifier:@"waypoint_node"];
-                view.canShowCallout = TRUE;
             } else {
                 [view setNeedsDisplay];
             }
@@ -510,11 +561,34 @@
             view.annotation = routeAnnotation;
         }
             break;
+        case 4:
+        {
+            BCarAnnotationView * realView = (BCarAnnotationView*)[mapview dequeueReusableAnnotationViewWithIdentifier:@"car_node"];
+            if (realView == nil) {
+                realView = [[BCarAnnotationView alloc] initWithAnnotation:routeAnnotation reuseIdentifier:@"car_node"];
+                realView.canShowCallout = TRUE;
+            } else {
+                [realView setNeedsDisplay];
+            }
+            
+            [realView updateWithIcon:@"map_car_male.png" andText:routeAnnotation.title withAngle:routeAnnotation.degree-90];
+            realView.clipsToBounds = NO;
+            
+            view = realView;
+        }
+            break;
         default:
             break;
     }
     
     return view;
+}
+
+- (void)mapView:(BMKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
+{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self requestJamWithZone];
+    });
 }
 
 @end

@@ -34,7 +34,7 @@
 - (void) updateLastGoodGpsItem:(GPSLogItem*)gps;
 
 - (NSDateFormatter*) dateFormatterForFormatStr:(NSString*)format;
-- (NSArray*) bestGuessLocations:(NSInteger)limit formatToDetail:(BOOL)format;
+- (NSArray*) bestGuessLocations:(NSInteger)limit formatToDetail:(BOOL)format thresDist:(CGFloat)thresDist;
 - (TripSummary*) bestTripForRegionGroup:(RegionGroup*)group;
 
 // some bussiness data storage

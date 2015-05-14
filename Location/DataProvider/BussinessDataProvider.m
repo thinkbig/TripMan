@@ -423,7 +423,7 @@ static BussinessDataProvider * _sharedProvider = nil;
     return formater;
 }
 
-- (NSArray*) bestGuessLocations:(NSInteger)limit formatToDetail:(BOOL)format
+- (NSArray*) bestGuessLocations:(NSInteger)limit formatToDetail:(BOOL)format thresDist:(CGFloat)thresDist
 {
     if (limit <= 0) {
         limit = INT16_MAX;
@@ -503,6 +503,24 @@ static BussinessDataProvider * _sharedProvider = nil;
             }
         }
         
+        NSMutableArray * farAwayArr = [NSMutableArray array];
+        NSArray * tmpArr = [finalArr copy];
+        for (id obj in tmpArr) {
+            if ([obj isKindOfClass:[TripSummary class]]) {
+                TripSummary * sum = (TripSummary*)obj;
+                if ([sum.total_dist floatValue] > thresDist) {
+                    [farAwayArr addObject:obj];
+                    [finalArr removeObject:obj];
+                }
+            } else if ([obj isKindOfClass:[ParkingRegion class]]) {
+                ParkingRegion * region = (ParkingRegion*)obj;
+                if ([[region centerLocation] distanceFromLocation:curLoc] > thresDist) {
+                    [farAwayArr addObject:obj];
+                    [finalArr removeObject:obj];
+                }
+            }
+        }
+        
         if (finalArr.count < limit) {
             // 把剩下的，没开过的location，按照停车次数排序
             NSArray * otherSortedRegion = [otherRegions sortedArrayUsingComparator:^NSComparisonResult(ParkingRegionDetail * obj1, ParkingRegionDetail * obj2) {
@@ -514,7 +532,21 @@ static BussinessDataProvider * _sharedProvider = nil;
                 }
                 return (NSComparisonResult)NSOrderedSame;
             }];
-            [finalArr addObjectsFromArray:otherSortedRegion];
+            
+            for (id obj in otherSortedRegion) {
+                if ([obj isKindOfClass:[ParkingRegionDetail class]]) {
+                    ParkingRegionDetail * regionDetail = (ParkingRegionDetail*)obj;
+                    if ([[regionDetail.coreDataItem centerLocation] distanceFromLocation:curLoc] < thresDist) {
+                        [finalArr addObject:obj];
+                    } else {
+                        [farAwayArr addObject:obj];
+                    }
+                }
+            }
+            
+            if (finalArr.count < limit) {
+                [finalArr addObjectsFromArray:farAwayArr];
+            }
         }
     }
     else

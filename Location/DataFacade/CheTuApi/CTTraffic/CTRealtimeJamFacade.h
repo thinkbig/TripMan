@@ -8,6 +8,7 @@
 
 #import "BaseChetuFacade.h"
 #import "GeoRectBound.h"
+#import "JamZone.h"
 
 @interface CTRealtimeJamFacade : BaseChetuFacade
 

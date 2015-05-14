@@ -9,7 +9,9 @@
 #ifndef TripMan_UrlDefine_h
 #define TripMan_UrlDefine_h
 
-#define kChetuBaseUrl       @"http://121.40.193.34:80/"    // prod
+//#define kChetuBaseUrl       @"http://121.40.193.34:80/"    // prod windows
+#define kChetuBaseUrl       @"http://115.29.200.94:80/"      // prod linux1
+//#define kChetuBaseUrl       @"http://218.244.139.25/"      // prod linux2
 
 //#define kChetuBaseUrl       @"http://localhost:8000/"     //local
 //#define kChetuBaseUrl       @"http://192.168.1.105:8000/"    //local ip

@@ -67,7 +67,7 @@
     }
     
     self.bestTrip = nil;
-    NSArray * guessTrips = [[BussinessDataProvider sharedInstance] bestGuessLocations:1 formatToDetail:NO];
+    NSArray * guessTrips = [[BussinessDataProvider sharedInstance] bestGuessLocations:1 formatToDetail:NO thresDist:IGNORE_NAVIGATION_DIST];
     if (guessTrips.count > 0) {
         id guessData = guessTrips[0];
         if ([guessData isKindOfClass:[TripSummary class]]) {

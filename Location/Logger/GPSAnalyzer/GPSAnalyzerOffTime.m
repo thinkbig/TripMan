@@ -296,8 +296,9 @@
     NSInteger offset = 0;
     NSInteger limit = 500;
     
-    GPSEventItem * stRegion = [loggerDB selectLatestEventBefore:tripSum.start_date ofType:eGPSEventDriveEnd];
-    NSDate * detectStart = [[tripSum.start_date dateByAddingMinutes:-10] laterDate:stRegion.timestamp];
+    NSDate * midDate = [tripSum.start_date dateByAddingTimeInterval:[tripSum.end_date timeIntervalSinceDate:tripSum.start_date]/2.0];
+    GPSEventItem * stRegion = [loggerDB selectLatestEventBefore:midDate ofType:eGPSEventDriveEnd];
+    NSDate * detectStart = [[tripSum.start_date dateByAddingMinutes:-10] laterDate:[stRegion.timestamp dateByAddingTimeInterval:30]];
     NSDate * detectEnd = tripSum.end_date;//[tripSum.end_date dateByAddingMinutes:10];
     NSArray * logArr = [loggerDB selectLogFrom:detectStart toDate:detectEnd offset:offset limit:limit];
     if (logArr.count == 0) {
@@ -610,10 +611,21 @@
 
 - (GPSLogItem*)modifyStartPoint:(TripSummary*)sum firstGPSLog:(GPSLogItem*)firstLog
 {
-    GPSEventItem * stRegion = [[GPSLogger sharedLogger].dbLogger selectLatestEventBefore:sum.start_date ofType:eGPSEventMonitorRegion];
+    GPSEventItem * stRegion = nil;
+    NSDate * stDate = firstLog.timestamp ? firstLog.timestamp : sum.start_date;
     
-    if (nil == stRegion) {
-        stRegion = [[GPSLogger sharedLogger].dbLogger selectLatestEventBefore:sum.start_date ofType:eGPSEventDriveEnd];
+    GPSEventItem * monitorEvent = [[GPSLogger sharedLogger].dbLogger selectLatestEventBefore:stDate ofType:eGPSEventMonitorRegion];
+    GPSEventItem * endDriveEvent = stRegion = [[GPSLogger sharedLogger].dbLogger selectLatestEventBefore:stDate ofType:eGPSEventDriveEnd];
+    if (monitorEvent || endDriveEvent) {
+        if (nil == monitorEvent) {
+            stRegion = endDriveEvent;
+        } else if (nil == monitorEvent) {
+            stRegion = endDriveEvent;
+        } else {
+            CGFloat during1 = [firstLog.timestamp timeIntervalSinceDate:monitorEvent.timestamp];
+            CGFloat during2 = [firstLog.timestamp timeIntervalSinceDate:endDriveEvent.timestamp];
+            stRegion = (during1 > during2) ? endDriveEvent : monitorEvent;
+        }
     }
     if (nil == stRegion || ![stRegion isValidLocation]) {
         // if do not have the last end drive point, or do not have the lat lon
