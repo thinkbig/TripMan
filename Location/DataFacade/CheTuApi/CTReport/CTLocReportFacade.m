@@ -14,19 +14,19 @@
     return eRequestTypePost;
 }
 
-- (NSString *)getPath {
-    NSString * udid = [[GToolUtil sharedInstance] deviceId];
-    NSString * uid = [[GToolUtil sharedInstance] userId];
+- (NSString *)getPath
+{
+    NSMutableString * path = [NSMutableString stringWithString:@"parking/detail"];
+    
+    NSString * sep = @"?";
     NSString * pid = self.aimRegion.parking_id;
-    NSMutableString * path = [NSMutableString stringWithFormat:@"parking/detail?udid=%@", udid];
-    if (uid) {
-        [path appendFormat:@"&uid=%@", uid];
-    }
     if (pid) {
-        [path appendFormat:@"&pid=%@", pid];
+        [path appendFormat:@"%@pid=%@", sep, pid];
+        sep = @"&";
     }
     if (self.force) {
-        [path appendString:@"&force=1"];
+        [path appendFormat:@"%@force=1", sep];
+        sep = @"&";
     }
     return path;
 }

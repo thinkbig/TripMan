@@ -187,6 +187,10 @@
 		A35C26831A48FCE2005F6658 /* CTPOICategoryFacade.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C26821A48FCE2005F6658 /* CTPOICategoryFacade.m */; };
 		A35C26861A490F5F005F6658 /* HomeTripCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A35C26851A490F5F005F6658 /* HomeTripCell.m */; };
 		A36CB51A1B02494C000C4666 /* BCarAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = A36CB5191B02494C000C4666 /* BCarAnnotationView.m */; };
+		A36CB51D1B04E226000C4666 /* CTConfigProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = A36CB51C1B04E226000C4666 /* CTConfigProvider.m */; };
+		A36CB5201B0618D4000C4666 /* CTFeedbackFacade.m in Sources */ = {isa = PBXBuildFile; fileRef = A36CB51F1B0618D4000C4666 /* CTFeedbackFacade.m */; };
+		A36CB5231B061901000C4666 /* CTFeedbackModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A36CB5221B061901000C4666 /* CTFeedbackModel.m */; };
+		A36CB5271B061CC4000C4666 /* TSPlaceHolderTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = A36CB5261B061CC4000C4666 /* TSPlaceHolderTextView.m */; };
 		A377B42F19F5537900DDB5EE /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = A377B42E19F5537900DDB5EE /* NSString+MD5.m */; };
 		A378ABE31A164664006A3B68 /* DVSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = A378ABE21A164664006A3B68 /* DVSwitch.m */; };
 		A378ABE71A16F124006A3B68 /* DRDynamicSlideShow.m in Sources */ = {isa = PBXBuildFile; fileRef = A378ABE61A16F124006A3B68 /* DRDynamicSlideShow.m */; };
@@ -633,6 +637,14 @@
 		A35C26851A490F5F005F6658 /* HomeTripCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeTripCell.m; sourceTree = "<group>"; };
 		A36CB5181B02494C000C4666 /* BCarAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCarAnnotationView.h; sourceTree = "<group>"; };
 		A36CB5191B02494C000C4666 /* BCarAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCarAnnotationView.m; sourceTree = "<group>"; };
+		A36CB51B1B04E226000C4666 /* CTConfigProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTConfigProvider.h; sourceTree = "<group>"; };
+		A36CB51C1B04E226000C4666 /* CTConfigProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTConfigProvider.m; sourceTree = "<group>"; };
+		A36CB51E1B0618D4000C4666 /* CTFeedbackFacade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTFeedbackFacade.h; sourceTree = "<group>"; };
+		A36CB51F1B0618D4000C4666 /* CTFeedbackFacade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTFeedbackFacade.m; sourceTree = "<group>"; };
+		A36CB5211B061901000C4666 /* CTFeedbackModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTFeedbackModel.h; sourceTree = "<group>"; };
+		A36CB5221B061901000C4666 /* CTFeedbackModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTFeedbackModel.m; sourceTree = "<group>"; };
+		A36CB5251B061CC4000C4666 /* TSPlaceHolderTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSPlaceHolderTextView.h; sourceTree = "<group>"; };
+		A36CB5261B061CC4000C4666 /* TSPlaceHolderTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSPlaceHolderTextView.m; sourceTree = "<group>"; };
 		A377B42D19F5537900DDB5EE /* NSString+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5.h"; sourceTree = "<group>"; };
 		A377B42E19F5537900DDB5EE /* NSString+MD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MD5.m"; sourceTree = "<group>"; };
 		A378ABE11A164664006A3B68 /* DVSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVSwitch.h; sourceTree = "<group>"; };
@@ -1384,6 +1396,8 @@
 				A38FB1901A6F69B400DBA46C /* UserWrapper.m */,
 				A3BD72B01A15BC2E0007ECA1 /* BussinessDataProvider.h */,
 				A3BD72B11A15BC2E0007ECA1 /* BussinessDataProvider.m */,
+				A36CB51B1B04E226000C4666 /* CTConfigProvider.h */,
+				A36CB51C1B04E226000C4666 /* CTConfigProvider.m */,
 			);
 			path = DataProvider;
 			sourceTree = "<group>";
@@ -1466,6 +1480,7 @@
 		A34F01421A06699300F58C17 /* UIControl */ = {
 			isa = PBXGroup;
 			children = (
+				A36CB5241B061CC4000C4666 /* Others */,
 				A38D882E1AEBCF9F000881FD /* STAlertView */,
 				A35C264D1A42C597005F6658 /* ScrollSegView */,
 				A3D0B4A81A2C64A80030B19E /* MPPlot */,
@@ -1554,6 +1569,8 @@
 				A35BC7421AA94C1200D726D4 /* CTTripRawReportFacade.m */,
 				A3E2891C1ACB98E10043F14C /* CTInstReportFacade.h */,
 				A3E2891D1ACB98E10043F14C /* CTInstReportFacade.m */,
+				A36CB51E1B0618D4000C4666 /* CTFeedbackFacade.h */,
+				A36CB51F1B0618D4000C4666 /* CTFeedbackFacade.m */,
 			);
 			path = CTReport;
 			sourceTree = "<group>";
@@ -1965,6 +1982,15 @@
 				A35C26821A48FCE2005F6658 /* CTPOICategoryFacade.m */,
 			);
 			path = CTPOI;
+			sourceTree = "<group>";
+		};
+		A36CB5241B061CC4000C4666 /* Others */ = {
+			isa = PBXGroup;
+			children = (
+				A36CB5251B061CC4000C4666 /* TSPlaceHolderTextView.h */,
+				A36CB5261B061CC4000C4666 /* TSPlaceHolderTextView.m */,
+			);
+			path = Others;
 			sourceTree = "<group>";
 		};
 		A377B42B19F5532400DDB5EE /* Category */ = {
@@ -2387,6 +2413,8 @@
 				A301EB671AE0FE6300CC6412 /* JamZone.m */,
 				A359E6191AF395D600D7FF10 /* CarMaintainInfo.h */,
 				A359E61A1AF395D600D7FF10 /* CarMaintainInfo.m */,
+				A36CB5211B061901000C4666 /* CTFeedbackModel.h */,
+				A36CB5221B061901000C4666 /* CTFeedbackModel.m */,
 			);
 			path = Chetu;
 			sourceTree = "<group>";
@@ -2732,6 +2760,7 @@
 				A34890681A3FCB6F002DE948 /* AJJson2ObjectSerializer.m in Sources */,
 				A359E6181AF3215F00D7FF10 /* CarMaintainInfoViewController.m in Sources */,
 				A30405461AE911E90047E66B /* VersionInfoViewController.m in Sources */,
+				A36CB5201B0618D4000C4666 /* CTFeedbackFacade.m in Sources */,
 				A35C26261A426F4B005F6658 /* NSDate+RZExtensions.m in Sources */,
 				A35C26411A426F4B005F6658 /* RZProgressView.m in Sources */,
 				A35C26861A490F5F005F6658 /* HomeTripCell.m in Sources */,
@@ -2828,6 +2857,7 @@
 				A35BC7521AAA90B100D726D4 /* EnvInfo+Fetcher.m in Sources */,
 				A37E03EC1A0D216900B0B0EC /* TSPair.m in Sources */,
 				A321E2921AC4526300CA9035 /* BaiduMapViewController.m in Sources */,
+				A36CB5271B061CC4000C4666 /* TSPlaceHolderTextView.m in Sources */,
 				A3B5DFC91A49200C00576F77 /* FXLabel.m in Sources */,
 				A35C26301A426F4B005F6658 /* UIImage+RZResize.m in Sources */,
 				A3326B281A2DFAA800C9F1C9 /* GToolUtil.m in Sources */,
@@ -2921,6 +2951,7 @@
 				A34284A019C6770A002DB0FD /* GPSFileLogFormatter.m in Sources */,
 				A34F01121A03D78900F58C17 /* LogFileContentViewController.m in Sources */,
 				5C9090A018B3A66A00510153 /* AppDelegate.m in Sources */,
+				A36CB51D1B04E226000C4666 /* CTConfigProvider.m in Sources */,
 				A3D1719C1AFE030F0095CC58 /* CarMaintainCell.m in Sources */,
 				A304054F1AE91E5A0047E66B /* MVTextInputsScroller.m in Sources */,
 				A36CB51A1B02494C000C4666 /* BCarAnnotationView.m in Sources */,
@@ -2939,6 +2970,7 @@
 				A378ABED1A17A7C2006A3B68 /* TripTodayView.m in Sources */,
 				A3C011F61AC3D0D60088EFF3 /* GPlaceModel.m in Sources */,
 				A377B42F19F5537900DDB5EE /* NSString+MD5.m in Sources */,
+				A36CB5231B061901000C4666 /* CTFeedbackModel.m in Sources */,
 				A342AD441A0C6CF000C92849 /* DataDebugPrinter.m in Sources */,
 				A3C454541A930E0000D53342 /* CTTrafficAbstractFacade.m in Sources */,
 				A35BC72F1AA4244C00D726D4 /* DataReporter.m in Sources */,

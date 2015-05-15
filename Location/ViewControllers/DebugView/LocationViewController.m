@@ -12,6 +12,8 @@
 #import "JamDisplayViewController.h"
 #import "LogFileListViewController.h"
 #import "DebugTableCell.h"
+#import "CTConfigProvider.h"
+#import "ActionSheetStringPicker.h"
 
 typedef NS_ENUM(NSUInteger, eDebugDisplayType) {
     eDebugDisplayUid = 0,
@@ -24,6 +26,7 @@ typedef NS_ENUM(NSUInteger, eDebugDisplayType) {
 
 typedef NS_ENUM(NSUInteger, eDebugActionType) {
     eDebugActionShowLog = 0,
+    eDebugActionSwitchServer,
     eDebugActionJamsMap,
     eDebugActionUpdatePOIName,
     eDebugActionRevertDelete,
@@ -134,6 +137,12 @@ typedef NS_ENUM(NSUInteger, eDebugActionType) {
             cell.textLabel.text = @"查看log";
             cell.detailTextLabel.text = @"文件log";
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        } else if (eDebugActionSwitchServer == indexPath.row) {
+            cell = [tableView dequeueReusableCellWithIdentifier:@"DebugDetailCellId"];
+            CTConfigProvider * configProvider = [CTConfigProvider sharedInstance];
+            cell.textLabel.text = configProvider.currentServerName;
+            cell.detailTextLabel.text = configProvider.currentServer;
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         } else if (eDebugActionJamsMap == indexPath.row) {
             cell = [tableView dequeueReusableCellWithIdentifier:@"DebugDetailCellId"];
             cell.textLabel.text = @"查看实时拥堵地图";
@@ -203,6 +212,17 @@ typedef NS_ENUM(NSUInteger, eDebugActionType) {
         if (eDebugActionShowLog == indexPath.row) {
             LogFileListViewController * logListVC = [self.storyboard instantiateViewControllerWithIdentifier:@"LogDisplayList"];
             [self.navigationController pushViewController:logListVC animated:YES];
+        } else if (eDebugActionSwitchServer == indexPath.row) {
+            CTConfigProvider * configProvider = [CTConfigProvider sharedInstance];
+            NSDictionary * allServer = [configProvider allServerConfigs];
+            NSArray * allName = allServer.allKeys;
+            NSString * curServerName = [configProvider currentServerName];
+            NSInteger curIdx = [allName indexOfObject:curServerName];
+            [ActionSheetStringPicker showPickerWithTitle:@"切换服务器" rows:allName initialSelection:curIdx doneBlock:^(ActionSheetStringPicker *picker, NSInteger selectedIndex, id selectedValue) {
+                [configProvider selectServerWithName:selectedValue];
+                [self showToast:[NSString stringWithFormat:@"已经切换到: %@", selectedValue] onDismiss:nil];
+                [self.debugTable reloadData];
+            } cancelBlock:nil origin:self.view];
         } else if (eDebugActionJamsMap == indexPath.row) {
             JamDisplayViewController * jamVC = [self.storyboard instantiateViewControllerWithIdentifier:@"JamDisplayVC"];
             [self.navigationController pushViewController:jamVC animated:YES];

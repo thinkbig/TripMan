@@ -14,19 +14,19 @@
     return eRequestTypePost;
 }
 
-- (NSString *)getPath {
-    NSString * udid = [[GToolUtil sharedInstance] deviceId];
-    NSString * uid = [[GToolUtil sharedInstance] userId];
+- (NSString *)getPath
+{
+    NSMutableString * path = [NSMutableString stringWithString:@"trip/realtime"];
+    
+    NSString * sep = @"?";
     NSString * jam_id = self.reportModel.jam_id;
-    NSMutableString * path = [NSMutableString stringWithFormat:@"trip/realtime?udid=%@", udid];
-    if (uid) {
-        [path appendFormat:@"&uid=%@", uid];
-    }
     if (jam_id) {
-        [path appendFormat:@"&jam_id=%@", jam_id];
+        [path appendFormat:@"%@jam_id=%@", sep, jam_id];
+        sep = @"&";
     }
     if (self.ignore) {
-        [path appendString:@"&ignore=1"];
+        [path appendFormat:@"%@ignore=1", sep];
+        sep = @"&";
     }
     return path;
 }

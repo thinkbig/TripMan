@@ -74,7 +74,7 @@
 #define IS_FORCE_DRIVING             (((AppDelegate*)([UIApplication sharedApplication].delegate)).forceDriving)
 
 // traffic threshold
-#define IGNORE_NAVIGATION_DIST       (1000*300)
+#define IGNORE_NAVIGATION_DIST       (1000*100)
 
 #if TARGET_IPHONE_SIMULATOR
 #define gDeviceType @"iosSimulator"

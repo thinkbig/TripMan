@@ -80,6 +80,10 @@ static BussinessDataProvider * _sharedProvider = nil;
     return [[CLLocation alloc] initWithLatitude:[dict[@"lat"] doubleValue] longitude:[dict[@"lon"] doubleValue]];
 }
 
+- (NSString*) currentCity {
+    return _latestCityDate[@"city"];
+}
+
 - (NSDictionary*) lastGoodGpsItem
 {
     if (nil == _lastGoodGPS) {

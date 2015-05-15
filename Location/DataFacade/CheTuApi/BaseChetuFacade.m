@@ -23,9 +23,40 @@
     return kChetuBaseUrl;
 }
 
-//- (NSString *)getPath{
-//    return @"%@?uid=someUserId";
-//}
+- (NSDictionary*)requestHeader {
+    NSMutableDictionary * dict = [NSMutableDictionary dictionary];
+    NSString * udid = [[GToolUtil sharedInstance] deviceId];
+    NSString * uid = [[GToolUtil sharedInstance] userId];
+    if (uid) {
+        dict[@"uid"] = uid;
+    }
+    if (udid) {
+        dict[@"udid"] = udid;
+    }
+    return dict;
+}
+
+- (NSMutableString *)ctPathWithResPath:(NSString*)resPath
+{
+    NSMutableString * path = [NSMutableString stringWithString:resPath];
+    if (![resPath hasSuffix:@"?"] && ![resPath hasSuffix:@"&"]) {
+        NSString * sep = @"?";
+        if ([resPath containsString:@"?"]) {
+            sep = @"&";
+        }
+        [path appendString:sep];
+    }
+    
+    NSString * udid = [[GToolUtil sharedInstance] deviceId];
+    [path appendFormat:@"udid=%@", udid];
+    
+    NSString * uid = [[GToolUtil sharedInstance] userId];
+    if (uid) {
+        [path appendFormat:@"&uid=%@", uid];
+    }
+    
+    return path;
+}
 
 - (id) processingOrigResult:(NSDictionary*)origResult error:(NSError **)err
 {

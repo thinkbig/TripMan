@@ -10,4 +10,6 @@
 
 @interface LocationViewController : GViewController
 
+@property (weak, nonatomic) IBOutlet UITableView *debugTable;
+
 @end

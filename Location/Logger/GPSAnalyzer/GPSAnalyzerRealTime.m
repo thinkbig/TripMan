@@ -260,12 +260,10 @@
     
     eMotionStat stat = [self checkStatus];
     
-    if (eMotionStatDriving == stat) {
+    if ([_isInTrip boolValue]) {
         if (_driveStart) {
             CGFloat distFromStart = [gps distanceFrom:_driveStart];
             _maxDist = MAX(distFromStart, _maxDist);
-        } else {
-            _driveStart = gps;
         }
         if (_lastMonitorLoc) {
             CGFloat distFromMonitor = [gps distanceFromCLLocation:_lastMonitorLoc];
@@ -498,7 +496,7 @@
         } else {
             if (_endSpeedTraceIdx < self.logArr.count) {
                 item = ((GPSLogItem*)(self.logArr[_endSpeedTraceIdx]));
-                if (_maxDist >= 0 && _maxDist < 400 && _maxDist2Monitor >= 0 && _maxDist2Monitor < 400) {
+                if (_maxDist > 0 && _maxDist < 400 && _maxDist2Monitor > 0 && _maxDist2Monitor < 400) {
                     dropTrip = YES;
                 }
             }

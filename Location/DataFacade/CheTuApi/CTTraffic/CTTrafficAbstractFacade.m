@@ -27,14 +27,6 @@
         dict[@"fromId"] = self.fromParkingId;
         dict[@"toId"] = self.toParkingId;
     }
-    NSString * udid = [[GToolUtil sharedInstance] deviceId];
-    NSString * uid = [[GToolUtil sharedInstance] userId];
-    if (uid) {
-        dict[@"uid"] = uid;
-    }
-    if (udid) {
-        dict[@"udid"] = udid;
-    }
     return dict;
 }
 

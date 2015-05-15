@@ -30,6 +30,7 @@
 - (void) updateRoadMarkForTrips:(TripSummary*)sum ofTurningPoints:(NSArray*)ptArr success:(successFacadeBlock)success failure:(failureFacadeBlock)failure;
 
 + (CLLocation*) lastGoodLocation;
+- (NSString*) currentCity;
 - (NSDictionary*) lastGoodGpsItem;
 - (void) updateLastGoodGpsItem:(GPSLogItem*)gps;
 

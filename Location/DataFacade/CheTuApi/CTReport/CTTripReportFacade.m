@@ -14,19 +14,19 @@
     return eRequestTypePost;
 }
 
-- (NSString *)getPath {
-    NSString * udid = [[GToolUtil sharedInstance] deviceId];
-    NSString * uid = [[GToolUtil sharedInstance] userId];
+- (NSString *)getPath
+{
+    NSMutableString * path = [NSMutableString stringWithString:@"trip/detail"];
+
+    NSString * sep = @"?";
     NSString * tid = self.sum.trip_id;
-    NSMutableString * path = [NSMutableString stringWithFormat:@"trip/detail?udid=%@", udid];
-    if (uid) {
-        [path appendFormat:@"&uid=%@", uid];
-    }
     if (tid) {
-        [path appendFormat:@"&tid=%@", tid];
+        [path appendFormat:@"%@tid=%@", sep, tid];
+        sep = @"&";
     }
     if (self.force) {
-        [path appendString:@"&force=1"];
+        [path appendFormat:@"%@force=1", sep];
+        sep = @"&";
     }
     return path;
 }

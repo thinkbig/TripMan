@@ -14,8 +14,10 @@
     return eRequestTypePost;
 }
 
-- (NSString *)getPath {
-    return [NSString stringWithFormat:@"trip/raw?tid=%@", self.sum.trip_id];
+- (NSString *)getPath
+{
+    NSString * path = [NSString stringWithFormat:@"trip/raw?tid=%@", self.sum.trip_id];
+    return path;
 }
 
 - (eSerializationType)requestSerializationType {
