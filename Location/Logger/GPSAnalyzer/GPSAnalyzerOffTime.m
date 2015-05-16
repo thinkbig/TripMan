@@ -144,7 +144,6 @@
     if (nil == daySum) {
         return;
     }
-    TripsCoreDataManager * manager = self.manager;
     
     CGFloat total_dist = 0;
     CGFloat total_during = 0;
@@ -181,8 +180,6 @@
     daySum.traffic_light_waiting = @(traffic_light_waiting);
     daySum.max_speed = @(max_speed);
     daySum.is_analyzed = @(YES);
-    
-    [manager commit];
 }
 
 - (void) analyzeWeekSum:(WeekSummary*)weekSum
@@ -190,8 +187,7 @@
     if (nil == weekSum) {
         return;
     }
-    TripsCoreDataManager * manager = self.manager;
-
+    
     CGFloat total_dist = 0;
     CGFloat total_during = 0;
     CGFloat jam_dist = 0;
@@ -226,8 +222,6 @@
     weekSum.max_speed = @(max_speed);
     weekSum.trip_cnt = @(trip_cnt);
     weekSum.is_analyzed = @(YES);
-    
-    [manager commit];
 }
 
 - (void)analyzeMonthSum:(MonthSummary*)monthSum
@@ -281,8 +275,6 @@
     monthSum.trip_most_during = trip_most_during;
     monthSum.trip_most_jam_during = trip_most_jam_during;
     monthSum.is_analyzed = @(YES);
-    
-    [self.manager commit];
 }
 
 - (void) analyzeTripForSum:(TripSummary*)tripSum withAnalyzer:(NSDictionary*)anaDict

@@ -732,7 +732,7 @@ typedef enum
                 NSTimeInterval timeGap = [mostAccuracyLocation.timestamp timeIntervalSinceDate:_lastStationaryDate];
                 eMoveStat moveStat = [GPSLogger sharedLogger].gpsAnalyzer.moveStat;
                 if (eMoveStatLine == moveStat) {
-                    if (timeGap > cCanStopMonitoringThreshold*2) {
+                    if (timeGap > cCanStopMonitoringThreshold*1.8) {
                         _keepMonitoring = NO;
                     }
                 } else if (timeGap > cCanStopMonitoringThreshold) {

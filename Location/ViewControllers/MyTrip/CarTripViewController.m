@@ -236,6 +236,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
         self.sumYestoday = self.sumToday;
         self.sumToday = self.sumTomorrow;
         self.sumTomorrow = [self fetchDayTripForDate:[self.currentDate dateByAddingDays:1]];
+        [[AnaDbManager deviceDb] commit];
         
         [self reloadContentOfDay];
     }
@@ -247,6 +248,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
     self.sumTomorrow = self.sumToday;
     self.sumToday = self.sumYestoday;
     self.sumYestoday = [self fetchDayTripForDate:[self.currentDate dateBySubtractingDays:1]];
+    [[AnaDbManager deviceDb] commit];
     
     [self reloadContentOfDay];
 }
@@ -258,6 +260,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
         self.sumLastWeek = self.sumThisWeek;
         self.sumThisWeek = self.sumNextWeek;
         self.sumNextWeek = [self fetchWeekTripForDate:[self.currentWeekDate dateByAddingDays:7]];
+        [[AnaDbManager deviceDb] commit];
         
         [self reloadContentOfWeek];
     }
@@ -269,6 +272,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
     self.sumNextWeek = self.sumThisWeek;
     self.sumThisWeek = self.sumLastWeek;
     self.sumLastWeek = [self fetchWeekTripForDate:[self.currentWeekDate dateBySubtractingDays:7]];
+    [[AnaDbManager deviceDb] commit];
     
     [self reloadContentOfWeek];
 }
@@ -280,6 +284,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
         self.sumLastMonth = self.sumThisMonth;
         self.sumThisMonth = self.sumNextMonth;
         self.sumNextMonth = [self fetchMonthTripForDate:[self.currentMonthDate dateByAddingMonths:1]];
+        [[AnaDbManager deviceDb] commit];
         
         [self reloadContentOfMonth];
     }
@@ -291,6 +296,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
     self.sumNextMonth = self.sumThisMonth;
     self.sumThisMonth = self.sumLastMonth;
     self.sumLastMonth = [self fetchMonthTripForDate:[self.currentMonthDate dateBySubtractingMonths:1]];
+    [[AnaDbManager deviceDb] commit];
     
     [self reloadContentOfMonth];
 }
@@ -406,6 +412,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
                 self.sumTomorrow = nil;
             }
             dispatch_async(dispatch_get_main_queue(), ^{
+                [[AnaDbManager deviceDb] commit];
                 [self hideLoading];
                 [self reloadContentOfDay];
             });
@@ -426,6 +433,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
                 self.sumNextWeek = nil;
             }
             dispatch_async(dispatch_get_main_queue(), ^{
+                [[AnaDbManager deviceDb] commit];
                 [self hideLoading];
                 [self reloadContentOfWeek];
             });
@@ -446,6 +454,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
                 self.sumNextMonth = nil;
             }
             dispatch_async(dispatch_get_main_queue(), ^{
+                [[AnaDbManager deviceDb] commit];
                 [self hideLoading];
                 [self reloadContentOfMonth];
             });
