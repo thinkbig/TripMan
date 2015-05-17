@@ -51,7 +51,7 @@
 #define cDirveStartSamplePoint                 4
 #define cDirveEndSamplePoint                   9
 #define cOntOfDateThreshold                    (60*30)          // if the last gps data is over 30*60s ealier, force end unfinished trip
-#define cCanStopMonitoringThreshold            (60*5)
+#define cCanStopMonitoringThreshold            (60*4.1)
 
 #define cInsDrivingSpeed                       (30.0/3.6)       //  > 15 km/h
 #define cInsTrafficJamSpeed                    (20.0/3.6)        //  < 5 km/h

@@ -154,7 +154,7 @@
     if (speed < 0) {
         speed = 0;
     }
-    if (speed > cInsDrivingSpeed*5 && _startMoveTraceIdx < self.logArr.count) {
+    if (speed > cInsDrivingSpeed*3.5 && _startMoveTraceIdx < self.logArr.count) {
         CGFloat maxAccu = MAX(gpsAccu, [self.lastLogItem.horizontalAccuracy floatValue]);
         if (maxAccu > kPoorHorizontalAccuracy) {
             speed /= 4.0;
@@ -317,7 +317,7 @@
     if (!force && _removeThreshold-- > 0) {
         return;
     }
-    self.removeThreshold = 7;
+    self.removeThreshold = 2;
     
     GPSLogItem * lastItem = self.lastLogItem;
     if (lastItem) {

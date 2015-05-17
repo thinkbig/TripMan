@@ -10,7 +10,7 @@
 #import "GPSOffTimeFilter.h"
 #import "GPSAnalyzerRealTime.h"
 
-#define NSLog(...) {}
+//#define NSLog(...) {}
 
 @interface TripSimulator () {
     
@@ -276,7 +276,7 @@
     if (!force && _removeThreshold-- > 0) {
         return;
     }
-    self.removeThreshold = 4;
+    self.removeThreshold = 2;
     
     GPSLogItem * lastItem = self.lastLogItem;
     if (lastItem) {

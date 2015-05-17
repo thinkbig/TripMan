@@ -41,12 +41,13 @@ static CTConfigProvider * _sharedInst = nil;
 {
     if (nil == self.realServerConfig) {
         NSDictionary * config = [[NSUserDefaults standardUserDefaults] objectForKey:kServerConfigKey];
-        NSInteger thisVersionCnt = 4;
+        NSInteger thisVersionCnt = 5;
         if (nil == config || config.count != thisVersionCnt) {
-            config = @{@"Production": @{@"url": @"http://115.29.200.94:80/", @"isSelect": @YES},
-                       @"Linux(主)": @{@"url": @"http://115.29.200.94:9000/", @"isSelect": @NO},
-                       @"Linux(从)": @{@"url": @"http://218.244.139.25:9000/", @"isSelect": @NO},
-                       @"Windows(废)": @{@"url": @"http://121.40.193.34:80/", @"isSelect": @NO}
+            config = @{@"1. Production": @{@"url": @"http://115.29.200.94:80/", @"isSelect": @YES},
+                       @"2. Linux(主)": @{@"url": @"http://115.29.200.94:9000/", @"isSelect": @NO},
+                       @"3. Linux(从)": @{@"url": @"http://218.244.139.25:9000/", @"isSelect": @NO},
+                       @"4. Linux(测试)": @{@"url": @"http://121.43.230.8:9000/", @"isSelect": @NO},
+                       @"5. Windows(废)": @{@"url": @"http://121.40.193.34:80/", @"isSelect": @NO}
                        };
         }
         

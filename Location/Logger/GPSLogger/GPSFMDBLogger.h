@@ -11,7 +11,8 @@
 	NSString *logDirectory;
 	NSMutableArray *pendingLogEntries;
 	
-	FMDatabase *database;
+	//FMDatabase *        database;
+    FMDatabaseQueue *   dbQueue;
 }
 
 @property (nonatomic, strong, readonly) NSString *                curTableName;

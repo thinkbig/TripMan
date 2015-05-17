@@ -257,7 +257,8 @@
 {
     if (self.route.orig && self.route.dest)
     {
-        if (self.route.steps.count == 0) {
+        if (self.route.steps.count == 0)
+        {
             CLLocation * mLoc = [BussinessDataProvider lastGoodLocation];
             ParkingRegionDetail * startDetail = [[AnaDbManager deviceDb] parkingDetailForCoordinate:mLoc.coordinate minDist:500];
             
@@ -404,6 +405,15 @@
     [self.routeAnnos addObject:itemEd];
     [regionBound updateBoundsWithCoor:itemEd.coordinate];
     
+    CGFloat dist = [route.orig distanceFrom:route.dest];
+    if (dist < 300) {
+        [self showToast:@"您就在目的地附近，可以步行前往" onDismiss:nil];
+        CLLocationCoordinate2D coorToUse[2] = {itemSt.coordinate, itemEd.coordinate};
+        BMKPolyline * lineOne = [BMKPolyline polylineWithCoordinates:coorToUse count:2];
+        lineOne.title = @"dirLine";
+        [self.mapView addOverlay:lineOne];
+    }
+    
     for (RouteAnnotation * anno in self.routeAnnos) {
         [_mapView addAnnotation:anno];
     }
@@ -491,6 +501,14 @@
         circleRender.strokeColor=[UIColor colorWithRed:255.0f/255.0f green:112.0f/255.0f blue:155.0f/255.0f alpha:0.9];
         circleRender.lineWidth = 3.0;
         return circleRender;
+    }
+    else if ([overlay isKindOfClass:[BMKPolyline class]])
+    {
+        BMKPolylineView * routeView = [[BMKPolylineView alloc] initWithOverlay:overlay];
+        routeView.lineWidth = 2;
+        routeView.strokeColor = [UIColor redColor];
+        routeView.lineDash = YES;
+        return routeView;
     }
     return overlayView;
 }
