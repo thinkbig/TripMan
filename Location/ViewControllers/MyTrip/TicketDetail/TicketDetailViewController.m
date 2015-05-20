@@ -17,13 +17,16 @@
 #import "TripSummary+Fetcher.h"
 #import "ActionSheetStringPicker.h"
 #import "TripSimulator.h"
+#import "CTConfigProvider.h"
 
-@interface TicketDetailViewController () {
+@interface TicketDetailViewController () <EMHintDelegate> {
     BOOL        _mayEditName;
 }
 
-@property (nonatomic, strong) NSArray *         speedSegs;
-@property (nonatomic, strong) AddressEditCell * editCell;
+@property (nonatomic, strong) NSArray *             speedSegs;
+@property (nonatomic, strong) AddressEditCell *     editCell;
+
+@property (nonatomic, strong) EMHint *              hintView;
 
 @end
 
@@ -46,6 +49,20 @@
         tapGesture.numberOfTapsRequired = 2;
         [self.navigationController.navigationBar addGestureRecognizer:tapGesture];
     }
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self showHintIfNeeded];
+    });
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [self.hintView clear];
+    [super viewWillDisappear:animated];
 }
 
 - (void) tapSecret{
@@ -242,7 +259,7 @@
         [realCell setTolDuringStr:[NSString stringWithFormat:@"%.f", [_tripSum.total_during floatValue]/60.0]];
         [realCell setAvgSpeedStr:[NSString stringWithFormat:@"%.1f", [_tripSum.avg_speed floatValue]*3.6]];
         [realCell setMaxSpeedStr:[NSString stringWithFormat:@"%.1f", [_tripSum.max_speed floatValue]*3.6]];
-        
+
         cell = realCell;
     } else if (2 == indexPath.row) {
         TicketJamDetailCell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"JamDetailCell" forIndexPath:indexPath];
@@ -334,39 +351,42 @@
         BaiduMapViewController * mapVC = [self.storyboard instantiateViewControllerWithIdentifier:@"baiduMapVC"];
         mapVC.tripSum = self.tripSum;
         [self.navigationController pushViewController:mapVC animated:YES];
-    } else if (2 == indexPath.row) {
-        NSArray * logArr = [[GPSLogger sharedLogger].dbLogger selectLogFrom:self.tripSum.start_date toDate:self.tripSum.end_date offset:0 limit:0];
-        GPSInstJamAnalyzer * ana = [GPSInstJamAnalyzer new];
-        for (GPSLogItem * item in logArr) {
-            [ana appendGPSInfo:item];
+    }
+    if (DEBUG_MODE) {
+        if (2 == indexPath.row) {
+            NSArray * logArr = [[GPSLogger sharedLogger].dbLogger selectLogFrom:self.tripSum.start_date toDate:self.tripSum.end_date offset:0 limit:0];
+            GPSInstJamAnalyzer * ana = [GPSInstJamAnalyzer new];
+            for (GPSLogItem * item in logArr) {
+                [ana appendGPSInfo:item];
+            }
+        } else if (3 == indexPath.row) {
+            NSArray * pts = nil;
+            NSData * ptsData = self.tripSum.turning_info.addi_data;
+            if (ptsData) {
+                pts = [NSKeyedUnarchiver unarchiveObjectWithData:ptsData];
+            }
+            [[BussinessDataProvider sharedInstance] updateRoadMarkForTrips:self.tripSum ofTurningPoints:pts success:^(id cnt) {
+                NSLog(@"traffic light cnt = %@", cnt);
+            } failure:nil];
+        } else if (4 == indexPath.row) {
+            
+            NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+            [dateFormatter setDateFormat: @"yyyy-MM-dd HH:mm:ss"];
+            NSDate * origDate= [dateFormatter dateFromString:@"2015-05-16 20:16:22"];
+            NSDate * destDate= [dateFormatter dateFromString:@"2015-05-16 21:05:20"];
+            
+            GPSFMDBLogger * loggerDB = [GPSLogger sharedLogger].dbLogger;
+            NSArray * logArr = [loggerDB selectLogFrom:origDate toDate:destDate offset:0 limit:0];
+            TripSimulator * simulator = [TripSimulator new];
+            simulator.gpsLogs = logArr;
+            
+            //        GPSFMDBLogger * loggerDB = [GPSLogger sharedLogger].dbLogger;
+            //        NSArray * logArr = [loggerDB selectLogFrom:[self.tripSum.start_date dateByAddingTimeInterval:-180] toDate:[self.tripSum.end_date dateByAddingTimeInterval:60*10] offset:0 limit:0];
+            //        TripSimulator * simulator = [TripSimulator new];
+            //        simulator.gpsLogs = logArr;
+        }  else if (5 == indexPath.row) {
+            NSLog(@"is valid = %d", [[GPSLogger sharedLogger].offTimeAnalyzer checkValid:self.tripSum]);
         }
-    } else if (3 == indexPath.row) {
-        NSArray * pts = nil;
-        NSData * ptsData = self.tripSum.turning_info.addi_data;
-        if (ptsData) {
-            pts = [NSKeyedUnarchiver unarchiveObjectWithData:ptsData];
-        }
-        [[BussinessDataProvider sharedInstance] updateRoadMarkForTrips:self.tripSum ofTurningPoints:pts success:^(id cnt) {
-            NSLog(@"traffic light cnt = %@", cnt);
-        } failure:nil];
-    } else if (4 == indexPath.row) {
-        
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat: @"yyyy-MM-dd HH:mm:ss"];
-        NSDate * origDate= [dateFormatter dateFromString:@"2015-05-16 20:16:22"];
-        NSDate * destDate= [dateFormatter dateFromString:@"2015-05-16 21:05:20"];
-        
-        GPSFMDBLogger * loggerDB = [GPSLogger sharedLogger].dbLogger;
-        NSArray * logArr = [loggerDB selectLogFrom:origDate toDate:destDate offset:0 limit:0];
-        TripSimulator * simulator = [TripSimulator new];
-        simulator.gpsLogs = logArr;
-        
-//        GPSFMDBLogger * loggerDB = [GPSLogger sharedLogger].dbLogger;
-//        NSArray * logArr = [loggerDB selectLogFrom:[self.tripSum.start_date dateByAddingTimeInterval:-180] toDate:[self.tripSum.end_date dateByAddingTimeInterval:60*10] offset:0 limit:0];
-//        TripSimulator * simulator = [TripSimulator new];
-//        simulator.gpsLogs = logArr;
-    }  else if (5 == indexPath.row) {
-        NSLog(@"is valid = %d", [[GPSLogger sharedLogger].offTimeAnalyzer checkValid:self.tripSum]);
     }
 }
 
@@ -376,6 +396,43 @@
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView;
 {
     [scrollView endEditing:YES];
+}
+
+#pragma EMHintDelegate
+
+- (void) showHintIfNeeded
+{
+    NSString * showId = nil;
+    if (![[CTConfigProvider sharedInstance] hasShowHintForKey:eShowHintMyTripEditAddress]) {
+        showId = @"hintSwipe";
+    }
+    
+    if (showId) {
+        if (nil == self.hintView) {
+            self.hintView = [[EMHint alloc] init];
+            [self.hintView setHintDelegate:self];
+        }
+        self.hintView.customId = showId;
+        self.hintView.bgColor = [UIColor colorWithWhite:0 alpha:0.75];
+        [self.hintView presentModalMessage:@"" where:self.view.window];
+    }
+}
+
+- (NSArray*) hintStateRectsToHint:(EMHint*)hintState
+{
+    CGPoint pos = self.editCell.frame.origin;
+    pos.x += 50;
+    CGPoint newPos = [self.view.window convertPoint:pos fromView:self.editCell.superview];
+    return @[[NSValue valueWithCGRect:CGRectMake(newPos.x, newPos.y, 60, self.editCell.frame.size.height)]];
+}
+
+- (UIView*) hintStateViewForDialog:(EMHint*)hintState
+{
+    UILabel * hintLabel = [EMHint defaultLabelWithText:@"点击可以修改备注\r如：公司，我家"];
+    CGPoint center = self.view.center;
+    hintLabel.center = CGPointMake(center.x, center.y);
+    
+    return hintLabel;
 }
 
 @end

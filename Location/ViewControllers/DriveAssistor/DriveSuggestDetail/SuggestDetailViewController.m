@@ -20,6 +20,7 @@
 #import "RouteOverlayView.h"
 #import "BCarAnnotationView.h"
 #import "CTRealtimeJamFacade.h"
+#import "UIImage+RZResize.h"
 
 #define OVER_HEADER_HEIGHT      114
 
@@ -234,7 +235,7 @@
     [self.mapView removeAnnotations:self.carAnnos];
     [self.carAnnos removeAllObjects];
     
-    NSInteger idx = 1;
+    //NSInteger idx = 1;
     for (JamZone * zone in jamArr) {
         CLLocationCoordinate2D bdCoor = [GeoTransformer earth2Baidu:zone.position.coordinate];
 
@@ -242,8 +243,11 @@
         carAnnotation.coordinate = bdCoor;
         carAnnotation.degree = [zone headingDegree];
         carAnnotation.type = 4;
-        carAnnotation.title = [NSString stringWithFormat:@"%ld", idx++];
+        //carAnnotation.title = [NSString stringWithFormat:@"%ld", idx++];
         [self.carAnnos addObject:carAnnotation];
+        
+//        BMKCircle * circle = [BMKCircle circleWithCenterCoordinate:bdCoor radius:10];
+//        [self.mapView addOverlay:circle];
     }
     
     for (RouteAnnotation * anno in self.carAnnos) {
@@ -534,6 +538,7 @@
                 view.image = [self.bdHelper imageNamed:@"images/icon_nav_start.png"];
                 view.centerOffset = CGPointMake(0, -(view.frame.size.height * 0.5));
                 view.canShowCallout = TRUE;
+                view.layer.zPosition = -100;
             }
             view.annotation = routeAnnotation;
         }
@@ -546,6 +551,7 @@
                 view.image = [self.bdHelper imageNamed:@"images/icon_nav_end.png"];
                 view.centerOffset = CGPointMake(0, -(view.frame.size.height * 0.5));
                 view.canShowCallout = TRUE;
+                view.layer.zPosition = -100;
             }
             view.annotation = routeAnnotation;
         }
@@ -555,6 +561,7 @@
             view = [mapview dequeueReusableAnnotationViewWithIdentifier:@"route_node"];
             if (view == nil) {
                 view = [[BMKAnnotationView alloc]initWithAnnotation:routeAnnotation reuseIdentifier:@"route_node"];
+                view.layer.zPosition = -150;
             } else {
                 [view setNeedsDisplay];
             }
@@ -562,7 +569,6 @@
             UIImage* image = [self.bdHelper imageNamed:@"images/icon_direction.png"];
             view.image = [image imageRotatedByDegrees:routeAnnotation.degree];
             view.annotation = routeAnnotation;
-            
         }
             break;
         case 3:
@@ -570,6 +576,7 @@
             view = [mapview dequeueReusableAnnotationViewWithIdentifier:@"waypoint_node"];
             if (view == nil) {
                 view = [[BMKAnnotationView alloc]initWithAnnotation:routeAnnotation reuseIdentifier:@"waypoint_node"];
+                view.layer.zPosition = -150;
             } else {
                 [view setNeedsDisplay];
             }
@@ -581,18 +588,20 @@
             break;
         case 4:
         {
-            BCarAnnotationView * realView = (BCarAnnotationView*)[mapview dequeueReusableAnnotationViewWithIdentifier:@"car_node"];
-            if (realView == nil) {
-                realView = [[BCarAnnotationView alloc] initWithAnnotation:routeAnnotation reuseIdentifier:@"car_node"];
-                realView.canShowCallout = TRUE;
+            view = [mapview dequeueReusableAnnotationViewWithIdentifier:@"route_node"];
+            if (view == nil) {
+                view = [[BMKAnnotationView alloc] initWithAnnotation:routeAnnotation reuseIdentifier:@"car_node"];
+                view.layer.zPosition = -200;
             } else {
-                [realView setNeedsDisplay];
+                [view setNeedsDisplay];
             }
             
-            [realView updateWithIcon:@"map_car_male.png" andText:routeAnnotation.title withAngle:routeAnnotation.degree-90];
-            realView.clipsToBounds = NO;
-            
-            view = realView;
+            UIImage* image = [UIImage imageNamed:@"map_car_male.png"];
+            CGSize oldSz = image.size;
+            CGSize newSz = CGSizeMake(oldSz.width*0.75, oldSz.height*0.75);
+            view.image = [UIImage rz_imageWithImage:image scaledToSize:newSz preserveAspectRatio:YES];
+            view.centerOffset = CGPointMake(-3, -newSz.height/2.0+4);
+            view.annotation = routeAnnotation;
         }
             break;
         default:

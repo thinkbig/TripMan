@@ -32,6 +32,8 @@
 
 @property (nonatomic, strong) NSMutableArray *                  userFavLocs;
 @property (nonatomic, strong) NSArray *                         mostParkingLoc;
+@property (nonatomic, strong) NSArray *                         bdPoiLoc;
+
 @property (nonatomic, strong) SearchPOIHeader*                  header;
 @property (nonatomic, strong) NSArray *                         categories;
 @property (nonatomic) NSUInteger                                selCategoryIdx;
@@ -92,12 +94,6 @@
 
 - (void)reloadContent
 {
-    [[BussinessDataProvider sharedInstance] updateCurrentCity:^(NSString * city) {
-        if (city) {
-            self.curCity = city;
-        }
-    } forceUpdate:YES];
-    
     NSArray * userFav = [[BussinessDataProvider sharedInstance] favLocations];
     if (userFav.count > 0) {
         self.userFavLocs = [NSMutableArray arrayWithArray:[userFav subarrayWithRange:NSMakeRange(0, MIN(kMaxUserFavLocCnt, userFav.count))]];
@@ -108,6 +104,37 @@
     self.recentSearch = [NSMutableArray arrayWithArray:[[BussinessDataProvider sharedInstance] recentSearches]];
     
     self.mostParkingLoc = [[BussinessDataProvider sharedInstance] bestGuessLocations:0 formatToDetail:YES thresDist:IGNORE_NAVIGATION_DIST];
+    
+    CLLocation * curLoc = [BussinessDataProvider lastGoodLocation];
+    [[BussinessDataProvider sharedInstance] updateCurrentCity:^(NSString * city) {
+        if (city) {
+            self.curCity = city;
+            
+            if (nil == self.bdPoiLoc && self.mostParkingLoc.count < kMostParkingShowCnt) {
+                BaiduPOISearchWrapper * wrapper = [BaiduPOISearchWrapper new];
+                wrapper.city = city;
+                wrapper.searchName = @"商圈";
+                [wrapper requestWithSuccess:^(BMKPoiResult * result) {
+                    if (result.poiInfoList.count > 0) {
+                        NSMutableArray * tmpArr = [NSMutableArray array];
+                        for (BMKPoiInfo * oneInfo in result.poiInfoList) {
+                            CLLocation * infoLoc = [[CLLocation alloc] initWithLatitude:oneInfo.pt.latitude longitude:oneInfo.pt.longitude];
+                            CGFloat dist = [curLoc distanceFromLocation:infoLoc];
+                            if (dist < 400 || dist > 20*1000) {
+                                continue;
+                            }
+                            [tmpArr addObject:oneInfo];
+                        }
+                        self.bdPoiLoc = tmpArr;
+                        [self.suggestCollectionView reloadData];
+                    }
+                } failure:^(NSError * err) {
+                    NSLog(@"fail to get baidu poi info for 商圈");
+                }];
+            }
+        }
+    } forceUpdate:YES];
+    
     
     [self.suggestCollectionView reloadData];
     [self updateSuggestionByKeyword:self.searchBar.text];
@@ -153,7 +180,7 @@
         return MIN(self.userFavLocs.count + 1, kMaxUserFavLocCnt);
     } else if (1 == section) {
         if (0 == _selCategoryIdx) {
-            return MIN(kMostParkingShowCnt, self.mostParkingLoc.count) + 1;
+            return MIN(kMostParkingShowCnt, self.mostParkingLoc.count + self.bdPoiLoc.count) + 1;
         }
         return 4;
     }
@@ -199,7 +226,13 @@
         } else {
             DriveSuggestPOICell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"SuggestPOICell" forIndexPath:indexPath];
             if (0 == _selCategoryIdx) {
-                [realCell updateWithLocation:self.mostParkingLoc[indexPath.row-1]];
+                NSInteger realIdx = indexPath.row-1;
+                NSInteger parkingLocCnt = self.mostParkingLoc.count;
+                if (realIdx < parkingLocCnt) {
+                    [realCell updateWithLocation:self.mostParkingLoc[realIdx]];
+                } else if (realIdx < parkingLocCnt + self.bdPoiLoc.count) {
+                    [realCell updateWithBDPoiInfo:self.bdPoiLoc[realIdx-parkingLocCnt]];
+                }
             } else {
                 [realCell useMockData];
             }
@@ -296,8 +329,15 @@
     } else if (1 == indexPath.section) {
         if (indexPath.row > 0) {
             if (0 == _selCategoryIdx) {
-                id selectRegion = self.mostParkingLoc[indexPath.row-1];
-                [self gotoDetail:selectRegion fromLoc:curLoc];
+                NSInteger realIdx = indexPath.row-1;
+                NSInteger parkingLocCnt = self.mostParkingLoc.count;
+                if (realIdx < parkingLocCnt) {
+                    id selectRegion = self.mostParkingLoc[indexPath.row-1];
+                    [self gotoDetail:selectRegion fromLoc:curLoc];
+                } else if (realIdx < parkingLocCnt + self.bdPoiLoc.count) {
+                    id selectInfo = self.bdPoiLoc[realIdx-parkingLocCnt];
+                    [self gotoPoiInfo:selectInfo fromLoc:curLoc];
+                }
             } else {
                 
             }
@@ -399,6 +439,20 @@
     SuggestDetailViewController * suggestDetail = [self.storyboard instantiateViewControllerWithIdentifier:@"SuggestDetailID"];
     suggestDetail.route = route;
     suggestDetail.endParkingId = selectRegion.coreDataItem.parking_id;
+    [self.navigationController pushViewController:suggestDetail animated:YES];
+}
+
+- (void) gotoPoiInfo:(BMKPoiInfo*)poiInfo fromLoc:(CLLocation*)curLoc
+{
+    CTRoute * route = [CTRoute new];
+    [route setCoorType:eCoorTypeBaidu];
+    route.orig.name = @"当前位置";
+    [route.orig updateWithCoordinate:[GeoTransformer earth2Baidu:curLoc.coordinate]];
+    route.dest.name = poiInfo.name;
+    [route.dest updateWithCoordinate:poiInfo.pt];
+    
+    SuggestDetailViewController * suggestDetail = [self.storyboard instantiateViewControllerWithIdentifier:@"SuggestDetailID"];
+    suggestDetail.route = route;
     [self.navigationController pushViewController:suggestDetail animated:YES];
 }
 

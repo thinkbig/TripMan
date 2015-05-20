@@ -30,6 +30,8 @@
 @property (nonatomic, strong) HomeTripCell *            tripCell;
 @property (nonatomic, strong) HomeHealthCellNew *       healthCell;
 
+@property (nonatomic, strong) CLLocation *              lastRecordLoc;
+
 @end
 
 @implementation CarHomeViewController
@@ -43,6 +45,7 @@
     // Do any additional setup after loading the view.
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadContent) name:kNotifyNeedUpdate object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateUserLocation) name:kNotifyGoodLocationUpdated object:nil];
     
     if (nil == self.maintainInfo) {
         self.maintainInfo = [[CarMaintainInfo alloc] init];
@@ -82,55 +85,77 @@
                 self.bestGuessDest = guessData;
             }
         }
-        
-        CLLocation * curLoc = [BussinessDataProvider lastGoodLocation];
-        if (curLoc)
-        {
-            if (self.bestGuessDest) {
-                ParkingRegionDetail * parkingDetail = [[AnaDbManager sharedInst] parkingDetailForCoordinate:curLoc.coordinate minDist:500];
-                CTTrafficAbstractFacade * facade = [[CTTrafficAbstractFacade alloc] init];
-                facade.fromCoorBaidu = [GeoTransformer earth2Baidu:curLoc.coordinate];
-                facade.toCoorBaidu = [GeoTransformer earth2Baidu:self.bestGuessDest.centerCoordinate];
-                if (parkingDetail) {
-                    facade.fromParkingId = parkingDetail.coreDataItem.parking_id;
-                    facade.toParkingId = self.bestGuessDest.parking_id;
-                }
-                [facade requestWithSuccess:^(CTRoute * result) {
-                    self.bestRoute = result;
-                    [self.homeCollection reloadData];
-                } failure:^(NSError * err) {
-                    //NSLog(@"asdfasdf = %@", err);
-                }];
-            } else {
-                [[BussinessDataProvider sharedInstance] updateCurrentCity:^(NSString * city) {
-                    if (city) {
-                        BaiduPOISearchWrapper * wrapper = [BaiduPOISearchWrapper new];
-                        wrapper.city = city;
-                        wrapper.searchName = @"火车站";
-                        [wrapper requestWithSuccess:^(BMKPoiResult * result) {
-                            if (result.poiInfoList.count > 0) {
-                                BMKPoiInfo * info = result.poiInfoList[0];
-                                self.defaultDest = info;
-                                
-                                CTTrafficAbstractFacade * facade = [[CTTrafficAbstractFacade alloc] init];
-                                facade.fromCoorBaidu = [GeoTransformer earth2Baidu:curLoc.coordinate];
-                                facade.toCoorBaidu = info.pt;
-                                
-                                [facade requestWithSuccess:^(CTRoute * result) {
-                                    self.bestRoute = result;
-                                    [self.homeCollection reloadData];
-                                } failure:nil];
-                            }
-                        } failure:^(NSError * err) {
-                            NSLog(@"fail to get baidu poi info for 商圈");
-                        }];
-                    }
-                } forceUpdate:YES];
-            }
-        }
-        
-        [self.homeCollection reloadData];
     }
+    
+    CLLocation * curLoc = [BussinessDataProvider lastGoodLocation];
+    if (curLoc)
+    {
+        [self showLoading];
+        self.lastRecordLoc = curLoc;
+        if (self.bestGuessDest) {
+            ParkingRegionDetail * parkingDetail = [[AnaDbManager sharedInst] parkingDetailForCoordinate:curLoc.coordinate minDist:500];
+            CTTrafficAbstractFacade * facade = [[CTTrafficAbstractFacade alloc] init];
+            facade.fromCoorBaidu = [GeoTransformer earth2Baidu:curLoc.coordinate];
+            facade.toCoorBaidu = [GeoTransformer earth2Baidu:self.bestGuessDest.centerCoordinate];
+            if (parkingDetail) {
+                facade.fromParkingId = parkingDetail.coreDataItem.parking_id;
+                facade.toParkingId = self.bestGuessDest.parking_id;
+            }
+            [facade requestWithSuccess:^(CTRoute * result) {
+                [self hideLoading];
+                self.bestRoute = result;
+                [self.homeCollection reloadData];
+            } failure:^(NSError * err) {
+                [self hideLoading];
+                //NSLog(@"asdfasdf = %@", err);
+            }];
+        } else {
+            [[BussinessDataProvider sharedInstance] updateCurrentCity:^(NSString * city) {
+                if (city) {
+                    BaiduPOISearchWrapper * wrapper = [BaiduPOISearchWrapper new];
+                    wrapper.city = city;
+                    wrapper.searchName = @"商圈";
+                    [wrapper requestWithSuccess:^(BMKPoiResult * result) {
+                        if (result.poiInfoList.count > 0) {
+                            BMKPoiInfo * info = result.poiInfoList[0];
+                            for (BMKPoiInfo * oneInfo in result.poiInfoList) {
+                                CLLocation * infoLoc = [[CLLocation alloc] initWithLatitude:oneInfo.pt.latitude longitude:oneInfo.pt.longitude];
+                                CGFloat dist = [curLoc distanceFromLocation:infoLoc];
+                                if (dist < 400 || dist > 20*1000) {
+                                    continue;
+                                }
+                                info = oneInfo;
+                                break;
+                            }
+                            
+                            self.defaultDest = info;
+                            
+                            CTTrafficAbstractFacade * facade = [[CTTrafficAbstractFacade alloc] init];
+                            facade.fromCoorBaidu = [GeoTransformer earth2Baidu:curLoc.coordinate];
+                            facade.toCoorBaidu = info.pt;
+                            
+                            [facade requestWithSuccess:^(CTRoute * result) {
+                                [self hideLoading];
+                                self.bestRoute = result;
+                                [self.homeCollection reloadData];
+                            } failure:^(NSError * err) {
+                                [self hideLoading];
+                            }];
+                        } else {
+                            [self hideLoading];
+                        }
+                    } failure:^(NSError * err) {
+                        [self hideLoading];
+                        NSLog(@"fail to get baidu poi info for 商圈");
+                    }];
+                } else {
+                    [self hideLoading];
+                }
+            } forceUpdate:YES];
+        }
+    }
+    
+    [self.homeCollection reloadData];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -147,6 +172,17 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+- (void) updateUserLocation
+{
+    if (self.lastRecordLoc) {
+        CLLocation * curLoc = [BussinessDataProvider lastGoodLocation];
+        if ([curLoc distanceFromLocation:self.lastRecordLoc] < 500) {
+            return;
+        }
+    }
+    [self reloadContent];
+}
 
 - (void) tapHealth {
     [self tapMaintain];
@@ -235,6 +271,7 @@
     
     self.tripCell.statusLabel.text = @"目前道路无特殊情况";
     self.tripCell.statusColorView.backgroundColor = COLOR_STAT_GREEN;
+    self.tripCell.jamImageView.image = [UIImage imageNamed:@"greenball"];
     if (self.bestRoute.most_jam) {
         [self.bestRoute.most_jam calCoefWithStartLoc:[self.bestRoute.orig clLocation] andEndLoc:[self.bestRoute.dest clLocation]];
 
@@ -244,8 +281,10 @@
         } else {
             if (status == eStepTrafficVerySlow) {
                 self.tripCell.statusLabel.text = @"旅程有拥堵";
+                self.tripCell.jamImageView.image = [UIImage imageNamed:@"redball"];
             } else if (status == eStepTrafficSlow) {
                 self.tripCell.statusLabel.text = @"车多缓行";
+                self.tripCell.jamImageView.image = [UIImage imageNamed:@"yellowball"];
             }
         }
         self.tripCell.statusColorView.backgroundColor = [CTJam colorFromTraffic:status];
@@ -321,13 +360,23 @@
 
 - (void) gotoDetail:(ParkingRegion*)region fromLoc:(CLLocation*)curLoc
 {
+    if (nil == region && nil == self.defaultDest) {
+        return;
+    }
+    
     CTRoute * route = [CTRoute new];
     [route setCoorType:eCoorTypeBaidu];
     route.orig.name = @"当前位置";
     [route.orig updateWithCoordinate:[GeoTransformer earth2Baidu:curLoc.coordinate]];
-    route.dest.name = [region nameWithDefault:@"目的地"];
-    [route.dest updateWithCoordinate:[GeoTransformer earth2Baidu:[region centerCoordinate]]];
-
+    
+    if (region) {
+        route.dest.name = [region nameWithDefault:@"目的地"];
+        [route.dest updateWithCoordinate:[GeoTransformer earth2Baidu:[region centerCoordinate]]];
+    } else if (self.defaultDest) {
+        route.dest.name = self.defaultDest.name;
+        [route.dest updateWithCoordinate:self.defaultDest.pt];
+    }
+    
     SuggestDetailViewController * suggestDetail = InstVC(@"CarAssistor", @"SuggestDetailID");
     suggestDetail.route = route;
     suggestDetail.endParkingId = region.parking_id;

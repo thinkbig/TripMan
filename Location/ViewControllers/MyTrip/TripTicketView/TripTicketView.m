@@ -84,12 +84,15 @@
     if (eStepTrafficVerySlow == status) {
         statusColor = COLOR_STAT_RED;
         self.statusBackground.image = [UIImage imageNamed:@"ticketred"];
+        self.trafficStatLabel.text = @"拥堵";
     } else if (eStepTrafficSlow == status) {
         statusColor = COLOR_STAT_YELLOW;
         self.statusBackground.image = [UIImage imageNamed:@"ticketyellow"];
+        self.trafficStatLabel.text = @"缓行";
     } else {
         statusColor = COLOR_STAT_GREEN;
         self.statusBackground.image = [UIImage imageNamed:@"ticketgreen"];
+        self.trafficStatLabel.text = @"畅通";
     }
     
     self.distTextLabel.textColor = statusColor;

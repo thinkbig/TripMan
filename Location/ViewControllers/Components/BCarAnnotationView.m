@@ -13,7 +13,7 @@
 - (id)initWithAnnotation:(id<BMKAnnotation>)annotation reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithAnnotation:annotation reuseIdentifier:reuseIdentifier];
     if (self) {
-        CGRect bound = CGRectMake(0.f, 0.f, 32.f, 18.f);
+        CGRect bound = CGRectMake(0.f, 0.f, 33.f, 49.f);
         [self setBounds:bound];
         [self setBackgroundColor:[UIColor clearColor]];
         

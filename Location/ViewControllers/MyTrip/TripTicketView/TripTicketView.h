@@ -21,6 +21,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *toStreet;
 @property (weak, nonatomic) IBOutlet UILabel *toDate;
 
+@property (weak, nonatomic) IBOutlet UILabel *trafficStatLabel;
+
 // sum content
 @property (weak, nonatomic) IBOutlet UILabel *distLabel;
 @property (weak, nonatomic) IBOutlet UILabel *speedLabel;

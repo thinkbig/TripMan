@@ -102,4 +102,25 @@ static CTConfigProvider * _sharedInst = nil;
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
+- (BOOL) hasShowHintForKey:(eShowHint)hintKey
+{
+    NSString * realKey = [NSString stringWithFormat:@"ct_hint_%ld", hintKey];
+    NSNumber * num = [[NSUserDefaults standardUserDefaults] objectForKey:realKey];
+    if (nil == num) {
+        [[NSUserDefaults standardUserDefaults] setObject:@1 forKey:realKey];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        return NO;
+    }
+    return YES;
+}
+
+- (void) resetAllHintKey
+{
+    for (NSInteger i = eShowHintMyTripFirst+1; i < eShowHintMyTripLast; i++) {
+        NSString * realKey = [NSString stringWithFormat:@"ct_hint_%ld", i];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:realKey];
+    }
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
 @end

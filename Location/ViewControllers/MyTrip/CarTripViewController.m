@@ -21,6 +21,7 @@
 #import "NSAttributedString+Style.h"
 #import "DataDebugPrinter.h"
 #import "ActionSheetDatePicker.h"
+#import "CTConfigProvider.h"
 
 typedef NS_ENUM(NSUInteger, eTripRange) {
     eTripRangeDay = 0,
@@ -28,7 +29,9 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
     eTripRangeMonth
 };
 
-@interface CarTripViewController ()
+@interface CarTripViewController () <EMHintDelegate> {
+    NSInteger           _allTripCount;
+}
 
 @property (nonatomic, strong) DaySummary *          sumYestoday;
 @property (nonatomic, strong) DaySummary *          sumToday;
@@ -48,6 +51,8 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
 @property (nonatomic, strong) NSDateFormatter *     dateFormatter;
 @property (nonatomic, strong) DVSwitch *            switcher;
 @property (nonatomic) NSUInteger                    currentIdx;
+
+@property (nonatomic, strong) EMHint *              hintView;
 
 @end
 
@@ -186,6 +191,10 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
     } completion:nil];
     
     [self rebuildContent:NO];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self showHintIfNeeded];
+    });
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -196,6 +205,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
 
 - (void)viewWillDisappear:(BOOL)animated {
     [self.navigationController setNavigationBarHidden:NO animated:animated];
+    [self.hintView clear];
     [super viewWillDisappear:animated];
 }
 
@@ -1010,6 +1020,77 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
             }
             [self.navigationController pushViewController:detailVC animated:YES];
         }
+    }
+}
+
+#pragma EMHintDelegate
+
+- (void) showHintIfNeeded
+{
+    if (IS_UPDATING) {
+        return;
+    }
+    
+    if (_allTripCount < 4) {
+        _allTripCount = [TripSummary count];
+        if (_allTripCount < 4) {
+            return;
+        }
+    }
+    
+    NSString * showId = nil;
+    CGFloat alpha = 0.6;
+    if (![[CTConfigProvider sharedInstance] hasShowHintForKey:eShowHintMyTripSwipe]) {
+        showId = @"hintSwipe";
+    } else if (![[CTConfigProvider sharedInstance] hasShowHintForKey:eShowHintMyTripDatePicker]) {
+        showId = @"hintDatePicker";
+        alpha = 0.75;
+    }
+    
+    if (showId) {
+        if (nil == self.hintView) {
+            self.hintView = [[EMHint alloc] init];
+            [self.hintView setHintDelegate:self];
+        }
+        self.hintView.customId = showId;
+        self.hintView.modalView.backgroundColor = [UIColor colorWithWhite:0 alpha:alpha];
+        [self.hintView presentModalMessage:@"" where:self.view.window];
+    }
+}
+
+- (NSArray*) hintStateRectsToHint:(EMHint*)hintState
+{
+    if ([hintState.customId isEqualToString:@"hintDatePicker"]) {
+        CGPoint pos = self.switcher.frame.origin;
+        pos.x += 20;
+        CGPoint newPos = [self.view.window convertPoint:pos fromView:self.switcher.superview];
+        return @[[NSValue valueWithCGRect:CGRectMake(newPos.x, newPos.y, 50, self.switcher.frame.size.height)]];
+    } else {
+        CGPoint center = self.view.center;
+        return @[[NSValue valueWithCGRect:CGRectMake(center.x-75, center.y-120, 150, 50)]];
+    }
+}
+
+- (UIView*) hintStateViewForDialog:(EMHint*)hintState
+{
+    if ([hintState.customId isEqualToString:@"hintDatePicker"]) {
+        UILabel * hintLabel = [EMHint defaultLabelWithText:@"点击“今天”\r快速选择其他日期"];
+        CGPoint center = self.view.center;
+        hintLabel.center = CGPointMake(center.x, center.y+60);
+        
+        return hintLabel;
+    } else {
+        UIImage * img = [UIImage imageNamed:@"RCHGestureSwipe"];
+        UIImageView * hintImg = [[UIImageView alloc] initWithImage:img];
+        CGPoint center = self.view.center;
+        hintImg.center = CGPointMake(center.x, center.y-60);
+        hintImg.clipsToBounds = NO;
+        
+        UILabel * hintLabel = [EMHint defaultLabelWithText:@"左右滑动高亮部分\r查看前一天后一天的数据"];
+        hintLabel.center = CGPointMake(img.size.width/2.0, img.size.height + 100);
+        [hintImg addSubview:hintLabel];
+        
+        return hintImg;
     }
 }
 

@@ -26,6 +26,7 @@ typedef NS_ENUM(NSUInteger, eDebugDisplayType) {
 
 typedef NS_ENUM(NSUInteger, eDebugActionType) {
     eDebugActionShowLog = 0,
+    eDebugActionResetHintFlag,
     eDebugActionSwitchServer,
     eDebugActionJamsMap,
     eDebugActionUpdatePOIName,
@@ -137,6 +138,11 @@ typedef NS_ENUM(NSUInteger, eDebugActionType) {
             cell.textLabel.text = @"查看log";
             cell.detailTextLabel.text = @"文件log";
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        }  else if (eDebugActionResetHintFlag == indexPath.row) {
+            cell = [tableView dequeueReusableCellWithIdentifier:@"DebugDetailCellId"];
+            cell.textLabel.text = @"重置用户导览标志位";
+            cell.detailTextLabel.text = @"重置后，首次进入某些页面会再次出现帮助页面";
+            cell.accessoryType = UITableViewCellAccessoryNone;
         } else if (eDebugActionSwitchServer == indexPath.row) {
             cell = [tableView dequeueReusableCellWithIdentifier:@"DebugDetailCellId"];
             CTConfigProvider * configProvider = [CTConfigProvider sharedInstance];
@@ -212,6 +218,9 @@ typedef NS_ENUM(NSUInteger, eDebugActionType) {
         if (eDebugActionShowLog == indexPath.row) {
             LogFileListViewController * logListVC = [self.storyboard instantiateViewControllerWithIdentifier:@"LogDisplayList"];
             [self.navigationController pushViewController:logListVC animated:YES];
+        } else if (eDebugActionResetHintFlag == indexPath.row) {
+            [[CTConfigProvider sharedInstance] resetAllHintKey];;
+            [self showToast:@"重置成功" onDismiss:nil];
         } else if (eDebugActionSwitchServer == indexPath.row) {
             CTConfigProvider * configProvider = [CTConfigProvider sharedInstance];
             NSDictionary * allServer = [configProvider allServerConfigs];

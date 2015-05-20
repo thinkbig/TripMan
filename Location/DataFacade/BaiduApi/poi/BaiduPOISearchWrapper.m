@@ -61,7 +61,6 @@
 
 - (NSString*) keyForRequest
 {
-    // 经纬度，一度大约为80~111km，所有取近似地点的时候，取小数点后3位，也就是百米作为误差
     return [NSString stringWithFormat:@"poi-%@_%@", self.city, self.searchName];
 }
 

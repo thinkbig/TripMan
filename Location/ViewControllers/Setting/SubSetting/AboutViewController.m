@@ -8,8 +8,9 @@
 
 #import "AboutViewController.h"
 #import "STAlertView.h"
+#import <MessageUI/MFMailComposeViewController.h>
 
-@interface AboutViewController ()
+@interface AboutViewController () <TTTAttributedLabelDelegate, MFMailComposeViewControllerDelegate>
 
 @property (nonatomic, strong) STAlertView *     stAlert;
 
@@ -22,6 +23,13 @@
     // Do any additional setup after loading the view.
     
     self.title = @"关于我们";
+    
+    NSString * vstring = [NSString stringWithFormat:@"当前版本：version %@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]];
+    self.versionLabel.text = vstring;
+    
+    NSRange range = [self.emailLabel.text rangeOfString:@"developer@carmap.me"];
+    [self.emailLabel addLinkToURL:[NSURL URLWithString:@"mailto://developer@carmap.me"] withRange:range]; // Embedding a custom link in a substring
+    self.emailLabel.delegate = self;
     
     UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapSecret)];
     if ([GToolUtil isEnableDebug]) {
@@ -40,6 +48,21 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)attributedLabel:(TTTAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url
+{
+    if (![MFMailComposeViewController canSendMail]) {
+        [self showToast:@"无法发送邮件，请确认正确设置了手机的邮件账号" onDismiss:nil];
+        return;
+    }
+    MFMailComposeViewController *mailCompose = [[MFMailComposeViewController alloc] init];
+    mailCompose.mailComposeDelegate = self;
+    NSArray *toAddress = [NSArray arrayWithObject:@"developer@carmap.me"];
+    
+    [mailCompose setToRecipients:toAddress];
+
+    [self.navigationController presentViewController:mailCompose animated:YES completion:nil];
 }
 
 - (void)tapSecret
@@ -68,5 +91,29 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
+{
+    NSString *msg = @"邮件发送";
+    switch (result)
+    {
+        case MFMailComposeResultCancelled:
+            msg = @"邮件发送取消";
+            break;
+        case MFMailComposeResultSaved:
+            msg = @"邮件保存成功";
+            break;
+        case MFMailComposeResultSent:
+            msg = @"邮件发送成功";
+            break;
+        case MFMailComposeResultFailed:
+            msg = @"邮件发送失败";
+            break;
+        default:
+            break;
+    }
+    [self showToast:msg onDismiss:nil];
+    [controller dismissViewControllerAnimated:YES completion:nil];
+}
 
 @end

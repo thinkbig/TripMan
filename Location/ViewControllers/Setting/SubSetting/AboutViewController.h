@@ -7,7 +7,11 @@
 //
 
 #import "GViewController.h"
+#import "TTTAttributedLabel.h"
 
 @interface AboutViewController : GViewController
+
+@property (weak, nonatomic) IBOutlet UILabel *versionLabel;
+@property (weak, nonatomic) IBOutlet TTTAttributedLabel *emailLabel;
 
 @end

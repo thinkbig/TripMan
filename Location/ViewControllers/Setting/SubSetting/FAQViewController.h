@@ -7,7 +7,10 @@
 //
 
 #import "GViewController.h"
+#import "AMBTableViewController.h"
 
-@interface FAQViewController : GViewController
+@interface FAQViewController : AMBTableViewController
+
+@property (weak, nonatomic) IBOutlet UITableView *faqTableView;
 
 @end

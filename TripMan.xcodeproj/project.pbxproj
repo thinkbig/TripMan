@@ -28,7 +28,6 @@
 		A304053B1AE87FF70047E66B /* RouteOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = A304053A1AE87FF70047E66B /* RouteOverlayView.m */; };
 		A30405401AE911BC0047E66B /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A304053F1AE911BC0047E66B /* AboutViewController.m */; };
 		A30405431AE911D50047E66B /* FeedbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A30405421AE911D50047E66B /* FeedbackViewController.m */; };
-		A30405461AE911E90047E66B /* VersionInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A30405451AE911E90047E66B /* VersionInfoViewController.m */; };
 		A30405491AE9146D0047E66B /* FAQViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A30405481AE9146D0047E66B /* FAQViewController.m */; };
 		A304054F1AE91E5A0047E66B /* MVTextInputsScroller.m in Sources */ = {isa = PBXBuildFile; fileRef = A304054C1AE91E5A0047E66B /* MVTextInputsScroller.m */; };
 		A30405501AE91E5A0047E66B /* UIViewController+InputScroller.m in Sources */ = {isa = PBXBuildFile; fileRef = A304054E1AE91E5A0047E66B /* UIViewController+InputScroller.m */; };
@@ -191,6 +190,15 @@
 		A36CB5201B0618D4000C4666 /* CTFeedbackFacade.m in Sources */ = {isa = PBXBuildFile; fileRef = A36CB51F1B0618D4000C4666 /* CTFeedbackFacade.m */; };
 		A36CB5231B061901000C4666 /* CTFeedbackModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A36CB5221B061901000C4666 /* CTFeedbackModel.m */; };
 		A36CB5271B061CC4000C4666 /* TSPlaceHolderTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = A36CB5261B061CC4000C4666 /* TSPlaceHolderTextView.m */; };
+		A36CB52B1B098299000C4666 /* AMBTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A36CB52A1B098299000C4666 /* AMBTableViewController.m */; };
+		A36CB52E1B0988FC000C4666 /* FAQCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A36CB52D1B0988FC000C4666 /* FAQCell.m */; };
+		A36CB5311B09CC61000C4666 /* HowToViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A36CB5301B09CC61000C4666 /* HowToViewController.m */; };
+		A36CB5341B09D1EF000C4666 /* HowToCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A36CB5331B09D1EF000C4666 /* HowToCell.m */; };
+		A36CB5391B0A25D3000C4666 /* BGHintViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A36CB5371B0A25D3000C4666 /* BGHintViewController.m */; };
+		A36CB53A1B0A25D3000C4666 /* BGHintViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A36CB5381B0A25D3000C4666 /* BGHintViewController.xib */; };
+		A36CB5401B0AD212000C4666 /* EMHint.m in Sources */ = {isa = PBXBuildFile; fileRef = A36CB53D1B0AD212000C4666 /* EMHint.m */; };
+		A36CB5411B0AD212000C4666 /* EMHintsView.m in Sources */ = {isa = PBXBuildFile; fileRef = A36CB53F1B0AD212000C4666 /* EMHintsView.m */; };
+		A36CB5481B0C307E000C4666 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = A36CB5471B0C307E000C4666 /* TTTAttributedLabel.m */; };
 		A377B42F19F5537900DDB5EE /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = A377B42E19F5537900DDB5EE /* NSString+MD5.m */; };
 		A378ABE31A164664006A3B68 /* DVSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = A378ABE21A164664006A3B68 /* DVSwitch.m */; };
 		A378ABE71A16F124006A3B68 /* DRDynamicSlideShow.m in Sources */ = {isa = PBXBuildFile; fileRef = A378ABE61A16F124006A3B68 /* DRDynamicSlideShow.m */; };
@@ -331,8 +339,6 @@
 		A304053F1AE911BC0047E66B /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
 		A30405411AE911D50047E66B /* FeedbackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedbackViewController.h; sourceTree = "<group>"; };
 		A30405421AE911D50047E66B /* FeedbackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedbackViewController.m; sourceTree = "<group>"; };
-		A30405441AE911E90047E66B /* VersionInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VersionInfoViewController.h; sourceTree = "<group>"; };
-		A30405451AE911E90047E66B /* VersionInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VersionInfoViewController.m; sourceTree = "<group>"; };
 		A30405471AE9146D0047E66B /* FAQViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FAQViewController.h; sourceTree = "<group>"; };
 		A30405481AE9146D0047E66B /* FAQViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FAQViewController.m; sourceTree = "<group>"; };
 		A304054B1AE91E5A0047E66B /* MVTextInputsScroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVTextInputsScroller.h; sourceTree = "<group>"; };
@@ -645,6 +651,23 @@
 		A36CB5221B061901000C4666 /* CTFeedbackModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTFeedbackModel.m; sourceTree = "<group>"; };
 		A36CB5251B061CC4000C4666 /* TSPlaceHolderTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSPlaceHolderTextView.h; sourceTree = "<group>"; };
 		A36CB5261B061CC4000C4666 /* TSPlaceHolderTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSPlaceHolderTextView.m; sourceTree = "<group>"; };
+		A36CB5291B098299000C4666 /* AMBTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMBTableViewController.h; sourceTree = "<group>"; };
+		A36CB52A1B098299000C4666 /* AMBTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AMBTableViewController.m; sourceTree = "<group>"; };
+		A36CB52C1B0988FC000C4666 /* FAQCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FAQCell.h; sourceTree = "<group>"; };
+		A36CB52D1B0988FC000C4666 /* FAQCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FAQCell.m; sourceTree = "<group>"; };
+		A36CB52F1B09CC61000C4666 /* HowToViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HowToViewController.h; sourceTree = "<group>"; };
+		A36CB5301B09CC61000C4666 /* HowToViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HowToViewController.m; sourceTree = "<group>"; };
+		A36CB5321B09D1EF000C4666 /* HowToCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HowToCell.h; sourceTree = "<group>"; };
+		A36CB5331B09D1EF000C4666 /* HowToCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HowToCell.m; sourceTree = "<group>"; };
+		A36CB5361B0A25D3000C4666 /* BGHintViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BGHintViewController.h; sourceTree = "<group>"; };
+		A36CB5371B0A25D3000C4666 /* BGHintViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BGHintViewController.m; sourceTree = "<group>"; };
+		A36CB5381B0A25D3000C4666 /* BGHintViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BGHintViewController.xib; sourceTree = "<group>"; };
+		A36CB53C1B0AD212000C4666 /* EMHint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EMHint.h; sourceTree = "<group>"; };
+		A36CB53D1B0AD212000C4666 /* EMHint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EMHint.m; sourceTree = "<group>"; };
+		A36CB53E1B0AD212000C4666 /* EMHintsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EMHintsView.h; sourceTree = "<group>"; };
+		A36CB53F1B0AD212000C4666 /* EMHintsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EMHintsView.m; sourceTree = "<group>"; };
+		A36CB5461B0C307E000C4666 /* TTTAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTAttributedLabel.h; sourceTree = "<group>"; };
+		A36CB5471B0C307E000C4666 /* TTTAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTAttributedLabel.m; sourceTree = "<group>"; };
 		A377B42D19F5537900DDB5EE /* NSString+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5.h"; sourceTree = "<group>"; };
 		A377B42E19F5537900DDB5EE /* NSString+MD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MD5.m"; sourceTree = "<group>"; };
 		A378ABE11A164664006A3B68 /* DVSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVSwitch.h; sourceTree = "<group>"; };
@@ -1036,10 +1059,14 @@
 				A304053F1AE911BC0047E66B /* AboutViewController.m */,
 				A30405411AE911D50047E66B /* FeedbackViewController.h */,
 				A30405421AE911D50047E66B /* FeedbackViewController.m */,
-				A30405441AE911E90047E66B /* VersionInfoViewController.h */,
-				A30405451AE911E90047E66B /* VersionInfoViewController.m */,
+				A36CB52F1B09CC61000C4666 /* HowToViewController.h */,
+				A36CB5301B09CC61000C4666 /* HowToViewController.m */,
+				A36CB5321B09D1EF000C4666 /* HowToCell.h */,
+				A36CB5331B09D1EF000C4666 /* HowToCell.m */,
 				A30405471AE9146D0047E66B /* FAQViewController.h */,
 				A30405481AE9146D0047E66B /* FAQViewController.m */,
+				A36CB52C1B0988FC000C4666 /* FAQCell.h */,
+				A36CB52D1B0988FC000C4666 /* FAQCell.m */,
 			);
 			path = SubSetting;
 			sourceTree = "<group>";
@@ -1480,7 +1507,10 @@
 		A34F01421A06699300F58C17 /* UIControl */ = {
 			isa = PBXGroup;
 			children = (
+				A36CB5451B0C307E000C4666 /* TTTAttributedLabel */,
+				A36CB53B1B0AD212000C4666 /* EMHint */,
 				A36CB5241B061CC4000C4666 /* Others */,
+				A36CB5281B098299000C4666 /* AMBTableViewController */,
 				A38D882E1AEBCF9F000881FD /* STAlertView */,
 				A35C264D1A42C597005F6658 /* ScrollSegView */,
 				A3D0B4A81A2C64A80030B19E /* MPPlot */,
@@ -1993,6 +2023,45 @@
 			path = Others;
 			sourceTree = "<group>";
 		};
+		A36CB5281B098299000C4666 /* AMBTableViewController */ = {
+			isa = PBXGroup;
+			children = (
+				A36CB5291B098299000C4666 /* AMBTableViewController.h */,
+				A36CB52A1B098299000C4666 /* AMBTableViewController.m */,
+			);
+			path = AMBTableViewController;
+			sourceTree = "<group>";
+		};
+		A36CB5351B0A25C7000C4666 /* OtherHint */ = {
+			isa = PBXGroup;
+			children = (
+				A36CB5361B0A25D3000C4666 /* BGHintViewController.h */,
+				A36CB5371B0A25D3000C4666 /* BGHintViewController.m */,
+				A36CB5381B0A25D3000C4666 /* BGHintViewController.xib */,
+			);
+			path = OtherHint;
+			sourceTree = "<group>";
+		};
+		A36CB53B1B0AD212000C4666 /* EMHint */ = {
+			isa = PBXGroup;
+			children = (
+				A36CB53C1B0AD212000C4666 /* EMHint.h */,
+				A36CB53D1B0AD212000C4666 /* EMHint.m */,
+				A36CB53E1B0AD212000C4666 /* EMHintsView.h */,
+				A36CB53F1B0AD212000C4666 /* EMHintsView.m */,
+			);
+			path = EMHint;
+			sourceTree = "<group>";
+		};
+		A36CB5451B0C307E000C4666 /* TTTAttributedLabel */ = {
+			isa = PBXGroup;
+			children = (
+				A36CB5461B0C307E000C4666 /* TTTAttributedLabel.h */,
+				A36CB5471B0C307E000C4666 /* TTTAttributedLabel.m */,
+			);
+			path = TTTAttributedLabel;
+			sourceTree = "<group>";
+		};
 		A377B42B19F5532400DDB5EE /* Category */ = {
 			isa = PBXGroup;
 			children = (
@@ -2460,6 +2529,7 @@
 		A3E2894A1AD132050043F14C /* UserGuide */ = {
 			isa = PBXGroup;
 			children = (
+				A36CB5351B0A25C7000C4666 /* OtherHint */,
 				A359E6131AF31BAA00D7FF10 /* InputCarInfo */,
 				A3E2894B1AD13B780043F14C /* NoGpsHint */,
 			);
@@ -2681,6 +2751,7 @@
 				5C90909A18B3A66A00510153 /* InfoPlist.strings in Resources */,
 				A399C9FB1A12E0CA00665917 /* Main.storyboard in Resources */,
 				A3E2892C1ACD2DC40043F14C /* SearchSuggestionCell.xib in Resources */,
+				A36CB53A1B0A25D3000C4666 /* BGHintViewController.xib in Resources */,
 				A37E03EF1A0DE10B00B0B0EC /* TripTicketView.xib in Resources */,
 				A34F00FA1A03D04400F58C17 /* CarHealth.storyboard in Resources */,
 				A3E289361ACD31B60043F14C /* SearchHistoryCell.xib in Resources */,
@@ -2759,13 +2830,13 @@
 				A3BD72AF1A15A9950007ECA1 /* BaiduMarkModel.m in Sources */,
 				A34890681A3FCB6F002DE948 /* AJJson2ObjectSerializer.m in Sources */,
 				A359E6181AF3215F00D7FF10 /* CarMaintainInfoViewController.m in Sources */,
-				A30405461AE911E90047E66B /* VersionInfoViewController.m in Sources */,
 				A36CB5201B0618D4000C4666 /* CTFeedbackFacade.m in Sources */,
 				A35C26261A426F4B005F6658 /* NSDate+RZExtensions.m in Sources */,
 				A35C26411A426F4B005F6658 /* RZProgressView.m in Sources */,
 				A35C26861A490F5F005F6658 /* HomeTripCell.m in Sources */,
 				A342849B19C42081002DB0FD /* GPSLogger.m in Sources */,
 				A35C26251A426F4B005F6658 /* NSObject+RZBlockKVO.m in Sources */,
+				A36CB5411B0AD212000C4666 /* EMHintsView.m in Sources */,
 				A34F01221A04D98E00F58C17 /* BaseBaiduFacade.m in Sources */,
 				A3E289341ACD31710043F14C /* SearchHistoryCell.m in Sources */,
 				A3CD360E19C9767F0039F6E1 /* GPSAnalyzerOffTime.m in Sources */,
@@ -2794,6 +2865,7 @@
 				A3E0A3761ABC176600E7456C /* CTTrafficFullFacade.m in Sources */,
 				A34F00EF1A03C8F800F58C17 /* CarSettingViewController.m in Sources */,
 				A37E03F21A0DE19B00B0B0EC /* TripTicketView.m in Sources */,
+				A36CB52B1B098299000C4666 /* AMBTableViewController.m in Sources */,
 				A35BC7291AA35B7D00D726D4 /* NSString+ShiftEncode.m in Sources */,
 				A359E6271AFAFFE800D7FF10 /* BMKPoiResult+Encode.m in Sources */,
 				A359E60B1AEFC32C00D7FF10 /* WeatherInfo.m in Sources */,
@@ -2801,6 +2873,7 @@
 				A359E5F61AEFC32B00D7FF10 /* TurningInfo.m in Sources */,
 				A378ABE31A164664006A3B68 /* DVSwitch.m in Sources */,
 				A3E2892F1ACD2DD80043F14C /* SearchClearCell.m in Sources */,
+				A36CB5341B09D1EF000C4666 /* HowToCell.m in Sources */,
 				A3CD728A19D14430005F84E2 /* GeoTransformer.m in Sources */,
 				A35C264A1A426F4B005F6658 /* RZWaiter.m in Sources */,
 				A35C262E1A426F4B005F6658 /* UIFont+RZExtensions.m in Sources */,
@@ -2850,6 +2923,7 @@
 				A35C263B1A426F4B005F6658 /* RZButtonView.m in Sources */,
 				A35C26441A426F4B005F6658 /* RZViewControllerTransitioningContext.m in Sources */,
 				A35C26371A426F4B005F6658 /* UIView+RZFrameUtils.m in Sources */,
+				A36CB52E1B0988FC000C4666 /* FAQCell.m in Sources */,
 				A359E5F91AEFC32B00D7FF10 /* ParkingRegion.m in Sources */,
 				A331F5C71A1D700A001F4DE3 /* SuggestOverLayerCollectionViewController.m in Sources */,
 				A35C26451A426F4B005F6658 /* RZSingleChildContainerViewController.m in Sources */,
@@ -2902,7 +2976,9 @@
 				A382A4471A124CFF00974E7A /* PICircularProgressView.m in Sources */,
 				A35C26241A426F4B005F6658 /* CAAnimation+RZBlocks.m in Sources */,
 				A34F013C1A052A6B00F58C17 /* BaiduWeatherModel.m in Sources */,
+				A36CB5401B0AD212000C4666 /* EMHint.m in Sources */,
 				A35C26331A426F4B005F6658 /* UIImage+RZStretchHelpers.m in Sources */,
+				A36CB5391B0A25D3000C4666 /* BGHintViewController.m in Sources */,
 				A34F00E91A03C8D500F58C17 /* CarHomeViewController.m in Sources */,
 				A35BC7391AA82D9B00D726D4 /* ParkingRegion+Fetcher.m in Sources */,
 				A35C26731A451EE9005F6658 /* LocationTracker.m in Sources */,
@@ -2912,6 +2988,7 @@
 				A3CD35FD19C6DCC00039F6E1 /* GPSFMDBLogger.m in Sources */,
 				A35C26481A426F4B005F6658 /* RZViewFactory.m in Sources */,
 				A359E60E1AEFC32C00D7FF10 /* Extend.m in Sources */,
+				A36CB5311B09CC61000C4666 /* HowToViewController.m in Sources */,
 				A3D0B4BE1A2C64A80030B19E /* UIView+Frame.m in Sources */,
 				A3FDD16B1A028037007B3C65 /* IconTitleBtn.m in Sources */,
 				A34F01191A04A56F00F58C17 /* CommonFacade.m in Sources */,
@@ -2979,6 +3056,7 @@
 				A359E5FF1AEFC32C00D7FF10 /* EnvInfo.m in Sources */,
 				A3E2894E1AD13BB10043F14C /* OpenGpsViewController.m in Sources */,
 				A321E2C61AC8344600CA9035 /* CTFavLocation.m in Sources */,
+				A36CB5481B0C307E000C4666 /* TTTAttributedLabel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

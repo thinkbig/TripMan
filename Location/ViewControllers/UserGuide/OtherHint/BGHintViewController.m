@@ -1,24 +1,22 @@
 //
-//  VersionInfoViewController.m
+//  BGHintViewController.m
 //  TripMan
 //
-//  Created by taq on 4/23/15.
+//  Created by taq on 5/18/15.
 //  Copyright (c) 2015 Location. All rights reserved.
 //
 
-#import "VersionInfoViewController.h"
+#import "BGHintViewController.h"
 
-@interface VersionInfoViewController ()
+@interface BGHintViewController ()
 
 @end
 
-@implementation VersionInfoViewController
+@implementation BGHintViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    
-    self.title = @"版本信息";
+    // Do any additional setup after loading the view from its nib.
 }
 
 - (void)didReceiveMemoryWarning {

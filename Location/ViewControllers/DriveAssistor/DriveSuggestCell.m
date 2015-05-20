@@ -100,9 +100,16 @@
 
 /////////////////////////////////////////////////////////////////////////////////
 
+typedef NS_ENUM(NSUInteger, ePOICellSourceType) {
+    ePOICellSourceTypeParking,
+    ePOICellSourceTypeBaidu
+};
+
 @interface DriveSuggestPOICell ()
 
 @property (nonatomic, strong) ParkingRegionDetail * location;
+@property (nonatomic, strong) BMKPoiInfo *          bdInfo;
+@property (nonatomic) ePOICellSourceType            soureType;
 
 @end
 
@@ -120,6 +127,7 @@
 
 - (void) updateWithLocation:(ParkingRegionDetail*)loc
 {
+    self.soureType = ePOICellSourceTypeParking;
     if (self.location != loc) {
         self.location = loc;
         self.destPOILabel.text = [loc.coreDataItem nameWithDefault:@"未知位置"];
@@ -127,11 +135,12 @@
         
         [self updateTimeDuring:@"- -"];
         self.duringStatusLabel.textColor = COLOR_STAT_GREEN;
+        self.iconStatusImage.image = [UIImage imageNamed:@"greenicon"];
     }
     
     
     CLLocation * mLoc = [BussinessDataProvider lastGoodLocation];
-    CGFloat dist = [GToolUtil distFrom:mLoc.coordinate toCoor:loc.region.center];
+    CGFloat dist = [mLoc distanceFromLocation:[loc.coreDataItem centerLocation]];
     
     if (dist > IGNORE_NAVIGATION_DIST) {
         // too far away
@@ -150,6 +159,63 @@
             if (loc == self.location) {
                 NSNumber * during = result.duration;
                 [self updateTimeDuring:[NSString stringWithFormat:@"%d", (int)([during floatValue]/60)]];
+                
+                eStepTraffic stat = [result trafficStat];
+                if (eStepTrafficVerySlow == stat) {
+                    self.iconStatusImage.image = [UIImage imageNamed:@"yellowicon"];
+                } else if (eStepTrafficSlow == stat) {
+                    self.iconStatusImage.image = [UIImage imageNamed:@"yellowicon"];
+                } else {
+                    self.iconStatusImage.image = [UIImage imageNamed:@"greenicon"];
+                }
+            }
+        } failure:^(NSError * err) {
+            //NSLog(@"asdfasdf = %@", err);
+        }];
+    } else {
+        [self updateTimeDuring:@"1"];
+    }
+}
+
+- (void) updateWithBDPoiInfo:(BMKPoiInfo*)poiInfo
+{
+    self.soureType = ePOICellSourceTypeBaidu;
+    if (self.bdInfo != poiInfo) {
+        self.bdInfo = poiInfo;
+        self.destPOILabel.text = poiInfo.name;
+        self.destStreetLabel.text = poiInfo.address;
+        
+        [self updateTimeDuring:@"- -"];
+        self.duringStatusLabel.textColor = COLOR_STAT_GREEN;
+        self.iconStatusImage.image = [UIImage imageNamed:@"greenicon"];
+    }
+    
+    
+    CLLocation * mLoc = [BussinessDataProvider lastGoodLocation];
+    CLLocation * infoLoc = [[CLLocation alloc] initWithLatitude:poiInfo.pt.latitude longitude:poiInfo.pt.longitude];
+    CGFloat dist = [mLoc distanceFromLocation:infoLoc];
+    
+    if (dist > IGNORE_NAVIGATION_DIST) {
+        // too far away
+        [self updateTimeDuring:@"- -"];
+        self.duringStatusLabel.text = @"点击查看详情";
+    } else if (dist > 500) {
+        CTTrafficAbstractFacade * facade = [[CTTrafficAbstractFacade alloc] init];
+        facade.fromCoorBaidu = [GeoTransformer earth2Baidu:mLoc.coordinate];
+        facade.toCoorBaidu = poiInfo.pt;
+        [facade requestWithSuccess:^(CTRoute * result) {
+            if (poiInfo == self.bdInfo) {
+                NSNumber * during = result.duration;
+                [self updateTimeDuring:[NSString stringWithFormat:@"%d", (int)([during floatValue]/60)]];
+                
+                eStepTraffic stat = [result trafficStat];
+                if (eStepTrafficVerySlow == stat) {
+                    self.iconStatusImage.image = [UIImage imageNamed:@"yellowicon"];
+                } else if (eStepTrafficSlow == stat) {
+                    self.iconStatusImage.image = [UIImage imageNamed:@"yellowicon"];
+                } else {
+                    self.iconStatusImage.image = [UIImage imageNamed:@"greenicon"];
+                }
             }
         } failure:^(NSError * err) {
             //NSLog(@"asdfasdf = %@", err);

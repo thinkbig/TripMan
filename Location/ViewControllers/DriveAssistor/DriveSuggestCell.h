@@ -59,6 +59,7 @@
 
 - (void) useMockData;
 - (void) updateWithLocation:(ParkingRegionDetail*)loc;
+- (void) updateWithBDPoiInfo:(BMKPoiInfo*)poiInfo;
 
 @end
 

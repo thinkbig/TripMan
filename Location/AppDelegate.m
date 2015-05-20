@@ -81,7 +81,7 @@ static NSString * rebuildVal = @"value_0000000000005"; // make sure it is differ
     }
     
     DDLogWarn(@"@@@@@@@@@@@@@ didFinishLaunchingWithOptions @@@@@@@@@@@@@");
-
+    
     return YES;
 }
 
@@ -212,10 +212,18 @@ static NSString * rebuildVal = @"value_0000000000005"; // make sure it is differ
     if (!IS_UPDATING) {
         [self.locationTracker updateCurrentLocation];
     }
+    
+    if (nil == self.bgHintVC) {
+        self.bgHintVC = [[BGHintViewController alloc] initWithNibName:@"BGHintViewController" bundle:nil];
+        self.bgHintVC.view.frame = self.window.bounds;
+        self.bgHintVC.bgContent.frame = self.bgHintVC.view.bounds;
+    }
+    [self.window addSubview:self.bgHintVC.view];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
+    [self.bgHintVC.view removeFromSuperview];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
