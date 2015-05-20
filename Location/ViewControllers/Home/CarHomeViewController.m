@@ -90,7 +90,6 @@
     CLLocation * curLoc = [BussinessDataProvider lastGoodLocation];
     if (curLoc)
     {
-        [self showLoading];
         self.lastRecordLoc = curLoc;
         if (self.bestGuessDest) {
             ParkingRegionDetail * parkingDetail = [[AnaDbManager sharedInst] parkingDetailForCoordinate:curLoc.coordinate minDist:500];
@@ -102,13 +101,9 @@
                 facade.toParkingId = self.bestGuessDest.parking_id;
             }
             [facade requestWithSuccess:^(CTRoute * result) {
-                [self hideLoading];
                 self.bestRoute = result;
                 [self.homeCollection reloadData];
-            } failure:^(NSError * err) {
-                [self hideLoading];
-                //NSLog(@"asdfasdf = %@", err);
-            }];
+            } failure:nil];
         } else {
             [[BussinessDataProvider sharedInstance] updateCurrentCity:^(NSString * city) {
                 if (city) {
@@ -135,21 +130,13 @@
                             facade.toCoorBaidu = info.pt;
                             
                             [facade requestWithSuccess:^(CTRoute * result) {
-                                [self hideLoading];
                                 self.bestRoute = result;
                                 [self.homeCollection reloadData];
-                            } failure:^(NSError * err) {
-                                [self hideLoading];
-                            }];
-                        } else {
-                            [self hideLoading];
+                            } failure:nil];
                         }
                     } failure:^(NSError * err) {
-                        [self hideLoading];
                         NSLog(@"fail to get baidu poi info for 商圈");
                     }];
-                } else {
-                    [self hideLoading];
                 }
             } forceUpdate:YES];
         }

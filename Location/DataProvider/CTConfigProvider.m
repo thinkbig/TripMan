@@ -104,7 +104,7 @@ static CTConfigProvider * _sharedInst = nil;
 
 - (BOOL) hasShowHintForKey:(eShowHint)hintKey
 {
-    NSString * realKey = [NSString stringWithFormat:@"ct_hint_%ld", hintKey];
+    NSString * realKey = [NSString stringWithFormat:@"ct_hint_%ld", (NSInteger)hintKey];
     NSNumber * num = [[NSUserDefaults standardUserDefaults] objectForKey:realKey];
     if (nil == num) {
         [[NSUserDefaults standardUserDefaults] setObject:@1 forKey:realKey];

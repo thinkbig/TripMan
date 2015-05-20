@@ -126,29 +126,32 @@
         CGFloat diagonal = 2 * (radius - circleWidth);
         CGFloat edge = diagonal / sqrtf(2);
         
-        CGFloat actualFontSize;
+        //CGFloat actualFontSize;
         CGSize maximumSize = CGSizeMake(edge, edge);
-        CGSize expectedSize = [progressString sizeWithFont:font
-                                               minFontSize:5.0
-                                            actualFontSize:&actualFontSize
-                                                  forWidth:maximumSize.width
-                                             lineBreakMode:NSLineBreakByWordWrapping];
+        CGSize expectedSize = [progressString boundingRectWithSize:CGSizeMake(maximumSize.width, 1000) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:font} context:nil].size;
         
-        if (actualFontSize < fontSize)
-        {
-            font = [font fontWithSize:actualFontSize];
-            expectedSize = [progressString sizeWithFont:font
-                                            minFontSize:5.0
-                                         actualFontSize:&actualFontSize
-                                               forWidth:maximumSize.width
-                                          lineBreakMode:NSLineBreakByWordWrapping];
-        }
+//        CGSize expectedSize = [progressString sizeWithFont:font
+//                                               minFontSize:5.0
+//                                            actualFontSize:&actualFontSize
+//                                                  forWidth:maximumSize.width
+//                                             lineBreakMode:NSLineBreakByWordWrapping];
+//        if (actualFontSize < fontSize)
+//        {
+//            font = [font fontWithSize:actualFontSize];
+//            expectedSize = [progressString boundingRectWithSize:CGSizeMake(maximumSize.width, 1000) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:font} context:nil].size;
+//            expectedSize = [progressString sizeWithFont:font
+//                                            minFontSize:5.0
+//                                         actualFontSize:&actualFontSize
+//                                               forWidth:maximumSize.width
+//                                          lineBreakMode:NSLineBreakByWordWrapping];
+//        }
         
         CGPoint origin = CGPointMake(center.x - expectedSize.width / 2.0, center.y - expectedSize.height / 2.0);
 
         [_textColor setFill];
         
-        [progressString drawAtPoint:origin forWidth:expectedSize.width withFont:font lineBreakMode:NSLineBreakByWordWrapping];
+        [progressString drawInRect:CGRectMake(origin.x, origin.y, expectedSize.width, expectedSize.height) withAttributes:@{NSFontAttributeName:font}];
+        //[progressString drawAtPoint:origin forWidth:expectedSize.width withFont:font lineBreakMode:NSLineBreakByWordWrapping];
     }
     
     UIBezierPath *path = [UIBezierPath bezierPath];

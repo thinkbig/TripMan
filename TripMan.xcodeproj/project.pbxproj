@@ -73,12 +73,6 @@
 		A34284A019C6770A002DB0FD /* GPSFileLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = A342849F19C6770A002DB0FD /* GPSFileLogFormatter.m */; };
 		A342AD441A0C6CF000C92849 /* DataDebugPrinter.m in Sources */ = {isa = PBXBuildFile; fileRef = A342AD431A0C6CF000C92849 /* DataDebugPrinter.m */; };
 		A34890571A3FC600002DE948 /* AFgzipRequestSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = A34890561A3FC600002DE948 /* AFgzipRequestSerializer.m */; };
-		A34890671A3FCB6F002DE948 /* AJClassHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = A348905A1A3FCB6F002DE948 /* AJClassHelper.m */; };
-		A34890681A3FCB6F002DE948 /* AJJson2ObjectSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = A348905C1A3FCB6F002DE948 /* AJJson2ObjectSerializer.m */; };
-		A34890691A3FCB6F002DE948 /* AJObject2JsonSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = A348905E1A3FCB6F002DE948 /* AJObject2JsonSerializer.m */; };
-		A348906A1A3FCB6F002DE948 /* AJPropertyDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = A34890601A3FCB6F002DE948 /* AJPropertyDescriptor.m */; };
-		A348906B1A3FCB6F002DE948 /* AJSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = A34890621A3FCB6F002DE948 /* AJSerializer.m */; };
-		A348906C1A3FCB6F002DE948 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = A34890661A3FCB6F002DE948 /* NSData+Base64.m */; };
 		A34890731A3FCCAF002DE948 /* NSData+Godzippa.m in Sources */ = {isa = PBXBuildFile; fileRef = A34890701A3FCCAF002DE948 /* NSData+Godzippa.m */; };
 		A34890741A3FCCAF002DE948 /* NSFileManager+Godzippa.m in Sources */ = {isa = PBXBuildFile; fileRef = A34890721A3FCCAF002DE948 /* NSFileManager+Godzippa.m */; };
 		A34F00E61A03C8BE00F58C17 /* CarHealthViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A34F00E51A03C8BE00F58C17 /* CarHealthViewController.m */; };
@@ -418,19 +412,6 @@
 		A342AD431A0C6CF000C92849 /* DataDebugPrinter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataDebugPrinter.m; sourceTree = "<group>"; };
 		A34890551A3FC5FF002DE948 /* AFgzipRequestSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFgzipRequestSerializer.h; sourceTree = "<group>"; };
 		A34890561A3FC600002DE948 /* AFgzipRequestSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFgzipRequestSerializer.m; sourceTree = "<group>"; };
-		A34890591A3FCB6F002DE948 /* AJClassHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AJClassHelper.h; sourceTree = "<group>"; };
-		A348905A1A3FCB6F002DE948 /* AJClassHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AJClassHelper.m; sourceTree = "<group>"; };
-		A348905B1A3FCB6F002DE948 /* AJJson2ObjectSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AJJson2ObjectSerializer.h; sourceTree = "<group>"; };
-		A348905C1A3FCB6F002DE948 /* AJJson2ObjectSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AJJson2ObjectSerializer.m; sourceTree = "<group>"; };
-		A348905D1A3FCB6F002DE948 /* AJObject2JsonSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AJObject2JsonSerializer.h; sourceTree = "<group>"; };
-		A348905E1A3FCB6F002DE948 /* AJObject2JsonSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AJObject2JsonSerializer.m; sourceTree = "<group>"; };
-		A348905F1A3FCB6F002DE948 /* AJPropertyDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AJPropertyDescriptor.h; sourceTree = "<group>"; };
-		A34890601A3FCB6F002DE948 /* AJPropertyDescriptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AJPropertyDescriptor.m; sourceTree = "<group>"; };
-		A34890611A3FCB6F002DE948 /* AJSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AJSerializer.h; sourceTree = "<group>"; };
-		A34890621A3FCB6F002DE948 /* AJSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AJSerializer.m; sourceTree = "<group>"; };
-		A34890631A3FCB6F002DE948 /* AnyJson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnyJson.h; sourceTree = "<group>"; };
-		A34890651A3FCB6F002DE948 /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
-		A34890661A3FCB6F002DE948 /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
 		A348906E1A3FCCAF002DE948 /* Godzippa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Godzippa.h; sourceTree = "<group>"; };
 		A348906F1A3FCCAF002DE948 /* NSData+Godzippa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Godzippa.h"; sourceTree = "<group>"; };
 		A34890701A3FCCAF002DE948 /* NSData+Godzippa.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Godzippa.m"; sourceTree = "<group>"; };
@@ -1293,34 +1274,6 @@
 			path = AFgzipRequestSerializer;
 			sourceTree = "<group>";
 		};
-		A34890581A3FCB6F002DE948 /* AnyJson */ = {
-			isa = PBXGroup;
-			children = (
-				A34890591A3FCB6F002DE948 /* AJClassHelper.h */,
-				A348905A1A3FCB6F002DE948 /* AJClassHelper.m */,
-				A348905B1A3FCB6F002DE948 /* AJJson2ObjectSerializer.h */,
-				A348905C1A3FCB6F002DE948 /* AJJson2ObjectSerializer.m */,
-				A348905D1A3FCB6F002DE948 /* AJObject2JsonSerializer.h */,
-				A348905E1A3FCB6F002DE948 /* AJObject2JsonSerializer.m */,
-				A348905F1A3FCB6F002DE948 /* AJPropertyDescriptor.h */,
-				A34890601A3FCB6F002DE948 /* AJPropertyDescriptor.m */,
-				A34890611A3FCB6F002DE948 /* AJSerializer.h */,
-				A34890621A3FCB6F002DE948 /* AJSerializer.m */,
-				A34890631A3FCB6F002DE948 /* AnyJson.h */,
-				A34890641A3FCB6F002DE948 /* Categories */,
-			);
-			path = AnyJson;
-			sourceTree = "<group>";
-		};
-		A34890641A3FCB6F002DE948 /* Categories */ = {
-			isa = PBXGroup;
-			children = (
-				A34890651A3FCB6F002DE948 /* NSData+Base64.h */,
-				A34890661A3FCB6F002DE948 /* NSData+Base64.m */,
-			);
-			path = Categories;
-			sourceTree = "<group>";
-		};
 		A348906D1A3FCCAF002DE948 /* Godzippa */ = {
 			isa = PBXGroup;
 			children = (
@@ -1539,7 +1492,6 @@
 				A3C453FD1A8B515800D53342 /* BaiduMapSDK */,
 				A3B5DFC61A49200C00576F77 /* FXLabel */,
 				A35C25AD1A426F4B005F6658 /* RZUtils */,
-				A34890581A3FCB6F002DE948 /* AnyJson */,
 				A34890541A3FC5FF002DE948 /* AFgzipRequestSerializer */,
 			);
 			path = ThirdParty;
@@ -2828,7 +2780,6 @@
 				A35495B21A2F4745000D9311 /* TripMonthView.m in Sources */,
 				A3FDD16F1A02814D007B3C65 /* UIControl+Blocks.m in Sources */,
 				A3BD72AF1A15A9950007ECA1 /* BaiduMarkModel.m in Sources */,
-				A34890681A3FCB6F002DE948 /* AJJson2ObjectSerializer.m in Sources */,
 				A359E6181AF3215F00D7FF10 /* CarMaintainInfoViewController.m in Sources */,
 				A36CB5201B0618D4000C4666 /* CTFeedbackFacade.m in Sources */,
 				A35C26261A426F4B005F6658 /* NSDate+RZExtensions.m in Sources */,
@@ -2847,7 +2798,6 @@
 				A38D88341AEC8B8B000881FD /* DebugTableCell.m in Sources */,
 				A3FDD17A1A028A6B007B3C65 /* GViewController.m in Sources */,
 				A34F01141A03D78900F58C17 /* MapDisplayViewController.m in Sources */,
-				A34890691A3FCB6F002DE948 /* AJObject2JsonSerializer.m in Sources */,
 				A32CF4001A24C380008EA051 /* XYPieChart.m in Sources */,
 				A321E2C91ACA7FAB00CA9035 /* GPSInstJamAnalyzer.m in Sources */,
 				A35C26461A426F4B005F6658 /* RZSplitViewController.m in Sources */,
@@ -2897,7 +2847,6 @@
 				A35C262F1A426F4B005F6658 /* UIImage+RZAverageColor.m in Sources */,
 				A32CF8A81A2BF97E006932F7 /* CarTripCell.m in Sources */,
 				A35C26391A426F4B005F6658 /* RZAnimatedCountingLabel.m in Sources */,
-				A348906C1A3FCB6F002DE948 /* NSData+Base64.m in Sources */,
 				A3E0A3701ABC0A0C00E7456C /* POICategory.m in Sources */,
 				A34F00F31A03CB8C00F58C17 /* CarAssistorViewController.m in Sources */,
 				A30405381AE876400047E66B /* RouteOverlay.m in Sources */,
@@ -2953,7 +2902,6 @@
 				A3E289211ACB994A0043F14C /* CTInstReportModel.m in Sources */,
 				A33544141A23759F0023815B /* SuggestDetailCell.m in Sources */,
 				A3D0B4BD1A2C64A80030B19E /* UIBezierPath+curved.m in Sources */,
-				A348906B1A3FCB6F002DE948 /* AJSerializer.m in Sources */,
 				A359E62A1AFB002A00D7FF10 /* BMKCityListInfo+Encode.m in Sources */,
 				A34890571A3FC600002DE948 /* AFgzipRequestSerializer.m in Sources */,
 				A3C011FE1AC3D4830088EFF3 /* GRoadSnapFacade.m in Sources */,
@@ -2970,7 +2918,6 @@
 				A34F01931A071F3200F58C17 /* BaiduPOISearchWrapper.m in Sources */,
 				A31FCA6F19E6711300A3BB4C /* GPSEventItem.m in Sources */,
 				A35C262C1A426F4B005F6658 /* UIAlertView+RZCompletionBlocks.m in Sources */,
-				A34890671A3FCB6F002DE948 /* AJClassHelper.m in Sources */,
 				A3171A911A090666003EA8CE /* NSString+URLEncoding.m in Sources */,
 				A3E289491ACFC75D0043F14C /* FavSelectCell.m in Sources */,
 				A382A4471A124CFF00974E7A /* PICircularProgressView.m in Sources */,
@@ -2996,7 +2943,6 @@
 				A31FCA6319D94B9600A3BB4C /* GPSOffTimeFilter.m in Sources */,
 				A30405331AE7CE5F0047E66B /* BMKReverseGeoCodeResult+Encode.m in Sources */,
 				A3FDD16A1A028037007B3C65 /* CustomBadge.m in Sources */,
-				A348906A1A3FCB6F002DE948 /* AJPropertyDescriptor.m in Sources */,
 				A35C264B1A426F4B005F6658 /* RZCommonUtils.m in Sources */,
 				A3E2891E1ACB98E10043F14C /* CTInstReportFacade.m in Sources */,
 				A3D0B4BA1A2C64A80030B19E /* MPBarsGraphView.m in Sources */,

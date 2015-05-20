@@ -107,7 +107,7 @@
     }
     
     self.carMaintainProgress.progress = maintainProgress;
-    self.carMaintainLabel.text = [NSString stringWithFormat:@"%d", distSinceLastMaintain/100];
+    self.carMaintainLabel.text = [NSString stringWithFormat:@"%ld", distSinceLastMaintain/100];
     
     self.carHealthProgress.progress = healthProgress;
     self.carHeathLabel.text = healthProgress > 0.3 ? @"优" : @"良";

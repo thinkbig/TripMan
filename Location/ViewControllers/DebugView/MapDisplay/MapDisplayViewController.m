@@ -264,7 +264,7 @@
         CLLocationCoordinate2D pointsToUse[gpsLog.count];
         int realCnt = 0;
         BOOL isJam = NO;
-        GPSLogItem * last = [gpsLog lastObject];
+        //GPSLogItem * last = [gpsLog lastObject];
         for (int i = 0; i < gpsLog.count; i++)
         {
             GPSLogItem * item = gpsLog[i];

@@ -7,8 +7,6 @@
 //
 
 #import "DataDebugPrinter.h"
-#import "AnyJson.h"
-#import "AJObject2JsonSerializer.h"
 
 @implementation DataDebugPrinter
 
@@ -39,33 +37,6 @@
 + (NSString*) printTurningInfo:(TurningInfo*)info
 {
     return [NSString stringWithFormat:@"left:(cnd=%@, %@/%@), right:(cnd=%@, %@/%@), turn:(cnd=%@, %@/%@)", info.left_turn_cnt, info.left_turn_avg_speed, info.left_turn_max_speed, info.right_turn_cnt, info.right_turn_avg_speed, info.right_turn_max_speed, info.turn_round_cnt, info.turn_round_avg_speed, info.turn_round_max_speed];
-}
-
-
-+ (NSString*) jsonTripSummary:(TripSummary*)sum
-{
-    if (sum)
-    {
-        NSMutableDictionary * mutableDict = [AJObject2JsonSerializer serializeToBasicObject:sum excludeProps:@[@"day_summary", @"weather", @"trip_owner", @"traffic_jams", @"addi_data", @"trips", @"group_owner_st", @"group_owner_ed", @"is_analyzed"]];
-        
-        NSMutableArray * jamArr = [NSMutableArray array];
-        NSArray * jamRawArr =  [[sum.traffic_jams allObjects] sortedArrayWithOptions:NSSortStable usingComparator:^NSComparisonResult(TrafficJam * obj1, TrafficJam * obj2) {
-            return [obj1.start_date compare:obj2.start_date];
-        }];
-        for (TrafficJam * jam in jamRawArr) {
-            NSDictionary * dict = [AJObject2JsonSerializer serializeToBasicObject:jam excludeProps:@[@"trip_owner", @"addi_data", @"is_analyzed"]];
-            if ([dict isKindOfClass:[NSDictionary class]]) {
-                [jamArr addObject:dict];
-            }
-        }
-        mutableDict[@"traffic_jams"] = jamArr;
-
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:mutableDict options:NSJSONWritingPrettyPrinted error:nil];
-        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        
-        return jsonString;
-    }
-    return nil;
 }
 
 @end

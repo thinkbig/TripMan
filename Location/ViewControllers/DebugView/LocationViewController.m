@@ -14,6 +14,7 @@
 #import "DebugTableCell.h"
 #import "CTConfigProvider.h"
 #import "ActionSheetStringPicker.h"
+#import "NSArray+ObjectiveSugar.h"
 
 typedef NS_ENUM(NSUInteger, eDebugDisplayType) {
     eDebugDisplayUid = 0,
@@ -224,7 +225,7 @@ typedef NS_ENUM(NSUInteger, eDebugActionType) {
         } else if (eDebugActionSwitchServer == indexPath.row) {
             CTConfigProvider * configProvider = [CTConfigProvider sharedInstance];
             NSDictionary * allServer = [configProvider allServerConfigs];
-            NSArray * allName = allServer.allKeys;
+            NSArray * allName = [allServer.allKeys sort];
             NSString * curServerName = [configProvider currentServerName];
             NSInteger curIdx = [allName indexOfObject:curServerName];
             [ActionSheetStringPicker showPickerWithTitle:@"切换服务器" rows:allName initialSelection:curIdx doneBlock:^(ActionSheetStringPicker *picker, NSInteger selectedIndex, id selectedValue) {
