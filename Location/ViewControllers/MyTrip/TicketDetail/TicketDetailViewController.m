@@ -352,7 +352,7 @@
         mapVC.tripSum = self.tripSum;
         [self.navigationController pushViewController:mapVC animated:YES];
     }
-    if (DEBUG_MODE) {
+    if ([GToolUtil isEnableDebug]) {
         if (2 == indexPath.row) {
             NSArray * logArr = [[GPSLogger sharedLogger].dbLogger selectLogFrom:self.tripSum.start_date toDate:self.tripSum.end_date offset:0 limit:0];
             GPSInstJamAnalyzer * ana = [GPSInstJamAnalyzer new];
@@ -370,20 +370,20 @@
             } failure:nil];
         } else if (4 == indexPath.row) {
             
-            NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-            [dateFormatter setDateFormat: @"yyyy-MM-dd HH:mm:ss"];
-            NSDate * origDate= [dateFormatter dateFromString:@"2015-05-16 20:16:22"];
-            NSDate * destDate= [dateFormatter dateFromString:@"2015-05-16 21:05:20"];
+//            NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+//            [dateFormatter setDateFormat: @"yyyy-MM-dd HH:mm:ss"];
+//            NSDate * origDate= [dateFormatter dateFromString:@"2015-05-16 20:16:22"];
+//            NSDate * destDate= [dateFormatter dateFromString:@"2015-05-16 21:05:20"];
+//            
+//            GPSFMDBLogger * loggerDB = [GPSLogger sharedLogger].dbLogger;
+//            NSArray * logArr = [loggerDB selectLogFrom:origDate toDate:destDate offset:0 limit:0];
+//            TripSimulator * simulator = [TripSimulator new];
+//            simulator.gpsLogs = logArr;
             
-            GPSFMDBLogger * loggerDB = [GPSLogger sharedLogger].dbLogger;
-            NSArray * logArr = [loggerDB selectLogFrom:origDate toDate:destDate offset:0 limit:0];
-            TripSimulator * simulator = [TripSimulator new];
-            simulator.gpsLogs = logArr;
-            
-            //        GPSFMDBLogger * loggerDB = [GPSLogger sharedLogger].dbLogger;
-            //        NSArray * logArr = [loggerDB selectLogFrom:[self.tripSum.start_date dateByAddingTimeInterval:-180] toDate:[self.tripSum.end_date dateByAddingTimeInterval:60*10] offset:0 limit:0];
-            //        TripSimulator * simulator = [TripSimulator new];
-            //        simulator.gpsLogs = logArr;
+              GPSFMDBLogger * loggerDB = [GPSLogger sharedLogger].dbLogger;
+              NSArray * logArr = [loggerDB selectLogFrom:[self.tripSum.start_date dateByAddingTimeInterval:-180] toDate:[self.tripSum.end_date dateByAddingTimeInterval:60*10] offset:0 limit:0];
+              TripSimulator * simulator = [TripSimulator new];
+              simulator.gpsLogs = logArr;
         }  else if (5 == indexPath.row) {
             NSLog(@"is valid = %d", [[GPSLogger sharedLogger].offTimeAnalyzer checkValid:self.tripSum]);
         }

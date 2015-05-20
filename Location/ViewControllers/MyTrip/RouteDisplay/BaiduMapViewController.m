@@ -47,7 +47,7 @@
     }
     self.mapView.showsUserLocation = YES;
     
-    if (DEBUG_MODE) {
+    if ([GToolUtil isEnableDebug]) {
         [[GPSLogger sharedLogger].offTimeAnalyzer analyzeTripForSum:self.tripSum withAnalyzer:nil];
     }
     
