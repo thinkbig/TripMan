@@ -250,6 +250,10 @@
 //        [self.mapView addOverlay:circle];
     }
     
+    [self.carAnnos sortUsingComparator:^NSComparisonResult(RouteAnnotation * obj1, RouteAnnotation * obj2) {
+        return obj1.coordinate.latitude < obj2.coordinate.latitude ? NSOrderedDescending : NSOrderedAscending;
+    }];
+    
     for (RouteAnnotation * anno in self.carAnnos) {
         [_mapView addAnnotation:anno];
     }

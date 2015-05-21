@@ -228,6 +228,7 @@ typedef NS_ENUM(NSUInteger, ePOICellSourceType) {
 - (void) updateTimeDuring:(NSString*)timeStr
 {
     self.estimateDuringLabel.attributedText = [NSAttributedString stringWithNumber:timeStr font:DigitalFontSize(24) color:[UIColor whiteColor] andUnit:@"min" font:DigitalFontSize(14) color:COLOR_UNIT_GRAY];
+    self.duringStatusLabel.text = @"预计耗时";
 }
 
 @end
