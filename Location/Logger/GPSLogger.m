@@ -100,18 +100,23 @@
         self.gpsAnalyzer = [[GPSAnalyzerRealTime alloc] init];
         
         self.dbLogger = [[GPSFMDBLogger alloc] initWithLogDirectory:[self dbLogRootDirectory]];
-        
-        DDLogFileManagerDefault * manager = [[DDLogFileManagerDefault alloc] initWithLogsDirectory:[self fileLogRootDirectory]];
-        self.fileLogger = [[DDFileLogger alloc] initWithLogFileManager:manager];
-        self.fileLogger.maximumFileSize = (1024 * 1024 * 8);// 512
-        self.fileLogger.rollingFrequency = DEFAULT_LOG_ROLLING_FREQUENCY;
-        self.fileLogger.logFileManager.maximumNumberOfLogFiles = 60;
-        self.fileLogger.logFileManager.logFilesDiskQuota = (1024 * 1024 * 1024);
-        
+
         self.offTimeAnalyzer = [[GPSAnalyzerOffTime alloc] init];
         self.offTimeAnalyzer.dbLogger = self.dbLogger;
     }
     return self;
+}
+
+- (DDFileLogger*) fileLogger {
+    if (nil == _fileLogger) {
+        DDLogFileManagerDefault * manager = [[DDLogFileManagerDefault alloc] initWithLogsDirectory:[self fileLogRootDirectory]];
+        _fileLogger = [[DDFileLogger alloc] initWithLogFileManager:manager];
+        _fileLogger.maximumFileSize = (1024 * 1024 * 8);// 512
+        _fileLogger.rollingFrequency = DEFAULT_LOG_ROLLING_FREQUENCY;
+        _fileLogger.logFileManager.maximumNumberOfLogFiles = 60;
+        _fileLogger.logFileManager.logFilesDiskQuota = (1024 * 1024 * 1024);
+    }
+    return _fileLogger;
 }
 
 -(void) startLogger
@@ -130,11 +135,8 @@
     [self.dbLogger setLogFormatter:wlFormatter1];
     [DDLog addLogger:self.offTimeAnalyzer.dbLogger];
     
-    // file logger, log all info, NOT just gps info
-    if (self.fileLogger) {
-        GPSFileLogFormatter * fileFormatter = [GPSFileLogFormatter new];
-        [self.fileLogger setLogFormatter:fileFormatter];
-        [DDLog addLogger:self.fileLogger];
+    if ([GToolUtil isEnableDebug]) {
+        [self startFileLogger];
     }
 }
 
@@ -142,6 +144,24 @@
 {
     [DDLog removeLogger:self.gpsAnalyzer];
     [DDLog removeLogger:self.dbLogger];
+}
+
+- (void) startFileLogger
+{
+    // file logger, log all info, NOT just gps info
+    [self stopFileLogger];
+    if (self.fileLogger) {
+        GPSFileLogFormatter * fileFormatter = [GPSFileLogFormatter new];
+        [self.fileLogger setLogFormatter:fileFormatter];
+        [DDLog addLogger:self.fileLogger];
+    }
+    
+    [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:kFileLogEnable];
+}
+
+- (void) stopFileLogger
+{
+    [[NSUserDefaults standardUserDefaults] setObject:@(NO) forKey:kFileLogEnable];
     if (self.fileLogger) {
         [DDLog removeLogger:self.fileLogger];
     }

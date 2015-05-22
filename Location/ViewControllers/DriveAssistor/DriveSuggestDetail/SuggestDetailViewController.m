@@ -243,6 +243,15 @@
         carAnnotation.coordinate = bdCoor;
         carAnnotation.degree = [zone headingDegree];
         carAnnotation.type = 4;
+        carAnnotation.subType = 100;
+        if (zone.speed) {
+            CGFloat speed = [zone.speed floatValue];
+            if (speed < 5/3.6) {
+                carAnnotation.subType = 102;
+            } else if (speed < 15/3.6) {
+                carAnnotation.subType = 101;
+            }
+        }
         //carAnnotation.title = [NSString stringWithFormat:@"%ld", idx++];
         [self.carAnnos addObject:carAnnotation];
         
@@ -297,7 +306,8 @@
                     self.overLayerVC.predictDict = predict;
                     [self.overLayerVC.collectionView reloadData];
                 } failure:^(NSError * err) {
-                    [self showToast:@"暂时无法获得交通预测数据" onDismiss:nil];
+                    NSString * msg = [GToolUtil msgWithErr:err andDefaultMsg:@"暂时无法获得交通数据"];
+                    [self showToast:msg onDismiss:nil];
                 }];
                 
                 [UIView animateWithDuration:1.0 delay:0.3 options:UIViewAnimationOptionCurveEaseInOut animations:^{
@@ -306,7 +316,8 @@
                 
             } failure:^(NSError * err) {
                 [self hideLoading];
-                [self showToast:@"暂时无法获得交通数据" onDismiss:^(id toast) {
+                NSString * msg = [GToolUtil msgWithErr:err andDefaultMsg:@"暂时无法获得交通数据"];
+                [self showToast:msg onDismiss:^(id toast) {
                     [self.navigationController popViewControllerAnimated:YES];
                 }];
             }];
@@ -600,7 +611,15 @@
                 [view setNeedsDisplay];
             }
             
-            UIImage* image = [UIImage imageNamed:@"map_car_male.png"];
+            UIImage* image = nil;
+            if (routeAnnotation.subType == 101) {
+                image = [UIImage imageNamed:@"map_car_male_upset.png"];
+            } else if (routeAnnotation.subType == 102) {
+                image = [UIImage imageNamed:@"map_car_male_cry.png"];
+            } else {
+                image = [UIImage imageNamed:@"map_car_male.png"];
+            }
+            
             CGSize oldSz = image.size;
             CGSize newSz = CGSizeMake(oldSz.width*0.75, oldSz.height*0.75);
             view.image = [UIImage rz_imageWithImage:image scaledToSize:newSz preserveAspectRatio:YES];

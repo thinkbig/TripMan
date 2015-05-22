@@ -35,6 +35,7 @@ typedef NS_ENUM(NSUInteger, eDebugActionType) {
     eDebugActionAnalyzeAllTrip,
     eDebugActionForceUpload,
     eDebugActionShowDebugInfo,
+    eDebugActionEnableFileLog,
     eDebugActionCount
 };
 
@@ -70,7 +71,15 @@ typedef NS_ENUM(NSUInteger, eDebugActionType) {
 
 - (void)switchChanged:(UISwitch*)cellSwitch
 {
-    [[NSUserDefaults standardUserDefaults] setObject:@(cellSwitch.isOn) forKey:kDebugEnable];
+    if (cellSwitch.tag == 100+eDebugActionShowDebugInfo) {
+        [[NSUserDefaults standardUserDefaults] setObject:@(cellSwitch.isOn) forKey:kDebugEnable];
+    } else if (cellSwitch.tag == 100+eDebugActionEnableFileLog) {
+        if (cellSwitch.isOn) {
+            [[GPSLogger sharedLogger] startFileLogger];
+        } else {
+            [[GPSLogger sharedLogger] stopFileLogger];
+        }
+    }
 }
 
 
@@ -178,6 +187,18 @@ typedef NS_ENUM(NSUInteger, eDebugActionType) {
             DebugTableCell * realCell = [tableView dequeueReusableCellWithIdentifier:@"DebugTableCellId"];
             realCell.mainLabel.text = @"打开调试模式";
             NSNumber * enable = [[NSUserDefaults standardUserDefaults] objectForKey:kDebugEnable];
+            if (enable && [enable boolValue]) {
+                realCell.cellSwitch.on = YES;
+            } else {
+                realCell.cellSwitch.on = NO;
+            }
+            [realCell.cellSwitch addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
+            realCell.cellSwitch.tag = indexPath.section * 100 + indexPath.row;
+            cell = realCell;
+        } else if (eDebugActionEnableFileLog == indexPath.row) {
+            DebugTableCell * realCell = [tableView dequeueReusableCellWithIdentifier:@"DebugTableCellId"];
+            realCell.mainLabel.text = @"开启文件log功能";
+            NSNumber * enable = [[NSUserDefaults standardUserDefaults] objectForKey:kFileLogEnable];
             if (enable && [enable boolValue]) {
                 realCell.cellSwitch.on = YES;
             } else {

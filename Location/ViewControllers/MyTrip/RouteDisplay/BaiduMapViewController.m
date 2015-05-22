@@ -99,8 +99,19 @@
             pointsToUse[idx+1] = bdMappt;
         }];
         
+        NSString * subTitle = @"solid";
+        if (pathArr.count < 3) {
+            if (route.orig) {
+                if ([oneStep.to distanceFrom:route.orig] < 300) {
+                    subTitle = @"dash";   // too close to start loc, just ignore
+                } else if ([oneStep.from distanceFrom:route.orig] < 400) {
+                    subTitle = @"dash";
+                }
+            }
+        }
         RouteOverlay * lineOne = [RouteOverlay routeWithPoints:pointsToUse count:pathArr.count+2];
         lineOne.title = @"green";
+        lineOne.subtitle = subTitle;
         [self.mapView addOverlay:lineOne];
         
         delete [] pointsToUse;
@@ -176,8 +187,10 @@
     BMKOverlayView* overlayView = nil;
     if ([overlay isKindOfClass:[RouteOverlay class]])
     {
-        RouteOverlayView * routeView = [[RouteOverlayView alloc] initWithOverlay:overlay];
+        RouteOverlay * routeOverlay = (RouteOverlay*)overlay;
+        RouteOverlayView * routeView = [[RouteOverlayView alloc] initWithOverlay:routeOverlay];
         routeView.lineWidth = 10;
+        routeView.lineDash = [routeOverlay.subtitle isEqualToString:@"dash"] ? YES : NO;
         return routeView;
     }
     else if ([overlay isKindOfClass:[BMKCircle class]])

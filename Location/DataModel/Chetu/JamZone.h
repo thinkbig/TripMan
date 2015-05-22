@@ -17,6 +17,7 @@
 @property (nonatomic, strong) NSNumber<Optional> * radius;
 @property (nonatomic, strong) NSNumber<Optional> * lastRefTime;
 @property (nonatomic, strong) NSString<Optional> * direction;
+@property (nonatomic, strong) NSString<Optional> * speed;
 
 - (CGFloat) headingDegree;
 

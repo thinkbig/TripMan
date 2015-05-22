@@ -32,7 +32,10 @@ typedef NS_ENUM(NSUInteger, eMotionStat) {
 
 + (instancetype)sharedLogger;
 
--(void) startLogger;
--(void) stopLogger;
+- (void) startLogger;
+- (void) stopLogger;
+
+- (void) startFileLogger;
+- (void) stopFileLogger;
 
 @end

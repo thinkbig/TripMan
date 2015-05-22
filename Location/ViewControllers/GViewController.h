@@ -23,6 +23,7 @@
 - (void)hideLoading;
 
 - (void)showToast:(NSString*)msg onDismiss:(void (^)(id))handler;
+- (void)showToastWithErr:(NSError*)err defaultMsg:(NSString*)msg onDismiss:(void (^)(id))handler;
 
 // only for collectionview
 - (void)addPullRefreshOn:(UICollectionView*)collectionView withSelector:(SEL)selector;

@@ -82,7 +82,8 @@
     [facade request:[model toDictionary] success:^(id result) {
         [self showToast:@"提交成功，感谢您的支持" onDismiss:nil];
     } failure:^(NSError * err) {
-        [self showToast:@"提交失败，请稍后再试" onDismiss:nil];
+        NSString * msg = [GToolUtil msgWithErr:err andDefaultMsg:@"提交失败，请稍后再试"];
+        [self showToast:msg onDismiss:nil];
     }];
 }
 

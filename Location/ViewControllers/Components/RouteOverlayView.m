@@ -37,11 +37,11 @@
     RouteOverlay *customOverlay = [self routeOverlay];
     NSString * textureImg = customOverlay.title;
     if ([customOverlay.title isEqualToString:@"yellow"]) {
-        textureImg = @"map_yellow.png";
+        textureImg = self.lineDash ? @"map_yellow_dash.png" : @"map_yellow.png";
     } else if ([customOverlay.title isEqualToString:@"red"]) {
-        textureImg = @"map_red.png";
+        textureImg = self.lineDash ? @"map_red_dash.png" : @"map_red.png";
     } else if ([customOverlay.title isEqualToString:@"green"]) {
-        textureImg = @"map_green.png";
+        textureImg = self.lineDash ? @"map_green_dash.png" : @"map_green.png";
     }
     
     GLuint testureID = [self loadStrokeTextureImage:[UIImage imageNamed:textureImg]];

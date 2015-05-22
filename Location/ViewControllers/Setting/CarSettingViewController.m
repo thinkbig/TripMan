@@ -58,7 +58,7 @@
         UIViewController * vc = [self.storyboard instantiateViewControllerWithIdentifier:@"HowToViewController"];
         [self.navigationController pushViewController:vc animated:YES];
     } else if (btn.tag == 22) {
-        [self showToast:@"产品还没有上线" onDismiss:nil];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:APP_STORE_URL]];
     } else if (btn.tag == 31) {
         UIViewController * vc = [self.storyboard instantiateViewControllerWithIdentifier:@"AboutViewController"];
         [self.navigationController pushViewController:vc animated:YES];

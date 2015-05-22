@@ -89,8 +89,13 @@ static const NSString * kHUDDismissKey = @"CT_prop_kHUDDismissKey";
     [HUD showInView:self.view];
 }
 
-- (void)showToast:(NSString*)msg onDismiss:(void (^)(id))handler
+- (void)showToast:(NSString*)msg onDismiss:(void (^)(id))handler {
+    [self showToastWithErr:nil defaultMsg:msg onDismiss:handler];
+}
+
+- (void)showToastWithErr:(NSError*)err defaultMsg:(NSString*)msg onDismiss:(void (^)(id))handler
 {
+    msg = [GToolUtil msgWithErr:err andDefaultMsg:msg];
     if (msg.length > 0) {
         JGProgressHUD *HUD = [self prototypeHUD:NO];
         HUD.indicatorView = nil;

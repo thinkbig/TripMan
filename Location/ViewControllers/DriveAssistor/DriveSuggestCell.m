@@ -162,7 +162,7 @@ typedef NS_ENUM(NSUInteger, ePOICellSourceType) {
                 
                 eStepTraffic stat = [result trafficStat];
                 if (eStepTrafficVerySlow == stat) {
-                    self.iconStatusImage.image = [UIImage imageNamed:@"yellowicon"];
+                    self.iconStatusImage.image = [UIImage imageNamed:@"redicon"];
                 } else if (eStepTrafficSlow == stat) {
                     self.iconStatusImage.image = [UIImage imageNamed:@"yellowicon"];
                 } else {
@@ -210,7 +210,7 @@ typedef NS_ENUM(NSUInteger, ePOICellSourceType) {
                 
                 eStepTraffic stat = [result trafficStat];
                 if (eStepTrafficVerySlow == stat) {
-                    self.iconStatusImage.image = [UIImage imageNamed:@"yellowicon"];
+                    self.iconStatusImage.image = [UIImage imageNamed:@"redicon"];
                 } else if (eStepTrafficSlow == stat) {
                     self.iconStatusImage.image = [UIImage imageNamed:@"yellowicon"];
                 } else {

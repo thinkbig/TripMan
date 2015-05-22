@@ -114,16 +114,16 @@ static NSString * rebuildVal = @"value_0000000000005"; // make sure it is differ
 
 - (void) setupLogger
 {
-#ifdef COMMON_DEBUG
-    if (nil == self.afNetworkLogger) {
-        self.afNetworkLogger = [[AFNetworkActivityLogger alloc] init];
-        self.afNetworkLogger.level = AFLoggerLevelDebug;
+    if ([GToolUtil isEnableDebug]) {
+        if (nil == self.afNetworkLogger) {
+            self.afNetworkLogger = [[AFNetworkActivityLogger alloc] init];
+            self.afNetworkLogger.level = AFLoggerLevelDebug;
+        }
+        [self.afNetworkLogger startLogging];
+        
+        [DDLog addLogger:[DDASLLogger sharedInstance]];
+        [DDLog addLogger:[DDTTYLogger sharedInstance]];
     }
-    [self.afNetworkLogger startLogging];
-    
-    [DDLog addLogger:[DDASLLogger sharedInstance]];
-    [DDLog addLogger:[DDTTYLogger sharedInstance]];
-#endif
 }
 
 - (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings

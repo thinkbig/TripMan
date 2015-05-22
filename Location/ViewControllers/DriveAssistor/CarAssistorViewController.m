@@ -540,7 +540,8 @@
     } failure:^(NSError * err) {
         [self hideLoading];
         if ([err.domain isEqualToString:@"clientErrDomain"]) {
-            [self showToast:@"无法搜到结果，请尝试其他关键字" onDismiss:nil];
+            NSString * msg = [GToolUtil msgWithErr:err andDefaultMsg:@"无法搜到结果，请尝试其他关键字"];
+            [self showToast:msg onDismiss:nil];
         } else {
             [self showToast:@"搜索失败，请稍后再试" onDismiss:nil];
         }

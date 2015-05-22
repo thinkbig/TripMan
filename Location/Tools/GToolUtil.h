@@ -15,6 +15,8 @@
 
 + (instancetype)sharedInstance;
 
++ (NSString*)msgWithErr:(NSError*)err andDefaultMsg:(NSString*)msg;
+
 + (void)showToast:(NSString*)msg;
 - (void)showPieHUDWithText:(NSString*)str andProgress:(NSInteger)progress;
 

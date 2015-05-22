@@ -55,6 +55,14 @@ static GToolUtil * _sharedUtil = nil;
     return self;
 }
 
++ (NSString*)msgWithErr:(NSError*)err andDefaultMsg:(NSString*)msg
+{
+    if (eNetworkError == err.code) {
+        return @"网络不太给力哦";
+    }
+    return msg;
+}
+
 + (void)showToast:(NSString*)msg
 {
     JGProgressHUD *HUD = [[JGProgressHUD alloc] initWithStyle:JGProgressHUDStyleDark];

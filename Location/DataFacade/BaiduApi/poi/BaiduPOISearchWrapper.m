@@ -43,7 +43,7 @@
     option.pageCapacity = 10;
     option.keyword = self.searchName;
     if (![self.poiSearch poiSearchInCity:option] && self.failureBlock) {
-        self.failureBlock(ERR_MAKE(eInvalidInputError, @"查询失败"));
+        self.failureBlock(ERR_MAKE(eInvalidInputError, @"查询失败，请稍后再试"));
     }
 }
 
@@ -55,7 +55,7 @@
             self.successBlock(poiResult);
         }
     } else if (self.failureBlock) {
-        self.failureBlock(ERR_MAKE(errorCode, @"查询失败"));
+        self.failureBlock(ERR_MAKE(errorCode, @"查询失败，请稍后再试"));
     }
 }
 
