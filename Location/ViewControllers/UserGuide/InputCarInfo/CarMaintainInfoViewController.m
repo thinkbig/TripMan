@@ -174,7 +174,7 @@ typedef NS_ENUM(NSUInteger, eMaintainCellType) {
         realCell.maintainTitle.text = @"当前里程";
         realCell.maintainContent.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"您爱车当前的里程数" attributes:@{ NSForegroundColorAttributeName : COLOR_UNIT_GRAY}];
         if (_newTolDist >= 0) {
-            realCell.maintainContent.text = [NSString stringWithFormat:@"%ld", _newTolDist];
+            realCell.maintainContent.text = [NSString stringWithFormat:@"%ld", (long)_newTolDist];
         } else {
             realCell.maintainContent.text = nil;
         }
@@ -186,7 +186,7 @@ typedef NS_ENUM(NSUInteger, eMaintainCellType) {
         realCell.maintainTitle.text = @"上次保养里程";
         realCell.maintainContent.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"爱车上次保养时的里程数" attributes:@{ NSForegroundColorAttributeName : COLOR_UNIT_GRAY}];
         if (_newLastMaintainDist >= 0) {
-            realCell.maintainContent.text = [NSString stringWithFormat:@"%ld", _newLastMaintainDist];
+            realCell.maintainContent.text = [NSString stringWithFormat:@"%ld", (long)_newLastMaintainDist];
         } else {
             realCell.maintainContent.text = nil;
         }

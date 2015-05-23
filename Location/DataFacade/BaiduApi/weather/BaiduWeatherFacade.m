@@ -39,7 +39,7 @@ static NSDateFormatter *sDateFormatter = nil;
 {
     if ([origResult isKindOfClass:[NSDictionary class]] && ([origResult[@"error"] integerValue] == 0 || [@"success" isEqualToString:origResult[@"status"]])) {
         return origResult[@"results"];
-    } else {
+    } else if (err) {
         *err = ERR_MAKE(eBussinessError, @"天气服务异常");
     }
     return nil;

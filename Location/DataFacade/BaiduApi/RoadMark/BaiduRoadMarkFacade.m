@@ -29,7 +29,7 @@
 {
     if ([origResult isKindOfClass:[NSDictionary class]] && ((origResult[@"error"] && [origResult[@"error"] integerValue] == 0) || [@"success" isEqualToString:origResult[@"status"]])) {
         return origResult[@"results"];
-    } else {
+    } else if (err) {
         *err = ERR_MAKE(eBussinessError, @"获取路标异常");
     }
     return nil;

@@ -26,7 +26,7 @@
     }
     if (self.ignore) {
         [path appendFormat:@"%@ignore=1", sep];
-        sep = @"&";
+        //sep = @"&";
     }
     return path;
 }

@@ -577,7 +577,7 @@
             } else {
                 newStat = eMotionStatStationary;
             }
-            DDLogWarn(@"$$$$$$$$$$$$$$$$$$$$$ start speed = %f - %lu", avgSpeed, newStat);
+            DDLogWarn(@"$$$$$$$$$$$$$$$$$$$$$ start speed = %f - %ld", avgSpeed, (long)newStat);
         }
     } else {
         // fast decide using M7 chrip
@@ -617,7 +617,7 @@
                 } else {
                     newStat = eMotionStatDriving;
                 }
-                DDLogWarn(@"$$$$$$$$$$$$$$$$$$$$$ end speed = %f - %lu", avgSpeed, newStat);
+                DDLogWarn(@"$$$$$$$$$$$$$$$$$$$$$ end speed = %f - %ld", avgSpeed, (long)newStat);
             }
         }
     }

@@ -79,7 +79,7 @@
     self.duringLabel.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%.f", [sum.total_during floatValue]/60.0] font:[self.duringLabel.font fontWithSize:17] color:self.duringLabel.textColor andUnit:@"min" font:[self.duringLabel.font fontWithSize:14] color:self.duringLabel.textColor];
     self.trafficLightLabel.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%ld", (long)[sum.traffic_light_jam_cnt integerValue]] font:[self.trafficLightLabel.font fontWithSize:17] color:self.trafficLightLabel.textColor andUnit:@"处" font:[self.trafficLightLabel.font fontWithSize:14] color:self.trafficLightLabel.textColor];
     
-    UIColor * statusColor = COLOR_STAT_GREEN;
+    UIColor * statusColor = nil;
     eStepTraffic status = [[sum tripRoute] trafficStat];
     if (eStepTrafficVerySlow == status) {
         statusColor = COLOR_STAT_RED;

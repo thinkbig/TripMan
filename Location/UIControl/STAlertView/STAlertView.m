@@ -48,13 +48,15 @@ typedef enum {
    cancelButtonBlock:(STAlertViewBlock)theCancelButtonBlock
     otherButtonBlock:(STAlertViewBlock)theOtherButtonBlock
 {
+    self = [super init];
+    if (self) {
+        cancelButtonBlock = [theCancelButtonBlock copy];
+        otherButtonBlock = [theOtherButtonBlock copy];
+        
+        alertView = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:cancelButtonTitle otherButtonTitles:otherButtonTitle, nil];
+        alertView.tag = STAlertViewTypeNormal;
+    }
 
-    cancelButtonBlock = [theCancelButtonBlock copy];
-    otherButtonBlock = [theOtherButtonBlock copy];
-    
-    alertView = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:cancelButtonTitle otherButtonTitles:otherButtonTitle, nil];
-    alertView.tag = STAlertViewTypeNormal;
-    
     return self;
 }
 
@@ -67,18 +69,19 @@ typedef enum {
    cancelButtonBlock:(STAlertViewBlock)theCancelButtonBlock
     otherButtonBlock:(STAlertViewStringBlock)theOtherButtonBlock
 {
-    
-    cancelButtonBlock = [theCancelButtonBlock copy];
-    textFieldBlock = [theOtherButtonBlock copy];
-    
-    alertView = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:cancelButtonTitle otherButtonTitles:otherButtonTitle, nil];
-    alertView.tag = STAlertViewTypeTextField;
+    self = [super init];
+    if (self) {
+        cancelButtonBlock = [theCancelButtonBlock copy];
+        textFieldBlock = [theOtherButtonBlock copy];
+        
+        alertView = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:cancelButtonTitle otherButtonTitles:otherButtonTitle, nil];
+        alertView.tag = STAlertViewTypeTextField;
+        
+        alertView.alertViewStyle = UIAlertViewStylePlainTextInput;
+        [[alertView textFieldAtIndex:0] setPlaceholder:textFieldMessage];
+        [[alertView textFieldAtIndex:0] setText:textFieldValue];
+    }
 
-    alertView.alertViewStyle = UIAlertViewStylePlainTextInput;
-    [[alertView textFieldAtIndex:0] setPlaceholder:textFieldMessage];
-    [[alertView textFieldAtIndex:0] setText:textFieldValue];
-    
-    
     return self;
 }
 

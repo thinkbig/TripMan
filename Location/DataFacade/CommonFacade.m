@@ -208,7 +208,7 @@
             break;
             
         default:
-            NSAssert(false, @"Unsupported request type=%lu!!!", type);
+            NSAssert(false, @"Unsupported request type=%ld!!!", (long)type);
             break;
     }
 }

@@ -600,59 +600,17 @@ typedef enum
         //Select only valid location and also location with good accuracy
         if(newLocation!=nil && theAccuracy>0 && theAccuracy<420 && (!(theLocation.latitude==0.0 && theLocation.longitude==0.0)))
         {
-            BOOL isMost = NO;
             if (mostAccuracy > theAccuracy) {
                 mostAccuracy = theAccuracy;
                 mostAccuracyLocation = newLocation;
                 calSpeed = mostAccuracyLocation.speed;
-                isMost = YES;
             }
-            
             CGFloat speed = newLocation.speed;
-//            NSTimeInterval interval = 0;
-//            if (speed < 0 && _lastLoc) {
-//                interval = [newLocation.timestamp timeIntervalSinceDate:_lastLoc.timestamp];
-//                CGFloat dist = [newLocation distanceFromLocation:_lastLoc];
-//                if (interval > 3 && ((newLocation.horizontalAccuracy < kPoorHorizontalAccuracy && _lastLoc.horizontalAccuracy < kPoorHorizontalAccuracy) || dist > 50)) {
-//                    // if the gps signal is too low, we can not cal the speed
-//                    CGFloat tmpSpeed = dist/interval;
-//                    if (tmpSpeed < cAvgNoiceSpeed) {
-//                        if (!_isDriving) {
-//                            BOOL skipModify = NO;
-//                            if (newLocation.horizontalAccuracy > kPoorHorizontalAccuracy && _lastLoc.horizontalAccuracy > kPoorHorizontalAccuracy) {
-//                                skipModify = YES;
-//                            }
-//                            CGFloat angleThres = 100;
-//                            if (tmpSpeed > cAvgDrivingSpeed*2) {
-//                                if (newLocation.horizontalAccuracy > kLowHorizontalAccuracy || _lastLoc.horizontalAccuracy > kLowHorizontalAccuracy) {
-//                                    angleThres = 50;
-//                                }
-//                            }
-//                            if (!skipModify && _lastLastLoc) {
-//                                CGFloat angle = [GPSOffTimeFilter checkPointAngle:[GPSOffTimeFilter coor2Point:_lastLastLoc.coordinate] antPt:[GPSOffTimeFilter coor2Point:_lastLoc.coordinate] antPt:[GPSOffTimeFilter coor2Point:newLocation.coordinate]];
-//                                if (angle < angleThres) {
-//                                    // filter the wrong gps
-//                                    speed = tmpSpeed;
-//                                }
-//                            }
-//                        } else {
-//                            if (interval < 5 || tmpSpeed > cAvgDrivingSpeed*6) {
-//                                tmpSpeed = MIN(tmpSpeed/2.0, cAvgDrivingSpeed*6.1);
-//                            }
-//                            speed = tmpSpeed;
-//                        }
-//                        if (isMost) {
-//                            calSpeed = speed;
-//                        }
-//                    }
-//                }
-//            }
             
             _lastLastLoc = _lastLoc;
             _lastLoc = newLocation;
             
             GPSLog2(newLocation, self.lastAcceleraion, speed);
-            //DDLogWarn(@"location is: <%f, %f>, speed=%f, accuracy=%f, origSpeed=%f", newLocation.coordinate.latitude, newLocation.coordinate.longitude, speed, newLocation.horizontalAccuracy, newLocation.speed);
         }
     }
     

@@ -35,7 +35,7 @@
     }
 
     NSString * str = [CommonFacade toJsonString:(NSDictionary*)rawData prettyPrint:NO];
-    NSLog(@"len = %ld", str.length);
+    NSLog(@"len = %ld", (unsigned long)str.length);
     return rawData;
     
     return @{@"aa": @"dd", @"bb" : @(3.2), @"arr" : @[@"asdf", @"acdcd", @(12)]};

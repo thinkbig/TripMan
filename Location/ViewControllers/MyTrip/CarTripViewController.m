@@ -790,7 +790,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
             for (DaySummary * daySum in userSum.all_days) {
                 NSNumber * weekDay = @([daySum.date_day weekday]);
                 CGFloat oldMaxSpeed = MAX([maxDict[weekDay] floatValue], [daySum.max_speed floatValue]);
-                CGFloat oldAvgSpeed = [avgDict[weekDay] floatValue];
+                CGFloat oldAvgSpeed = 0;
                 if (avgDict[weekDay]) {
                     oldAvgSpeed = ([avgDict[weekDay] floatValue] + [daySum.avg_speed floatValue])/2.0;
                 } else {

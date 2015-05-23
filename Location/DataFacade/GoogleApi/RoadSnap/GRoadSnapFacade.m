@@ -26,7 +26,7 @@
         [wayStr appendFormat:@"%@%.5f,%.5f", seg, marsCoor.latitude, marsCoor.longitude];
         seg = @"|";
     }
-    NSLog(@"@@@ show route = (%ld) %@", self.snapPath.count, wayStr);
+    NSLog(@"@@@ show route = (%ld) %@", (unsigned long)self.snapPath.count, wayStr);
     return @{@"path": wayStr, @"interpolate": (self.interpolate ? @"true" : @"false")};
 }
 

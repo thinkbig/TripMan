@@ -313,7 +313,7 @@ static BussinessDataProvider * _sharedProvider = nil;
             }
         }
         // 看最远的点是不是就在终点附近
-        if ([maxLoc distanceFromLocation:lastLoc] < 500) {
+        if (nil == maxLoc || [maxLoc distanceFromLocation:lastLoc] < 500) {
             maxLoc = [GToolUtil dictToLocation:ptArr[ptArr.count/2]];
         }
         
@@ -584,7 +584,6 @@ static BussinessDataProvider * _sharedProvider = nil;
                 for (ParkingRegionDetail * detail in allUserDetail) {
                     if (detail.coreDataItem == curRegion) {
                         [formatArr addObject:detail];
-                        find = YES;
                     }
                 }
             }

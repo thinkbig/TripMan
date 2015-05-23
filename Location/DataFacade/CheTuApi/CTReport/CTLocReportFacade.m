@@ -26,7 +26,7 @@
     }
     if (self.force) {
         [path appendFormat:@"%@force=1", sep];
-        sep = @"&";
+        //sep = @"&";
     }
     return path;
 }

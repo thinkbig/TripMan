@@ -90,7 +90,7 @@
         self.jamDuringLabel.attributedText = [NSAttributedString stringWithNumber:@"- -" font:DigitalFontSize(24) color:[UIColor blackColor] andUnit:@"min" font:DigitalFontSize(14) color:[UIColor blackColor]];
     } else {
         self.suggestLabel.attributedText = [NSAttributedString stringWithNumber:[formatter stringFromDate:[NSDate dateWithTimeIntervalSinceNow:during]] font:DigitalFontSize(17) color:[UIColor whiteColor] andUnit:@"预计到达" font:[UIFont boldSystemFontOfSize:11] color:COLOR_UNIT_GRAY];
-        self.jamCntLabel.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%ld", jamCnt] font:DigitalFontSize(17) color:[UIColor whiteColor] andUnit:@"处拥堵" font:[UIFont boldSystemFontOfSize:11] color:COLOR_UNIT_GRAY];
+        self.jamCntLabel.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%ld", (long)jamCnt] font:DigitalFontSize(17) color:[UIColor whiteColor] andUnit:@"处拥堵" font:[UIFont boldSystemFontOfSize:11] color:COLOR_UNIT_GRAY];
         
         self.jamDuringLabel.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%d", (int)(during/60)] font:DigitalFontSize(24) color:[UIColor blackColor] andUnit:@"min" font:DigitalFontSize(14) color:[UIColor blackColor]];
     }
