@@ -25,13 +25,14 @@
 #import "SearchResultViewController.h"
 #import "NSString+ObjectiveSugar.h"
 #import "FavSelectViewController.h"
+#import "UIAlertView+RZCompletionBlocks.h"
 
 @interface CarAssistorViewController () {
     ZBNSearchDisplayController *       searchDisplayController;
 }
 
 @property (nonatomic, strong) NSMutableArray *                  userFavLocs;
-@property (nonatomic, strong) NSArray *                         mostParkingLoc;
+@property (nonatomic, strong) NSMutableArray *                  mostParkingLoc;
 @property (nonatomic, strong) NSArray *                         bdPoiLoc;
 
 @property (nonatomic, strong) SearchPOIHeader*                  header;
@@ -103,7 +104,8 @@
     
     self.recentSearch = [NSMutableArray arrayWithArray:[[BussinessDataProvider sharedInstance] recentSearches]];
     
-    self.mostParkingLoc = [[BussinessDataProvider sharedInstance] bestGuessLocations:0 formatToDetail:YES thresDist:IGNORE_NAVIGATION_DIST];
+    NSArray * loadArr = [[BussinessDataProvider sharedInstance] bestGuessLocations:0 formatToDetail:YES thresDist:IGNORE_NAVIGATION_DIST];
+    self.mostParkingLoc = [NSMutableArray arrayWithArray:loadArr];
     
     CLLocation * curLoc = [BussinessDataProvider lastGoodLocation];
     [[BussinessDataProvider sharedInstance] updateCurrentCity:^(NSString * city) {
@@ -225,6 +227,10 @@
             cell = realCell;
         } else {
             DriveSuggestPOICell * realCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"SuggestPOICell" forIndexPath:indexPath];
+            realCell._rz_parentCollectionTableView = self.suggestCollectionView;
+            RZCollectionTableViewCellEditingItem * delItem = [RZCollectionTableViewCellEditingItem itemWithIcon:[UIImage imageNamed:@"deleteicon"] highlightedIcon:[UIImage imageNamed:@"deleteicon"] backgroundColor:[UIColor clearColor] hostBgImg:[UIImage imageNamed:@"deletetag"]];
+            [realCell setRzEditingItems:@[delItem]];
+            realCell.rzEditingEnabled = YES;
             if (0 == _selCategoryIdx) {
                 NSInteger realIdx = indexPath.row-1;
                 NSInteger parkingLocCnt = self.mostParkingLoc.count;
@@ -323,8 +329,12 @@
                 [self.navigationController pushViewController:suggestDetail animated:YES];
             }
         } else {
-            FavSelectViewController * favSelVC = [self.storyboard instantiateViewControllerWithIdentifier:@"FavSelectVC"];
-            [self.navigationController pushViewController:favSelVC animated:YES];
+            if (0 == self.mostParkingLoc.count) {
+                [self showToast:@"您还没有行驶记录\r尚未生成常用地点" onDismiss:nil];
+            } else {
+                FavSelectViewController * favSelVC = [self.storyboard instantiateViewControllerWithIdentifier:@"FavSelectVC"];
+                [self.navigationController pushViewController:favSelVC animated:YES];
+            }
         }
     } else if (1 == indexPath.section) {
         if (indexPath.row > 0) {
@@ -348,11 +358,32 @@
 
 - (void)collectionView:(UICollectionView *)collectionView rzTableLayout:(RZCollectionTableViewLayout *)layout editingButtonPressedForIndex:(NSUInteger)buttonIndex forRowAtIndexPath:(NSIndexPath*)indexPath
 {
-    if (indexPath.row < self.userFavLocs.count) {
-        [self.userFavLocs removeObjectAtIndex:indexPath.row];
+    if (0 == indexPath.section) {
+        if (indexPath.row < self.userFavLocs.count) {
+            [self.userFavLocs removeObjectAtIndex:indexPath.row];
+        }
+        [[BussinessDataProvider sharedInstance] putFavLocations:self.userFavLocs];
+        [collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
+    } else if (1 == indexPath.section) {
+        NSInteger realIdx = indexPath.row-1;
+        NSInteger parkingLocCnt = self.mostParkingLoc.count;
+        if (realIdx < parkingLocCnt) {
+            
+            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"是否删除？" message:@"删除后，即使将来再次开车到达该目的地，也不会出现在常用地点列表" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"删除", nil];
+            [alert rz_showWithCompletionBlock:^(NSInteger dismissalButtonIndex) {
+                if (1 == dismissalButtonIndex) {
+                    ParkingRegionDetail * selectRegion = self.mostParkingLoc[indexPath.row-1];
+                    selectRegion.coreDataItem.rate = @(-1);
+                    [self.mostParkingLoc removeObject:selectRegion];
+                    [[AnaDbManager sharedInst] commit];
+                    [collectionView reloadSections:[NSIndexSet indexSetWithIndex:1]];
+                }
+            }];
+
+        } else if (realIdx < parkingLocCnt + self.bdPoiLoc.count) {
+            [self showToast:@"目前只支持删除您开车到过的位置" onDismiss:nil];
+        }
     }
-    [[BussinessDataProvider sharedInstance] putFavLocations:self.userFavLocs];
-    [collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
 }
 
 

@@ -75,4 +75,7 @@
 - (RegionGroup*) startRegionCenter:(CLLocationCoordinate2D)centerFrom toRegionCenter:(CLLocationCoordinate2D)centerTo forTrip:(TripSummary*)tripSum;
 - (WeatherInfo*) weatherInfoForTrip:(TripSummary*)tripSum;
 
+// method for debug
+- (void) recoverDeletedLocation;
+
 @end

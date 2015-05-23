@@ -345,15 +345,20 @@
 
 - (NSArray*) mostUsedParkingRegionLimit:(NSUInteger)limit
 {
+    NSMutableArray * validLoc = [NSMutableArray array];
     for (ParkingRegionDetail * parkLoc in self.parkingDetails) {
-        NSUInteger tripCnt = 0;
-        for (RegionGroup * group in parkLoc.coreDataItem.group_owner_ed) {
-            tripCnt += group.trips.count;
+        if ([parkLoc.coreDataItem.rate integerValue] != -1) {
+            [validLoc addObject:parkLoc];
+            
+            NSUInteger tripCnt = 0;
+            for (RegionGroup * group in parkLoc.coreDataItem.group_owner_ed) {
+                tripCnt += group.trips.count;
+            }
+            parkLoc.parkingCnt = tripCnt;
         }
-        parkLoc.parkingCnt = tripCnt;
     }
 
-    NSArray * sortArr = [self.parkingDetails sortedArrayUsingComparator:^NSComparisonResult(ParkingRegionDetail * obj1, ParkingRegionDetail * obj2) {
+    NSArray * sortArr = [validLoc sortedArrayUsingComparator:^NSComparisonResult(ParkingRegionDetail * obj1, ParkingRegionDetail * obj2) {
         if (obj1.parkingCnt > obj2.parkingCnt) {
             return (NSComparisonResult)NSOrderedAscending;
         }
@@ -622,6 +627,16 @@
     }
     
     return nil;
+}
+
+- (void) recoverDeletedLocation
+{
+    for (ParkingRegionDetail * dbRegion in _parkingDetails) {
+        if (-1 == [dbRegion.coreDataItem.rate integerValue]) {
+            dbRegion.coreDataItem.rate = @(0);
+        }
+    }
+    [self commit];
 }
 
 @end

@@ -304,5 +304,11 @@
     return mostTrip;
 }
 
+- (void) recoverDeletedLocation
+{
+    [[self deviceDbMgr] recoverDeletedLocation];
+    [[self userDbMgr] recoverDeletedLocation];
+}
+
 @end
 

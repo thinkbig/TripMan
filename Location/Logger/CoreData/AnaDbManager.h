@@ -45,4 +45,8 @@
 - (TripSummary*) tripMostDuringForMonthSum:(MonthSummary*)monthSum;
 - (TripSummary*) tripMostJamDuringForMonthSum:(MonthSummary*)monthSum;
 
+// method for debug
+- (void) recoverDeletedLocation;
+
+
 @end

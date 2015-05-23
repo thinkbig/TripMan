@@ -41,6 +41,12 @@
 
 // ------------------------------------------------
 
+@interface RZCollectionTableViewCell ()
+
+@property (nonatomic, strong) UIView * clipView;
+
+@end
+
 @implementation RZCollectionTableViewCell
 
 - (id)initWithFrame:(CGRect)frame
@@ -72,18 +78,34 @@
     [self setRzEditing:NO animated:NO];
 }
 
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    self.editingButtonsHostView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight;
+    CGSize contentSz = self.contentView.bounds.size;
+    CGFloat targetTranslationX = self.swipeableContentHostView.transform.tx;
+    self.clipView.frame = CGRectMake(contentSz.width+targetTranslationX, 0, -targetTranslationX, contentSz.height);
+}
+
 #pragma mark - Config
 
 - (void)createHostViews
 {
+    self.clipView = [[UIView alloc] initWithFrame:self.contentView.bounds];
+    self.clipView.backgroundColor = [UIColor clearColor];
+    self.clipView.clipsToBounds = YES;
+    self.clipView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    [self.contentView addSubview:self.clipView];
+    
     UIView *editingButtonView = [[UIView alloc] initWithFrame:self.contentView.bounds];
-    editingButtonView.backgroundColor  = self.backgroundColor;
+    editingButtonView.backgroundColor  = [UIColor clearColor];
     editingButtonView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    [self.contentView addSubview:editingButtonView];
+    [self.clipView addSubview:editingButtonView];
     self.editingButtonsHostView = editingButtonView;
 
     UIView *swipeView = [[UIView alloc] initWithFrame:self.contentView.bounds];
-    swipeView.backgroundColor  = self.backgroundColor;
+    swipeView.backgroundColor  = [UIColor clearColor];
     swipeView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self.contentView addSubview:swipeView];
     self.swipeableContentHostView = swipeView;
@@ -94,7 +116,7 @@
     // move all of content view's subviews to the pannable container
     NSArray *subviews = [[self.contentView subviews] copy];
     [subviews enumerateObjectsUsingBlock:^(UIView *sv, NSUInteger idx, BOOL *stop) {
-        if ( sv != self.swipeableContentHostView && sv != self.editingButtonsHostView ) {
+        if ( sv != self.swipeableContentHostView && sv != self.clipView ) {
             [self.swipeableContentHostView addSubview:sv];
         }
     }];
@@ -288,10 +310,14 @@
                             options:UIViewAnimationOptionCurveEaseOut
                          animations:^{
             self.swipeableContentHostView.transform = CGAffineTransformMakeTranslation(stopTarget, 0);
+            CGSize contentSz = self.contentView.bounds.size;
+            self.clipView.frame = CGRectMake(contentSz.width+stopTarget, 0, -stopTarget, contentSz.height);
         } completion:nil];
     }
     else {
         self.swipeableContentHostView.transform = CGAffineTransformMakeTranslation(stopTarget, 0);
+        CGSize contentSz = self.contentView.bounds.size;
+        self.clipView.frame = CGRectMake(contentSz.width+stopTarget, 0, -stopTarget, contentSz.height);
     }
 
     [self._rz_parentCollectionTableView _rz_editingStateChangedForCell:self];
@@ -343,6 +369,8 @@
             }
 
             self.swipeableContentHostView.transform = CGAffineTransformMakeTranslation(targetTranslationX, 0);
+            CGSize contentSz = self.contentView.bounds.size;
+            self.clipView.frame = CGRectMake(contentSz.width+targetTranslationX, 0, -targetTranslationX, contentSz.height);
         }
             break;
 
@@ -366,14 +394,14 @@
 {
     BOOL shouldBegin = NO;
     if ( gestureRecognizer == self.panGesture ) {
-        return YES;
-//        UIPanGestureRecognizer *pan = (UIPanGestureRecognizer *)gestureRecognizer;
-//        CGPoint                vel  = [pan velocityInView:self];
-//        // if it's more X than y
-//        if ( fabsf(vel.x) > fabsf(vel.y) ) {
-//            // if it's more left than right
-//            shouldBegin = ( vel.x < 0 );
-//        }
+//        return YES;
+        UIPanGestureRecognizer *pan = (UIPanGestureRecognizer *)gestureRecognizer;
+        CGPoint                vel  = [pan velocityInView:self];
+        // if it's more X than y
+        if ( fabsf(vel.x) > fabsf(vel.y) ) {
+            // if it's more left than right
+            shouldBegin = ( vel.x < 0 );
+        }
     }
     else if ( [super respondsToSelector:@selector(gestureRecognizerShouldBegin:)] ) {
         shouldBegin = [super gestureRecognizerShouldBegin:gestureRecognizer];

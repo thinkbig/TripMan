@@ -46,7 +46,7 @@
 
 /////////////////////////////////////////////////////////////////////////////////
 
-@interface DriveSuggestPOICell : UICollectionViewCell
+@interface DriveSuggestPOICell : RZCollectionTableViewCell
 
 @property (weak, nonatomic) IBOutlet UIImageView *iconStatusImage;
 @property (weak, nonatomic) IBOutlet UIImageView *iconImage;

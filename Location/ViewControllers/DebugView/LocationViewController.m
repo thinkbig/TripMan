@@ -171,8 +171,8 @@ typedef NS_ENUM(NSUInteger, eDebugActionType) {
         } else if (eDebugActionRevertDelete == indexPath.row) {
             cell = [tableView dequeueReusableCellWithIdentifier:@"DebugDetailCellId"];
             cell.accessoryType = UITableViewCellAccessoryNone;
-            cell.textLabel.text = @"恢复所有删除的旅程";
-            cell.detailTextLabel.text = @"恢复用户手工删除的本地旅程";
+            cell.textLabel.text = @"恢复所有删除的旅程和地点";
+            cell.detailTextLabel.text = @"恢复用户手工删除的本地旅程，以及目的地";
         } else if (eDebugActionAnalyzeAllTrip == indexPath.row) {
             cell = [tableView dequeueReusableCellWithIdentifier:@"DebugDetailCellId"];
             cell.accessoryType = UITableViewCellAccessoryNone;
@@ -241,7 +241,7 @@ typedef NS_ENUM(NSUInteger, eDebugActionType) {
             LogFileListViewController * logListVC = [self.storyboard instantiateViewControllerWithIdentifier:@"LogDisplayList"];
             [self.navigationController pushViewController:logListVC animated:YES];
         } else if (eDebugActionResetHintFlag == indexPath.row) {
-            [[CTConfigProvider sharedInstance] resetAllHintKey];;
+            [[CTConfigProvider sharedInstance] resetAllHintKey];
             [self showToast:@"重置成功" onDismiss:nil];
         } else if (eDebugActionSwitchServer == indexPath.row) {
             CTConfigProvider * configProvider = [CTConfigProvider sharedInstance];
@@ -264,7 +264,7 @@ typedef NS_ENUM(NSUInteger, eDebugActionType) {
             for (TripSummary * sum in arr) {
                 sum.is_valid = @YES;
             }
-            [[AnaDbManager sharedInst] commit];
+            [[AnaDbManager sharedInst] recoverDeletedLocation];
             [self showToast:@"恢复完成！" onDismiss:nil];
         } else if (eDebugActionAnalyzeAllTrip == indexPath.row) {
             [self showLoading];
