@@ -12,7 +12,7 @@
 
 - (NSString*)coor2String:(CLLocationCoordinate2D)coor
 {
-    return [NSString stringWithFormat:@"%f,%f", coor.longitude, coor.latitude];
+    return [NSString stringWithFormat:@"%.6f,%.6f", coor.longitude, coor.latitude];
 }
 
 - (NSString *)getPath

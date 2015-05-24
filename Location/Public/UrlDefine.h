@@ -11,7 +11,7 @@
 
 #import "CTConfigProvider.h"
 
-#define kChetuBaseUrl         [CTConfigProvider sharedInstance].currentServer
+//#define kChetuBaseUrl         [CTConfigProvider sharedInstance].currentServer
 
 //#define kChetuBaseUrl       @"http://121.40.193.34:80/"    // prod windows
 //#define kChetuBaseUrl       @"http://115.29.200.94:9000/"      // prod linux1
@@ -19,7 +19,7 @@
 
 //#define kChetuBaseUrl       @"http://115.29.200.94:80/"      // prod load banlance
 
-//#define kChetuBaseUrl       @"http://localhost:8000/"     //local
+#define kChetuBaseUrl       @"http://localhost:8000/"     //local
 //#define kChetuBaseUrl       @"http://192.168.1.105:8000/"    //local ip
 
 

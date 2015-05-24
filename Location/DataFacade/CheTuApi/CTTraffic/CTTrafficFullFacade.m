@@ -22,8 +22,8 @@
 
 - (NSDictionary*)requestParam {
     NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithDictionary:
-                                  @{@"from": [NSString stringWithFormat:@"%f,%f", self.fromCoorBaidu.longitude, self.fromCoorBaidu.latitude],
-                                    @"to": [NSString stringWithFormat:@"%f,%f", self.toCoorBaidu.longitude, self.toCoorBaidu.latitude]}];
+                                  @{@"from": [self coor2String:self.fromCoorBaidu],
+                                    @"to": [self coor2String:self.toCoorBaidu]}];
     if (self.fromParkingId && self.toParkingId) {
         dict[@"fromId"] = self.fromParkingId;
         dict[@"toId"] = self.toParkingId;
