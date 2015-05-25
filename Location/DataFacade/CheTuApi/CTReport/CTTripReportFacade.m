@@ -17,16 +17,16 @@
 - (NSString *)getPath
 {
     NSMutableString * path = [NSMutableString stringWithString:@"trip/detail"];
-
-    NSString * sep = @"?";
+    
+    NSDictionary * plistDict = [[NSBundle mainBundle] infoDictionary];
+    [path appendFormat:@"?version=%@", plistDict[@"CFBundleVersion"]];
+    
     NSString * tid = self.sum.trip_id;
     if (tid) {
-        [path appendFormat:@"%@tid=%@", sep, tid];
-        sep = @"&";
+        [path appendFormat:@"&tid=%@", tid];
     }
     if (self.force) {
-        [path appendFormat:@"%@force=1", sep];
-        //sep = @"&";
+        [path appendFormat:@"&force=1"];
     }
     return path;
 }

@@ -50,7 +50,7 @@
         self.jamCntLabel.font = [UIFont boldSystemFontOfSize:11];
         self.jamCntLabel.textColor = COLOR_UNIT_GRAY;
         self.jamDuringLabel.attributedText = [NSAttributedString stringWithNumber:@"- -" font:DigitalFontSize(24) color:[UIColor blackColor] andUnit:@"min" font:DigitalFontSize(14) color:[UIColor blackColor]];
-    } else if (dist > 500) {
+    } else if (dist > 800) {
         ParkingRegionDetail * startDetail = [[AnaDbManager deviceDb] parkingDetailForCoordinate:mLoc.coordinate minDist:500];
         CTTrafficAbstractFacade * facade = [[CTTrafficAbstractFacade alloc] init];
         facade.fromCoorBaidu = [GeoTransformer earth2Baidu:mLoc.coordinate];

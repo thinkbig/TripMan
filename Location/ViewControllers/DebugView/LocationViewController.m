@@ -36,6 +36,7 @@ typedef NS_ENUM(NSUInteger, eDebugActionType) {
     eDebugActionForceUpload,
     eDebugActionShowDebugInfo,
     eDebugActionEnableFileLog,
+    eDebugActionEnableNonWifiReport,
     eDebugActionCount
 };
 
@@ -78,6 +79,12 @@ typedef NS_ENUM(NSUInteger, eDebugActionType) {
             [[GPSLogger sharedLogger] startFileLogger];
         } else {
             [[GPSLogger sharedLogger] stopFileLogger];
+        }
+    } else if (cellSwitch.tag == 100+eDebugActionEnableNonWifiReport) {
+        if (cellSwitch.isOn) {
+            [DataReporter sharedInst].onlyWifiReport = NO;
+        } else {
+            [DataReporter sharedInst].onlyWifiReport = YES;
         }
     }
 }
@@ -207,7 +214,19 @@ typedef NS_ENUM(NSUInteger, eDebugActionType) {
             [realCell.cellSwitch addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
             realCell.cellSwitch.tag = indexPath.section * 100 + indexPath.row;
             cell = realCell;
+        } else if (eDebugActionEnableNonWifiReport == indexPath.row) {
+            DebugTableCell * realCell = [tableView dequeueReusableCellWithIdentifier:@"DebugTableCellId"];
+            realCell.mainLabel.text = @"非wifi下也上报（流量大坑）";
+            if ([DataReporter sharedInst].onlyWifiReport) {
+                realCell.cellSwitch.on = NO;
+            } else {
+                realCell.cellSwitch.on = YES;
+            }
+            [realCell.cellSwitch addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
+            realCell.cellSwitch.tag = indexPath.section * 100 + indexPath.row;
+            cell = realCell;
         }
+
     }
     cell.tag = indexPath.section * 100 + indexPath.row;
     

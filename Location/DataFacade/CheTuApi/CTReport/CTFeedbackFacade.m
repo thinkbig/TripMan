@@ -16,7 +16,10 @@
 
 - (NSString *)getPath
 {
-    return @"user/feedback";
+    NSDictionary * plistDict = [[NSBundle mainBundle] infoDictionary];
+    NSString * path = [NSString stringWithFormat:@"user/feedback?version=%@", plistDict[@"CFBundleVersion"]];
+    
+    return path;
 }
 
 - (eSerializationType)requestSerializationType {

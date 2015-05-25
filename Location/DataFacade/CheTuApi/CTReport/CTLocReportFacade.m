@@ -18,15 +18,15 @@
 {
     NSMutableString * path = [NSMutableString stringWithString:@"parking/detail"];
     
-    NSString * sep = @"?";
+    NSDictionary * plistDict = [[NSBundle mainBundle] infoDictionary];
+    [path appendFormat:@"?version=%@", plistDict[@"CFBundleVersion"]];
+    
     NSString * pid = self.aimRegion.parking_id;
     if (pid) {
-        [path appendFormat:@"%@pid=%@", sep, pid];
-        sep = @"&";
+        [path appendFormat:@"&pid=%@", pid];
     }
     if (self.force) {
-        [path appendFormat:@"%@force=1", sep];
-        //sep = @"&";
+        [path appendFormat:@"&force=1"];
     }
     return path;
 }

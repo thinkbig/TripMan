@@ -18,15 +18,15 @@
 {
     NSMutableString * path = [NSMutableString stringWithString:@"trip/realtime"];
     
-    NSString * sep = @"?";
+    NSDictionary * plistDict = [[NSBundle mainBundle] infoDictionary];
+    [path appendFormat:@"?version=%@", plistDict[@"CFBundleVersion"]];
+    
     NSString * jam_id = self.reportModel.jam_id;
     if (jam_id) {
-        [path appendFormat:@"%@jam_id=%@", sep, jam_id];
-        sep = @"&";
+        [path appendFormat:@"&jam_id=%@", jam_id];
     }
     if (self.ignore) {
-        [path appendFormat:@"%@ignore=1", sep];
-        //sep = @"&";
+        [path appendFormat:@"&ignore=1"];
     }
     return path;
 }

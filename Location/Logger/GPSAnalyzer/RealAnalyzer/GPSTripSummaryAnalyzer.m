@@ -132,11 +132,11 @@
             GPSLogItem * item = filteredRoute[i];
             GPSLogItem * itemNext = filteredRoute[i+1];
             CGFloat dist2Last = [item distanceFrom:lastItem];
-            if (dist2Last > 150) {
+            if (dist2Last > 60) {
                 CGFloat dist2Next = [item distanceFrom:itemNext];
                 CGFloat last2Next = [lastItem distanceFrom:itemNext];
                 if (dist2Next < 150) {
-                    if (dist2Last+dist2Next > last2Next*1.1) {
+                    if (dist2Last+dist2Next > last2Next*1.05) {
                         [mergedRoute addObject:item];
                         lastItem = item;
                     }

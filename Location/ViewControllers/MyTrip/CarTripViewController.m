@@ -406,6 +406,9 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
 
 - (void)rebuildContent:(BOOL)force
 {
+    if (self.isLoading) {
+        return;
+    }
     if (0 == _currentIdx)
     {
         if (!force && ![self.currentDate isToday]) {

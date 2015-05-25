@@ -16,7 +16,8 @@
 
 - (NSString *)getPath
 {
-    NSString * path = [NSString stringWithFormat:@"trip/raw?tid=%@", self.sum.trip_id];
+    NSDictionary * plistDict = [[NSBundle mainBundle] infoDictionary];
+    NSString * path = [NSString stringWithFormat:@"trip/raw?tid=%@&version=%@", self.sum.trip_id, plistDict[@"CFBundleVersion"]];
     return path;
 }
 
