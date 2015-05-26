@@ -125,7 +125,7 @@
 - (BOOL) nearParkingLoc:(NSInteger)parkCnt
 {
     if (self.lastItem) {
-        ParkingRegionDetail * detail = [[AnaDbManager sharedInst] parkingDetailForCoordinate:[self.lastItem coordinate] minDist:500];
+        ParkingRegionDetail * detail = [[AnaDbManager sharedInst] parkingDetailForCoordinate:[self.lastItem coordinate] minDist:cRegionRadiusThreshold];
         return (detail.parkingCnt < parkCnt);
     }
     return NO;

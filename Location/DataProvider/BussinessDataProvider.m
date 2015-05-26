@@ -313,7 +313,7 @@ static BussinessDataProvider * _sharedProvider = nil;
             }
         }
         // 看最远的点是不是就在终点附近
-        if (nil == maxLoc || [maxLoc distanceFromLocation:lastLoc] < 500) {
+        if (nil == maxLoc || [maxLoc distanceFromLocation:lastLoc] < cRegionRadiusThreshold) {
             maxLoc = [GToolUtil dictToLocation:ptArr[ptArr.count/2]];
         }
         
@@ -446,7 +446,7 @@ static BussinessDataProvider * _sharedProvider = nil;
         NSMutableArray * traveledTrips = [NSMutableArray array];
         NSMutableArray * otherRegions = [NSMutableArray arrayWithArray:filterRegions];
         
-        ParkingRegionDetail * stDetail = [[AnaDbManager sharedInst] parkingDetailForCoordinate:curLoc.coordinate minDist:500];
+        ParkingRegionDetail * stDetail = [[AnaDbManager sharedInst] parkingDetailForCoordinate:curLoc.coordinate minDist:cRegionRadiusThreshold];
         if (stDetail) {
             NSArray * groups = [stDetail.coreDataItem.group_owner_st allObjects];
             for (RegionGroup * group in groups) {
@@ -662,7 +662,7 @@ static BussinessDataProvider * _sharedProvider = nil;
         if (region) {
             [favLoc updateWithParkingRegion:region];
         } else {
-            ParkingRegionDetail * detail = [[AnaDbManager sharedInst] parkingDetailForCoordinate:favLoc.coordinate minDist:500];
+            ParkingRegionDetail * detail = [[AnaDbManager sharedInst] parkingDetailForCoordinate:favLoc.coordinate minDist:cRegionRadiusThreshold];
             if (detail) {
                 [favLoc updateWithParkingRegion:detail.coreDataItem];
             }

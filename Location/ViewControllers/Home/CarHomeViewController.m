@@ -92,7 +92,7 @@
     {
         self.lastRecordLoc = curLoc;
         if (self.bestGuessDest) {
-            ParkingRegionDetail * parkingDetail = [[AnaDbManager sharedInst] parkingDetailForCoordinate:curLoc.coordinate minDist:500];
+            ParkingRegionDetail * parkingDetail = [[AnaDbManager sharedInst] parkingDetailForCoordinate:curLoc.coordinate minDist:cRegionRadiusThreshold];
             CTTrafficAbstractFacade * facade = [[CTTrafficAbstractFacade alloc] init];
             facade.fromCoorBaidu = [GeoTransformer earth2Baidu:curLoc.coordinate];
             facade.toCoorBaidu = [GeoTransformer earth2Baidu:self.bestGuessDest.centerCoordinate];
@@ -164,7 +164,7 @@
 {
     if (self.lastRecordLoc) {
         CLLocation * curLoc = [BussinessDataProvider lastGoodLocation];
-        if ([curLoc distanceFromLocation:self.lastRecordLoc] < 500) {
+        if ([curLoc distanceFromLocation:self.lastRecordLoc] < cRegionRadiusThreshold) {
             return;
         }
     }

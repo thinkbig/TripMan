@@ -208,7 +208,7 @@
 
 - (ParkingRegion*) addParkingLocation:(CLLocationCoordinate2D)coordinate modifyRegionCenter:(BOOL)ifModify
 {
-    ParkingRegionDetail * existDetail = [self parkingDetailForCoordinate:coordinate minDist:500];
+    ParkingRegionDetail * existDetail = [self parkingDetailForCoordinate:coordinate minDist:cRegionRadiusThreshold];
     if (existDetail) {
         if (ifModify) {
             CLLocationCoordinate2D newCoor = existDetail.region.center;

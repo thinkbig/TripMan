@@ -511,7 +511,7 @@ typedef enum
         NSInteger exitCnt = [self.regionExitRecorder[region.identifier] integerValue];
         if (exitCnt > 0) {
             float theRadius = region.radius + 50;
-            if (theRadius < 500) {
+            if (theRadius < cRegionRadiusThreshold) {
                 CLLocationManager *locationManager = self.locationManager;
                 CLCircularRegion* theRegion = [[CLCircularRegion alloc] initWithCenter:region.center radius:theRadius identifier:region.identifier];
                 [locationManager startMonitoringForRegion:theRegion];
@@ -767,10 +767,10 @@ typedef enum
     if (forceSet || (loc && CLLocationCoordinate2DIsValid(loc.coordinate) && loc.speed <= cInsStationarySpeed))
     {
         CLLocation * lastLoc = [[CLLocation alloc] initWithLatitude:_lastStillRegion.center.latitude longitude:_lastStillRegion.center.longitude];
-        if (forceSet || nil == _lastStillRegion || [lastLoc distanceFromLocation:loc] > 2*cReagionRadius)
+        if (forceSet || nil == _lastStillRegion || [lastLoc distanceFromLocation:loc] > cStillReagionRadius*1.1)
         {
             DDLogWarn(@"&&&&&&&&&&&&&& add still region monitor for location(%@) = %@", REGION_ID_LAST_STILL, loc);
-            result = [self registerNotificationForLocation:loc withRadius:@(cReagionRadius*1.8) assignIdentifier:REGION_ID_LAST_STILL group:REGION_GROUP_LAST_STILL];
+            result = [self registerNotificationForLocation:loc withRadius:@(cStillReagionRadius) assignIdentifier:REGION_ID_LAST_STILL group:REGION_GROUP_LAST_STILL];
         }
     }
     
@@ -782,7 +782,7 @@ typedef enum
     if (loc && CLLocationCoordinate2DIsValid(loc.coordinate))
     {
         DDLogWarn(@"&&&&&&&&&&&&&& add parking region monitor for location(%@) = %@", REGION_ID_LAST_PARKING, loc);
-        [self registerNotificationForLocation:loc withRadius:@(cReagionRadius*1.5) assignIdentifier:REGION_ID_LAST_PARKING group:REGION_GROUP_LAST_PARKING];
+        [self registerNotificationForLocation:loc withRadius:@(cParkReagionRadius) assignIdentifier:REGION_ID_LAST_PARKING group:REGION_GROUP_LAST_PARKING];
         
         NSInteger idCnt = 1;
         TripSummary * lastTrip = [[AnaDbManager sharedInst] lastTrip];
@@ -790,8 +790,8 @@ typedef enum
         
         if (lastSt) {
             CLLocation * lastStLoc = [[CLLocation alloc] initWithLatitude:[lastSt.center_lat doubleValue] longitude:[lastSt.center_lon doubleValue]];
-            if ([lastStLoc distanceFromLocation:loc] > 500) {
-                [self registerNotificationForLocation:lastStLoc withRadius:@(2*cReagionRadius) assignIdentifier:REGION_ID_MOST_PARKING(idCnt++) group:REGION_GROUP_MOST_STAY];
+            if ([lastStLoc distanceFromLocation:loc] > cRegionRadiusThreshold) {
+                [self registerNotificationForLocation:lastStLoc withRadius:@(cHistoryReagionRadius) assignIdentifier:REGION_ID_MOST_PARKING(idCnt++) group:REGION_GROUP_MOST_STAY];
             }
         }
         
@@ -799,8 +799,8 @@ typedef enum
         for (ParkingRegionDetail * region in mostUsedLoc) {
             if (region.coreDataItem != lastSt) {
                 CLLocation * curLoc = [[CLLocation alloc] initWithLatitude:region.region.center.latitude longitude:region.region.center.longitude];
-                if ([curLoc distanceFromLocation:loc] > 500) {
-                    [self registerNotificationForLocation:curLoc withRadius:@(2*cReagionRadius) assignIdentifier:REGION_ID_MOST_PARKING(idCnt++) group:REGION_GROUP_MOST_STAY];
+                if ([curLoc distanceFromLocation:loc] > cRegionRadiusThreshold) {
+                    [self registerNotificationForLocation:curLoc withRadius:@(cHistoryReagionRadius) assignIdentifier:REGION_ID_MOST_PARKING(idCnt++) group:REGION_GROUP_MOST_STAY];
                 }
             }
         }

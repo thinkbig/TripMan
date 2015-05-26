@@ -34,4 +34,20 @@
     return zoneModels;
 }
 
+// cache override
+
+- (NSString*) keyByUrl:(NSString*)url resPath:(NSString*)path andParam:(NSDictionary*)param
+{
+    // 经纬度，一度大约为80~111km，所有取近似地点的时候，取小数点后3位，也就是百米作为误差
+    return [NSString stringWithFormat:@"jamzone-%ld_%ld-%ld_%ld", lround(self.geoBound.minLon*1000), lround(self.geoBound.maxLon*1000), lround(self.geoBound.minLat*1000), lround(self.geoBound.maxLat*1000)];
+}
+
+- (eCacheStrategy) cacheStrategy {
+    return eCacheStrategyMemory;
+}
+
+- (NSTimeInterval) expiredDuring {
+    return 60*3;
+}
+
 @end

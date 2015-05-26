@@ -313,7 +313,7 @@
         if (indexPath.row < self.userFavLocs.count) {
             CTFavLocation * locFav = self.userFavLocs[indexPath.row];
             CGFloat dist = [locFav distanceFromLoc:curLoc];
-            if (dist < 800) {
+            if (dist < cIngoreNavThreshold) {
                 [self showToast:@"当前就在目标附近" onDismiss:nil];
             } else {
                 CTRoute * route = [CTRoute new];

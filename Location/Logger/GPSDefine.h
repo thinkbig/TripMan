@@ -66,9 +66,19 @@
 #define cTrafficJamThreshold                    (60*3)
 
 #define cStartLocErrorDist                      2000
-#define cReagionRadius                          120
 #define cParkingRegionRadius                    300
+#define cRegionRadiusThreshold                  500             // 判断是否是同一个停车地点的阈值
+#define cIngoreNavThreshold                     800             // 低于这个阈值的地点，不再求路
 #define cTrafficLightRegionRadius               150
+#define cReagionRadius                          120
+#define cParkReagionRadius                      (1.5*120)
+#define cStillReagionRadius                     (1.8*120)
+#define cHistoryReagionRadius                   (2*120)
+
+#define cRouteStepMin                           60
+#define cRouteStepEnough                        150
+#define cRouteStepMax                           (1000*10)
+#define cRouteStepAngleCoef                     1.05
 
 // public define
 

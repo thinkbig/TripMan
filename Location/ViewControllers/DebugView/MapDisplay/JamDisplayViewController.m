@@ -164,11 +164,11 @@ typedef NS_ENUM(NSUInteger, eDispMapType) {
         jamOne.title = @"route_arrow";
         [self.mapView addOverlay:jamOne];
         
-        BMKCircle * circleSt = [BMKCircle circleWithCenterCoordinate:fromCoor radius:100];
+        BMKCircle * circleSt = [BMKCircle circleWithCenterCoordinate:fromCoor radius:8];
         circleSt.title = @"start";
         [self.mapView addOverlay:circleSt];
         
-        BMKCircle * circleEd = [BMKCircle circleWithCenterCoordinate:toCoor radius:100];
+        BMKCircle * circleEd = [BMKCircle circleWithCenterCoordinate:toCoor radius:10];
         circleEd.title = @"end";
         [self.mapView addOverlay:circleEd];
     }

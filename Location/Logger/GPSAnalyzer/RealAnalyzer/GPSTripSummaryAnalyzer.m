@@ -132,11 +132,11 @@
             GPSLogItem * item = filteredRoute[i];
             GPSLogItem * itemNext = filteredRoute[i+1];
             CGFloat dist2Last = [item distanceFrom:lastItem];
-            if (dist2Last > 60) {
+            if (dist2Last > cRouteStepMin) {
                 CGFloat dist2Next = [item distanceFrom:itemNext];
                 CGFloat last2Next = [lastItem distanceFrom:itemNext];
-                if (dist2Next < 150) {
-                    if (dist2Last+dist2Next > last2Next*1.05) {
+                if (dist2Next < cRouteStepEnough) {
+                    if (dist2Last+dist2Next > last2Next*cRouteStepAngleCoef) {
                         [mergedRoute addObject:item];
                         lastItem = item;
                     }
@@ -242,7 +242,7 @@
     NSTimeInterval during = [item.timestamp timeIntervalSinceDate:self.lastItem.timestamp];
     
     CGFloat threshold = cInsTrafficJamSpeed;
-    if (distance > 500) {
+    if (distance > cRegionRadiusThreshold) {
         threshold = cAvgTrafficJamSpeed;
     }
 

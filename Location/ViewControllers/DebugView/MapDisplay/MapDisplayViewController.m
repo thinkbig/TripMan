@@ -244,10 +244,10 @@
 //    {
 //        CLLocationCoordinate2D coordsSt = CLLocationCoordinate2DMake([group.start_region.center_lat floatValue], [group.start_region.center_lon floatValue]);
 //        CLLocationCoordinate2D coordsEd = CLLocationCoordinate2DMake([group.end_region.center_lat floatValue], [group.end_region.center_lon floatValue]);
-//        MKCircle * circleSt = [MKCircle circleWithCenterCoordinate:[GeoTransformer earth2Mars:coordsSt] radius:500];
+//        MKCircle * circleSt = [MKCircle circleWithCenterCoordinate:[GeoTransformer earth2Mars:coordsSt] radius:cRegionRadiusThreshold];
 //        circleSt.title = @"parkingRegion";
 //        [self.mapView addOverlay:circleSt];
-//        MKCircle * circleEd = [MKCircle circleWithCenterCoordinate:[GeoTransformer earth2Mars:coordsEd] radius:500];
+//        MKCircle * circleEd = [MKCircle circleWithCenterCoordinate:[GeoTransformer earth2Mars:coordsEd] radius:cRegionRadiusThreshold];
 //        circleEd.title = @"parkingRegion";
 //        [self.mapView addOverlay:circleEd];
 //    }

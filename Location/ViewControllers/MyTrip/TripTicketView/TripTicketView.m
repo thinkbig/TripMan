@@ -51,7 +51,7 @@
         self.toDate.text = [formatter stringFromDate:sum.end_date];
     } else if (sum) {
         CLLocation * curLoc = [BussinessDataProvider lastGoodLocation];
-        ParkingRegionDetail * endLoc = [[AnaDbManager sharedInst] parkingDetailForCoordinate:curLoc.coordinate minDist:500];
+        ParkingRegionDetail * endLoc = [[AnaDbManager sharedInst] parkingDetailForCoordinate:curLoc.coordinate minDist:cRegionRadiusThreshold];
         if ([endLoc.coreDataItem.is_analyzed boolValue]) {
             self.toPoi.text = [endLoc.coreDataItem nameWithDefault:@"当前位置"];
             self.toStreet.text = @"可能在行驶中";

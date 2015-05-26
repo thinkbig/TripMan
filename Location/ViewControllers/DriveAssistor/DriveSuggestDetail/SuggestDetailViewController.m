@@ -277,7 +277,7 @@
         if (self.route.steps.count == 0)
         {
             CLLocation * mLoc = [BussinessDataProvider lastGoodLocation];
-            ParkingRegionDetail * startDetail = [[AnaDbManager deviceDb] parkingDetailForCoordinate:mLoc.coordinate minDist:500];
+            ParkingRegionDetail * startDetail = [[AnaDbManager deviceDb] parkingDetailForCoordinate:mLoc.coordinate minDist:cRegionRadiusThreshold];
             
             [self showLoading];
             CTTrafficFullFacade * facade = [[CTTrafficFullFacade alloc] init];

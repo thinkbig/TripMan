@@ -103,7 +103,7 @@
         NSArray * deviceParkings = [self.deviceDbMgr allParkingDetails];
         for (ParkingRegionDetail * detail in deviceParkings) {
             if ([detail.coreDataItem.is_temp boolValue] == NO) {
-                ParkingRegionDetail * duplicateDetail = [userDb parkingDetailForCoordinate:detail.region.center minDist:500];
+                ParkingRegionDetail * duplicateDetail = [userDb parkingDetailForCoordinate:detail.region.center minDist:cRegionRadiusThreshold];
                 if (duplicateDetail) {
                     [detail copyInfoFromAnother:duplicateDetail];
                 }
