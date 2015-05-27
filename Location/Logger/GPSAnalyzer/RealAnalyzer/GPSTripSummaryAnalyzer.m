@@ -128,21 +128,36 @@
         GPSLogItem * lastItem = filteredRoute[0];
         NSMutableArray * mergedRoute = [NSMutableArray arrayWithObject:lastItem];
         
+        NSInteger lowQualityCnt = 0;
         for (int i = 1; i < filteredRoute.count-1; i++) {
             GPSLogItem * item = filteredRoute[i];
             GPSLogItem * itemNext = filteredRoute[i+1];
             CGFloat dist2Last = [item distanceFrom:lastItem];
+            BOOL shouldAddItem = NO;
             if (dist2Last > cRouteStepMin) {
                 CGFloat dist2Next = [item distanceFrom:itemNext];
                 CGFloat last2Next = [lastItem distanceFrom:itemNext];
                 if (dist2Next < cRouteStepEnough) {
                     if (dist2Last+dist2Next > last2Next*cRouteStepAngleCoef) {
-                        [mergedRoute addObject:item];
-                        lastItem = item;
+                        shouldAddItem = YES;
                     }
                 } else {
-                    [mergedRoute addObject:item];
-                    lastItem = item;
+                    shouldAddItem = YES;
+                }
+            }
+            
+            if (shouldAddItem) {
+                [mergedRoute addObject:item];
+                lastItem = item;
+                item.quality = lowQualityCnt > 3 ? -1 : 1;
+                lowQualityCnt = 0;
+            } else if (item.stepAngle > 60) {
+                if (item.stepAngle > 120) {
+                    lowQualityCnt += 3;
+                } else if (item.stepAngle > 80) {
+                    lowQualityCnt += 2;
+                } else {
+                    lowQualityCnt += 1;
                 }
             }
         }
@@ -208,6 +223,9 @@
                 step.jams = [curJams copy];
             }
             [step calculateQuality:accuArr];
+            if (curItem.quality < 0) {
+                step.quality = @(-1);
+            }
             
             lastItem = curItem;
             

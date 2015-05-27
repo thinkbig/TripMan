@@ -86,6 +86,7 @@
             CGFloat angle = [GPSOffTimeFilter checkPointAngle:pt1 antPt:pt2 antPt:pt3];
             if (angle > 12 || [objLast distanceFrom:objNext] > cRouteStepMax) {
                 [route addObject:obj];
+                obj.stepAngle = angle;
             } else {
                 [route addObject:objNext];
                 i++;

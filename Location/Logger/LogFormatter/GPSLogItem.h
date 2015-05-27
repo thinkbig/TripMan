@@ -30,8 +30,10 @@
 @property (nonatomic, strong) NSNumber   *          accelerationZ;
 
 // helper property
-@property (nonatomic) float angle;      // 和上一个点的矢量方向
-@property (nonatomic) float angleDiff;  // 和上一个点矢量方向的差
+@property (nonatomic) float angle;          // 和上一个点的矢量方向
+@property (nonatomic) float angleDiff;      // 和上一个点矢量方向的差
+@property (nonatomic) float stepAngle;      // 计算玩step以后，相邻（3个）step的夹角
+@property (nonatomic) float quality;        // 上一个点到当前点的step，是否是直线（非直线 = -1）
 
 - (id)initWithLogMessage:(DDLogMessage *)logMessage;
 - (id)initWithDBResultSet:(FMResultSet*)resultSet;
