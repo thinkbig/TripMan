@@ -90,7 +90,7 @@
             if (self.delegate && [self.delegate respondsToSelector:@selector(tabBar:clickItemAtIndex:currentIndex:)]) {
                 [self.delegate tabBar:self clickItemAtIndex:idx currentIndex:_selectedIndex];
             }
-            [self setSelectedIndex:idx animed:YES];
+            [self setSelectedIndex:idx animed:NO];
         } forControlEvents:UIControlEventTouchUpInside];
         
         if (idx == self.selectedIndex) {

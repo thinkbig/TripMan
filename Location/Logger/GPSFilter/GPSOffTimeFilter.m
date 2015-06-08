@@ -79,12 +79,24 @@
             GPSLogItem * obj = rawRoute[i];
             GPSLogItem * objNext = rawRoute[i+1];
             
+            CGFloat dist2Last = [obj distanceFrom:objLast];
+            if (dist2Last < cRouteStepMerge) {
+                [route addObject:objNext];
+                i++;
+                continue;
+            }
+            
             CGPoint pt1 = [GPSOffTimeFilter item2Point:objLast];
             CGPoint pt2 = [GPSOffTimeFilter item2Point:obj];
             CGPoint pt3 = [GPSOffTimeFilter item2Point:objNext];
-            
             CGFloat angle = [GPSOffTimeFilter checkPointAngle:pt1 antPt:pt2 antPt:pt3];
-            if (angle > 12 || [objLast distanceFrom:objNext] > cRouteStepMax) {
+            
+            BOOL shouldAddItem = NO;
+            if (angle > 12 || dist2Last > cRouteStepMax) {
+                shouldAddItem = YES;
+            }
+            
+            if (shouldAddItem) {
                 [route addObject:obj];
                 obj.stepAngle = angle;
             } else {

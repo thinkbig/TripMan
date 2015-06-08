@@ -50,7 +50,7 @@
     
     [self.tabBar setTabShadowImage:[UIImage imageNamed:@"shadowtab"]];
     self.tabBar.backgroundImageView.image = [UIImage imageNamed:@"tabbar"];
-    [self setSelectedIndex:0 animed:YES];
+    [self setSelectedIndex:0 animed:NO];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationEnterForeground) name:@"kLocationAuthrizeStatChange" object:nil];

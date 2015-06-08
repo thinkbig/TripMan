@@ -134,14 +134,11 @@
             GPSLogItem * itemNext = filteredRoute[i+1];
             CGFloat dist2Last = [item distanceFrom:lastItem];
             BOOL shouldAddItem = NO;
-            if (dist2Last > cRouteStepMin) {
+            if (fabs(item.stepAngle) > 30 || dist2Last > cRouteStepMax) {
+                shouldAddItem = YES;
+            } else if (fabs(item.stepAngle) > 18) {
                 CGFloat dist2Next = [item distanceFrom:itemNext];
-                CGFloat last2Next = [lastItem distanceFrom:itemNext];
-                if (dist2Next < cRouteStepEnough) {
-                    if (dist2Last+dist2Next > last2Next*cRouteStepAngleCoef) {
-                        shouldAddItem = YES;
-                    }
-                } else {
+                if (dist2Last > cRouteStepMin && dist2Next > cRouteStepMin) {
                     shouldAddItem = YES;
                 }
             }

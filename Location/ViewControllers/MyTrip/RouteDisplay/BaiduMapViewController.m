@@ -189,7 +189,7 @@
     {
         RouteOverlay * routeOverlay = (RouteOverlay*)overlay;
         RouteOverlayView * routeView = [[RouteOverlayView alloc] initWithOverlay:routeOverlay];
-        routeView.lineWidth = 10;
+        routeView.lineWidth = 6;
         routeView.lineDash = [routeOverlay.subtitle isEqualToString:@"dash"] ? YES : NO;
         return routeView;
     }

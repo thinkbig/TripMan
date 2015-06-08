@@ -7,6 +7,7 @@
 //
 
 #import "RouteOverlayView.h"
+#import "DeviceUtil.h"
 
 @implementation RouteOverlayView
 
@@ -30,6 +31,15 @@
     if (self) {
     }
     return self;
+}
+
+- (void)setLineWidth:(CGFloat)lineWidth
+{
+    Hardware hw = [DeviceUtil hardware];
+    if (hw == IPHONE_6_PLUS) {
+        lineWidth *= 0.6;
+    }
+    [super setLineWidth:lineWidth];
 }
 
 - (void)glRender

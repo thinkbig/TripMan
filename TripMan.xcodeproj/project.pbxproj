@@ -68,6 +68,7 @@
 		A3326B281A2DFAA800C9F1C9 /* GToolUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = A3326B271A2DFAA800C9F1C9 /* GToolUtil.m */; };
 		A33544111A1F1C3C0023815B /* ZBNSearchDisplayController.m in Sources */ = {isa = PBXBuildFile; fileRef = A33544101A1F1C3C0023815B /* ZBNSearchDisplayController.m */; };
 		A33544141A23759F0023815B /* SuggestDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A33544131A23759F0023815B /* SuggestDetailCell.m */; };
+		A3388E551B25D9780044882C /* DeviceUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = A3388E541B25D9780044882C /* DeviceUtil.m */; };
 		A340E8F419EEC7610014C14B /* GPSEndTraceAnalyzer.m in Sources */ = {isa = PBXBuildFile; fileRef = A340E8F319EEC7610014C14B /* GPSEndTraceAnalyzer.m */; };
 		A342849B19C42081002DB0FD /* GPSLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = A342849A19C42081002DB0FD /* GPSLogger.m */; };
 		A34284A019C6770A002DB0FD /* GPSFileLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = A342849F19C6770A002DB0FD /* GPSFileLogFormatter.m */; };
@@ -406,6 +407,8 @@
 		A33544101A1F1C3C0023815B /* ZBNSearchDisplayController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZBNSearchDisplayController.m; sourceTree = "<group>"; };
 		A33544121A23759F0023815B /* SuggestDetailCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SuggestDetailCell.h; sourceTree = "<group>"; };
 		A33544131A23759F0023815B /* SuggestDetailCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SuggestDetailCell.m; sourceTree = "<group>"; };
+		A3388E531B25D9780044882C /* DeviceUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceUtil.h; sourceTree = "<group>"; };
+		A3388E541B25D9780044882C /* DeviceUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceUtil.m; sourceTree = "<group>"; };
 		A340E8F219EEC7610014C14B /* GPSEndTraceAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPSEndTraceAnalyzer.h; sourceTree = "<group>"; };
 		A340E8F319EEC7610014C14B /* GPSEndTraceAnalyzer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPSEndTraceAnalyzer.m; sourceTree = "<group>"; };
 		A342849919C42081002DB0FD /* GPSLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPSLogger.h; sourceTree = "<group>"; };
@@ -1439,6 +1442,8 @@
 				A34F01331A051EBD00F58C17 /* Debug */,
 				A3326B261A2DFAA800C9F1C9 /* GToolUtil.h */,
 				A3326B271A2DFAA800C9F1C9 /* GToolUtil.m */,
+				A3388E531B25D9780044882C /* DeviceUtil.h */,
+				A3388E541B25D9780044882C /* DeviceUtil.m */,
 				A3C454471A8B521F00D53342 /* BaiduHelper.h */,
 				A3C454481A8B522000D53342 /* BaiduHelper.m */,
 			);
@@ -2882,6 +2887,7 @@
 				A359E6121AF0736000D7FF10 /* TripSimulator.m in Sources */,
 				A35C26291A426F4B005F6658 /* NSString+RZStringFormatting.m in Sources */,
 				5C90909C18B3A66A00510153 /* main.m in Sources */,
+				A3388E551B25D9780044882C /* DeviceUtil.m in Sources */,
 				A34F011D1A04A7EF00F58C17 /* TSHttpClient.m in Sources */,
 				A3D0B4B81A2C64A80030B19E /* _MPWButton.m in Sources */,
 				A3FDD15F1A027F64007B3C65 /* TSTabBarView.m in Sources */,

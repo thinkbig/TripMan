@@ -195,7 +195,7 @@ typedef NS_ENUM(NSUInteger, eDispMapType) {
     if ([overlay isKindOfClass:[RouteOverlay class]])
     {
         RouteOverlayView * routeView = [[RouteOverlayView alloc] initWithOverlay:overlay];
-        routeView.lineWidth = 8;
+        routeView.lineWidth = 10;
         return routeView;
     }
     else if ([overlay isKindOfClass:[BMKCircle class]])

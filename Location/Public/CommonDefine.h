@@ -69,7 +69,6 @@
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 #define SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
 
-
 // debug define
 #define IS_FORCE_DRIVING             (((AppDelegate*)([UIApplication sharedApplication].delegate)).forceDriving)
 
