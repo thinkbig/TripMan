@@ -698,33 +698,35 @@ static BussinessDataProvider * _sharedProvider = nil;
     NSDate * now = [NSDate date];
     NSDictionary * plistDict = [[NSBundle mainBundle] infoDictionary];
     NSString * appVersion = [NSString stringWithFormat:@"appVersion=%@", plistDict[@"CFBundleVersion"]];
-    NSString * deviceInfo = [NSString stringWithFormat:@"name=%@,model=%@", [UIDevice currentDevice].name, gDeviceType];
+    UIDevice * curDevice = [UIDevice currentDevice];
+    NSDictionary * deviceInfo = @{@"name": curDevice.name, @"model": curDevice.model, @"osVersion": curDevice.systemVersion};
+    NSString * deviceInfoStr = [CommonFacade toJsonString:deviceInfo prettyPrint:NO];
     NSString * uid = [GToolUtil sharedInstance].userId;
     if (nil == uid) uid = @"";
     NSString * udid = [GToolUtil sharedInstance].deviceId;
     if (nil == udid) udid = @"";
     
-    DeviceHistory * device = nil;
+    DeviceHistory * deviceHis = nil;
     NSArray * history = [DeviceHistory where:nil inContext:[AnaDbManager deviceDb].tripAnalyzerContent order:@{@"created_at": @"DESC"} limit:@(1)];
     if (history.count > 0) {
-        device = history[0];
-        if (![uid isEqualToString:device.user_id] || ![udid isEqualToString:device.device_id] ||
-            ![appVersion isEqualToString:device.app_info] || [deviceInfo isEqualToString:device.device_info]) {
-            device = nil;
+        deviceHis = history[0];
+        if (![uid isEqualToString:deviceHis.user_id] || ![udid isEqualToString:deviceHis.device_id] ||
+            ![appVersion isEqualToString:deviceHis.app_info] || [deviceInfoStr isEqualToString:deviceHis.device_info]) {
+            deviceHis = nil;
         } else {
-            device.updated_at = now;
+            deviceHis.updated_at = now;
         }
     }
-    if (nil == device) {
-        device = [DeviceHistory createInContext:[AnaDbManager deviceDb].tripAnalyzerContent];
-        device.user_id = uid;
-        device.device_id = udid;
-        device.app_info = appVersion;
-        device.device_info = deviceInfo;
-        device.created_at = now;
-        device.updated_at = now;
+    if (nil == deviceHis) {
+        deviceHis = [DeviceHistory createInContext:[AnaDbManager deviceDb].tripAnalyzerContent];
+        deviceHis.user_id = uid;
+        deviceHis.device_id = udid;
+        deviceHis.app_info = appVersion;
+        deviceHis.device_info = deviceInfoStr;
+        deviceHis.created_at = now;
+        deviceHis.updated_at = now;
     }
-    [device save];
+    [deviceHis save];
 }
 
 @end

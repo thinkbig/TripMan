@@ -89,9 +89,19 @@
 
 - (void) appendGPSInfo:(GPSLogItem*)gps
 {
-    if (self.lastLogItem && [gps.timestamp timeIntervalSinceDate:self.lastLogItem.timestamp] < 0.5 && [gps.speed floatValue] < 0) {
-        // 说明是重复点，忽略改点
-        return;
+    CGFloat timeGap = -1;
+    if (self.lastLogItem && gps.timestamp) {
+        timeGap = [gps.timestamp timeIntervalSinceDate:self.lastLogItem.timestamp];
+        if (timeGap < 0.5 && [gps.speed floatValue] < 0) {
+            // 说明是重复点，忽略改点
+            return;
+        }
+        if (![self isInTrip] && timeGap > cDriveEndThreshold*0.6) {
+            _startSpeedTrace = _endSpeedTrace = 0;
+            _startSpeedTraceCnt = _endSpeedTraceCnt = 0;
+            _startSpeedTraceIdx = _endSpeedTraceIdx = _startMoveTraceIdx = 0;
+            [self.logArr removeAllObjects];
+        }
     }
     
     if (gps.timestamp)
@@ -214,7 +224,7 @@
                         CGFloat avgAngle = angleDiff/realCnt;
                         self.moveStat = (avgAngle < 60 && maxAngle >= 0) ? eMoveStatLine : (maxAngle < 0 ? eMoveStatUnknow : eMoveStatJump);
                     } else {
-                        self.moveStat = eMoveStatUnknow;
+                        //self.moveStat = eMoveStatUnknow;
                     }
                 } else {
                     self.moveStat = eMoveStatUnknow;
@@ -293,8 +303,8 @@
                 if (during > 10*60) {
                     if (self.moveStat == eMoveStatJump) {
                         stat = eMotionStatStationary;
+                        self.locChangeLogItem = gps;
                     }
-                    self.locChangeLogItem = gps;
                 }
             }
             

@@ -18,6 +18,7 @@
 #import "ActionSheetStringPicker.h"
 #import "TripSimulator.h"
 #import "CTConfigProvider.h"
+#import "NSDate+Utilities.h"
 
 @interface TicketDetailViewController () <EMHintDelegate> {
     BOOL        _mayEditName;
@@ -369,17 +370,93 @@
                 NSLog(@"traffic light cnt = %@", cnt);
             } failure:nil];
         } else if (4 == indexPath.row) {
+            GPSFMDBLogger * loggerDB = [GPSLogger sharedLogger].dbLogger;
             
             NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
             [dateFormatter setDateFormat: @"yyyy-MM-dd HH:mm:ss"];
-            NSDate * origDate= [dateFormatter dateFromString:@"2015-05-21 20:45:22"];
-            NSDate * destDate= [dateFormatter dateFromString:@"2015-05-21 21:05:20"];
+            NSDate * origDate= [dateFormatter dateFromString:@"2015-06-05 10:30:22"];
+            NSDate * destDate= [dateFormatter dateFromString:@"2015-06-05 11:18:20"];
+            GPSEventItem * stEvent = [loggerDB selectLatestEventBefore:destDate ofType:eGPSEventDriveStart];
+            GPSEventItem * edEvent = [loggerDB selectEvent:eGPSEventDriveEnd between:origDate andDate:destDate];
+            if (nil == stEvent || nil == edEvent) {
+                return;
+            }
+            origDate = stEvent.timestamp;
+            destDate = edEvent.timestamp;
+            NSLog(@"real st and end = %@, %@", origDate, destDate);
             
-            GPSFMDBLogger * loggerDB = [GPSLogger sharedLogger].dbLogger;
             NSArray * logArr = [loggerDB selectLogFrom:origDate toDate:destDate offset:0 limit:0];
             TripSimulator * simulator = [TripSimulator new];
             simulator.gpsLogs = logArr;
-            return;
+            
+            GPSTripSummaryAnalyzer * oneTripAna = [GPSTripSummaryAnalyzer new];
+            [oneTripAna updateGPSDataArray:logArr];
+            CGFloat avgSpeed = oneTripAna.avg_speed;
+            CGFloat tolDuration = oneTripAna.total_during;
+            CGFloat maxSpeed = oneTripAna.max_speed;
+            if (avgSpeed < 8/3.6 || tolDuration < 4*60 || (avgSpeed < 15/3.6 && avgSpeed * 10 < maxSpeed)) {
+                NSLog(@"$$$$$$$$$$ trip check valid fail, maxSpeed=%f, avgSpeed=%f, tolDuration=%f", maxSpeed, avgSpeed, tolDuration);
+            }
+            
+            // check start point
+            NSMutableArray * rawData = [NSMutableArray array];
+            NSInteger offset = 0;
+            NSInteger limit = 500;
+            
+            NSDate * midDate = [origDate dateByAddingTimeInterval:[destDate timeIntervalSinceDate:origDate]/2.0];
+            GPSEventItem * stRegion = [loggerDB selectLatestEventBefore:midDate ofType:eGPSEventDriveEnd];
+            NSDate * detectStart = [[origDate dateByAddingMinutes:-10] laterDate:[stRegion.timestamp dateByAddingTimeInterval:30]];
+            NSDate * detectEnd = destDate;
+            logArr = [loggerDB selectLogFrom:detectStart toDate:detectEnd offset:offset limit:limit];
+            
+            CGFloat distMissing = 0;
+            GPSLogItem * stLogItem = [[GPSLogger sharedLogger].offTimeAnalyzer modifyStartPoint:origDate firstGPSLog:logArr[0]];
+            if (stLogItem)
+            {
+                // logArr[0] 不一定是检测开始点，有可能是用户起点附近开车前打开过，因此要去除这些点的影响
+                CGFloat dist2Start = [stLogItem distanceFrom:logArr[0]];
+                if (dist2Start < 300) {
+                    NSInteger realStartIdx = 0;
+                    GPSLogItem * firstItem = logArr[0];
+                    GPSLogItem * lastItem = firstItem;
+                    for (int i = 1; i < logArr.count; i++) {
+                        GPSLogItem * curItem = logArr[i];
+                        CGFloat during = [curItem.timestamp timeIntervalSinceDate:lastItem.timestamp];
+                        if (during >= cTrafficJamThreshold) {
+                            realStartIdx = i;
+                            break;
+                        }
+                        
+                        lastItem = curItem;
+                        
+                        CGFloat during2First = [curItem.timestamp timeIntervalSinceDate:firstItem.timestamp];
+                        CGFloat dist2First = [curItem distanceFrom:stLogItem];
+                        if (dist2First > 300 || during2First > 10*60) {
+                            break;
+                        }
+                    }
+                    if (realStartIdx > 0) {
+                        logArr = [logArr subarrayWithRange:NSMakeRange(realStartIdx, logArr.count-realStartIdx)];
+                    }
+                }
+                
+                // check the modified start point is valid
+                GPSLogItem * logItem = logArr[0];
+                distMissing = [stLogItem distanceFrom:logItem];
+                if (distMissing > 0 && distMissing < cStartLocErrorDist*1.6) {
+                    // the modified start point is valid, add to array
+                    [rawData addObject:stLogItem];
+                    // extimate the start time
+                    stLogItem.timestamp = [logItem.timestamp dateByAddingTimeInterval:-(distMissing*1.414)/cAvgDrivingSpeed];
+                } else {
+                    distMissing = 0;
+                    stLogItem = nil;
+                }
+            }
+            if (nil == stLogItem) {
+                stLogItem = logArr[0];
+            }
+            NSLog(@"modify st time = %@", stLogItem.timestamp);
             
 //            GPSFMDBLogger * loggerDB = [GPSLogger sharedLogger].dbLogger;
 //            NSArray * logArr = [loggerDB selectLogFrom:[self.tripSum.start_date dateByAddingTimeInterval:-180] toDate:[self.tripSum.end_date dateByAddingTimeInterval:60*10] offset:0 limit:0];

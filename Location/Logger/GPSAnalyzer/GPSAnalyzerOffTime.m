@@ -299,7 +299,7 @@
     }
     
     CGFloat distMissing = 0;
-    GPSLogItem * stLogItem = [self modifyStartPoint:tripSum firstGPSLog:logArr[0]];
+    GPSLogItem * stLogItem = [self modifyStartPoint:tripSum.start_date firstGPSLog:logArr[0]];
     if (stLogItem)
     {
         // logArr[0] 不一定是检测开始点，有可能是用户起点附近开车前打开过，因此要去除这些点的影响
@@ -524,7 +524,8 @@
         CGFloat avgSpeed = [sum.avg_speed floatValue];
         CGFloat tolDuration = [sum.total_during floatValue];
         CGFloat maxSpeed = [sum.max_speed floatValue];
-        if (avgSpeed < 9/3.6 || tolDuration < 4*60 || (avgSpeed < 15/3.6 && avgSpeed * 10 < maxSpeed)) {
+        if (avgSpeed < 8/3.6 || tolDuration < 4*60 || (avgSpeed < 15/3.6 && avgSpeed * 10 < maxSpeed)) {
+            DDLogWarn(@"$$$$$$$$$$ trip check valid fail, maxSpeed=%f, avgSpeed=%f, tolDuration=%f", maxSpeed, avgSpeed, tolDuration);
             return NO;
         }
     }
@@ -601,10 +602,10 @@
 }
 
 
-- (GPSLogItem*)modifyStartPoint:(TripSummary*)sum firstGPSLog:(GPSLogItem*)firstLog
+- (GPSLogItem*)modifyStartPoint:(NSDate*)date firstGPSLog:(GPSLogItem*)firstLog
 {
     GPSEventItem * stRegion = nil;
-    NSDate * stDate = firstLog.timestamp ? firstLog.timestamp : sum.start_date;
+    NSDate * stDate = firstLog.timestamp ? firstLog.timestamp : date;
     
     GPSEventItem * monitorEvent = [[GPSLogger sharedLogger].dbLogger selectLatestEventBefore:stDate ofType:eGPSEventMonitorRegion];
     GPSEventItem * endDriveEvent = stRegion = [[GPSLogger sharedLogger].dbLogger selectLatestEventBefore:stDate ofType:eGPSEventDriveEnd];
@@ -622,7 +623,7 @@
     if (nil == stRegion || ![stRegion isValidLocation]) {
         // if do not have the last end drive point, or do not have the lat lon
         // try get the last end driving point by trip sum
-        TripSummary * prevTrip = [self.manager prevTripBy:sum];
+        TripSummary * prevTrip = [self.manager prevTripByDate:date];
         if (prevTrip) {
             stRegion = [[GPSEventItem alloc] init];
             stRegion.timestamp = prevTrip.end_date;

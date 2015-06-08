@@ -193,6 +193,7 @@
 		A36CB5401B0AD212000C4666 /* EMHint.m in Sources */ = {isa = PBXBuildFile; fileRef = A36CB53D1B0AD212000C4666 /* EMHint.m */; };
 		A36CB5411B0AD212000C4666 /* EMHintsView.m in Sources */ = {isa = PBXBuildFile; fileRef = A36CB53F1B0AD212000C4666 /* EMHintsView.m */; };
 		A36CB5481B0C307E000C4666 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = A36CB5471B0C307E000C4666 /* TTTAttributedLabel.m */; };
+		A36CB57E1B16F816000C4666 /* libWeChatSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A36CB57A1B16F816000C4666 /* libWeChatSDK.a */; };
 		A377B42F19F5537900DDB5EE /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = A377B42E19F5537900DDB5EE /* NSString+MD5.m */; };
 		A378ABE31A164664006A3B68 /* DVSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = A378ABE21A164664006A3B68 /* DVSwitch.m */; };
 		A378ABE71A16F124006A3B68 /* DRDynamicSlideShow.m in Sources */ = {isa = PBXBuildFile; fileRef = A378ABE61A16F124006A3B68 /* DRDynamicSlideShow.m */; };
@@ -217,6 +218,10 @@
 		A39E31451AB4701A004F0D95 /* TripFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = A39E31441AB4701A004F0D95 /* TripFilter.m */; };
 		A39E31481AB6D395004F0D95 /* CTTrafficLightFacade.m in Sources */ = {isa = PBXBuildFile; fileRef = A39E31471AB6D395004F0D95 /* CTTrafficLightFacade.m */; };
 		A39E314B1AB71260004F0D95 /* CTBaseLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = A39E314A1AB71260004F0D95 /* CTBaseLocation.m */; };
+		A3A1F7C41B1C391B00B1B113 /* NSString+QRImage.m in Sources */ = {isa = PBXBuildFile; fileRef = A3A1F7C31B1C391B00B1B113 /* NSString+QRImage.m */; };
+		A3A1F7D01B1F45F900B1B113 /* QRScanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A3A1F7CE1B1F45F900B1B113 /* QRScanViewController.m */; };
+		A3A1F7D11B1F45F900B1B113 /* QRScanViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A3A1F7CF1B1F45F900B1B113 /* QRScanViewController.xib */; };
+		A3A1F7D61B24771900B1B113 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3A1F7D51B24771900B1B113 /* AVFoundation.framework */; };
 		A3A2092C1A7619A000C17DF3 /* DaySummary+Fetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = A3A2092B1A7619A000C17DF3 /* DaySummary+Fetcher.m */; };
 		A3B5DFC91A49200C00576F77 /* FXLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = A3B5DFC81A49200C00576F77 /* FXLabel.m */; };
 		A3BD72AC1A14F2B00007ECA1 /* BaiduRoadMarkFacade.m in Sources */ = {isa = PBXBuildFile; fileRef = A3BD72AB1A14F2B00007ECA1 /* BaiduRoadMarkFacade.m */; };
@@ -649,6 +654,9 @@
 		A36CB53F1B0AD212000C4666 /* EMHintsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EMHintsView.m; sourceTree = "<group>"; };
 		A36CB5461B0C307E000C4666 /* TTTAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTAttributedLabel.h; sourceTree = "<group>"; };
 		A36CB5471B0C307E000C4666 /* TTTAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTAttributedLabel.m; sourceTree = "<group>"; };
+		A36CB57A1B16F816000C4666 /* libWeChatSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libWeChatSDK.a; sourceTree = "<group>"; };
+		A36CB57C1B16F816000C4666 /* WXApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApi.h; sourceTree = "<group>"; };
+		A36CB57D1B16F816000C4666 /* WXApiObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApiObject.h; sourceTree = "<group>"; };
 		A377B42D19F5537900DDB5EE /* NSString+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5.h"; sourceTree = "<group>"; };
 		A377B42E19F5537900DDB5EE /* NSString+MD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MD5.m"; sourceTree = "<group>"; };
 		A378ABE11A164664006A3B68 /* DVSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVSwitch.h; sourceTree = "<group>"; };
@@ -694,6 +702,12 @@
 		A39E31471AB6D395004F0D95 /* CTTrafficLightFacade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTTrafficLightFacade.m; sourceTree = "<group>"; };
 		A39E31491AB71260004F0D95 /* CTBaseLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTBaseLocation.h; sourceTree = "<group>"; };
 		A39E314A1AB71260004F0D95 /* CTBaseLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTBaseLocation.m; sourceTree = "<group>"; };
+		A3A1F7C21B1C391B00B1B113 /* NSString+QRImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+QRImage.h"; sourceTree = "<group>"; };
+		A3A1F7C31B1C391B00B1B113 /* NSString+QRImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+QRImage.m"; sourceTree = "<group>"; };
+		A3A1F7CD1B1F45F900B1B113 /* QRScanViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QRScanViewController.h; sourceTree = "<group>"; };
+		A3A1F7CE1B1F45F900B1B113 /* QRScanViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QRScanViewController.m; sourceTree = "<group>"; };
+		A3A1F7CF1B1F45F900B1B113 /* QRScanViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = QRScanViewController.xib; sourceTree = "<group>"; };
+		A3A1F7D51B24771900B1B113 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		A3A2092A1A7619A000C17DF3 /* DaySummary+Fetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DaySummary+Fetcher.h"; sourceTree = "<group>"; };
 		A3A2092B1A7619A000C17DF3 /* DaySummary+Fetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "DaySummary+Fetcher.m"; sourceTree = "<group>"; };
 		A3B5DFC71A49200C00576F77 /* FXLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXLabel.h; sourceTree = "<group>"; };
@@ -881,8 +895,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A3A1F7D61B24771900B1B113 /* AVFoundation.framework in Frameworks */,
 				A38D882D1AEB8118000881FD /* MessageUI.framework in Frameworks */,
 				A3CD728719D138F0005F84E2 /* MapKit.framework in Frameworks */,
+				A36CB57E1B16F816000C4666 /* libWeChatSDK.a in Frameworks */,
 				A3CD35EC19C6A1A70039F6E1 /* CoreMotion.framework in Frameworks */,
 				A320D01019BEA1B800F4038A /* Social.framework in Frameworks */,
 				A320D00E19BEA1A800F4038A /* Accounts.framework in Frameworks */,
@@ -940,6 +956,7 @@
 		5C90908E18B3A66A00510153 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A3A1F7D51B24771900B1B113 /* AVFoundation.framework */,
 				A38D882C1AEB8118000881FD /* MessageUI.framework */,
 				A3CD728D19D17128005F84E2 /* Crashlytics.framework */,
 				A3CD728619D138F0005F84E2 /* MapKit.framework */,
@@ -1489,6 +1506,7 @@
 		A34F01471A0715A900F58C17 /* ThirdParty */ = {
 			isa = PBXGroup;
 			children = (
+				A36CB5791B16F816000C4666 /* WeChatSDK_1.5 */,
 				A3C453FD1A8B515800D53342 /* BaiduMapSDK */,
 				A3B5DFC61A49200C00576F77 /* FXLabel */,
 				A35C25AD1A426F4B005F6658 /* RZUtils */,
@@ -2014,6 +2032,16 @@
 			path = TTTAttributedLabel;
 			sourceTree = "<group>";
 		};
+		A36CB5791B16F816000C4666 /* WeChatSDK_1.5 */ = {
+			isa = PBXGroup;
+			children = (
+				A36CB57A1B16F816000C4666 /* libWeChatSDK.a */,
+				A36CB57C1B16F816000C4666 /* WXApi.h */,
+				A36CB57D1B16F816000C4666 /* WXApiObject.h */,
+			);
+			path = WeChatSDK_1.5;
+			sourceTree = "<group>";
+		};
 		A377B42B19F5532400DDB5EE /* Category */ = {
 			isa = PBXGroup;
 			children = (
@@ -2033,6 +2061,8 @@
 				A35BC7281AA35B7D00D726D4 /* NSString+ShiftEncode.m */,
 				A377B42D19F5537900DDB5EE /* NSString+MD5.h */,
 				A377B42E19F5537900DDB5EE /* NSString+MD5.m */,
+				A3A1F7C21B1C391B00B1B113 /* NSString+QRImage.h */,
+				A3A1F7C31B1C391B00B1B113 /* NSString+QRImage.m */,
 			);
 			path = NSString;
 			sourceTree = "<group>";
@@ -2126,6 +2156,24 @@
 				A399CA031A12F5EE00665917 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		A3A1F7CB1B1F454900B1B113 /* Others */ = {
+			isa = PBXGroup;
+			children = (
+				A3A1F7CC1B1F455500B1B113 /* QRScan */,
+			);
+			path = Others;
+			sourceTree = "<group>";
+		};
+		A3A1F7CC1B1F455500B1B113 /* QRScan */ = {
+			isa = PBXGroup;
+			children = (
+				A3A1F7CD1B1F45F900B1B113 /* QRScanViewController.h */,
+				A3A1F7CE1B1F45F900B1B113 /* QRScanViewController.m */,
+				A3A1F7CF1B1F45F900B1B113 /* QRScanViewController.xib */,
+			);
+			path = QRScan;
 			sourceTree = "<group>";
 		};
 		A3A209261A75FDB000C17DF3 /* ModelCategory */ = {
@@ -2382,6 +2430,7 @@
 		A3CD362219CFB86D0039F6E1 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				A3A1F7CB1B1F454900B1B113 /* Others */,
 				A30405351AE8760C0047E66B /* Components */,
 				A3E2894A1AD132050043F14C /* UserGuide */,
 				A34F01011A03D78900F58C17 /* DebugView */,
@@ -2703,6 +2752,7 @@
 				5C90909A18B3A66A00510153 /* InfoPlist.strings in Resources */,
 				A399C9FB1A12E0CA00665917 /* Main.storyboard in Resources */,
 				A3E2892C1ACD2DC40043F14C /* SearchSuggestionCell.xib in Resources */,
+				A3A1F7D11B1F45F900B1B113 /* QRScanViewController.xib in Resources */,
 				A36CB53A1B0A25D3000C4666 /* BGHintViewController.xib in Resources */,
 				A37E03EF1A0DE10B00B0B0EC /* TripTicketView.xib in Resources */,
 				A34F00FA1A03D04400F58C17 /* CarHealth.storyboard in Resources */,
@@ -2801,6 +2851,7 @@
 				A32CF4001A24C380008EA051 /* XYPieChart.m in Sources */,
 				A321E2C91ACA7FAB00CA9035 /* GPSInstJamAnalyzer.m in Sources */,
 				A35C26461A426F4B005F6658 /* RZSplitViewController.m in Sources */,
+				A3A1F7C41B1C391B00B1B113 /* NSString+QRImage.m in Sources */,
 				A35BC73A1AA82D9B00D726D4 /* TripSummary+Fetcher.m in Sources */,
 				A35C26501A42C5BB005F6658 /* ScrollSegView.m in Sources */,
 				A304052D1AE7C84A0047E66B /* BMKAddressComponent+Encode.m in Sources */,
@@ -2916,6 +2967,7 @@
 				A34F019A1A07289C00F58C17 /* CommonWrapper.m in Sources */,
 				A314A6E41A0BBD9A00C12040 /* NSDate+Utilities.m in Sources */,
 				A34F01931A071F3200F58C17 /* BaiduPOISearchWrapper.m in Sources */,
+				A3A1F7D01B1F45F900B1B113 /* QRScanViewController.m in Sources */,
 				A31FCA6F19E6711300A3BB4C /* GPSEventItem.m in Sources */,
 				A35C262C1A426F4B005F6658 /* UIAlertView+RZCompletionBlocks.m in Sources */,
 				A3171A911A090666003EA8CE /* NSString+URLEncoding.m in Sources */,
@@ -3139,6 +3191,7 @@
 					"$(PROJECT_DIR)/Location/ThirdParty/BaiduMapSDK/libs/Release$(EFFECTIVE_PLATFORM_NAME)",
 					"$(PROJECT_DIR)/Location/ThirdParty/BaiduMapSDK/libs/Release-iphoneos",
 					"$(PROJECT_DIR)/Location/ThirdParty/BaiduMapSDK/libs/Release-iphonesimulator",
+					"$(PROJECT_DIR)/Location/ThirdParty/WeChatSDK_1.5",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -3196,6 +3249,7 @@
 					"$(PROJECT_DIR)/Location/ThirdParty/BaiduMapSDK/libs/Release$(EFFECTIVE_PLATFORM_NAME)",
 					"$(PROJECT_DIR)/Location/ThirdParty/BaiduMapSDK/libs/Release-iphoneos",
 					"$(PROJECT_DIR)/Location/ThirdParty/BaiduMapSDK/libs/Release-iphonesimulator",
+					"$(PROJECT_DIR)/Location/ThirdParty/WeChatSDK_1.5",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -3347,6 +3401,7 @@
 					"$(PROJECT_DIR)/Location/ThirdParty/BaiduMapSDK/libs/Release$(EFFECTIVE_PLATFORM_NAME)",
 					"$(PROJECT_DIR)/Location/ThirdParty/BaiduMapSDK/libs/Release-iphoneos",
 					"$(PROJECT_DIR)/Location/ThirdParty/BaiduMapSDK/libs/Release-iphonesimulator",
+					"$(PROJECT_DIR)/Location/ThirdParty/WeChatSDK_1.5",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",

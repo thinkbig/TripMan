@@ -27,7 +27,9 @@
     NSDictionary * plistDict = [[NSBundle mainBundle] infoDictionary];
     NSString * udid = [[GToolUtil sharedInstance] deviceId];
     NSString * uid = [[GToolUtil sharedInstance] userId];
-    NSString * deviceInfo = [NSString stringWithFormat:@"name=%@,model=%@", [UIDevice currentDevice].name, gDeviceType];
+    UIDevice * device = [UIDevice currentDevice];
+    NSDictionary * deviceInfo = @{@"name": device.name, @"model": device.model, @"osVersion": device.systemVersion};
+    NSString * deviceInfoStr = [CommonFacade toJsonString:deviceInfo prettyPrint:NO];
     NSString* deviceToken = [[NSUserDefaults standardUserDefaults] stringForKey:kDeviceToken];
     NSMutableDictionary * param = [NSMutableDictionary dictionaryWithDictionary:@{@"udid": udid,
                                                                                   @"verify_key": [GToolUtil verifyKey:udid],
@@ -35,7 +37,7 @@
                                                                                   @"source": ENV_APP_SOURCE,
                                                                                   @"country_code": ENV_COUNTRY_CODE,
                                                                                   @"version": plistDict[@"CFBundleVersion"],
-                                                                                  @"device_info": deviceInfo}];
+                                                                                  @"device_info": deviceInfoStr}];
     if (uid) param[@"user_id"] = uid;
     if (deviceToken) param[@"device_token"] = deviceToken;
     

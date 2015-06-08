@@ -76,12 +76,12 @@
 // traffic threshold
 #define IGNORE_NAVIGATION_DIST       (1000*200)
 
-#if TARGET_IPHONE_SIMULATOR
-#define gDeviceType @"iosSimulator"
-#elif TARGET_OS_IPHONE
-#define gDeviceType @"iosDevice"
-#else
-#define gDeviceType @"iosUnknow"
-#endif
+//#if TARGET_IPHONE_SIMULATOR
+//#define gDeviceType @"iosSimulator"
+//#elif TARGET_OS_IPHONE
+//#define gDeviceType @"iosDevice"
+//#else
+//#define gDeviceType @"iosUnknow"
+//#endif
 
 #endif

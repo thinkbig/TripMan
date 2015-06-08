@@ -42,7 +42,7 @@
 
 // trips for display
 - (TripSummary*) unfinishedTrip;
-- (TripSummary*) prevTripBy:(TripSummary*)curTrip;
+- (TripSummary*) prevTripByDate:(NSDate*)date;
 - (TripSummary*) lastTrip;
 - (NSArray*) allTrips;
 - (NSArray*) unAnalyzedTrips;

@@ -270,9 +270,9 @@
     return nil;
 }
 
-- (TripSummary*) prevTripBy:(TripSummary*)curTrip
+- (TripSummary*) prevTripByDate:(NSDate*)date
 {
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"start_date < %@", curTrip.start_date];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"start_date < %@", date];
     NSArray * trips = [TripSummary where:predicate inContext:self.tripAnalyzerContent order:@{@"start_date": @"DESC"} limit:@(1)];
     if (trips.count > 0) {
         return trips[0];

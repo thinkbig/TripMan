@@ -27,6 +27,7 @@
 - (BOOL)checkValid:(TripSummary*)sum;
 
 - (NSArray*)analyzeTripStartFrom:(NSDate*)fromDate toDate:(NSDate*)toDate shouldUpdateGlobalInfo:(BOOL)update;
+- (GPSLogItem*)modifyStartPoint:(NSDate*)date firstGPSLog:(GPSLogItem*)firstLog;
 
 - (void)analyzeDaySum:(DaySummary*)daySum;
 - (void)analyzeWeekSum:(WeekSummary*)weekSum;

@@ -66,8 +66,7 @@
 {
     // show hint view
     CLAuthorizationStatus authorizationStatus= [CLLocationManager authorizationStatus];
-    if (kCLAuthorizationStatusAuthorizedAlways != authorizationStatus)
-    {
+    if (kCLAuthorizationStatusAuthorizedAlways != authorizationStatus) {
         NSArray *nibs = [[NSBundle mainBundle] loadNibNamed:@"NoGpsHintView" owner:self options:nil];
         NoGpsHintView * hintView = (NoGpsHintView*)[nibs objectAtIndex:0];
         [hintView.howToBtn addTarget:self action:@selector(showHowToOpenGps) forControlEvents:UIControlEventTouchUpInside];

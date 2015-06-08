@@ -18,6 +18,7 @@
 #import "BaiduPOISearchWrapper.h"
 #import "BaiduReverseGeocodingWrapper.h"
 #import "CarMaintainInfoViewController.h"
+#import "NSString+QRImage.h"
 
 @interface CarHomeViewController ()
 
@@ -54,6 +55,13 @@
     }
     
     [self reloadContent];
+    
+    
+//    UIImage * qrImg = [@"carmap://trips?tid=asdfasdfadsf" qrImageWithSize:200 backgroundColor:[UIColor whiteColor] foregroundColor:[UIColor darkTextColor] centerImage:[UIImage imageNamed:@"qrIcon"]];
+//    UIImageView * imgView = [[UIImageView alloc] initWithImage:qrImg];
+//    imgView.center = self.view.center;
+//    [self.view addSubview:imgView];
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {

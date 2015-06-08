@@ -38,12 +38,7 @@ static NSString * rebuildVal = @"value_0000000000005"; // make sure it is differ
     
     [application setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
     
-    
-    // Sign up for a developer account at: https://www.cintric.com/register
-    //[CintricFind initWithApiKey:@"3c601eda17508279e5fcda88bc314061" andSecret:@"66d480af63780e19b4448f9eae7829e9"];
-    //[CintricFind setUniqueIdForUser:@"exampleId"];
-    
-    //[Parse setApplicationId:@"2Vm0ziBqqos8KflxCetdDffvgq6wg4bj6g3uuWlX" clientKey:@"UZCgfJCFrYqDbEDR1COtoJD0fh51NLQ3bR4HM4lh"];
+    //[Parse setApplicationId:@"VCNBKwPC8YeWAmKzqkviTZe1Z98hOaTfRG1J2S1b" clientKey:@"HGa0WMdH6of49dlPIQjQC5UZZvweIVl6DjK0KUhc"];
     
     if ([application respondsToSelector:@selector(registerUserNotificationSettings:)]) {
         // iOS 8
@@ -276,6 +271,19 @@ static NSString * rebuildVal = @"value_0000000000005"; // make sure it is differ
             [[BussinessDataProvider sharedInstance] updateAllRegionInfo:NO];
         }
     }
+}
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    if([url.scheme isEqualToString:@"carmap"]) {
+        [self internalParseURL:url application:application];
+    }
+    
+    return YES;
+}
+
+- (void)internalParseURL:(NSURL *)url application:(UIApplication *)application {
+
 }
 
 
