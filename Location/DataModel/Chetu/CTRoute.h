@@ -84,3 +84,15 @@ typedef NS_ENUM(NSUInteger, eStepTraffic) {
 - (void)setCoorType:(eCoorType)coorType;
 
 @end
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+@interface CTTrip : JSONModel
+
+@property (nonatomic, strong) NSDate<Optional> * stDate;
+@property (nonatomic, strong) NSNumber<Optional> * distance;
+@property (nonatomic, strong) NSNumber<Optional> * duration;
+@property (nonatomic, strong) NSNumber<Optional> * quality;
+@property (nonatomic, strong) CTRoute<Optional> * route;
+
+@end

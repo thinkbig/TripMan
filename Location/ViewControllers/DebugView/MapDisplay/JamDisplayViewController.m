@@ -15,20 +15,32 @@
 #import "JamZone.h"
 #import "RouteOverlayView.h"
 #import "ActionSheetStringPicker.h"
+#import "STAlertView.h"
+#import "TripFetchFacade.h"
 
 typedef NS_ENUM(NSUInteger, eDispMapType) {
     eDispMapTypeJam = 0,
     eDispMapTypeTest,
+    eDispMapTypeTrip,
 };
 
 @interface JamDisplayViewController ()
 
 @property (nonatomic, strong) BaiduHelper *     bdHelper;
 @property (nonatomic) eDispMapType              dispType;
+@property (nonatomic, strong) NSString *        requestKey;
+@property (nonatomic, strong) STAlertView *     alertView;
 
 @end
 
 @implementation JamDisplayViewController
+
+- (NSString *)requestKey {
+    if (nil == _requestKey) {
+        _requestKey = @"";
+    }
+    return _requestKey;
+}
 
 - (void)internalInit {
     [super internalInit];
@@ -55,12 +67,16 @@ typedef NS_ENUM(NSUInteger, eDispMapType) {
     
     [self updateUserLocation];
     BMKCoordinateRegion viewRegion = BMKCoordinateRegionMake([BussinessDataProvider lastGoodLocation].coordinate, BMKCoordinateSpanMake(0.5, 0.5));
-    BMKCoordinateRegion adjustedRegion = [_mapView regionThatFits:viewRegion];
-    [_mapView setRegion:adjustedRegion animated:YES];
+    BMKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:viewRegion];
+    [self.mapView setRegion:adjustedRegion animated:YES];
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self requestJamWithZone];
     });
+    
+    UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapSecret)];
+    tapGesture.numberOfTapsRequired = 2;
+    [self.navigationController.navigationBar addGestureRecognizer:tapGesture];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -75,6 +91,21 @@ typedef NS_ENUM(NSUInteger, eDispMapType) {
     // Dispose of any resources that can be recreated.
 }
 
+- (void)tapSecret
+{
+    self.alertView = [[[STAlertView alloc] initWithTitle:@"RequestKey"
+                                               message:@"Input Request Key"
+                                         textFieldHint:@"RequestKey"
+                                        textFieldValue:self.requestKey
+                                     cancelButtonTitle:@"取消"
+                                      otherButtonTitle:@"确定"
+                                     cancelButtonBlock:nil otherButtonBlock:^(NSString * result){
+                                         self.requestKey = result;
+                                         [self showToast:[NSString stringWithFormat:@"RequestKey = %@", result] onDismiss:nil];
+                                         [self reloadData:YES];
+                                     }] show];
+}
+
 - (void)updateUserLocation
 {
     CLLocation * userLoc = [BussinessDataProvider lastGoodLocation];
@@ -87,7 +118,7 @@ typedef NS_ENUM(NSUInteger, eDispMapType) {
 }
 
 - (IBAction)refresh:(id)sender {
-    [ActionSheetStringPicker showPickerWithTitle:@"选择要显示的内容" rows:@[@"实时拥堵地图", @"路径拆分"] initialSelection:0 doneBlock:^(ActionSheetStringPicker *picker, NSInteger selectedIndex, id selectedValue) {
+    [ActionSheetStringPicker showPickerWithTitle:@"选择要显示的内容" rows:@[@"实时拥堵地图", @"路径拆分", @"显示trip"] initialSelection:0 doneBlock:^(ActionSheetStringPicker *picker, NSInteger selectedIndex, id selectedValue) {
         self.title = selectedValue;
         if (0 == selectedIndex) {
             self.dispType = eDispMapTypeJam;
@@ -95,8 +126,186 @@ typedef NS_ENUM(NSUInteger, eDispMapType) {
         } else if (1 == selectedIndex) {
             self.dispType = eDispMapTypeTest;
             [self requestTestDataWithZone];
+        } else if (2 == selectedIndex) {
+            self.dispType = eDispMapTypeTrip;
+            [self requestTripData];
         }
     } cancelBlock:nil origin:self.view];
+}
+
+- (void) reloadData:(BOOL)force {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        if (eDispMapTypeJam == self.dispType) {
+            [self requestJamWithZone];
+        } else if (eDispMapTypeTest == self.dispType) {
+            [self requestTestDataWithZone];
+        } else if (eDispMapTypeTrip == self.dispType && force) {
+            [self requestTripData];
+        }
+    });
+}
+
+- (void) requestTripData
+{
+    if (self.requestKey.length < 8) {
+        [self showToast:@"不是有效的tripId" onDismiss:nil];
+    }
+    TripFetchFacade * facade = [TripFetchFacade new];
+    facade.tripId = self.requestKey;
+    [facade requestWithSuccess:^(CTTrip * trip) {
+        [self updateRouteViewWithRoute:trip.route coorType:eCoorTypeGps];
+    } failure:^(NSError * err) {
+        NSLog(@"err = %@", err);
+    }];
+}
+
+- (void) updateRouteViewWithRoute:(CTRoute*)route coorType:(eCoorType)coorType
+{
+    [self.mapView removeOverlays:self.mapView.overlays];
+    [self.mapView removeAnnotations:self.mapView.annotations];
+    [self.fullTurningAnno removeAllObjects];
+    
+    NSArray * steps = route.steps;
+    GeoRectBound * regionBound = [GeoRectBound new];
+    
+    NSMutableArray * jams2Add = [NSMutableArray array];
+    NSMutableArray * route2Add = [NSMutableArray array];
+    NSString * lastSubTitle = @"dash";
+    CGFloat lastDegree = 0;
+    CLLocationCoordinate2D lastCoor = CLLocationCoordinate2DMake(0, 0);
+    for (CTStep * oneStep in steps)
+    {
+        CLLocationCoordinate2D bdCoorFrom = [GeoTransformer baiduCoor:[oneStep.from coordinate] fromType:coorType];
+        [regionBound updateBoundsWithCoor:bdCoorFrom];
+        
+        CLLocationCoordinate2D btCoorTo = [GeoTransformer baiduCoor:[oneStep.to coordinate] fromType:coorType];
+        [regionBound updateBoundsWithCoor:btCoorTo];
+        
+        NSArray * pathArr = [oneStep pathArray];
+        
+        // 转弯节点添加标注
+        RouteAnnotation* itemNode = [[RouteAnnotation alloc] init];
+        itemNode.coordinate = bdCoorFrom;
+        itemNode.degree = [BaiduHelper mapAngleFromPoint:CGPointMake(bdCoorFrom.longitude, bdCoorFrom.latitude) toPoint:CGPointMake(btCoorTo.longitude, btCoorTo.latitude)];
+        itemNode.type = 2;
+        [self.fullTurningAnno addObject:itemNode];
+        lastDegree = itemNode.degree;
+        lastCoor = btCoorTo;
+        
+        NSString * subTitle = @"solid";
+        if (pathArr.count < 3 && [oneStep.from.ts timeIntervalSinceDate:route.orig.ts] < 60*5) {
+            if (route.orig) {
+                if ([oneStep.to distanceFrom:route.orig] < 400) {
+                    subTitle = @"dash";   // too close to start loc, just ignore
+                } else if ([oneStep.from distanceFrom:route.orig] < 100) {
+                    subTitle = @"dash";
+                }
+            }
+        }
+        
+        if (![lastSubTitle isEqualToString:subTitle] && route2Add.count > 0) {
+            BMKMapPoint * pointsToUse = new BMKMapPoint[route2Add.count];
+            [route2Add enumerateObjectsUsingBlock:^(CTBaseLocation * loc, NSUInteger idx, BOOL *stop) {
+                CLLocationCoordinate2D btCoor = [GeoTransformer baiduCoor:[loc coordinate] fromType:coorType];
+                BMKMapPoint bdMappt = BMKMapPointForCoordinate(btCoor);
+                pointsToUse[idx] = bdMappt;
+            }];
+            
+            RouteOverlay * lineOne = [RouteOverlay routeWithPoints:pointsToUse count:route2Add.count];
+            lineOne.title = @"green";
+            lineOne.subtitle = lastSubTitle;
+            [self.mapView addOverlay:lineOne];
+            
+            delete [] pointsToUse;
+            [route2Add removeAllObjects];
+            lastSubTitle = subTitle;
+        }
+        
+        [route2Add addObject:oneStep.from];
+        if (pathArr.count > 0) {
+            [route2Add addObjectsFromArray:pathArr];
+        }
+        [route2Add addObject:oneStep.to];
+        
+        // 处理堵车数据
+        CLLocation * origLoc = [route.orig clLocation];
+        CLLocation * destLoc = [route.dest clLocation];
+        NSArray * filteredJamArr = [oneStep jamsWithThreshold:cTrafficJamThreshold];
+        for (CTJam * jam in filteredJamArr) {
+            if ([jam.from.ts timeIntervalSinceDate:route.orig.ts] < 60*5 || [route.dest.ts timeIntervalSinceDate:jam.to.ts] < 60*5) {
+                [jam calCoefWithStartLoc:origLoc andEndLoc:destLoc];
+            }
+            NSArray * jamArr = [oneStep fullPathOfJam:jam];
+            if (jamArr.count > 0) {
+                BMKMapPoint * jamsToUse = new BMKMapPoint[jamArr.count];
+                [jamArr enumerateObjectsUsingBlock:^(CTBaseLocation * obj, NSUInteger idx, BOOL *stop) {
+                    CLLocationCoordinate2D btCoor = [GeoTransformer baiduCoor:[obj coordinate] fromType:coorType];
+                    BMKMapPoint bdMappt = BMKMapPointForCoordinate(btCoor);
+                    jamsToUse[idx] = bdMappt;
+                }];
+                
+                eStepTraffic stat = [jam trafficStat];
+                RouteOverlay * jamOne = [RouteOverlay routeWithPoints:jamsToUse count:jamArr.count];
+                if (eStepTrafficVerySlow == stat) {
+                    jamOne.title = @"red";
+                } else if (eStepTrafficSlow == stat) {
+                    jamOne.title = @"yellow";
+                } else {
+                    jamOne.title = @"green";
+                }
+                [jams2Add addObject:jamOne];
+                
+                delete [] jamsToUse;
+            }
+        }
+    }
+    
+    if (route2Add.count > 0) {
+        BMKMapPoint * pointsToUse = new BMKMapPoint[route2Add.count];
+        [route2Add enumerateObjectsUsingBlock:^(CTBaseLocation * loc, NSUInteger idx, BOOL *stop) {
+            CLLocationCoordinate2D btCoor = [GeoTransformer baiduCoor:[loc coordinate] fromType:coorType];
+            BMKMapPoint bdMappt = BMKMapPointForCoordinate(btCoor);
+            pointsToUse[idx] = bdMappt;
+        }];
+        
+        RouteOverlay * lineOne = [RouteOverlay routeWithPoints:pointsToUse count:route2Add.count];
+        lineOne.title = @"green";
+        lineOne.subtitle = lastSubTitle;
+        [self.mapView addOverlay:lineOne];
+        
+        delete [] pointsToUse;
+    }
+    
+    for (RouteOverlay * jamOne in jams2Add) {
+        [self.mapView addOverlay:jamOne];
+    }
+    
+    RouteAnnotation* itemNode = [[RouteAnnotation alloc] init];
+    itemNode.coordinate = lastCoor;
+    itemNode.degree = lastDegree;
+    itemNode.type = 2;
+    [self.fullTurningAnno addObject:itemNode];
+    
+    CTBaseLocation * startLoc = route.orig;
+    CTBaseLocation * endLoc = route.dest;
+    
+    RouteAnnotation* itemSt = [[RouteAnnotation alloc] init];
+    itemSt.coordinate = [GeoTransformer baiduCoor:[startLoc coordinate] fromType:coorType];
+    itemSt.title = @"起点";
+    itemSt.type = 0;
+    [self.mapView addAnnotation:itemSt];
+    [regionBound updateBoundsWithCoor:itemSt.coordinate];
+    
+    RouteAnnotation* itemEd = [[RouteAnnotation alloc] init];
+    itemEd.coordinate = [GeoTransformer baiduCoor:[endLoc coordinate] fromType:coorType];
+    itemEd.title = @"终点";
+    itemEd.type = 1;
+    [self.mapView addAnnotation:itemEd];
+    [regionBound updateBoundsWithCoor:itemEd.coordinate];
+    
+    [self.mapView setRegion:[regionBound baiduRegion] animated:YES];
+    
+    [self.mapView reloadInputViews];
 }
 
 - (void) requestJamWithZone
@@ -105,7 +314,7 @@ typedef NS_ENUM(NSUInteger, eDispMapType) {
 
     CTRealtimeJamFacade * facade = [[CTRealtimeJamFacade alloc] init];
     facade.geoBound = bound;
-    [facade requestWithSuccess:^(NSArray * jamArr) {
+    [facade request:@{@"key":self. requestKey} success:^(NSArray * jamArr) {
         [self updateWithJamArr:jamArr];
     } failure:^(NSError * err) {
         NSLog(@"err = %@", err);
@@ -124,8 +333,7 @@ typedef NS_ENUM(NSUInteger, eDispMapType) {
         itemNode.coordinate = bdCoor;
         itemNode.degree = [zone headingDegree];
         itemNode.type = 2;
-        [_mapView addAnnotation:itemNode];
-        
+        [self.mapView addAnnotation:itemNode];
         
         BMKCircle * circle = [BMKCircle circleWithCenterCoordinate:bdCoor radius:[zone.radius floatValue]];
         [self.mapView addOverlay:circle];
@@ -140,7 +348,7 @@ typedef NS_ENUM(NSUInteger, eDispMapType) {
 
     CTTestFacade * facade = [[CTTestFacade alloc] init];
     facade.geoBound = bound;
-    [facade requestWithSuccess:^(NSArray * jamArr) {
+    [facade request:@{@"key":self. requestKey} success:^(NSArray * jamArr) {
         [self updateWithTestArr:jamArr];
     } failure:^(NSError * err) {
         NSLog(@"err = %@", err);
@@ -192,13 +400,7 @@ typedef NS_ENUM(NSUInteger, eDispMapType) {
 - (BMKOverlayView *)mapView:(BMKMapView *)mapView viewForOverlay:(id <BMKOverlay>)overlay
 {
     BMKOverlayView* overlayView = nil;
-    if ([overlay isKindOfClass:[RouteOverlay class]])
-    {
-        RouteOverlayView * routeView = [[RouteOverlayView alloc] initWithOverlay:overlay];
-        routeView.lineWidth = 10;
-        return routeView;
-    }
-    else if ([overlay isKindOfClass:[BMKCircle class]])
+    if ([overlay isKindOfClass:[BMKCircle class]])
     {
         BMKCircleView * circleRender=[[BMKCircleView alloc] initWithOverlay:overlay];
         BMKCircle * circleOverlay = (BMKCircle*)overlay;
@@ -210,93 +412,17 @@ typedef NS_ENUM(NSUInteger, eDispMapType) {
         circleRender.lineWidth = 5.0;
         return circleRender;
     }
-    return overlayView;
-}
-
-
-- (BMKAnnotationView *)mapView:(BMKMapView *)mapView viewForAnnotation:(id <BMKAnnotation>)annotation
-{
-    if ([annotation isKindOfClass:[RouteAnnotation class]]) {
-        return [self getRouteAnnotationView:mapView viewForAnnotation:(RouteAnnotation*)annotation];
-    }
-    return nil;
-}
-
-- (BMKAnnotationView*)getRouteAnnotationView:(BMKMapView *)mapview viewForAnnotation:(RouteAnnotation*)routeAnnotation
-{
-    BMKAnnotationView* view = nil;
-    switch (routeAnnotation.type) {
-        case 0:
-        {
-            view = [mapview dequeueReusableAnnotationViewWithIdentifier:@"start_node"];
-            if (view == nil) {
-                view = [[BMKAnnotationView alloc]initWithAnnotation:routeAnnotation reuseIdentifier:@"start_node"];
-                view.image = [self.bdHelper imageNamed:@"images/icon_nav_start.png"];
-                view.centerOffset = CGPointMake(0, -(view.frame.size.height * 0.5));
-                view.canShowCallout = TRUE;
-            }
-            view.annotation = routeAnnotation;
-        }
-            break;
-        case 1:
-        {
-            view = [mapview dequeueReusableAnnotationViewWithIdentifier:@"end_node"];
-            if (view == nil) {
-                view = [[BMKAnnotationView alloc]initWithAnnotation:routeAnnotation reuseIdentifier:@"end_node"];
-                view.image = [self.bdHelper imageNamed:@"images/icon_nav_end.png"];
-                view.centerOffset = CGPointMake(0, -(view.frame.size.height * 0.5));
-                view.canShowCallout = TRUE;
-            }
-            view.annotation = routeAnnotation;
-        }
-            break;
-        case 2:
-        {
-            view = [mapview dequeueReusableAnnotationViewWithIdentifier:@"route_node"];
-            if (view == nil) {
-                view = [[BMKAnnotationView alloc]initWithAnnotation:routeAnnotation reuseIdentifier:@"route_node"];
-                view.canShowCallout = TRUE;
-            } else {
-                [view setNeedsDisplay];
-            }
-            
-            UIImage* image = [self.bdHelper imageNamed:@"images/icon_direction.png"];
-            view.image = [image imageRotatedByDegrees:routeAnnotation.degree];
-            view.annotation = routeAnnotation;
-            
-        }
-            break;
-        case 3:
-        {
-            view = [mapview dequeueReusableAnnotationViewWithIdentifier:@"waypoint_node"];
-            if (view == nil) {
-                view = [[BMKAnnotationView alloc]initWithAnnotation:routeAnnotation reuseIdentifier:@"waypoint_node"];
-                view.canShowCallout = TRUE;
-            } else {
-                [view setNeedsDisplay];
-            }
-            
-            UIImage* image = [self.bdHelper imageNamed:@"images/icon_nav_waypoint.png"];
-            view.image = [image imageRotatedByDegrees:routeAnnotation.degree];
-            view.annotation = routeAnnotation;
-        }
-            break;
-        default:
-            break;
-    }
     
-    return view;
+    if (nil == overlayView) {
+        overlayView = [super mapView:mapView viewForOverlay:overlay];
+    }
+    return overlayView;
 }
 
 - (void)mapView:(BMKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
 {
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        if (eDispMapTypeJam == self.dispType) {
-            [self requestJamWithZone];
-        } else if (eDispMapTypeTest == self.dispType) {
-            [self requestTestDataWithZone];
-        }
-    });
+    [super mapView:mapView regionDidChangeAnimated:animated];
+    [self reloadData:NO];
 }
 
 @end

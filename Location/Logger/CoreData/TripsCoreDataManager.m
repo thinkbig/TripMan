@@ -19,7 +19,9 @@
 //
 //@end
 
-@interface TripsCoreDataManager ()
+@interface TripsCoreDataManager () {
+    dispatch_queue_t request_queue;
+}
 
 @property (nonatomic, strong) NSMutableArray *                  parkingDetails;
 
@@ -48,6 +50,13 @@
         
     }
     return self;
+}
+
+- (dispatch_queue_t) readQueue {
+    if (nil == request_queue) {
+        request_queue = dispatch_queue_create("com.chetu.read", DISPATCH_QUEUE_SERIAL);
+    }
+    return request_queue;
 }
 
 - (NSString *)databaseName

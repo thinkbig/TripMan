@@ -7,11 +7,9 @@
 //
 
 #import "GViewController.h"
-#import "BMapKit.h"
+#import "BMapBaseViewController.h"
 
-@interface BaiduMapViewController : GViewController <BMKMapViewDelegate>
-
-@property (strong, nonatomic) BMKMapView *      mapView;
+@interface BaiduMapViewController : BMapBaseViewController
 
 @property (nonatomic, strong) TripSummary *     tripSum;
 @property (nonatomic, strong) CTRoute *         route;

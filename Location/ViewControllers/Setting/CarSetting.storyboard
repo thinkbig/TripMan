@@ -592,13 +592,13 @@
     <resources>
         <image name="guid_bg_tracing" width="320" height="568"/>
         <image name="main_bg" width="320" height="568"/>
-        <image name="mycar_FAQ" width="25" height="25"/>
-        <image name="mycar_Guide" width="23" height="28"/>
-        <image name="mycar_aboutus" width="28" height="22"/>
-        <image name="mycar_good" width="27" height="27"/>
+        <image name="mycar_FAQ" width="30" height="30"/>
+        <image name="mycar_Guide" width="30" height="30"/>
+        <image name="mycar_aboutus" width="30" height="30"/>
+        <image name="mycar_good" width="30" height="30"/>
         <image name="mycar_profile" width="115" height="110"/>
-        <image name="mycar_report" width="22" height="22"/>
-        <image name="mycar_version" width="18" height="24"/>
+        <image name="mycar_report" width="30" height="30"/>
+        <image name="mycar_version" width="30" height="30"/>
         <image name="shadow" width="320" height="5"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

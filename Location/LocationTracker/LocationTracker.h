@@ -36,7 +36,7 @@ typedef NS_ENUM(NSUInteger, eGPSSignalStrength) {
 @property (nonatomic, strong) CLLocationManager *           locationManager;
 @property (nonatomic, strong) CMMotionActivity *            rawMotionActivity;
 @property (nonatomic) eGPSSignalStrength                    signalStrength;
-@property (nonatomic) BOOL                                  useSignificantLocationChange;
+@property (nonatomic) BOOL                                  forceSignificantLocationChange;
 
 - (void)startLocationTracking;
 - (void)updateCurrentLocation;

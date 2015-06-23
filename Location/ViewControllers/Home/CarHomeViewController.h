@@ -9,8 +9,10 @@
 #import "GViewController.h"
 #import "PICircularProgressView.h"
 #import "CarMaintainInfo.h"
+#import "WXApi.h"
+#import "WXApiObject.h"
 
-@interface CarHomeViewController : GViewController
+@interface CarHomeViewController : GViewController <WXApiDelegate>
 
 @property (weak, nonatomic) IBOutlet UICollectionView *homeCollection;
 

@@ -40,8 +40,9 @@
 }
 
 @property (nonatomic, strong) NSMutableArray *          logArr;
-@property (nonatomic, strong) GPSLogItem *              lastLogItem;
-@property (nonatomic, strong) GPSLogItem *              locChangeLogItem;
+@property (nonatomic, strong) GPSLogItem *              lastLogItem;        // 上一个item
+@property (nonatomic, strong) GPSLogItem *              lastAngleCheckItem; // 上一个可用于计算角度的item，至少50米
+@property (nonatomic, strong) GPSLogItem *              locChangeLogItem;   // 上一个位置明显变化的item，400米
 @property (nonatomic) NSInteger                         removeThreshold;
 @property (nonatomic) eMoveStat moveStat;     // 是否是线性移动，还是gps不稳定跳动，根据最近的N（目前为10）个gps点的运动规律
 
@@ -89,6 +90,7 @@
             _startSpeedTrace = _endSpeedTrace = 0;
             _startSpeedTraceCnt = _endSpeedTraceCnt = 0;
             _startSpeedTraceIdx = _endSpeedTraceIdx = _startMoveTraceIdx = 0;
+            self.moveStat = eMoveStatUnknow;
             [self.logArr removeAllObjects];
         }
     }
@@ -158,76 +160,59 @@
         gps.speed = @(-1);
     }
     gps.speed = @(speed);
+    gps.angle = MAXFLOAT;
+    gps.angleDiff = -1;
     
-    GPSLogItem * lastGps = self.lastLogItem;
+    GPSLogItem * lastAngleGps = self.lastAngleCheckItem;
     if (validSpeed) {
         self.lastLogItem = gps;
-        if (lastGps) {
+        CGFloat dist = [gps distanceFrom:self.lastAngleCheckItem];
+        if (nil == self.lastAngleCheckItem || dist > cAngleCheckThres) {
+            self.lastAngleCheckItem = gps;
+        }
+        if (lastAngleGps) {
             // 计算轨迹夹角，用于判断是否是正常行驶（还是gps跳变）
-            if ([gps distanceFrom:lastGps] < 20) {
-                // 无法估计角度，距离太近了
-                gps.angle = MAXFLOAT;
-            } else {
-                gps.angle = [GPSOffTimeFilter angleFromPoint:[GPSOffTimeFilter coor2Point:lastGps.coordinate] toPoint:[GPSOffTimeFilter coor2Point:gps.coordinate]];
+            if (dist > cAngleCheckThres) {
+                gps.angle = [GPSOffTimeFilter angleFromPoint:[GPSOffTimeFilter coor2Point:lastAngleGps.coordinate] toPoint:[GPSOffTimeFilter coor2Point:gps.coordinate]];
             }
             
             if (self.logArr.count > 1) {
-                if (gps.angle > 10000) {
-                    gps.angleDiff = -1;
-                } else if (lastGps.angle > 10000) {
-                    gps.angleDiff = 0;
-                } else {
-                    gps.angleDiff = fabsf(gps.angle - lastGps.angle);
-                }
-                
-                NSInteger moveStatThres = 3;
-                if (self.logArr.count > moveStatThres) {
-                    CGFloat maxAngle = gps.angleDiff;
-                    CGFloat angleDiff = gps.angleDiff;
-                    NSInteger angleCnt = moveStatThres;
+                if (gps.angle < 10000 && lastAngleGps.angle < 10000) {
+                    CGFloat angleD = fabsf(gps.angle - lastAngleGps.angle);
+                    angleD = angleD > 180 ? 360-angleD : angleD;
+                    gps.angleDiff = angleD;
                     
-                    NSArray * subArr = [self.logArr subarrayWithRange:NSMakeRange(self.logArr.count-angleCnt, angleCnt)];
-                    NSInteger realCnt = 0;
-                    for (GPSLogItem * item in subArr) {
-                        maxAngle = MAX(maxAngle, item.angleDiff);
-                        if (item.angleDiff >= 0) {
-                            angleDiff += item.angleDiff;
-                            realCnt++;
-                        }
+                    if (angleD >= 0) {
+                        self.moveStat = (angleD < 100) ? eMoveStatLine : eMoveStatJump;
                     }
-                    if (realCnt > 0) {
-                        CGFloat avgAngle = angleDiff/realCnt;
-                        self.moveStat = (avgAngle < 60 && maxAngle >= 0) ? eMoveStatLine : (maxAngle < 0 ? eMoveStatUnknow : eMoveStatJump);
-                    } else {
-                        //self.moveStat = eMoveStatUnknow;
-                    }
-                } else {
-                    self.moveStat = eMoveStatUnknow;
                 }
                 
-//                gps.angle = [GPSOffTimeFilter angleFromPoint:[GPSOffTimeFilter coor2Point:lastGps.coordinate] toPoint:[GPSOffTimeFilter coor2Point:gps.coordinate]];
-//                if (self.logArr.count > 1) {
-//                    gps.angleDiff = fabsf(gps.angle - lastGps.angle);
+//                NSInteger moveStatThres = 3;
+//                if (self.logArr.count > moveStatThres) {
+//                    CGFloat maxAngle = gps.angleDiff;
+//                    CGFloat angleDiff = gps.angleDiff;
+//                    NSInteger angleCnt = moveStatThres;
 //                    
-//                    NSInteger moveStatThres = 3;
-//                    if (self.logArr.count > moveStatThres) {
-//                        CGFloat maxAngle = gps.angleDiff;   // 去掉一个最大值
-//                        CGFloat angleDiff = gps.angleDiff;
-//                        NSInteger angleCnt = moveStatThres;
-//                        
-//                        NSArray * subArr = [self.logArr subarrayWithRange:NSMakeRange(self.logArr.count-angleCnt, angleCnt)];
-//                        for (GPSLogItem * item in subArr) {
-//                            maxAngle = MAX(maxAngle, item.angleDiff);
+//                    NSArray * subArr = [self.logArr subarrayWithRange:NSMakeRange(self.logArr.count-angleCnt, angleCnt)];
+//                    NSInteger realCnt = 0;
+//                    for (GPSLogItem * item in subArr) {
+//                        maxAngle = MAX(maxAngle, item.angleDiff);
+//                        if (item.angleDiff >= 0) {
 //                            angleDiff += item.angleDiff;
+//                            realCnt++;
 //                        }
-//                        CGFloat avgAngle = (angleDiff-maxAngle)/angleCnt;
-//                        self.moveStat = (avgAngle < 60 && maxAngle > 0) ? eMoveStatLine : eMoveStatJump;
-//                    } else {
-//                        self.moveStat = eMoveStatUnknow;
 //                    }
-
+//                    if (realCnt > 0) {
+//                        CGFloat avgAngle = angleDiff/realCnt;
+//                        self.moveStat = (avgAngle < 60 && maxAngle >= 0) ? eMoveStatLine : (maxAngle < 0 ? eMoveStatUnknow : eMoveStatJump);
+//                    } else {
+//                        //self.moveStat = eMoveStatUnknow;
+//                    }
+//                } else {
+//                    self.moveStat = eMoveStatUnknow;
+//                }
             } else {
-                self.moveStat = eMoveStatUnknow;
+                //self.moveStat = eMoveStatUnknow;
             }
         }
 
@@ -269,7 +254,7 @@
                 NSTimeInterval during = [gps.timestamp timeIntervalSinceDate:self.locChangeLogItem.timestamp];
                 // the car should drive at least 400 meter after start drive 10 min
                 if (during > 10*60) {
-                    if (self.moveStat == eMoveStatJump) {
+                    if (self.moveStat == eMoveStatJump || [gps.timestamp timeIntervalSinceDate:self.lastAngleCheckItem.timestamp] > 10*60) {
                         stat = eMotionStatStationary;
                         self.locChangeLogItem = gps;
                     }
@@ -372,18 +357,22 @@
                         if (nil == tmpLast) {
                             tmpLast = tmpArr[j];
                         }
+                        //NSLog(@"anglediff = %f - %@ <%@,%@>", tmpLast.angleDiff, tmpLast.timestamp, tmpLast.latitude, tmpLast.longitude);
                         GPSLogItem * itemThis = tmpArr[j];
                         CGFloat thisDuration = [itemThis.timestamp timeIntervalSinceDate:tmpLast.timestamp];
                         if (thisDuration > 5) {
                             tolDist += thisDuration*[itemThis.speed floatValue];
                             tolDuration += thisDuration;
+                            //NSLog(@"%ld, <%.5f,%.5f> = %f*%f ? %f, %@", j, [itemThis.latitude floatValue], [itemThis.longitude floatValue], [itemThis.speed floatValue], thisDuration, [itemThis distanceFrom:tmpLast], itemThis.timestamp);
                             tmpLast = itemThis;
-                            //NSLog(@"%ld, <%.5f,%.5f> = %f*%f, %@", j, [itemThis.latitude floatValue], [itemThis.longitude floatValue], [itemThis.speed floatValue], thisDuration, itemThis.timestamp);
                         }
                         tolCnt++;
                     }
                     if (tolDuration > 0) {
                         tol = tolDist/tolDuration;
+                        //CGFloat dist = [self.lastLogItem distanceFrom:self.locChangeLogItem];
+                        //CGFloat dur = [self.lastLogItem.timestamp timeIntervalSinceDate:self.locChangeLogItem.timestamp];
+                        //NSLog(@"$$$$$$$$$$$ tol speed: %f = %f/%f - dist2lastChange(%f-%f) - stat(%ld)", tol, tolDist, tolDuration, dist, dur, self.moveStat);
                     }
                     _endSpeedTrace = tol*tolCnt;
                     _endSpeedTraceCnt = tolCnt;
@@ -473,7 +462,9 @@
         _startSpeedTrace = _endSpeedTrace = 0;
         _startSpeedTraceCnt = _endSpeedTraceCnt = 0;
         _startSpeedTraceIdx = _endSpeedTraceIdx = _startMoveTraceIdx = 0;
+        self.moveStat = eMoveStatUnknow;
         self.locChangeLogItem = nil;
+        self.lastAngleCheckItem = nil;
         [self.logArr removeAllObjects];
     }
 }
@@ -503,7 +494,11 @@
             if ([lastItem.timestamp timeIntervalSinceDate:item.timestamp] >= _endThreshold*0.6) {
                 CGFloat avgSpeed = _endSpeedTrace/_endSpeedTraceCnt;
                 if (avgSpeed  < cAvgStationarySpeed) {
-                    newStat = eMotionStatStationary;
+                    if (eMoveStatLine == self.moveStat) {
+                        newStat = eMotionStatWalking;
+                    } else {
+                        newStat = eMotionStatStationary;
+                    }
                 } else if (avgSpeed  < cAvgWalkingSpeed) {
                     newStat = eMotionStatWalking;
                 } else if (avgSpeed  < cAvgRunningSpeed) {

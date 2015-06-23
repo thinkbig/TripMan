@@ -52,9 +52,12 @@ typedef enum
     NSDate *                      _resumeGpsDate;      // each time call start location update, use to check if the gps is warn up
     NSDate *                      _maylostGpsDate;     // the date not getting good gps
     NSDate *                      _lastStopGpsDate;
+    
+    NSNumber *                    _forceSignificant;
 }
 
 @property (nonatomic, strong) CMAccelerometerData *         lastAcceleraion;
+@property (nonatomic) BOOL                                  useSignificantLocationChange;
 
 @property (nonatomic) LTMotionType                          eCurrentMotion;
 @property (nonatomic, strong) NSMutableArray *              motionArray;
@@ -185,6 +188,23 @@ typedef enum
     }];
     
     return during;
+}
+
+- (BOOL)forceSignificantLocationChange {
+    if (nil == _forceSignificant) {
+        _forceSignificant = [[NSUserDefaults standardUserDefaults] objectForKey:kForceSiginificantLocChange];
+        if (nil == _forceSignificant) {
+            _forceSignificant = @NO;
+        }
+    }
+    return [_forceSignificant boolValue];
+}
+
+- (void)setForceSignificantLocationChange:(BOOL)forceSignificantLocationChange {
+    if ([_forceSignificant boolValue] != forceSignificantLocationChange) {
+        _forceSignificant = @(forceSignificantLocationChange);
+        [[NSUserDefaults standardUserDefaults] setObject:_forceSignificant forKey:kForceSiginificantLocChange];
+    }
 }
 
 - (void)stopMotionChecker
@@ -364,7 +384,7 @@ typedef enum
     
     CLLocationManager *locationManager = self.locationManager;
     [locationManager stopUpdatingLocation];
-    if (!self.useSignificantLocationChange) {
+    if (!self.useSignificantLocationChange && !self.forceSignificantLocationChange) {
         [locationManager stopMonitoringSignificantLocationChanges];
     }
     _lastStopGpsDate = [NSDate date];

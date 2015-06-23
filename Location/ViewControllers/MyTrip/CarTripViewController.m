@@ -313,7 +313,8 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
 
 - (void)updateDaySumInfo:(DaySummary*)daySum
 {
-    for (TripSummary * sum in [daySum validTrips])
+    NSArray * validTrips = [daySum validTrips];
+    for (TripSummary * sum in validTrips)
     {
         // update region info
         [[BussinessDataProvider sharedInstance] updateRegionInfo:sum.region_group.start_region force:NO success:^(id) {
@@ -416,7 +417,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
             return;
         }
         [self showLoading];
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        dispatch_async([AnaDbManager deviceDb].readQueue, ^{
             self.sumToday = [self fetchDayTripForDate:self.currentDate];
             self.sumYestoday = [self fetchDayTripForDate:[self.currentDate dateBySubtractingDays:1]];
             if (![self.currentDate isToday]) {
@@ -437,7 +438,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
             return;
         }
         [self showLoading];
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        dispatch_async([AnaDbManager deviceDb].readQueue, ^{
             self.sumThisWeek = [self fetchWeekTripForDate:self.currentWeekDate];
             self.sumLastWeek = [self fetchWeekTripForDate:[self.currentWeekDate dateBySubtractingDays:7]];
             if (![self.currentWeekDate isThisWeek]) {
@@ -458,7 +459,7 @@ typedef NS_ENUM(NSUInteger, eTripRange) {
             return;
         }
         [self showLoading];
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        dispatch_async([AnaDbManager deviceDb].readQueue, ^{
             self.sumThisMonth = [self fetchMonthTripForDate:self.currentMonthDate];
             self.sumLastMonth = [self fetchMonthTripForDate:[self.currentMonthDate dateBySubtractingMonths:1]];
             if (![self.currentMonthDate isThisMonth]) {

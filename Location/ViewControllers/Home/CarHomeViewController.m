@@ -71,6 +71,16 @@
     [self reloadContent];
 }
 
+- (void)sendAuthRequest
+{
+    SendAuthReq* req = [[SendAuthReq alloc] init];
+    req.scope = @"snsapi_message,snsapi_userinfo,snsapi_friend,snsapi_contact"; // @"post_timeline,sns"
+    req.state = @"xxx";
+    req.openID = @"0c806938e2413ce73eef92cc3";
+    
+    [WXApi sendAuthReq:req viewController:self delegate:self];
+}
+
 - (void) reloadContent
 {
     if (IS_UPDATING) {

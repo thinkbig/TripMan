@@ -12,8 +12,9 @@
 
 - (NSArray*) validTrips
 {
-    NSMutableArray * arr = [NSMutableArray arrayWithCapacity:self.all_trips.count];
-    for (TripSummary * sum in self.all_trips) {
+    NSArray * trips = [self.all_trips allObjects];
+    NSMutableArray * arr = [NSMutableArray arrayWithCapacity:trips.count];
+    for (TripSummary * sum in trips) {
         if ([sum.is_valid boolValue]) {
             [arr addObject:sum];
         }
@@ -24,7 +25,8 @@
 - (NSUInteger) validTripCount
 {
     NSUInteger cnt = 0;
-    for (TripSummary * sum in self.all_trips) {
+    NSArray * trips = [self.all_trips allObjects];
+    for (TripSummary * sum in trips) {
         if ([sum.is_valid boolValue]) {
             cnt++;
         }

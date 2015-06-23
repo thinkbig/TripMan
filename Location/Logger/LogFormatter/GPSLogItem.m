@@ -92,6 +92,32 @@
     return self;
 }
 
+- (id)initWithArray:(NSArray*)arr
+{
+    if ((self = [super init]))
+    {
+        if (arr.count >= 11) {
+            NSNumber * number = arr[0];
+            NSInteger timeStamp = [number integerValue];
+            self.timestamp = [NSDate dateWithTimeIntervalSince1970:timeStamp];
+            self.latitude = arr[1];
+            self.longitude = arr[2];
+            self.altitude = arr[3];
+            self.horizontalAccuracy = arr[4];
+            self.verticalAccuracy = arr[5];
+            self.course = arr[6];
+            self.speed = arr[7];
+            self.accelerationX = arr[8];
+            self.accelerationY = arr[9];
+            self.accelerationZ = arr[10];
+            self.isValid = YES;
+        } else {
+            self.isValid = NO;
+        }
+    }
+    return self;
+}
+
 - (CLLocation*) location
 {
     return [[CLLocation alloc] initWithCoordinate:[self coordinate] altitude:[self.altitude doubleValue] horizontalAccuracy:[self.horizontalAccuracy doubleValue] verticalAccuracy:[self.verticalAccuracy doubleValue] course:[self.course doubleValue] speed:[self.speed doubleValue] timestamp:self.timestamp];
@@ -129,6 +155,17 @@
 - (NSArray*) toArray
 {
     return @[@((unsigned long long)[_timestamp timeIntervalSince1970]), _latitude, _longitude, _altitude, _horizontalAccuracy, _verticalAccuracy, _course, _speed, _accelerationX, _accelerationY, _accelerationZ];
+}
+
++ (NSArray *)logArrFromJsonString:(NSString *)jsonStr
+{
+    NSArray * dictArr = [CommonFacade fromJsonString:jsonStr];
+    NSMutableArray * logArr = [NSMutableArray arrayWithCapacity:dictArr.count];
+    for (NSArray * itemArr in dictArr) {
+        GPSLogItem * item = [[GPSLogItem alloc] initWithArray:itemArr];
+        [logArr addObject:item];
+    }
+    return logArr;
 }
 
 @end

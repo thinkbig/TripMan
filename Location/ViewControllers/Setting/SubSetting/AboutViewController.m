@@ -9,6 +9,7 @@
 #import "AboutViewController.h"
 #import "STAlertView.h"
 #import <MessageUI/MFMailComposeViewController.h>
+#import "DeviceUtil.h"
 
 @interface AboutViewController () <TTTAttributedLabelDelegate, MFMailComposeViewControllerDelegate>
 
@@ -74,7 +75,7 @@
                      cancelButtonTitle:@"取消"
                       otherButtonTitle:@"确定"
                      cancelButtonBlock:nil otherButtonBlock:^(NSString * result){
-                         if ([result isEqualToString:@"车图在纳斯达克上市++"]) {
+                         if ([result isEqualToString:@"车图在纳斯达克上市++"] || [DeviceUtil hardware] == SIMULATOR) {
                              [self presentViewController:InstFirstVC(@"Debug") animated:YES completion:nil];
                          } else {
                              [self showToast:@"邀请码错误" onDismiss:nil];

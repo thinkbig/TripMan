@@ -332,13 +332,16 @@
     CLLocation * origLoc = [self.orig clLocation];
     CLLocation * destLoc = [self.dest clLocation];
     if (self.most_jam) {
-        [self.most_jam calCoefWithStartLoc:origLoc andEndLoc:destLoc];
-
+        if ([self.most_jam.from.ts timeIntervalSinceDate:self.orig.ts] < 60*5 || [self.dest.ts timeIntervalSinceDate:self.most_jam.to.ts] < 60*5) {
+            [self.most_jam calCoefWithStartLoc:origLoc andEndLoc:destLoc];
+        }
         return [self.most_jam trafficStat];
     }
     for (CTStep * step in self.steps) {
         for (CTJam * jam in step.jams) {
-            [jam calCoefWithStartLoc:origLoc andEndLoc:destLoc];
+            if ([jam.from.ts timeIntervalSinceDate:self.orig.ts] < 60*5 || [self.dest.ts timeIntervalSinceDate:jam.to.ts] < 60*5) {
+                [jam calCoefWithStartLoc:origLoc andEndLoc:destLoc];
+            }
         }
     }
 
@@ -374,3 +377,11 @@
 }
 
 @end
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+@implementation CTTrip
+
+@end
+
+

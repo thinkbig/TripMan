@@ -15,11 +15,11 @@
 #import "CTConfigProvider.h"
 #import "ActionSheetStringPicker.h"
 #import "NSArray+ObjectiveSugar.h"
+#import "LocationTracker.h"
 
 typedef NS_ENUM(NSUInteger, eDebugDisplayType) {
     eDebugDisplayUid = 0,
     eDebugDisplayUdid,
-    eDebugDisplayServerUrl,
     eDebugDisplayNerwork,
     eDebugDisplayReportStat,
     eDebugDisplayCount
@@ -37,6 +37,7 @@ typedef NS_ENUM(NSUInteger, eDebugActionType) {
     eDebugActionShowDebugInfo,
     eDebugActionEnableFileLog,
     eDebugActionEnableNonWifiReport,
+    eDebugActionForceSignificantLocChange,
     eDebugActionCount
 };
 
@@ -86,6 +87,8 @@ typedef NS_ENUM(NSUInteger, eDebugActionType) {
         } else {
             [DataReporter sharedInst].onlyWifiReport = YES;
         }
+    } else if (cellSwitch.tag == 100+eDebugActionForceSignificantLocChange) {
+        LOCATION_TRACKER.forceSignificantLocationChange = cellSwitch.isOn;
     }
 }
 
@@ -129,9 +132,6 @@ typedef NS_ENUM(NSUInteger, eDebugActionType) {
         } else if (eDebugDisplayUdid == indexPath.row) {
             cell.textLabel.text = @"设备id";
             cell.detailTextLabel.text = [[GToolUtil sharedInstance] deviceId];
-        } else if (eDebugDisplayServerUrl == indexPath.row) {
-            cell.textLabel.text = @"服务器url";
-            cell.detailTextLabel.text = kChetuBaseUrl;
         } else if (eDebugDisplayNerwork == indexPath.row) {
             cell.textLabel.text = @"网络环境";
             if (IS_REACHABLE) {
@@ -225,6 +225,13 @@ typedef NS_ENUM(NSUInteger, eDebugActionType) {
             [realCell.cellSwitch addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
             realCell.cellSwitch.tag = indexPath.section * 100 + indexPath.row;
             cell = realCell;
+        }  else if (eDebugActionForceSignificantLocChange == indexPath.row) {
+            DebugTableCell * realCell = [tableView dequeueReusableCellWithIdentifier:@"DebugTableCellId"];
+            realCell.mainLabel.text = @"如果车票丢的厉害，打开试试（GPS箭头保持实心）";
+            realCell.cellSwitch.on = LOCATION_TRACKER.forceSignificantLocationChange;
+            [realCell.cellSwitch addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
+            realCell.cellSwitch.tag = indexPath.section * 100 + indexPath.row;
+            cell = realCell;
         }
 
     }
@@ -238,7 +245,8 @@ typedef NS_ENUM(NSUInteger, eDebugActionType) {
     if (0 == indexPath.section) {
         return 54;
     } else if (1 == indexPath.section) {
-        if (eDebugActionShowDebugInfo == indexPath.row) {
+        if (eDebugActionShowDebugInfo == indexPath.row || eDebugActionEnableFileLog == indexPath.row ||
+            eDebugActionEnableNonWifiReport == indexPath.row || eDebugActionForceSignificantLocChange == indexPath.row) {
             return 50;
         }
         return 64;

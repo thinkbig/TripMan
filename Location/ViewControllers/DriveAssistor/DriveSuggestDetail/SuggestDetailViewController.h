@@ -10,12 +10,11 @@
 #import "BMapKit.h"
 #import "A3ParallaxScrollView.h"
 #import "CTRoute.h"
+#import "BMapBaseViewController.h"
 
-@interface SuggestDetailViewController : GViewController <BMKMapViewDelegate, UIScrollViewDelegate>
+@interface SuggestDetailViewController : BMapBaseViewController <UIScrollViewDelegate>
 
 @property (weak, nonatomic) IBOutlet A3ParallaxScrollView *rootScrollView;
-
-@property (strong, nonatomic) BMKMapView *mapView;
 
 @property (nonatomic, strong) CTRoute *         route;
 @property (nonatomic, strong) NSString *        endParkingId;       // 如果有

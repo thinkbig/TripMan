@@ -69,6 +69,8 @@
 		A33544111A1F1C3C0023815B /* ZBNSearchDisplayController.m in Sources */ = {isa = PBXBuildFile; fileRef = A33544101A1F1C3C0023815B /* ZBNSearchDisplayController.m */; };
 		A33544141A23759F0023815B /* SuggestDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A33544131A23759F0023815B /* SuggestDetailCell.m */; };
 		A3388E551B25D9780044882C /* DeviceUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = A3388E541B25D9780044882C /* DeviceUtil.m */; };
+		A3388E5D1B26C61D0044882C /* debugRoute.txt in Resources */ = {isa = PBXBuildFile; fileRef = A3388E5C1B26C61D0044882C /* debugRoute.txt */; };
+		A3388E601B28144C0044882C /* CTBadge.m in Sources */ = {isa = PBXBuildFile; fileRef = A3388E5F1B28144C0044882C /* CTBadge.m */; };
 		A340E8F419EEC7610014C14B /* GPSEndTraceAnalyzer.m in Sources */ = {isa = PBXBuildFile; fileRef = A340E8F319EEC7610014C14B /* GPSEndTraceAnalyzer.m */; };
 		A342849B19C42081002DB0FD /* GPSLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = A342849A19C42081002DB0FD /* GPSLogger.m */; };
 		A34284A019C6770A002DB0FD /* GPSFileLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = A342849F19C6770A002DB0FD /* GPSFileLogFormatter.m */; };
@@ -207,6 +209,9 @@
 		A382A4471A124CFF00974E7A /* PICircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = A382A4461A124CFF00974E7A /* PICircularProgressView.m */; };
 		A385C54719F6423300A0F7F6 /* GPSTurningAnalyzer.m in Sources */ = {isa = PBXBuildFile; fileRef = A385C54619F6423300A0F7F6 /* GPSTurningAnalyzer.m */; };
 		A385C54A19F68FA000A0F7F6 /* GPSAcceleratorAnalyzer.m in Sources */ = {isa = PBXBuildFile; fileRef = A385C54919F68FA000A0F7F6 /* GPSAcceleratorAnalyzer.m */; };
+		A3871D2B1B2922E4000461A7 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3871D2A1B2922E4000461A7 /* Fabric.framework */; };
+		A3871D2E1B2A7DC3000461A7 /* BMapBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A3871D2D1B2A7DC3000461A7 /* BMapBaseViewController.m */; };
+		A3871D321B2C859B000461A7 /* TripFetchFacade.m in Sources */ = {isa = PBXBuildFile; fileRef = A3871D311B2C859B000461A7 /* TripFetchFacade.m */; };
 		A38D882D1AEB8118000881FD /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A38D882C1AEB8118000881FD /* MessageUI.framework */; };
 		A38D88311AEBCF9F000881FD /* STAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = A38D88301AEBCF9F000881FD /* STAlertView.m */; };
 		A38D88341AEC8B8B000881FD /* DebugTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A38D88331AEC8B8B000881FD /* DebugTableCell.m */; };
@@ -409,6 +414,9 @@
 		A33544131A23759F0023815B /* SuggestDetailCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SuggestDetailCell.m; sourceTree = "<group>"; };
 		A3388E531B25D9780044882C /* DeviceUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceUtil.h; sourceTree = "<group>"; };
 		A3388E541B25D9780044882C /* DeviceUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceUtil.m; sourceTree = "<group>"; };
+		A3388E5C1B26C61D0044882C /* debugRoute.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = debugRoute.txt; sourceTree = "<group>"; };
+		A3388E5E1B28144C0044882C /* CTBadge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTBadge.h; sourceTree = "<group>"; };
+		A3388E5F1B28144C0044882C /* CTBadge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTBadge.m; sourceTree = "<group>"; };
 		A340E8F219EEC7610014C14B /* GPSEndTraceAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPSEndTraceAnalyzer.h; sourceTree = "<group>"; };
 		A340E8F319EEC7610014C14B /* GPSEndTraceAnalyzer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPSEndTraceAnalyzer.m; sourceTree = "<group>"; };
 		A342849919C42081002DB0FD /* GPSLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPSLogger.h; sourceTree = "<group>"; };
@@ -682,6 +690,11 @@
 		A385C54619F6423300A0F7F6 /* GPSTurningAnalyzer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPSTurningAnalyzer.m; sourceTree = "<group>"; };
 		A385C54819F68FA000A0F7F6 /* GPSAcceleratorAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPSAcceleratorAnalyzer.h; sourceTree = "<group>"; };
 		A385C54919F68FA000A0F7F6 /* GPSAcceleratorAnalyzer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPSAcceleratorAnalyzer.m; sourceTree = "<group>"; };
+		A3871D2A1B2922E4000461A7 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
+		A3871D2C1B2A7DC3000461A7 /* BMapBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMapBaseViewController.h; sourceTree = "<group>"; };
+		A3871D2D1B2A7DC3000461A7 /* BMapBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BMapBaseViewController.m; sourceTree = "<group>"; };
+		A3871D301B2C859B000461A7 /* TripFetchFacade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TripFetchFacade.h; sourceTree = "<group>"; };
+		A3871D311B2C859B000461A7 /* TripFetchFacade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TripFetchFacade.m; sourceTree = "<group>"; };
 		A38D882C1AEB8118000881FD /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		A38D882F1AEBCF9F000881FD /* STAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STAlertView.h; sourceTree = "<group>"; };
 		A38D88301AEBCF9F000881FD /* STAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STAlertView.m; sourceTree = "<group>"; };
@@ -919,6 +932,7 @@
 				5C90909218B3A66A00510153 /* CoreGraphics.framework in Frameworks */,
 				A320D01219BEAE8A00F4038A /* Bolts.framework in Frameworks */,
 				5C90909418B3A66A00510153 /* UIKit.framework in Frameworks */,
+				A3871D2B1B2922E4000461A7 /* Fabric.framework in Frameworks */,
 				5C90909018B3A66A00510153 /* Foundation.framework in Frameworks */,
 				A3C454441A8B515800D53342 /* libbaidumapapi.a in Frameworks */,
 				A320D00419BEA0BD00F4038A /* Parse.framework in Frameworks */,
@@ -962,6 +976,7 @@
 				A3A1F7D51B24771900B1B113 /* AVFoundation.framework */,
 				A38D882C1AEB8118000881FD /* MessageUI.framework */,
 				A3CD728D19D17128005F84E2 /* Crashlytics.framework */,
+				A3871D2A1B2922E4000461A7 /* Fabric.framework */,
 				A3CD728619D138F0005F84E2 /* MapKit.framework */,
 				A3CD35EB19C6A1A70039F6E1 /* CoreMotion.framework */,
 				A320D00F19BEA1B800F4038A /* Social.framework */,
@@ -1019,6 +1034,7 @@
 				5C90909818B3A66A00510153 /* InfoPlist.strings */,
 				5C90909B18B3A66A00510153 /* main.m */,
 				5C90909D18B3A66A00510153 /* TripMan-Prefix.pch */,
+				A3388E5C1B26C61D0044882C /* debugRoute.txt */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -1049,6 +1065,8 @@
 				A304053A1AE87FF70047E66B /* RouteOverlayView.m */,
 				A36CB5181B02494C000C4666 /* BCarAnnotationView.h */,
 				A36CB5191B02494C000C4666 /* BCarAnnotationView.m */,
+				A3871D2C1B2A7DC3000461A7 /* BMapBaseViewController.h */,
+				A3871D2D1B2A7DC3000461A7 /* BMapBaseViewController.m */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -1969,6 +1987,7 @@
 		A35C267C1A48FC56005F6658 /* CheTuApi */ = {
 			isa = PBXGroup;
 			children = (
+				A3871D2F1B2C856D000461A7 /* CTTrip */,
 				A35BC7221AA2E94800D726D4 /* CTReport */,
 				A3C454511A930B4300D53342 /* CTTraffic */,
 				A35C26801A48FCE2005F6658 /* CTPOI */,
@@ -2135,6 +2154,15 @@
 				A382A4461A124CFF00974E7A /* PICircularProgressView.m */,
 			);
 			path = PICircularProgressView;
+			sourceTree = "<group>";
+		};
+		A3871D2F1B2C856D000461A7 /* CTTrip */ = {
+			isa = PBXGroup;
+			children = (
+				A3871D301B2C859B000461A7 /* TripFetchFacade.h */,
+				A3871D311B2C859B000461A7 /* TripFetchFacade.m */,
+			);
+			path = CTTrip;
 			sourceTree = "<group>";
 		};
 		A38D882E1AEBCF9F000881FD /* STAlertView */ = {
@@ -2490,6 +2518,8 @@
 				A359E61A1AF395D600D7FF10 /* CarMaintainInfo.m */,
 				A36CB5211B061901000C4666 /* CTFeedbackModel.h */,
 				A36CB5221B061901000C4666 /* CTFeedbackModel.m */,
+				A3388E5E1B28144C0044882C /* CTBadge.h */,
+				A3388E5F1B28144C0044882C /* CTBadge.m */,
 			);
 			path = Chetu;
 			sourceTree = "<group>";
@@ -2756,6 +2786,7 @@
 				5C9090A818B3A66A00510153 /* Images.xcassets in Resources */,
 				5C90909A18B3A66A00510153 /* InfoPlist.strings in Resources */,
 				A399C9FB1A12E0CA00665917 /* Main.storyboard in Resources */,
+				A3388E5D1B26C61D0044882C /* debugRoute.txt in Resources */,
 				A3E2892C1ACD2DC40043F14C /* SearchSuggestionCell.xib in Resources */,
 				A3A1F7D11B1F45F900B1B113 /* QRScanViewController.xib in Resources */,
 				A36CB53A1B0A25D3000C4666 /* BGHintViewController.xib in Resources */,
@@ -2841,6 +2872,7 @@
 				A35C26411A426F4B005F6658 /* RZProgressView.m in Sources */,
 				A35C26861A490F5F005F6658 /* HomeTripCell.m in Sources */,
 				A342849B19C42081002DB0FD /* GPSLogger.m in Sources */,
+				A3871D321B2C859B000461A7 /* TripFetchFacade.m in Sources */,
 				A35C26251A426F4B005F6658 /* NSObject+RZBlockKVO.m in Sources */,
 				A36CB5411B0AD212000C4666 /* EMHintsView.m in Sources */,
 				A34F01221A04D98E00F58C17 /* BaseBaiduFacade.m in Sources */,
@@ -3028,6 +3060,7 @@
 				A34F01131A03D78900F58C17 /* LogFileListViewController.m in Sources */,
 				A3E289461ACFC58C0043F14C /* FavSelectViewController.m in Sources */,
 				A359E5F01AEFC32B00D7FF10 /* DrivingInfo.m in Sources */,
+				A3388E601B28144C0044882C /* CTBadge.m in Sources */,
 				A34890731A3FCCAF002DE948 /* NSData+Godzippa.m in Sources */,
 				A34284A019C6770A002DB0FD /* GPSFileLogFormatter.m in Sources */,
 				A34F01121A03D78900F58C17 /* LogFileContentViewController.m in Sources */,
@@ -3041,6 +3074,7 @@
 				A301EB681AE0FE6300CC6412 /* JamZone.m in Sources */,
 				A35BC74F1AAA8FD800D726D4 /* DrivingInfo+Fetcher.m in Sources */,
 				A35C26471A426F4B005F6658 /* RZTelprompt.m in Sources */,
+				A3871D2E1B2A7DC3000461A7 /* BMapBaseViewController.m in Sources */,
 				A35C263F1A426F4B005F6658 /* RZDelayedOperation.m in Sources */,
 				A35C26381A426F4B005F6658 /* UIViewController+RZKeyboardWatcher.m in Sources */,
 				A30405301AE7CB910047E66B /* BMKPoiInfo+Encode.m in Sources */,

@@ -39,6 +39,7 @@
 - (id)initWithDBResultSet:(FMResultSet*)resultSet;
 - (id)initWithEventItem:(GPSEventItem*)event;
 - (id)initWithParkingRegion:(ParkingRegion*)region;
+- (id)initWithArray:(NSArray*)arr;
 
 - (CLLocation*) location;
 - (CLLocationCoordinate2D) coordinate;
@@ -48,5 +49,7 @@
 - (CLLocationDistance) distanceFromCLLocation:(CLLocation*)loc;
 
 - (NSArray*) toArray;
+
++ (NSArray*) logArrFromJsonString:(NSString*)jsonStr;
 
 @end

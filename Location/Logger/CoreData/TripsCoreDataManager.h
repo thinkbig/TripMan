@@ -31,6 +31,8 @@
 - (void) dropDb;
 - (void) commit;
 
+- (dispatch_queue_t) readQueue;
+
 // analyze info quary api
 
 - (NSArray*) allParkingDetails;

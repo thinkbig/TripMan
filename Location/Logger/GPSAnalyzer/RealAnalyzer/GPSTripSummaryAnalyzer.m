@@ -80,13 +80,13 @@
         
         CGFloat first2St = [first distanceFrom:stLoc];
         CGFloat second2St = [second distanceFrom:stLoc];
-        if (second2St < 300 || MAX(first2St, second2St) < 500) {
+        if ([first.timestamp timeIntervalSinceDate:stLoc.timestamp] < 60*5 && (second2St < 300 || MAX(first2St, second2St) < 500)) {
             continue;   // too close to start loc, just ignore
         }
         
         CGFloat first2Ed = [first distanceFrom:edLoc];
         CGFloat second2Ed = [second distanceFrom:edLoc];
-        if (first2Ed < 300 || MAX(first2Ed, second2Ed) < 500) {
+        if ([edLoc.timestamp timeIntervalSinceDate:second.timestamp] < 60*5 && (first2Ed < 300 || MAX(first2Ed, second2Ed) < 500)) {
             continue;   // too close to end loc, just ignore
         }
         

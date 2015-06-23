@@ -330,7 +330,7 @@
             }
         } else {
             if (0 == self.mostParkingLoc.count) {
-                [self showToast:@"您还没有行驶记录\r尚未生成常用地点" onDismiss:nil];
+                [self showToast:@"您还没有行驶记录\r可以先使用搜索功能" onDismiss:nil];
             } else {
                 FavSelectViewController * favSelVC = [self.storyboard instantiateViewControllerWithIdentifier:@"FavSelectVC"];
                 [self.navigationController pushViewController:favSelVC animated:YES];

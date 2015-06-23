@@ -31,11 +31,11 @@
 #define ENV_COUNTRY_CODE        @"CN"
 
 
-#define kDeviceToken                @"kADeviceToken"
-#define kLocationForceRebuildKey    @"kLocationForceRebuildKey"
-#define kLastResignActiveDate       @"kLastResignActiveDate"
-#define kDebugEnable                @"kDebugEnable"
-#define kFileLogEnable              @"kFileLogEnable"
-
+#define kDeviceToken                    @"kADeviceToken"
+#define kLocationForceRebuildKey        @"kLocationForceRebuildKey"
+#define kLastResignActiveDate           @"kLastResignActiveDate"
+#define kDebugEnable                    @"kDebugEnable"
+#define kFileLogEnable                  @"kFileLogEnable"
+#define kForceSiginificantLocChange     @"kForceSiginificantLocChange"
 
 #endif

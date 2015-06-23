@@ -75,6 +75,8 @@
 #define cStillReagionRadius                     (1.8*120)
 #define cHistoryReagionRadius                   (2*120)
 
+#define cAngleCheckThres                        50
+
 #define cRouteStepMerge                         30
 #define cRouteStepMin                           60
 #define cRouteStepMax                           (1000*4)

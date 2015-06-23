@@ -252,7 +252,8 @@
         heavy_jam_cnt += [sum.traffic_heavy_jam_cnt integerValue];
         max_speed = MAX(max_speed, [sum.max_speed floatValue]);
         trip_cnt += [sum validTripCount];
-        for (TripSummary * realTrip in [sum validTrips]) {
+        NSArray * validTrips = [sum validTrips];
+        for (TripSummary * realTrip in validTrips) {
             if ([trip_most_dist.total_dist floatValue] < [realTrip.total_dist floatValue]) {
                 trip_most_dist = realTrip;
             }
@@ -347,7 +348,9 @@
         stLogItem = logArr[0];
     }
     
-    if (distMissing > cStartLocErrorDist) {
+    CGFloat tolDist = [tripSum.total_dist floatValue];
+    CGFloat process = tolDist>0 ? distMissing/tolDist : 0;
+    if (distMissing > cStartLocErrorDist || (distMissing > cStartLocErrorDist/3.0 && process > 0.3)) {
         tripSum.quality = @(eTripQualityLow);
     } else if (distMissing > cStartLocErrorDist/2.0) {
         tripSum.quality = @(eTripQualityMedium);

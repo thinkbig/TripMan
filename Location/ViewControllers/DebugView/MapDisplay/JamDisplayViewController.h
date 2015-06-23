@@ -8,10 +8,9 @@
 
 #import "GViewController.h"
 #import "BMapKit.h"
+#import "BMapBaseViewController.h"
 
-@interface JamDisplayViewController : GViewController <BMKMapViewDelegate>
-
-@property (strong, nonatomic) BMKMapView *      mapView;
+@interface JamDisplayViewController : BMapBaseViewController
 
 - (IBAction)refresh:(id)sender;
 
