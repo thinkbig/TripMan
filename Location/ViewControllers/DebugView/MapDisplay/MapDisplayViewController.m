@@ -10,10 +10,14 @@
 #import "GPSLogItem.h"
 #import "GeoTransformer.h"
 #import "GPSOffTimeFilter.h"
+#import "TurningInfo+Fetcher.h"
+#import "GRoadSnapFacade.h"
+#import "CTTrafficFullFacade.h"
+#import "CTRoute.h"
+#import "GeoRectBound.h"
 
 @interface MapDisplayViewController ()
 
-@property (nonatomic) BOOL                      fullMap;
 @property (nonatomic, strong) NSArray *         gpsLogs;
 @property (nonatomic, strong) NSArray *         monitorRegions;
 
@@ -35,10 +39,157 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    [self updateTripInfo];
+    [[GPSLogger sharedLogger].offTimeAnalyzer analyzeTripForSum:self.tripSum withAnalyzer:nil];
     
-    self.fullMap = YES;
-    [self switchMap:nil];
+    [self updateTripInfo];
+
+    NSArray * rawRoute = [GPSOffTimeFilter keyRouteFromGPS:_gpsLogs autoFilter:YES];
+    [self updateRouteView:rawRoute];
+    [self updateSnapData:rawRoute];
+    
+}
+
+- (void) updateWayPointData:(NSArray*)snapData
+{
+    GSnapPtModel * first = snapData[0];
+    GSnapPtModel * last = [snapData lastObject];
+    NSMutableArray * bdArr = [NSMutableArray array];
+    for (int i = 1; i < snapData.count-1; i++) {
+        GSnapPtModel * cur = snapData[i];
+        CLLocationCoordinate2D bdCoor = [GeoTransformer mars2Baidu:[cur.location coordinate]];
+        [bdArr addObject:@{@"lat": @(bdCoor.latitude), @"lon": @(bdCoor.longitude)}];
+    }
+    
+    CTTrafficFullFacade * facade = [[CTTrafficFullFacade alloc] init];
+    facade.fromCoorBaidu = [GeoTransformer mars2Baidu:[first.location coordinate]];
+    facade.toCoorBaidu = [GeoTransformer mars2Baidu:[last.location coordinate]];
+    [facade requestWithSuccess:^(CTRoute * route) {
+        NSLog(@"updateWayPointData");
+        [self updateWithBaiduRoute:route];
+    } failure:^(NSError * err) {
+        NSLog(@"CTTrafficFullFacade err = %@", err);
+    }];
+}
+
+- (void) updateWithBaiduRoute:(CTRoute*)route
+{
+    [self.mapView removeOverlays:self.mapView.overlays];
+    
+    NSArray * steps = route.steps;
+    CTBaseLocation * startLoc = route.orig;
+    CTBaseLocation * endLoc = route.dest;
+    
+    GeoRectBound * regionBound = [GeoRectBound new];
+    
+    MKCircle * circle = [MKCircle circleWithCenterCoordinate:[GeoTransformer baidu2Mars:[startLoc coordinate]] radius:15];
+    circle.title = @"ErrCircle";
+    [self.mapView addOverlay:circle];
+    
+    MKCircle * circle1 = [MKCircle circleWithCenterCoordinate:[GeoTransformer baidu2Mars:[endLoc coordinate]] radius:15];
+    circle.title = @"ErrCircle";
+    [self.mapView addOverlay:circle1];
+    
+    for (CTStep * oneStep in steps)
+    {
+        CLLocationCoordinate2D coorFrom = [GeoTransformer baidu2Mars:[oneStep.from coordinate]];
+        [regionBound updateBoundsWithCoor:coorFrom];
+        
+        CLLocationCoordinate2D coorTo = [GeoTransformer baidu2Mars:[oneStep.to coordinate]];
+        [regionBound updateBoundsWithCoor:coorTo];
+        
+        NSArray * pathArr = [oneStep pathArray];
+        
+        CLLocationCoordinate2D pointsToUse[pathArr.count+2];
+        pointsToUse[0] = coorFrom;
+        pointsToUse[pathArr.count+1] = coorTo;
+        
+        for (int i = 0; i < pathArr.count; i++) {
+            CTBaseLocation * obj = pathArr[i];
+            CLLocationCoordinate2D coor = [GeoTransformer baidu2Mars:[obj coordinate]];
+            pointsToUse[i+1] = coor;
+        }
+        
+        MKPolyline * lineOne = [MKPolyline polylineWithCoordinates:pointsToUse count:pathArr.count+2];
+        lineOne.title = @"allLine";
+        [self.mapView addOverlay:lineOne];
+    }
+    
+    [self.mapView setRegion:[regionBound mapRegion] animated:YES];
+}
+
+- (void) updateSnapData:(NSArray*)rawRoute
+{
+//    NSMutableArray * snapRoute = [NSMutableArray arrayWithCapacity:rawRoute.count];
+//    for (GPSLogItem * item in rawRoute) {
+//        CLLocationCoordinate2D coor = [item locationCoordinate];
+//        CLLocationCoordinate2D marsCoor = [GeoTransformer earth2Mars:coor];
+//        GSnapPtModel * model = [[GSnapPtModel alloc] init];
+//        model.location = [GLocModel new];
+//        model.location.latitude = @(marsCoor.latitude);
+//        model.location.longitude = @(marsCoor.longitude);
+//        [snapRoute addObject:model];
+//    }
+//    [self updateWayPointData:snapRoute];
+//    // google服务被杀千刀的墙了
+//    return;
+    
+    GRoadSnapFacade * facade = [[GRoadSnapFacade alloc] init];
+    facade.snapPath = rawRoute;
+    facade.interpolate = YES;
+    [facade requestWithSuccess:^(NSArray * snapRoute) {
+        NSLog(@"update snap path");
+        [self updateMapWithSnapRoute:snapRoute];
+        //[self updateWayPointData:snapRoute];
+    } failure:^(NSError * err) {
+        NSLog(@"GRoadSnapFacade err = %@", err);
+    }];
+}
+
+- (void)updateMapWithSnapRoute:(NSArray*)routes
+{
+    [self.mapView removeOverlays:self.mapView.overlays];
+    
+    if (routes.count > 1)
+    {
+        MKCoordinateRegion region;
+        
+        CLLocationDegrees maxLat = -90;
+        CLLocationDegrees maxLon = -180;
+        CLLocationDegrees minLat = 90;
+        CLLocationDegrees minLon = 180;
+        
+        CLLocationCoordinate2D pointsToUse[routes.count];
+        for (int i = 0; i < routes.count; i++)
+        {
+            GSnapPtModel * item = routes[i];
+
+            CLLocationCoordinate2D marsCoords = [item coordinate];
+            pointsToUse[i] = marsCoords;
+
+            if(marsCoords.latitude > maxLat)
+                maxLat = marsCoords.latitude;
+            if(marsCoords.latitude < minLat)
+                minLat = marsCoords.latitude;
+            if(marsCoords.longitude > maxLon)
+                maxLon = marsCoords.longitude;
+            if(marsCoords.longitude < minLon)
+                minLon = marsCoords.longitude;
+
+            MKCircle * circle = [MKCircle circleWithCenterCoordinate:marsCoords radius:8];
+            circle.title = @"ErrCircle";
+            [self.mapView addOverlay:circle];
+        }
+        
+        MKPolyline *lineOne = [MKPolyline polylineWithCoordinates:pointsToUse count:routes.count];
+        lineOne.title = @"allLine";
+        [self.mapView addOverlay:lineOne];
+        
+        region.center.latitude     = (maxLat + minLat) / 2;
+        region.center.longitude    = (maxLon + minLon) / 2;
+        region.span.latitudeDelta  = maxLat - minLat + 0.018;
+        region.span.longitudeDelta = maxLon - minLon + 0.018;
+        [self.mapView setRegion:region animated:YES];
+    }
 }
 
 - (void)updateTripInfo
@@ -65,7 +216,7 @@
                 CLLocation * curLoc = [[CLLocation alloc] initWithLatitude:[item.latitude doubleValue] longitude:[item.longitude doubleValue]];
                 CLLocation * lastLoc = [[CLLocation alloc] initWithLatitude:[stItem.latitude doubleValue] longitude:[stItem.longitude doubleValue]];
                 CLLocationDistance distance = [lastLoc distanceFromLocation:curLoc];
-                if (distance < 1200) {
+                if (distance < cStartLocErrorDist) {
                     // the modified start point is valid, add to array
                     [logs addObject:stItem];
                 }
@@ -93,10 +244,10 @@
 //    {
 //        CLLocationCoordinate2D coordsSt = CLLocationCoordinate2DMake([group.start_region.center_lat floatValue], [group.start_region.center_lon floatValue]);
 //        CLLocationCoordinate2D coordsEd = CLLocationCoordinate2DMake([group.end_region.center_lat floatValue], [group.end_region.center_lon floatValue]);
-//        MKCircle * circleSt = [MKCircle circleWithCenterCoordinate:[GeoTransformer earth2Mars:coordsSt] radius:500];
+//        MKCircle * circleSt = [MKCircle circleWithCenterCoordinate:[GeoTransformer earth2Mars:coordsSt] radius:cRegionRadiusThreshold];
 //        circleSt.title = @"parkingRegion";
 //        [self.mapView addOverlay:circleSt];
-//        MKCircle * circleEd = [MKCircle circleWithCenterCoordinate:[GeoTransformer earth2Mars:coordsEd] radius:500];
+//        MKCircle * circleEd = [MKCircle circleWithCenterCoordinate:[GeoTransformer earth2Mars:coordsEd] radius:cRegionRadiusThreshold];
 //        circleEd.title = @"parkingRegion";
 //        [self.mapView addOverlay:circleEd];
 //    }
@@ -113,7 +264,7 @@
         CLLocationCoordinate2D pointsToUse[gpsLog.count];
         int realCnt = 0;
         BOOL isJam = NO;
-        GPSLogItem * last = [gpsLog lastObject];
+        //GPSLogItem * last = [gpsLog lastObject];
         for (int i = 0; i < gpsLog.count; i++)
         {
             GPSLogItem * item = gpsLog[i];
@@ -137,24 +288,6 @@
             if([item.longitude doubleValue] < minLon)
                 minLon = [item.longitude doubleValue];
             
-            if (!self.fullMap) {
-                pointsToUse[realCnt++] = marsCoords;
-                if (i%2) {
-                    MKPolyline *lineOne = [MKPolyline polylineWithCoordinates:pointsToUse count:realCnt];
-                    lineOne.title = @"allLine";
-                    [self.mapView addOverlay:lineOne];
-                    realCnt = 0;
-                    pointsToUse[realCnt++] = marsCoords;
-                } else {
-                    MKPolyline *lineOne = [MKPolyline polylineWithCoordinates:pointsToUse count:realCnt];
-                    lineOne.title = @"jamLine";
-                    [self.mapView addOverlay:lineOne];
-                    realCnt = 0;
-                    pointsToUse[realCnt++] = marsCoords;
-                }
-                continue;
-            }
-            
             // travel route and traffic jam route
             pointsToUse[realCnt++] = marsCoords;
             if (!isJam && curSpeed <= cAvgTrafficJamSpeed) {
@@ -165,44 +298,41 @@
                 pointsToUse[realCnt++] = marsCoords;
             } else if (isJam && curSpeed > cAvgTrafficJamSpeed) {
                 MKPolyline *lineOne = [MKPolyline polylineWithCoordinates:pointsToUse count:realCnt];
-                lineOne.title = @"jamLine";
+                lineOne.title = @"allLine";
                 [self.mapView addOverlay:lineOne];
                 realCnt = 0;
                 pointsToUse[realCnt++] = marsCoords;
             }
             isJam = curSpeed <= cAvgTrafficJamSpeed ? YES : NO;
             
-            if ([item.horizontalAccuracy doubleValue] >= 30) {
-                // location with low accuracy
-                MKCircle * circle = [MKCircle circleWithCenterCoordinate:marsCoords radius:[item.horizontalAccuracy doubleValue]/5.0];
-                circle.title = @"ErrCircle";
-                [self.mapView addOverlay:circle];
-            }
+            MKCircle * circle = [MKCircle circleWithCenterCoordinate:marsCoords radius:[item.horizontalAccuracy doubleValue]];
+            circle.title = @"ErrCircle";
+            [self.mapView addOverlay:circle];
             
             if (i > 0) {
                 // break or accelerate
-                if ([GPSOffTimeFilter dist2FromGPSItem:last toItem:item] > 30 && [last.timestamp timeIntervalSinceDate:item.timestamp] >= 10 && [item.horizontalAccuracy doubleValue] <= 1000) {
-                    GPSLogItem * lastItem = gpsLog[i-1];
-                    CGFloat xDif = fabs([item.accelerationX doubleValue]-[lastItem.accelerationX doubleValue]);
-                    CGFloat yDif = fabs([item.accelerationY doubleValue]-[lastItem.accelerationY doubleValue]);
-                    CGFloat zDif = fabs([item.accelerationZ doubleValue]-[lastItem.accelerationZ doubleValue]);
-                    CGFloat mod = xDif + yDif + zDif;
-                    
-                    MKCircle * circle = nil;
-                    if (mod > 0.4) {
-                        circle = [MKCircle circleWithCenterCoordinate:marsCoords radius:10];
-                    } else if (mod > 0.2) {
-                        circle = [MKCircle circleWithCenterCoordinate:marsCoords radius:5];
-                    }
-                    if (circle) {
-                        if ([item.speed doubleValue] > [lastItem.speed doubleValue]) {
-                            circle.title = @"MoveForward";
-                        } else {
-                            circle.title = @"MoveBackward";
-                        }
-                        [self.mapView addOverlay:circle];
-                    }
-                }
+//                if ([last distanceFrom:item] > 30 && [last.timestamp timeIntervalSinceDate:item.timestamp] >= 10 && [item.horizontalAccuracy doubleValue] <= 1000) {
+//                    GPSLogItem * lastItem = gpsLog[i-1];
+//                    CGFloat xDif = fabs([item.accelerationX doubleValue]-[lastItem.accelerationX doubleValue]);
+//                    CGFloat yDif = fabs([item.accelerationY doubleValue]-[lastItem.accelerationY doubleValue]);
+//                    CGFloat zDif = fabs([item.accelerationZ doubleValue]-[lastItem.accelerationZ doubleValue]);
+//                    CGFloat mod = xDif + yDif + zDif;
+//                    
+//                    MKCircle * circle = nil;
+//                    if (mod > 0.4) {
+//                        circle = [MKCircle circleWithCenterCoordinate:marsCoords radius:10];
+//                    } else if (mod > 0.2) {
+//                        circle = [MKCircle circleWithCenterCoordinate:marsCoords radius:5];
+//                    }
+//                    if (circle) {
+//                        if ([item.speed doubleValue] > [lastItem.speed doubleValue]) {
+//                            circle.title = @"MoveForward";
+//                        } else {
+//                            circle.title = @"MoveBackward";
+//                        }
+//                        [self.mapView addOverlay:circle];
+//                    }
+//                }
 
                 // terbulence location
 //                CGFloat threshold = .7;
@@ -239,6 +369,49 @@
         region.span.longitudeDelta = maxLon - minLon + 0.018;
         [self.mapView setRegion:region animated:YES];
     }
+    
+    NSInteger heavyJam = 0;
+    NSArray * jamArr =  [self.tripSum.traffic_jams allObjects];
+    for (TrafficJam * jamPair in jamArr)
+    {
+        CLLocationCoordinate2D pointsToUse[2];
+        
+        CLLocationCoordinate2D coords;
+        coords.latitude = [jamPair.start_lat doubleValue];
+        coords.longitude = [jamPair.start_lon doubleValue];
+        CLLocationCoordinate2D marsCoords = [GeoTransformer earth2Mars:coords];
+        pointsToUse[0] = marsCoords;
+        
+        coords.latitude = [jamPair.end_lat doubleValue];
+        coords.longitude = [jamPair.end_lon doubleValue];
+        marsCoords = [GeoTransformer earth2Mars:coords];
+        pointsToUse[1] = marsCoords;
+        
+        MKPolyline *lineOne = [MKPolyline polylineWithCoordinates:pointsToUse count:2];
+        lineOne.title = @"jamLine";
+
+        if (jamPair.end_date && jamPair.start_date && [jamPair.end_date timeIntervalSinceDate:jamPair.start_date] > cHeavyTrafficJamThreshold) {
+            lineOne.title = @"heavyJamLine";
+            heavyJam++;
+        }
+        
+        [self.mapView addOverlay:lineOne];
+    }
+    
+    // draw turning point
+    NSData * ptsData = self.tripSum.turning_info.addi_data;
+    if (ptsData) {
+        NSArray * pts = [NSKeyedUnarchiver unarchiveObjectWithData:ptsData];
+        for (NSDictionary * first in pts) {
+            CLLocationCoordinate2D coords = CLLocationCoordinate2DMake([first[@"lat"] doubleValue], [first[@"lon"] doubleValue]);
+            CLLocationCoordinate2D marsCoords = [GeoTransformer earth2Mars:coords];
+            MKCircle * circle = [MKCircle circleWithCenterCoordinate:marsCoords radius:15];
+            circle.title = @"MoveForward";
+            [self.mapView addOverlay:circle];
+        }
+    }
+    
+    //NSLog(@"traffic light = %@, total jam = %@, light jam = %@, heavy jam = %ld", _tripSum.traffic_light_tol_cnt, _tripSum.traffic_heavy_jam_cnt, _tripSum.traffic_light_jam_cnt, (long)heavyJam);
 }
 
 /*
@@ -261,7 +434,9 @@
         MKPolylineRenderer * lineRender=[[MKPolylineRenderer alloc] initWithOverlay:overlay] ;
         if ([line.title isEqualToString:@"allLine"]) {
             lineRender.strokeColor = [UIColor colorWithRed:69.0f/255.0f green:212.0f/255.0f blue:255.0f/255.0f alpha:0.9];
-        } else {
+        } else if ([line.title isEqualToString:@"jamLine"]) {
+            lineRender.strokeColor = [UIColor colorWithRed:168.0f/255.0f green:12.0f/255.0f blue:155.0f/255.0f alpha:0.9];
+        } else if ([line.title isEqualToString:@"heavyJamLine"]) {
             lineRender.strokeColor = [UIColor colorWithRed:255.0f/255.0f green:12.0f/255.0f blue:55.0f/255.0f alpha:0.9];
         }
         lineRender.lineWidth = 4.0;
@@ -289,17 +464,6 @@
 
 - (IBAction)switchMap:(UIBarButtonItem*)sender
 {
-    if (self.fullMap) {
-        [self updateRouteView:[GPSOffTimeFilter smoothGPSData:_gpsLogs iteratorCnt:3]];
-        sender.title = @"Simple";
-    } else {
-        GPSOffTimeFilter * filter = [GPSOffTimeFilter new];
-        [filter calGPSDataForTurning:_gpsLogs smoothFirst:YES];
-        NSArray * pts = [filter featurePoints];
-        [self updateRouteView:pts];
-        sender.title = @"Full";
-    }
-    self.fullMap = !_fullMap;
 }
 
 - (IBAction)close:(id)sender {

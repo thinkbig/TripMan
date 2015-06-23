@@ -26,7 +26,7 @@
         self.backgroundColor = [UIColor whiteColor];
         
         self.devideLineImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, 1)];
-        [self.devideLineImageView setBackgroundColor:[UIColor lightGrayColor]];
+        [self.devideLineImageView setBackgroundColor:[UIColor darkGrayColor]];
         [self addSubview:self.devideLineImageView];
         
         self.backgroundImageView = [[UIImageView alloc] initWithImage:[self defaultBackgroundImage]];
@@ -36,14 +36,25 @@
         self.backgroundImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         [self addSubview:self.backgroundImageView];
         
-        self.selectedImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 1, frame.size.height, frame.size.height)];
+        self.selectedImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, frame.size.height, frame.size.height)];
         self.selectedImageView.image = [self defaultSelectionIndicatorImage];
-        self.selectedImageView.contentMode = UIViewContentModeBottom;
+        self.selectedImageView.contentMode = UIViewContentModeScaleToFill;
         self.selectedImageView.backgroundColor = [UIColor clearColor];
         self.selectedImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         [self addSubview:self.selectedImageView];
     }
     return self;
+}
+
+- (void)setTabShadowImage:(UIImage*)image
+{
+    if (image) {
+        self.devideLineImageView.image = image;
+        self.devideLineImageView.backgroundColor = [UIColor clearColor];
+        CGSize imgSz = image.size;
+        CGSize frameSz = self.bounds.size;
+        self.devideLineImageView.frame = CGRectMake((frameSz.width-imgSz.width)/2, -imgSz.height, imgSz.width, imgSz.height);
+    }
 }
 
 - (void)setItemModels:(NSArray*)itemModels
@@ -67,17 +78,19 @@
     [itemModels enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         TSTabBarItemModel * model = (TSTabBarItemModel*)obj;
         TSTabBarItem* button = [[TSTabBarItem alloc] initWithFrame:CGRectMake(idx * buttonSize.width + offset, 0, buttonSize.width, buttonSize.height)];
-        [button setTitle:model.itemTitle forState:UIControlStateNormal];
-        button.imageEdgeInsets = UIEdgeInsetsMake(5.0, 5.0, 20.0, 5.0);
-        button.titleEdgeInsets = UIEdgeInsetsMake(30.0, 2.0, 5.0, 2.0);
-        button.titleLabel.font = [UIFont boldSystemFontOfSize:16];
-        [button setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+        if (model.itemTitle) {
+            [button setTitle:model.itemTitle forState:UIControlStateNormal];
+            button.imageEdgeInsets = UIEdgeInsetsMake(5.0, 5.0, 20.0, 5.0);
+            button.titleEdgeInsets = UIEdgeInsetsMake(30.0, 2.0, 5.0, 2.0);
+            button.titleLabel.font = [UIFont boldSystemFontOfSize:16];
+            [button setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+        }
         button.itemModel = model;
         [button addActionCompletionBlock:^(id sender) {
             if (self.delegate && [self.delegate respondsToSelector:@selector(tabBar:clickItemAtIndex:currentIndex:)]) {
                 [self.delegate tabBar:self clickItemAtIndex:idx currentIndex:_selectedIndex];
             }
-            [self setSelectedIndex:idx animed:YES];
+            [self setSelectedIndex:idx animed:NO];
         } forControlEvents:UIControlEventTouchUpInside];
         
         if (idx == self.selectedIndex) {

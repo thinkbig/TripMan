@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="SCY-PR-AOO">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
+    </dependencies>
+    <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="huS-Ty-5Kd">
+            <objects>
+                <navigationController id="SCY-PR-AOO" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="738-SC-80g">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="vQf-Lj-03p" kind="relationship" relationship="rootViewController" id="XqX-j3-I7g"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bLd-Te-ctC" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-284.80000000000001" y="279.26666666666665"/>
+        </scene>
+        <!--Car Maintain Info View Controller-->
+        <scene sceneID="UTL-po-aO0">
+            <objects>
+                <viewController storyboardIdentifier="CarMaintainInfoViewController" hidesBottomBarWhenPushed="YES" id="vQf-Lj-03p" customClass="CarMaintainInfoViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="E6t-8R-jRm"/>
+                        <viewControllerLayoutGuide type="bottom" id="ICv-lF-X1q"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="PTc-N6-IHB">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="main_bg" translatesAutoresizingMaskIntoConstraints="NO" id="1X9-Gd-KCO">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                            </imageView>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Rs0-mt-H4q">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="oJJ-sX-iVA">
+                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="headerReferenceSize" width="320" height="30"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CarMaintainCellId" id="7UT-NT-JNH" customClass="CarMaintainCell">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="48"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="上次保养里程" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c0A-eF-tio">
+                                                    <rect key="frame" x="15" y="10" width="102" height="28"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="km" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qVi-7w-RT8">
+                                                    <rect key="frame" x="275" y="10" width="30" height="28"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="爱车上次保养时的里程数" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="60Z-5o-ICz">
+                                                    <rect key="frame" x="111" y="9" width="168" height="30"/>
+                                                    <color key="textColor" red="0.0" green="0.92156862745098034" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                                </textField>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <size key="customSize" width="320" height="48"/>
+                                        <connections>
+                                            <outlet property="maintainContent" destination="60Z-5o-ICz" id="90U-fa-xeQ"/>
+                                            <outlet property="maintainTitle" destination="c0A-eF-tio" id="kOV-nX-f84"/>
+                                            <outlet property="maintainUnit" destination="qVi-7w-RT8" id="lK0-50-p5W"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CarMaintainConfirmCellId" id="yOp-pM-tkJ" customClass="CarMaintainConfirmCell">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="52"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Md9-da-cmv">
+                                                    <rect key="frame" x="84" y="7" width="153" height="38"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                                                    <inset key="contentEdgeInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="5"/>
+                                                    <state key="normal" title="我已保养" backgroundImage="guide_baoyang_btn">
+                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                </button>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <size key="customSize" width="320" height="52"/>
+                                        <connections>
+                                            <outlet property="maintainBtn" destination="Md9-da-cmv" id="HvX-V1-akj"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                </cells>
+                                <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="MaintainHeaderId" id="KS1-mj-6no">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="方便及时查看和提醒保养情况" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hTz-D1-sYe">
+                                            <rect key="frame" x="15" y="4" width="235" height="21"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                                            <color key="textColor" red="1" green="1" blue="1" alpha="0.54000000000000004" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </collectionReusableView>
+                                <connections>
+                                    <outlet property="dataSource" destination="vQf-Lj-03p" id="NLa-hv-Xqx"/>
+                                    <outlet property="delegate" destination="vQf-Lj-03p" id="YmQ-4W-ByN"/>
+                                </connections>
+                            </collectionView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="Rs0-mt-H4q" secondAttribute="trailing" id="BbZ-RQ-Pp7"/>
+                            <constraint firstItem="Rs0-mt-H4q" firstAttribute="leading" secondItem="PTc-N6-IHB" secondAttribute="leading" id="Enw-QG-Yob"/>
+                            <constraint firstItem="ICv-lF-X1q" firstAttribute="top" secondItem="Rs0-mt-H4q" secondAttribute="bottom" id="K20-6k-3ES"/>
+                            <constraint firstItem="1X9-Gd-KCO" firstAttribute="top" secondItem="PTc-N6-IHB" secondAttribute="top" id="MvC-X9-5RD"/>
+                            <constraint firstItem="Rs0-mt-H4q" firstAttribute="top" secondItem="E6t-8R-jRm" secondAttribute="bottom" id="RQf-pz-oci"/>
+                            <constraint firstItem="1X9-Gd-KCO" firstAttribute="leading" secondItem="PTc-N6-IHB" secondAttribute="leading" id="l6S-Am-H0j"/>
+                            <constraint firstItem="ICv-lF-X1q" firstAttribute="top" secondItem="1X9-Gd-KCO" secondAttribute="bottom" id="omr-Fb-II7"/>
+                            <constraint firstAttribute="trailing" secondItem="1X9-Gd-KCO" secondAttribute="trailing" id="qdc-Eb-xtQ"/>
+                        </constraints>
+                    </view>
+                    <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
+                    <navigationItem key="navigationItem" id="1Ux-Or-dT8">
+                        <barButtonItem key="rightBarButtonItem" title="保存" id="qc1-8B-HTr">
+                            <connections>
+                                <action selector="saveInfo:" destination="vQf-Lj-03p" id="Cro-Kj-18i"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
+                    <connections>
+                        <outlet property="collectView" destination="Rs0-mt-H4q" id="2jV-J6-T2d"/>
+                        <outlet property="saveBtn" destination="qc1-8B-HTr" id="bIz-IB-mWe"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0Sf-OU-lEB" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="191" y="279"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="guide_baoyang_btn" width="153" height="38"/>
+        <image name="main_bg" width="320" height="568"/>
+    </resources>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
+</document>

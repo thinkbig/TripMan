@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
-#import "TripSummary.h"
 
 @interface MapDisplayViewController : UIViewController
 

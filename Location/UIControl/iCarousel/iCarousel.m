@@ -134,6 +134,7 @@ NSComparisonResult compareViewDepth(UIView *view1, UIView *view2, iCarousel *sel
 
 - (void)setUp
 {
+    _itemOffset = CGPointZero;
     _decelerationRate = 0.95;
     _scrollEnabled = YES;
     _bounces = YES;
@@ -796,8 +797,8 @@ NSComparisonResult compareViewDepth(UIView *view1, UIView *view2, iCarousel *sel
     
     //set view frame
     frame = view.frame;
-    frame.origin.x = (containerView.bounds.size.width - frame.size.width) / 2.0;
-    frame.origin.y = (containerView.bounds.size.height - frame.size.height) / 2.0;
+    frame.origin.x = (containerView.bounds.size.width - frame.size.width) / 2.0 + self.itemOffset.x;
+    frame.origin.y = (containerView.bounds.size.height - frame.size.height) / 2.0 + self.itemOffset.y;
     view.frame = frame;
     [containerView addSubview:view];
     containerView.layer.opacity = 0;
@@ -1240,8 +1241,8 @@ NSComparisonResult compareViewDepth(UIView *view1, UIView *view2, iCarousel *sel
         
         //set view frame
         frame = view.frame;
-        frame.origin.x = (containerView.bounds.size.width - frame.size.width) / 2.0;
-        frame.origin.y = (containerView.bounds.size.height - frame.size.height) / 2.0;
+        frame.origin.x = (containerView.bounds.size.width - frame.size.width) / 2.0 + self.itemOffset.x;
+        frame.origin.y = (containerView.bounds.size.height - frame.size.height) / 2.0 + self.itemOffset.y;
         view.frame = frame;
         
         //switch views

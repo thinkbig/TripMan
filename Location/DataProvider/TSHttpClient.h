@@ -11,7 +11,8 @@
 
 typedef enum {
     eSerializationTextType = 0,
-    eSerializationJsonType
+    eSerializationJsonType = 1,
+    eSerializationJsonGzipType = 2
 } eSerializationType;
 
 @interface ClientConfig : NSObject

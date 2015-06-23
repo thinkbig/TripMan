@@ -6,11 +6,12 @@
 
 #import <Foundation/Foundation.h>
 
-#define D_MINUTE	60
-#define D_HOUR		3600
-#define D_DAY		86400
-#define D_WEEK		604800
-#define D_YEAR		31556926
+#define D_MINUTE            60
+#define D_HOUR              3600
+#define D_DAY               86400
+#define D_WEEK              604800
+#define D_YEAR              31556926
+#define D_FIRST_WEEKDAY     2   // monday
 
 @interface NSDate (Utilities)
 + (NSCalendar *) currentCalendar; // avoid bottlenecks
@@ -85,6 +86,10 @@
 // Date extremes
 - (NSDate *) dateAtStartOfDay;
 - (NSDate *) dateAtEndOfDay;
+- (NSDate *) dateAtStartOfWeek;
+- (NSDate *) dateAtEndOfWeek;
+- (NSDate *) dateAtStartOfMonth;
+- (NSDate *) dateAtEndOfMonth;
 
 // Retrieving intervals
 - (NSInteger) minutesAfterDate: (NSDate *) aDate;
@@ -93,7 +98,8 @@
 - (NSInteger) hoursBeforeDate: (NSDate *) aDate;
 - (NSInteger) daysAfterDate: (NSDate *) aDate;
 - (NSInteger) daysBeforeDate: (NSDate *) aDate;
-- (NSInteger)distanceInDaysToDate:(NSDate *)anotherDate;
+- (NSInteger) distanceInDaysToDate:(NSDate *)anotherDate;
+- (NSInteger) minutesFromDateIgnoreDay:(NSDate *)anotherDate;
 
 // Decomposing dates
 @property (readonly) NSInteger nearestHour;
@@ -102,7 +108,8 @@
 @property (readonly) NSInteger seconds;
 @property (readonly) NSInteger day;
 @property (readonly) NSInteger month;
-@property (readonly) NSInteger week;
+@property (readonly) NSInteger weekOfMonth;
+@property (readonly) NSInteger weekOfYear;
 @property (readonly) NSInteger weekday;
 @property (readonly) NSInteger nthWeekday; // e.g. 2nd Tuesday of the month == 2
 @property (readonly) NSInteger year;

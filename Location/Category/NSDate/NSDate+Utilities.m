@@ -15,7 +15,7 @@
 #import "NSDate+Utilities.h"
 
 // Thanks, AshFurrow
-static const unsigned componentFlags = (NSYearCalendarUnit| NSMonthCalendarUnit | NSDayCalendarUnit | NSWeekCalendarUnit |  NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit | NSWeekdayCalendarUnit | NSWeekdayOrdinalCalendarUnit);
+static const unsigned componentFlags = (NSYearCalendarUnit| NSMonthCalendarUnit | NSDayCalendarUnit |  NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit | NSWeekdayCalendarUnit | NSWeekdayOrdinalCalendarUnit | NSWeekOfMonthCalendarUnit | NSCalendarUnitWeekOfYear);
 
 @implementation NSDate (Utilities)
 
@@ -24,8 +24,11 @@ static const unsigned componentFlags = (NSYearCalendarUnit| NSMonthCalendarUnit 
 + (NSCalendar *) currentCalendar
 {
     static NSCalendar *sharedCalendar = nil;
-    if (!sharedCalendar)
+    if (!sharedCalendar) {
         sharedCalendar = [NSCalendar autoupdatingCurrentCalendar];
+        [sharedCalendar setTimeZone:[NSTimeZone localTimeZone]];
+        [sharedCalendar setFirstWeekday:D_FIRST_WEEKDAY];
+    }
     return sharedCalendar;
 }
 
@@ -177,7 +180,7 @@ static const unsigned componentFlags = (NSYearCalendarUnit| NSMonthCalendarUnit 
 	NSDateComponents *components2 = [[NSDate currentCalendar] components:componentFlags fromDate:aDate];
 	
 	// Must be same week. 12/31 and 1/1 will both be week "1" if they are in the same week
-	if (components1.week != components2.week) return NO;
+	if (components1.weekOfYear != components2.weekOfYear) return NO;
 	
 	// Must have a time interval under 1 week. Thanks @aclark
 	return (abs([self timeIntervalSinceDate:aDate]) < D_WEEK);
@@ -301,7 +304,7 @@ static const unsigned componentFlags = (NSYearCalendarUnit| NSMonthCalendarUnit 
 {
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     [dateComponents setYear:dYears];
-    NSDate *newDate = [[NSCalendar currentCalendar] dateByAddingComponents:dateComponents toDate:self options:0];
+    NSDate *newDate = [[NSDate currentCalendar] dateByAddingComponents:dateComponents toDate:self options:0];
     return newDate;
 }
 
@@ -314,7 +317,7 @@ static const unsigned componentFlags = (NSYearCalendarUnit| NSMonthCalendarUnit 
 {
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     [dateComponents setMonth:dMonths];
-    NSDate *newDate = [[NSCalendar currentCalendar] dateByAddingComponents:dateComponents toDate:self options:0];
+    NSDate *newDate = [[NSDate currentCalendar] dateByAddingComponents:dateComponents toDate:self options:0];
     return newDate;
 }
 
@@ -328,7 +331,7 @@ static const unsigned componentFlags = (NSYearCalendarUnit| NSMonthCalendarUnit 
 {
     NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
     [dateComponents setDay:dDays];
-    NSDate *newDate = [[NSCalendar currentCalendar] dateByAddingComponents:dateComponents toDate:self options:0];
+    NSDate *newDate = [[NSDate currentCalendar] dateByAddingComponents:dateComponents toDate:self options:0];
     return newDate;
 }
 
@@ -388,6 +391,51 @@ static const unsigned componentFlags = (NSYearCalendarUnit| NSMonthCalendarUnit 
 	return [[NSDate currentCalendar] dateFromComponents:components];
 }
 
+- (NSDate *) dateAtStartOfWeek
+{
+    NSDate *startOfTheWeek;
+    NSTimeInterval interval;
+    [[NSDate currentCalendar] rangeOfUnit:NSWeekCalendarUnit startDate:&startOfTheWeek interval:&interval forDate:self];
+    //startOfWeek holds now the first day of the week, according to locale (monday vs. sunday)
+    
+    return startOfTheWeek;
+}
+
+- (NSDate *) dateAtEndOfWeek
+{
+    NSDate *startOfTheWeek;
+    NSDate *endOfWeek;
+    NSTimeInterval interval;
+    [[NSDate currentCalendar] rangeOfUnit:NSWeekCalendarUnit startDate:&startOfTheWeek interval:&interval forDate:self];
+    //startOfWeek holds now the first day of the week, according to locale (monday vs. sunday)
+    
+    endOfWeek = [startOfTheWeek dateByAddingTimeInterval:interval-1];
+    
+    return endOfWeek;
+}
+
+- (NSDate *) dateAtStartOfMonth
+{
+    NSDateComponents *components = [[NSDate currentCalendar] components:componentFlags fromDate:self];
+    components.day = 0;
+    components.hour = 0;
+    components.minute = 0;
+    components.second = 0;
+    return [[NSDate currentCalendar] dateFromComponents:components];
+}
+
+- (NSDate *) dateAtEndOfMonth
+{
+    NSRange daysRange = [[NSDate currentCalendar] rangeOfUnit:NSDayCalendarUnit inUnit:NSMonthCalendarUnit forDate:self];
+    NSDateComponents *components = [[NSDate currentCalendar] components:componentFlags fromDate:self];
+    components.day = daysRange.length-1;
+    components.hour = 23;
+    components.minute = 59;
+    components.second = 59;
+    return [[NSDate currentCalendar] dateFromComponents:components];
+}
+
+
 #pragma mark - Retrieving Intervals
 
 - (NSInteger) minutesAfterDate: (NSDate *) aDate
@@ -435,6 +483,11 @@ static const unsigned componentFlags = (NSYearCalendarUnit| NSMonthCalendarUnit 
     return components.day;
 }
 
+- (NSInteger) minutesFromDateIgnoreDay:(NSDate *)anotherDate
+{
+    return D_MINUTE*(self.hour-anotherDate.hour) + (self.minute - anotherDate.minute);
+}
+
 #pragma mark - Decomposing Dates
 
 - (NSInteger) nearestHour
@@ -475,16 +528,22 @@ static const unsigned componentFlags = (NSYearCalendarUnit| NSMonthCalendarUnit 
 	return components.month;
 }
 
-- (NSInteger) week
+- (NSInteger) weekOfMonth
 {
 	NSDateComponents *components = [[NSDate currentCalendar] components:componentFlags fromDate:self];
-	return components.week;
+	return components.weekOfMonth;
+}
+
+- (NSInteger) weekOfYear
+{
+    NSDateComponents *components = [[NSDate currentCalendar] components:componentFlags fromDate:self];
+    return components.weekOfYear;
 }
 
 - (NSInteger) weekday
 {
 	NSDateComponents *components = [[NSDate currentCalendar] components:componentFlags fromDate:self];
-	return components.weekday;
+	return (components.weekday - D_FIRST_WEEKDAY + 7)%7 + 1;
 }
 
 - (NSInteger) nthWeekday // e.g. 2nd Tuesday of the month is 2

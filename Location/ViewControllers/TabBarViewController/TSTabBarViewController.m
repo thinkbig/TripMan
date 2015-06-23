@@ -102,6 +102,11 @@
     [self.tabBarView hideTabBar:showHideFrom animated:animated];
 }
 
+- (void)showHintView:(UIView*)view
+{
+    self.tabBarView.hintView = view;
+}
+
 
 #pragma mark - TSTabBarDelegate
 

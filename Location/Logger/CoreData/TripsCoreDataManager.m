@@ -7,14 +7,22 @@
 //
 
 #import "TripsCoreDataManager.h"
-#import "ParkingRegionDetail.h"
 #import "NSManagedObject+ActiveRecord.h"
+#import "NSDate+Utilities.h"
+#import "GToolUtil.h"
 
-#define cParkingRegionRadius        500
+//@interface TripsCoreDataManager (Private)
+//
+//- (NSPersistentStoreCoordinator *)persistentStoreCoordinatorWithStoreType:(NSString *const)storeType
+//                                                                 storeURL:(NSURL *)storeURL;
+//- (NSURL *)sqliteStoreURL;
+//
+//@end
 
-@interface TripsCoreDataManager ()
+@interface TripsCoreDataManager () {
+    dispatch_queue_t request_queue;
+}
 
-@property (nonatomic, strong) NSManagedObjectContext *          tripAnalyzerContent;
 @property (nonatomic, strong) NSMutableArray *                  parkingDetails;
 
 @end
@@ -30,6 +38,11 @@
     return _tripAnalyzerContent;
 }
 
+- (NSURL *)applicationDocumentsDirectory {
+    NSURL * url = [super applicationDocumentsDirectory];
+    return [url URLByAppendingPathComponent:@"TripDb" isDirectory:YES];
+}
+
 - (instancetype)init
 {
     self = [super init];
@@ -39,11 +52,51 @@
     return self;
 }
 
+- (dispatch_queue_t) readQueue {
+    if (nil == request_queue) {
+        request_queue = dispatch_queue_create("com.chetu.read", DISPATCH_QUEUE_SERIAL);
+    }
+    return request_queue;
+}
+
+- (NSString *)databaseName
+{
+    NSString * name = [super databaseName];
+    if (self.dbNamePrefix.length > 0) {
+        name = [name stringByAppendingFormat:@"%@_", self.dbNamePrefix];
+    }
+    return name;
+}
+
+- (BOOL) dbExist
+{
+    NSURL *databaseDir = [self.applicationDocumentsDirectory URLByAppendingPathComponent:[self databaseName]];
+    return [[[NSFileManager alloc] init] fileExistsAtPath:[databaseDir absoluteString]];
+}
+
 - (void) dropDb
 {
     NSURL *databaseDir = [self.applicationDocumentsDirectory URLByAppendingPathComponent:[self databaseName]];
     [[[NSFileManager alloc] init] removeItemAtURL:databaseDir error:nil];
 }
+
+//- (void) dropDbAll
+//{
+//    NSFileManager* fm = [NSFileManager defaultManager];
+//    NSDirectoryEnumerator *dirEnumerator = [fm enumeratorAtURL:self.applicationDocumentsDirectory
+//                                    includingPropertiesForKeys:@[NSURLNameKey, NSURLIsDirectoryKey]
+//                                                       options:NSDirectoryEnumerationSkipsHiddenFiles
+//                                                  errorHandler:nil];
+//    
+//    for (NSURL *url in dirEnumerator) {
+//        NSNumber *isDirectory;
+//        [url getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:NULL];
+//        if (![isDirectory boolValue]) {
+//            // This is a file - remove it
+//            [fm removeItemAtURL:url error:NULL];
+//        }
+//    }
+//}
 
 - (CLCircularRegion*)circularRegionForCenter:(CLLocationCoordinate2D)center {
     return [[CLCircularRegion alloc] initWithCenter:center radius:cParkingRegionRadius identifier:@"parkingSpot"];
@@ -57,7 +110,7 @@
             NSError * err = nil;
             [self.managedObjectContext save:&err];
             if (err) {
-                DDLogWarn(@"Core Data commit fail: %@", err);
+                DDLogWarn(@"Core Data commit fail: %ld", (long)err.code);
             }
         }];
     }
@@ -82,6 +135,10 @@
         detail.region = region;
         [_parkingDetails addObject:detail];
     }
+    
+    [_parkingDetails enumerateObjectsWithOptions:NSEnumerationConcurrent usingBlock:^(ParkingRegionDetail * obj, NSUInteger idx, BOOL *stop) {
+        [obj calculatePinyin];
+    }];
 }
 
 - (NSArray*) allParkingDetails
@@ -89,21 +146,87 @@
     return [self.parkingDetails copy];
 }
 
-- (ParkingRegion*) addParkingLocation:(CLLocationCoordinate2D)coordinate
+- (NSArray*) parkingRegionsToReport:(BOOL)forceAll
+{
+    if (forceAll) {
+        return [ParkingRegion where:@"is_temp==NO" inContext:self.tripAnalyzerContent];
+    }
+    // 不管是否获得了poi名称，先把gps位置上传
+    NSArray * all = [ParkingRegion where:@"parking_id==nil && is_temp==NO" inContext:self.tripAnalyzerContent];
+    if (0 == all.count) {
+        // is_uploaded=NO表示poi名称没有上传，is_analyzed==YES表示poi名称已经获得了
+        all = [ParkingRegion where:@"is_analyzed==YES && is_uploaded==NO && is_temp==NO" inContext:self.tripAnalyzerContent];
+    }
+    return all;
+}
+
+- (NSArray*) tripsReadyToReport:(BOOL)forceAll
+{
+    if (forceAll) {
+        return [TripSummary where:@"end_date!=nil && is_analyzed==YES" inContext:self.tripAnalyzerContent order:@{@"start_date": @"DESC"}];
+    }
+    // 已经结束并且分析完成，但还没有上传过的旅程（没有trip_id）
+    return [TripSummary where:@"end_date!=nil && is_analyzed==YES && trip_id==nil" inContext:self.tripAnalyzerContent order:@{@"start_date": @"DESC"}];
+}
+
+- (NSArray*) tripRawsReadyToReport
+{
+    // 已经结束并且获得了trip_id，但还没有上传原始gps数据（is_uploaded==NO）的旅程
+    return [TripSummary where:@"end_date!=nil && trip_id!=nil && is_uploaded==NO" inContext:self.tripAnalyzerContent order:@{@"start_date": @"DESC"}];
+}
+
+- (ParkingRegionDetail*) parkingDetailForCoordinate:(CLLocationCoordinate2D)coordinate minDist:(CGFloat)minDist
 {
     if (!CLLocationCoordinate2DIsValid(coordinate)) {
         return nil;
     }
     
+    CLLocation * loc = [[CLLocation alloc] initWithLatitude:coordinate.latitude longitude:coordinate.longitude];
+    ParkingRegionDetail * nearestRegion = nil;
+    CLLocationDistance nearestDist = MAXFLOAT;
     for (ParkingRegionDetail * detail in self.parkingDetails) {
-        if ([detail.region containsCoordinate:coordinate]) {
-            CLLocationCoordinate2D newCoor = detail.region.center;
-            newCoor = CLLocationCoordinate2DMake(0.7*newCoor.latitude+0.3*coordinate.latitude, 0.7*newCoor.longitude+0.3*coordinate.longitude);
-            detail.region = [self circularRegionForCenter:newCoor];
-            detail.coreDataItem.center_lat = @(newCoor.latitude);
-            detail.coreDataItem.center_lon = @(newCoor.longitude);
+        if (![detail.coreDataItem.is_temp boolValue] && [detail.region containsCoordinate:coordinate]) {
+            CLLocation * curLoc = [[CLLocation alloc] initWithLatitude:detail.region.center.latitude longitude:detail.region.center.longitude];
+            CLLocationDistance dist = [curLoc distanceFromLocation:loc];
+            if (dist < nearestDist) {
+                nearestDist = dist;
+                nearestRegion = detail;
+            }
+        }
+    }
+    
+    if (minDist > 0 && nearestDist > minDist) {
+        return nil;
+    }
+    
+    return nearestRegion;
+}
+
+- (ParkingRegion*) parkingRegioinForId:(NSString*)parkingId
+{
+    if (parkingId.length == 0) {
+        return nil;
+    }
+    for (ParkingRegionDetail * detail in self.parkingDetails) {
+        if (![detail.coreDataItem.is_temp boolValue] && [detail.coreDataItem.parking_id isEqualToString:parkingId]) {
             return detail.coreDataItem;
         }
+    }
+    return nil;
+}
+
+- (ParkingRegion*) addParkingLocation:(CLLocationCoordinate2D)coordinate modifyRegionCenter:(BOOL)ifModify
+{
+    ParkingRegionDetail * existDetail = [self parkingDetailForCoordinate:coordinate minDist:cRegionRadiusThreshold];
+    if (existDetail) {
+        if (ifModify) {
+            CLLocationCoordinate2D newCoor = existDetail.region.center;
+            newCoor = CLLocationCoordinate2DMake(0.7*newCoor.latitude+0.3*coordinate.latitude, 0.7*newCoor.longitude+0.3*coordinate.longitude);
+            existDetail.region = [self circularRegionForCenter:newCoor];
+            existDetail.coreDataItem.center_lat = @(newCoor.latitude);
+            existDetail.coreDataItem.center_lon = @(newCoor.longitude);
+        }
+        return existDetail.coreDataItem;
     }
     
     // insert a new record
@@ -149,7 +272,26 @@
 
 - (TripSummary*) unfinishedTrip
 {
-    NSArray * trips = [TripSummary where:@"start_date!=nil AND end_date==nil" inContext:self.tripAnalyzerContent order:@{@"start_date": @"DESC"} limit:@(1)];
+    NSArray * trips = [TripSummary where:@"start_date!=nil && end_date==nil" inContext:self.tripAnalyzerContent order:@{@"start_date": @"DESC"} limit:@(1)];
+    if (trips.count > 0) {
+        return trips[0];
+    }
+    return nil;
+}
+
+- (TripSummary*) prevTripByDate:(NSDate*)date
+{
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"start_date < %@", date];
+    NSArray * trips = [TripSummary where:predicate inContext:self.tripAnalyzerContent order:@{@"start_date": @"DESC"} limit:@(1)];
+    if (trips.count > 0) {
+        return trips[0];
+    }
+    return nil;
+}
+
+- (TripSummary*) lastTrip
+{
+    NSArray * trips = [TripSummary where:@"start_date!=nil" inContext:self.tripAnalyzerContent order:@{@"start_date": @"DESC"} limit:@(1)];
     if (trips.count > 0) {
         return trips[0];
     }
@@ -163,7 +305,12 @@
 
 - (NSArray*) unAnalyzedTrips
 {
-    return [TripSummary where:@"start_date!=nil AND is_analyzed!=YES" inContext:self.tripAnalyzerContent order:@{@"start_date": @"DESC"}];
+    return [TripSummary where:@"start_date!=nil && is_analyzed!=YES" inContext:self.tripAnalyzerContent order:@{@"start_date": @"DESC"}];
+}
+
+- (NSArray*) allFinishedTrips
+{
+    return [TripSummary where:@"end_date!=nil" inContext:self.tripAnalyzerContent order:@{@"start_date": @"DESC"}];
 }
 
 - (NSArray*) tripStartFrom:(NSDate*)fromDate toDate:(NSDate*)toDate
@@ -174,7 +321,7 @@
     if (nil == toDate) {
         toDate = [NSDate distantFuture];
     }
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(start_date >= %@) AND (start_date <= %@)", fromDate, toDate];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(start_date >= %@) && (start_date <= %@)", fromDate, toDate];
     return [TripSummary where:predicate inContext:self.tripAnalyzerContent order:@{@"start_date": @"DESC"}];
 }
 
@@ -182,9 +329,9 @@
 {
     NSArray * regionGroupArr = nil;
     if (limit > 0) {
-        regionGroupArr = [RegionGroup where:@"is_temp == NO" order:@{@"relative_trips_cnt": @"DESC"} limit:@(limit)];
+        regionGroupArr = [RegionGroup where:@"is_temp = NO" order:@{@"relative_trips_cnt": @"DESC"} limit:@(limit)];
     } else {
-        regionGroupArr = [RegionGroup where:@"is_temp == NO" order:@{@"relative_trips_cnt": @"DESC"}];
+        regionGroupArr = [RegionGroup where:@"is_temp = NO" order:@{@"relative_trips_cnt": @"DESC"}];
     }
     
     NSMutableArray * bestTrips = [NSMutableArray array];
@@ -205,6 +352,102 @@
     return bestTrips;
 }
 
+- (NSArray*) mostUsedParkingRegionLimit:(NSUInteger)limit
+{
+    NSMutableArray * validLoc = [NSMutableArray array];
+    for (ParkingRegionDetail * parkLoc in self.parkingDetails) {
+        if ([parkLoc.coreDataItem.rate integerValue] != -1) {
+            [validLoc addObject:parkLoc];
+            
+            NSUInteger tripCnt = 0;
+            for (RegionGroup * group in parkLoc.coreDataItem.group_owner_ed) {
+                tripCnt += group.trips.count;
+            }
+            parkLoc.parkingCnt = tripCnt;
+        }
+    }
+
+    NSArray * sortArr = [validLoc sortedArrayUsingComparator:^NSComparisonResult(ParkingRegionDetail * obj1, ParkingRegionDetail * obj2) {
+        if (obj1.parkingCnt > obj2.parkingCnt) {
+            return (NSComparisonResult)NSOrderedAscending;
+        }
+        if (obj1.parkingCnt < obj2.parkingCnt) {
+            return (NSComparisonResult)NSOrderedDescending;
+        }
+        return (NSComparisonResult)NSOrderedSame;
+    }];
+    
+    if (0 == limit || limit >= sortArr.count) {
+        return sortArr;
+    }
+    return [sortArr subarrayWithRange:NSMakeRange(0, limit)];
+}
+
+- (void) setNeedAnalyzeForDay:(NSDate*)dateDay
+{
+    if (nil == dateDay) {
+        dateDay = [NSDate date];
+    }
+    NSDate * dayBegin = [dateDay dateAtStartOfDay];
+    
+    NSArray * daySums = [DaySummary where:@{@"date_day": dayBegin} inContext:self.tripAnalyzerContent];
+    if (daySums.count > 0) {
+        DaySummary * daySum = daySums[0];
+        daySum.is_analyzed = @NO;
+    }
+    
+    NSArray * weekSums = [WeekSummary where:@{@"date_week": dayBegin} inContext:self.tripAnalyzerContent];
+    if (weekSums.count > 0) {
+        WeekSummary * weekSum = weekSums[0];
+        weekSum.is_analyzed = @NO;
+    }
+    
+    [self commit];
+}
+
+- (DaySummary*) daySummaryByDay:(NSDate*)dateDay
+{
+    if (nil == dateDay) {
+        dateDay = [NSDate date];
+    }
+    NSDate * dayBegin = [dateDay dateAtStartOfDay];
+    DaySummary * daySum = nil;
+    NSArray * daySums = [DaySummary where:@{@"date_day": dayBegin} inContext:self.tripAnalyzerContent];
+    if (daySums.count > 0) {
+        daySum = daySums[0];
+    }
+    return daySum;
+}
+
+- (WeekSummary*) weekSummaryByDay:(NSDate*)dateDay
+{
+    if (nil == dateDay) {
+        dateDay = [NSDate date];
+    }
+    NSDate * dayBegin = [dateDay dateAtStartOfWeek];
+    WeekSummary * weekSum = nil;
+    NSArray * weekSums = [WeekSummary where:@{@"date_week": dayBegin} inContext:self.tripAnalyzerContent];
+    if (weekSums.count > 0) {
+        weekSum = weekSums[0];
+    }
+
+    return weekSum;
+}
+
+- (MonthSummary*) monthSummaryByDay:(NSDate*)dateDay
+{
+    if (nil == dateDay) {
+        dateDay = [NSDate date];
+    }
+    NSDate * dayBegin = [dateDay dateAtStartOfMonth];
+    MonthSummary * monthSum = nil;
+    NSArray * monthSums = [MonthSummary where:@{@"date_month": dayBegin} inContext:self.tripAnalyzerContent];
+    if (monthSums.count > 0) {
+        monthSum = monthSums[0];
+    }
+    
+    return monthSum;
+}
 
 
 - (TripSummary*) newTripAt:(NSDate*)beginDate
@@ -221,8 +464,67 @@
     if (endDate) {
         newTrip.end_date = endDate;
     }
+        
+    DaySummary * daySum = [self daySumForTrip:newTrip];
+    [self weekSumForDay:daySum];
+    [self monthSumForDay:daySum];
     
     return newTrip;
+}
+
+
+- (DaySummary*) daySumForTrip:(TripSummary*)tripSum
+{
+    if (nil == tripSum) {
+        return nil;
+    }
+    if (tripSum.day_summary) {
+        return tripSum.day_summary;
+    }
+    
+    NSDate * dayBegin = [tripSum.start_date dateAtStartOfDay];
+    DaySummary * daySum = [DaySummary findOrCreate:@{@"date_day": dayBegin} inContext:self.tripAnalyzerContent];
+    daySum.is_analyzed = @NO;
+    [daySum addAll_tripsObject:tripSum];
+    tripSum.day_summary = daySum;
+    
+    return daySum;
+}
+
+- (WeekSummary*) weekSumForDay:(DaySummary*)daySum
+{
+    if (nil == daySum) {
+        return nil;
+    }
+    if (daySum.week_summary) {
+        return daySum.week_summary;
+    }
+    
+    NSDate * dayBegin = [daySum.date_day dateAtStartOfWeek];
+    WeekSummary * weekSum = [WeekSummary findOrCreate:@{@"date_week": dayBegin} inContext:self.tripAnalyzerContent];
+    weekSum.is_analyzed = @NO;
+    [weekSum addAll_daysObject:daySum];
+    daySum.week_summary = weekSum;
+    
+    return weekSum;
+}
+
+- (MonthSummary*) monthSumForDay:(DaySummary*)daySum
+{
+    if (nil == daySum) {
+        return nil;
+    }
+    if (daySum.month_summary) {
+        return daySum.month_summary;
+    }
+    
+    NSDate * dayBegin = [daySum.date_day dateAtStartOfMonth];
+    MonthSummary * monthSum = [MonthSummary findOrCreate:@{@"date_month": dayBegin} inContext:self.tripAnalyzerContent];
+    monthSum.is_analyzed = @NO;
+    [monthSum addAll_daysObject:daySum];
+    daySum.month_summary = monthSum;
+    
+    return monthSum;
 }
 
 - (DrivingInfo*) drivingInfoForTrip:(TripSummary*)tripSum
@@ -257,9 +559,17 @@
     return info;
 }
 
-- (TrafficInfo*) trafficInfoForTrip:(TripSummary*)tripSum
+- (TrafficJam*) allocTrafficInfoForTrip:(TripSummary*)tripSum
 {
-    return nil;
+    if (nil == tripSum) {
+        return nil;
+    }
+    
+    TrafficJam * jam = [TrafficJam createInContext:self.tripAnalyzerContent];
+    jam.trip_owner = tripSum;
+    [tripSum addTraffic_jamsObject:jam];
+    
+    return jam;
 }
 
 - (TurningInfo*) turningInfoForTrip:(TripSummary*)tripSum
@@ -285,11 +595,11 @@
     }
     
     BOOL isTemp = (nil == tripSum.end_date);
-    ParkingRegion * startRegion = [self addParkingLocation:centerFrom];
+    ParkingRegion * startRegion = [self addParkingLocation:centerFrom modifyRegionCenter:!tripSum.is_analyzed];
     ParkingRegion * endRegion = nil;
     NSArray * groups = nil;
     if (!isTemp) {
-        endRegion = [self addParkingLocation:centerTo];
+        endRegion = [self addParkingLocation:centerTo modifyRegionCenter:!tripSum.is_analyzed];
         groups = [RegionGroup where:@{@"start_region": startRegion, @"end_region": endRegion, @"is_temp": @NO} inContext:self.tripAnalyzerContent limit:@1];
     } else {
         endRegion = [self tempParkingLocation:centerTo];
@@ -300,7 +610,9 @@
     if (groups.count > 0) {
         regionGroup = groups[0];
         regionGroup.start_region = startRegion;
+        [startRegion addGroup_owner_stObject:regionGroup];
         regionGroup.end_region = endRegion;
+        [endRegion addGroup_owner_edObject:regionGroup];
     } else {
         regionGroup = [RegionGroup create:@{@"start_region": startRegion, @"end_region": endRegion, @"is_temp": @(isTemp)} inContext:self.tripAnalyzerContent];
     }
@@ -324,6 +636,16 @@
     }
     
     return nil;
+}
+
+- (void) recoverDeletedLocation
+{
+    for (ParkingRegionDetail * dbRegion in _parkingDetails) {
+        if (-1 == [dbRegion.coreDataItem.rate integerValue]) {
+            dbRegion.coreDataItem.rate = @(0);
+        }
+    }
+    [self commit];
 }
 
 @end

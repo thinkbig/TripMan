@@ -12,10 +12,10 @@
 #define itemSize                        44
 #define badgeSize                       (itemSize*0.3)
 #define tabBarBgImage                   @"somebgImage.png"
-#define tabBarHightLightImage           @"hightLightImage.png"
+#define tabBarHightLightImage           @"someHightLight"
 
 // Default height of the tab bar
-static const int kDefaultTabBarHeight = 49.0f;
+static const int kDefaultTabBarHeight = 48.0f;
 
 // Default Push animation duration
 static const float kPushAnimationDuration = 0.35;

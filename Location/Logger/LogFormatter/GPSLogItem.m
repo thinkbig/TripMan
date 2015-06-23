@@ -57,9 +57,15 @@
 	return self;
 }
 
+- (BOOL) isEqual:(GPSLogItem*)object
+{
+    return [self.latitude floatValue] == [object.latitude floatValue] && [self.longitude floatValue] == [object.longitude floatValue]
+        && [self.timestamp isEqualToDate:object.timestamp];
+}
+
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<%@, %@>, horizontalAccuracy=%@, speed=%@", self.latitude, self.longitude, self.horizontalAccuracy, self.speed];
+    return [NSString stringWithFormat:@"%@, <%@, %@>, horizontalAccuracy=%@, speed=%@", self.timestamp, self.latitude, self.longitude, self.horizontalAccuracy, self.speed];
 }
 
 - (id)initWithEventItem:(GPSEventItem*)event
@@ -74,19 +80,92 @@
 	return self;
 }
 
-- (CLLocation*) location
+- (id)initWithParkingRegion:(ParkingRegion*)region
 {
-    return [[CLLocation alloc] initWithCoordinate:[self locationCoordinate] altitude:[self.altitude doubleValue] horizontalAccuracy:[self.horizontalAccuracy doubleValue] verticalAccuracy:[self.verticalAccuracy doubleValue] course:[self.course doubleValue] speed:[self.speed doubleValue] timestamp:self.timestamp];
+    if ((self = [super init]))
+    {
+        self.latitude = region.center_lat;
+        self.longitude = region.center_lon;
+        
+        self.isValid = YES;
+    }
+    return self;
 }
 
-- (CLLocationCoordinate2D) locationCoordinate
+- (id)initWithArray:(NSArray*)arr
+{
+    if ((self = [super init]))
+    {
+        if (arr.count >= 11) {
+            NSNumber * number = arr[0];
+            NSInteger timeStamp = [number integerValue];
+            self.timestamp = [NSDate dateWithTimeIntervalSince1970:timeStamp];
+            self.latitude = arr[1];
+            self.longitude = arr[2];
+            self.altitude = arr[3];
+            self.horizontalAccuracy = arr[4];
+            self.verticalAccuracy = arr[5];
+            self.course = arr[6];
+            self.speed = arr[7];
+            self.accelerationX = arr[8];
+            self.accelerationY = arr[9];
+            self.accelerationZ = arr[10];
+            self.isValid = YES;
+        } else {
+            self.isValid = NO;
+        }
+    }
+    return self;
+}
+
+- (CLLocation*) location
+{
+    return [[CLLocation alloc] initWithCoordinate:[self coordinate] altitude:[self.altitude doubleValue] horizontalAccuracy:[self.horizontalAccuracy doubleValue] verticalAccuracy:[self.verticalAccuracy doubleValue] course:[self.course doubleValue] speed:[self.speed doubleValue] timestamp:self.timestamp];
+}
+
+- (CLLocationCoordinate2D) coordinate
 {
     return CLLocationCoordinate2DMake([self.latitude doubleValue], [self.longitude doubleValue]);
+}
+
+- (CLLocationDistance) distanceFrom:(GPSLogItem*)item
+{
+    return [[self location] distanceFromLocation:[item location]];
+}
+
+- (CLLocationDistance) distanceFromCLLocation:(CLLocation*)loc
+{
+    return [[self location] distanceFromLocation:loc];
+}
+
+- (CLLocationDistance) distanceFromDict:(NSDictionary*)dict
+{
+    CLLocation * dictLoc = [[CLLocation alloc] initWithLatitude:[dict[@"lat"] doubleValue] longitude:[dict[@"lon"] doubleValue]];
+    if (CLLocationCoordinate2DIsValid(dictLoc.coordinate)) {
+        return [dictLoc distanceFromLocation:[self location]];
+    }
+    return -1;
 }
 
 - (double) safeSpeed
 {
     return [self.speed doubleValue] > 0 ? [self.speed doubleValue] : 0;
+}
+
+- (NSArray*) toArray
+{
+    return @[@((unsigned long long)[_timestamp timeIntervalSince1970]), _latitude, _longitude, _altitude, _horizontalAccuracy, _verticalAccuracy, _course, _speed, _accelerationX, _accelerationY, _accelerationZ];
+}
+
++ (NSArray *)logArrFromJsonString:(NSString *)jsonStr
+{
+    NSArray * dictArr = [CommonFacade fromJsonString:jsonStr];
+    NSMutableArray * logArr = [NSMutableArray arrayWithCapacity:dictArr.count];
+    for (NSArray * itemArr in dictArr) {
+        GPSLogItem * item = [[GPSLogItem alloc] initWithArray:itemArr];
+        [logArr addObject:item];
+    }
+    return logArr;
 }
 
 @end

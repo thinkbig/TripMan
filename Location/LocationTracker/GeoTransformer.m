@@ -8,6 +8,30 @@
 
 #import "GeoTransformer.h"
 
+const double x_pi = 3.14159265358979324 * 3000.0 / 180.0;
+
+// 火星GCJ-02 to bd09ll
+void bd_encrypt(double gg_lat, double gg_lon, double &bd_lat, double &bd_lon)
+{
+    double x = gg_lon, y = gg_lat;
+    double z = sqrt(x * x + y * y) + 0.00002 * sin(y * x_pi);
+    double theta = atan2(y, x) + 0.000003 * cos(x * x_pi);
+    bd_lon = z * cos(theta) + 0.0065;
+    bd_lat = z * sin(theta) + 0.006;
+}
+
+// bd09ll to 火星GCJ-02
+void bd_decrypt(double bd_lat, double bd_lon, double &gg_lat, double &gg_lon)
+{
+    double x = bd_lon - 0.0065, y = bd_lat - 0.006;
+    double z = sqrt(x * x + y * y) - 0.00002 * sin(y * x_pi);
+    double theta = atan2(y, x) - 0.000003 * cos(x * x_pi);
+    gg_lon = z * cos(theta);
+    gg_lat = z * sin(theta);
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 @implementation GeoTransformer
 
 const double a = 6378245.0;
@@ -60,5 +84,40 @@ const double ee = 0.00669342162296594323;
 {
     return BMKCoorDictionaryDecode(BMKConvertBaiduCoorFrom(location, BMK_COORDTYPE_GPS));
 }
+
++ (BMKMapPoint)earth2BaiduProjection:(CLLocationCoordinate2D)location
+{
+    return BMKMapPointForCoordinate([self earth2Baidu:location]);
+}
+
++ (CLLocationCoordinate2D)baidu2Mars:(CLLocationCoordinate2D)location
+{
+    double marLat = 0;
+    double marLon = 0;
+    bd_decrypt(location.latitude, location.longitude, marLat, marLon);
+    
+    return CLLocationCoordinate2DMake(marLat, marLon);
+}
+
++ (CLLocationCoordinate2D)mars2Baidu:(CLLocationCoordinate2D)location
+{
+    return BMKCoorDictionaryDecode(BMKConvertBaiduCoorFrom(location, BMK_COORDTYPE_COMMON));
+//    double bdLat = 0;
+//    double bdLon = 0;
+//    bd_encrypt(location.latitude, location.longitude, bdLat, bdLon);
+//    
+//    return CLLocationCoordinate2DMake(bdLat, bdLon);
+}
+
++ (CLLocationCoordinate2D) baiduCoor:(CLLocationCoordinate2D)coor fromType:(eCoorType)coorType
+{
+    if (eCoorTypeGps == coorType) {
+        return [GeoTransformer earth2Baidu:coor];
+    } else if (eCoorTypeMars == coorType) {
+        return [GeoTransformer mars2Baidu:coor];
+    }
+    return coor;
+}
+
 
 @end

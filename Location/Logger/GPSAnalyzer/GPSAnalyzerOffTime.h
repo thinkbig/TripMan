@@ -8,21 +8,29 @@
 
 #import <Foundation/Foundation.h>
 #import "GPSTripSummaryAnalyzer.h"
-#import "GPSAnalyzeSumItem.h"
 #import "GPSFMDBLogger.h"
 #import "TripSummary.h"
+#import "WeekSummary.h"
+#import "MonthSummary.h"
+#import "TripsCoreDataManager.h"
 
 @interface GPSAnalyzerOffTime : NSObject
 
 @property (nonatomic, strong) GPSFMDBLogger *                   dbLogger;           // must set the fmdbLogger for analyze
-
-
-- (NSArray*)old_analyzedResultFrom:(NSDate*)fromDate toDate:(NSDate*)toDate offset:(NSInteger)offset limit:(NSInteger)limit reverseOrder:(BOOL)reverse forceAnalyze:(BOOL)force;
+@property (nonatomic, strong) TripsCoreDataManager *            manager;
 
 - (void)analyzeAllFinishedTrip:(BOOL)force;
 - (void)rollOutOfDateTrip;
-- (void)analyzeTripForSum:(TripSummary*)tripSum;
 
-- (NSArray*)tripStartFrom:(NSDate*)fromDate toDate:(NSDate*)toDate forceAnalyze:(BOOL)force;
+// analyzer dict key (TurningAnalyzer, AcceleratorAnalyzer)
+- (void)analyzeTripForSum:(TripSummary*)tripSum withAnalyzer:(NSDictionary*)anaDict;
+- (BOOL)checkValid:(TripSummary*)sum;
+
+- (NSArray*)analyzeTripStartFrom:(NSDate*)fromDate toDate:(NSDate*)toDate shouldUpdateGlobalInfo:(BOOL)update;
+- (GPSLogItem*)modifyStartPoint:(NSDate*)date firstGPSLog:(GPSLogItem*)firstLog;
+
+- (void)analyzeDaySum:(DaySummary*)daySum;
+- (void)analyzeWeekSum:(WeekSummary*)weekSum;
+- (void)analyzeMonthSum:(MonthSummary*)monthSum;
 
 @end

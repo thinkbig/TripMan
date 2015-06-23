@@ -1,8 +1,43 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6252" systemVersion="14A389" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6751" systemVersion="14B25" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="DaySummary" representedClassName="DaySummary" syncable="YES">
+        <attribute name="addi_data" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="addi_info" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="avg_speed" optional="YES" attributeType="Float" defaultValueString="0" syncable="YES"/>
+        <attribute name="date_day" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="is_analyzed" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="jam_dist" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="jam_during" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="max_speed" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="total_dist" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="total_during" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="traffic_heavy_jam_cnt" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="traffic_light_jam_cnt" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="traffic_light_waiting" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <relationship name="all_trips" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TripSummary" inverseName="day_summary" inverseEntity="TripSummary" syncable="YES"/>
+        <relationship name="extend" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Extend" syncable="YES"/>
+        <relationship name="month_summary" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MonthSummary" inverseName="all_days" inverseEntity="MonthSummary" syncable="YES"/>
+        <relationship name="week_summary" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WeekSummary" inverseName="all_days" inverseEntity="WeekSummary" syncable="YES"/>
+    </entity>
+    <entity name="DeviceHistory" representedClassName="DeviceHistory" syncable="YES">
+        <attribute name="app_info" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="created_at" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="device_id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="device_info" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="other_info" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="updated_at" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="user_id" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="extend" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Extend" syncable="YES"/>
+    </entity>
     <entity name="DrivingInfo" representedClassName="DrivingInfo" syncable="YES">
         <attribute name="acce_cnt" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="addi_data" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="addi_info" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="breaking_cnt" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="during_0_30" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="during_30_60" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="during_60_100" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="during_100_NA" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="hard_acce_cnt" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="hard_breaking_cnt" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="is_analyzed" optional="YES" attributeType="Boolean" syncable="YES"/>
@@ -13,9 +48,12 @@
         <attribute name="shortest_40" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="shortest_60" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="shortest_80" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <relationship name="extend" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Extend" syncable="YES"/>
         <relationship name="trip_owner" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TripSummary" inverseName="driving_info" inverseEntity="TripSummary" syncable="YES"/>
     </entity>
     <entity name="EnvInfo" representedClassName="EnvInfo" syncable="YES">
+        <attribute name="addi_data" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="addi_info" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="day_avg_speed" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="day_dist" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="day_during" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
@@ -25,25 +63,69 @@
         <attribute name="night_dist" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="night_during" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="night_max_speed" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <relationship name="extend" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Extend" syncable="YES"/>
         <relationship name="trip_owner" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TripSummary" inverseName="environment" inverseEntity="TripSummary" syncable="YES"/>
     </entity>
+    <entity name="Extend" representedClassName="Extend" syncable="YES">
+        <attribute name="bin_ext1" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="bool_ext1" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="bool_ext2" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="date_ext1" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="date_ext2" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="double_ext1" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="double_ext2" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="double_ext3" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="int_ext1" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="int_ext2" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="int_ext3" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="string_ext1" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="string_ext2" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="string_ext3" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="MonthSummary" representedClassName="MonthSummary" syncable="YES">
+        <attribute name="addi_data" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="addi_info" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="date_month" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="is_analyzed" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="jam_dist" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="jam_during" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="max_speed" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="total_dist" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="total_during" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="traffic_heavy_jam_cnt" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="trip_cnt" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <relationship name="all_days" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="DaySummary" inverseName="month_summary" inverseEntity="DaySummary" syncable="YES"/>
+        <relationship name="extend" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="Extend" syncable="YES"/>
+        <relationship name="trip_most_dist" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TripSummary" syncable="YES"/>
+        <relationship name="trip_most_during" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TripSummary" syncable="YES"/>
+        <relationship name="trip_most_jam_during" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TripSummary" syncable="YES"/>
+    </entity>
     <entity name="ParkingRegion" representedClassName="ParkingRegion" syncable="YES">
+        <attribute name="addi_data" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="addi_info" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="center_lat" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
         <attribute name="center_lon" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="city" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="describe" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="district" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="is_analyzed" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="is_analyzed" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="is_temp" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="is_uploaded" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="nearby_poi" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="parking_id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="province" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="rate" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="should_update" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="street" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="street_num" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="user_mark" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="extend" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Extend" syncable="YES"/>
+        <relationship name="group_owner_ed" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="RegionGroup" inverseName="end_region" inverseEntity="RegionGroup" syncable="YES"/>
+        <relationship name="group_owner_st" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="RegionGroup" inverseName="start_region" inverseEntity="RegionGroup" syncable="YES"/>
     </entity>
     <entity name="RegionGroup" representedClassName="RegionGroup" syncable="YES">
+        <attribute name="addi_data" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="addi_info" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="best_dist" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="best_during" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="best_jam" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
@@ -53,36 +135,64 @@
         <attribute name="is_analyzed" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="is_temp" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="relative_trips_cnt" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <relationship name="end_region" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="ParkingRegion" syncable="YES"/>
-        <relationship name="start_region" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="ParkingRegion" syncable="YES"/>
+        <relationship name="end_region" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ParkingRegion" inverseName="group_owner_ed" inverseEntity="ParkingRegion" syncable="YES"/>
+        <relationship name="extend" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Extend" syncable="YES"/>
+        <relationship name="start_region" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ParkingRegion" inverseName="group_owner_st" inverseEntity="ParkingRegion" syncable="YES"/>
         <relationship name="trips" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TripSummary" inverseName="region_group" inverseEntity="TripSummary" syncable="YES"/>
     </entity>
-    <entity name="TrafficInfo" representedClassName="TrafficInfo" syncable="YES">
+    <entity name="TrafficJam" representedClassName="TrafficJam" syncable="YES">
+        <attribute name="addi_data" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="addi_info" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="end_date" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="end_lat" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="end_lon" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="is_analyzed" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="near_traffic_light" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="start_date" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="start_lat" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="start_lon" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="traffic_avg_speed" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="traffic_jam_dist" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="traffic_jam_during" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <relationship name="extend" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Extend" syncable="YES"/>
+        <relationship name="trip_owner" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TripSummary" inverseName="traffic_jams" inverseEntity="TripSummary" syncable="YES"/>
     </entity>
     <entity name="TripSummary" representedClassName="TripSummary" syncable="YES">
+        <attribute name="addi_data" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="addi_info" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="avg_speed" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="end_date" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="is_analyzed" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="is_analyzed" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="is_uploaded" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="is_valid" optional="YES" attributeType="Boolean" defaultValueString="YES" syncable="YES"/>
         <attribute name="max_speed" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="owner" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="quality" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="should_update" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="start_date" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="total_dist" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="total_during" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="traffic_avg_speed" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
-        <attribute name="traffic_jam_cnt" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="traffic_heavy_jam_cnt" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="traffic_jam_dist" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="traffic_jam_during" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="traffic_jam_max_during" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="traffic_light_jam_cnt" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="traffic_light_tol_cnt" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="traffic_light_waiting" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="trip_id" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="day_summary" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="DaySummary" inverseName="all_trips" inverseEntity="DaySummary" syncable="YES"/>
         <relationship name="driving_info" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="DrivingInfo" inverseName="trip_owner" inverseEntity="DrivingInfo" syncable="YES"/>
         <relationship name="environment" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EnvInfo" inverseName="trip_owner" inverseEntity="EnvInfo" syncable="YES"/>
+        <relationship name="extend" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Extend" syncable="YES"/>
         <relationship name="region_group" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="RegionGroup" inverseName="trips" inverseEntity="RegionGroup" syncable="YES"/>
-        <relationship name="traffic_jams" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TrafficInfo" syncable="YES"/>
+        <relationship name="traffic_jams" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TrafficJam" inverseName="trip_owner" inverseEntity="TrafficJam" syncable="YES"/>
         <relationship name="turning_info" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TurningInfo" inverseName="trip_owner" inverseEntity="TurningInfo" syncable="YES"/>
-        <relationship name="weather" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WeatherInfo" syncable="YES"/>
+        <relationship name="weather" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WeatherInfo" inverseName="trip_owner" inverseEntity="WeatherInfo" syncable="YES"/>
     </entity>
     <entity name="TurningInfo" representedClassName="TurningInfo" syncable="YES">
+        <attribute name="addi_data" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="addi_info" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="is_analyzed" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="left_turn_avg_speed" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="left_turn_cnt" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
@@ -93,9 +203,12 @@
         <attribute name="turn_round_avg_speed" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="turn_round_cnt" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="turn_round_max_speed" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <relationship name="extend" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Extend" syncable="YES"/>
         <relationship name="trip_owner" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TripSummary" inverseName="turning_info" inverseEntity="TripSummary" syncable="YES"/>
     </entity>
     <entity name="WeatherInfo" representedClassName="WeatherInfo" syncable="YES">
+        <attribute name="addi_data" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="addi_info" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="city" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="date_day" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="hour_period" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
@@ -105,15 +218,39 @@
         <attribute name="temperature" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="weather" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="wind" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="extend" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Extend" syncable="YES"/>
+        <relationship name="trip_owner" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TripSummary" inverseName="weather" inverseEntity="TripSummary" syncable="YES"/>
+    </entity>
+    <entity name="WeekSummary" representedClassName="WeekSummary" syncable="YES">
+        <attribute name="addi_data" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="addi_info" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="date_week" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="is_analyzed" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="jam_dist" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="jam_during" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="max_speed" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="total_dist" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="total_during" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="traffic_heavy_jam_cnt" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="traffic_light_jam_cnt" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="traffic_light_waiting" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="trip_cnt" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <relationship name="all_days" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="DaySummary" inverseName="week_summary" inverseEntity="DaySummary" syncable="YES"/>
+        <relationship name="extend" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Extend" syncable="YES"/>
     </entity>
     <elements>
-        <element name="DrivingInfo" positionX="27" positionY="153" width="128" height="238"/>
-        <element name="EnvInfo" positionX="-9" positionY="135" width="128" height="193"/>
-        <element name="ParkingRegion" positionX="-63" positionY="-18" width="128" height="253"/>
-        <element name="RegionGroup" positionX="-18" positionY="135" width="128" height="223"/>
-        <element name="TrafficInfo" positionX="-27" positionY="126" width="128" height="105"/>
-        <element name="TripSummary" positionX="-45" positionY="72" width="128" height="298"/>
-        <element name="TurningInfo" positionX="-9" positionY="108" width="128" height="208"/>
-        <element name="WeatherInfo" positionX="9" positionY="144" width="128" height="180"/>
+        <element name="DaySummary" positionX="-18" positionY="135" width="128" height="300"/>
+        <element name="DeviceHistory" positionX="-9" positionY="144" width="128" height="163"/>
+        <element name="DrivingInfo" positionX="27" positionY="153" width="128" height="343"/>
+        <element name="EnvInfo" positionX="-9" positionY="135" width="128" height="238"/>
+        <element name="MonthSummary" positionX="-18" positionY="135" width="128" height="283"/>
+        <element name="ParkingRegion" positionX="-63" positionY="-18" width="128" height="360"/>
+        <element name="RegionGroup" positionX="-18" positionY="135" width="128" height="270"/>
+        <element name="TrafficJam" positionX="-27" positionY="126" width="128" height="268"/>
+        <element name="TripSummary" positionX="-45" positionY="72" width="128" height="508"/>
+        <element name="TurningInfo" positionX="-9" positionY="108" width="128" height="255"/>
+        <element name="WeatherInfo" positionX="9" positionY="144" width="128" height="240"/>
+        <element name="WeekSummary" positionX="0" positionY="153" width="128" height="270"/>
+        <element name="Extend" positionX="-18" positionY="135" width="128" height="253"/>
     </elements>
 </model>

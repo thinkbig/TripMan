@@ -17,6 +17,7 @@ typedef NS_ENUM(NSUInteger, eRequestType) {
     eRequestTypePut,
     eRequestTypeDelete
 };
+#define RequestTypeStr(_enum) [@[@"GET",@"POST",@"PUT", @"DELETE"] objectAtIndex:(_enum)]
 
 typedef NS_ENUM(NSUInteger, eCacheStrategy) {
     eCacheStrategyNone = 0,
@@ -25,10 +26,17 @@ typedef NS_ENUM(NSUInteger, eCacheStrategy) {
     eCacheStrategySqlite
 };
 
+typedef NS_ENUM(NSUInteger, eCallbackStrategy) {
+    eCallBackCacheIfExist = 0,
+    eCallBackCacheIfRequestFail,
+    eCallBackCacheAndRequestNew
+};
 
 @interface CommonFacade : NSObject
 
-@property (nonatomic, assign) NSUInteger statusCode;
+@property (readonly, nonatomic) NSUInteger          statusCode;
+@property (readonly, nonatomic) NSDictionary *      responseHeaders;
+@property (nonatomic) NSUInteger                    retryCnt;       // default 0
 
 // for public use
 - (void)requestWithSuccess:(successFacadeBlock)success failure:(failureFacadeBlock)failure;
@@ -51,7 +59,7 @@ typedef NS_ENUM(NSUInteger, eCacheStrategy) {
 - (eRequestType)requestType;
 - (NSString *)getPath;
 - (NSDictionary*)requestHeader;
-- (NSDictionary*)requestParam;
+- (id)requestParam;
 
 - (id)parseRespData:(id)data error:(NSError **)err;
 
@@ -60,6 +68,7 @@ typedef NS_ENUM(NSUInteger, eCacheStrategy) {
 
 - (eCacheStrategy) cacheStrategy;       // default for no cache
 - (NSTimeInterval) expiredDuring;
+- (eCallbackStrategy) callbackStrategy; // only work when cache strategy is on
 
 // override this if u need custom key for caching
 - (NSString*) keyByUrl:(NSString*)url resPath:(NSString*)path andParam:(NSDictionary*)param;
@@ -67,5 +76,9 @@ typedef NS_ENUM(NSUInteger, eCacheStrategy) {
 // no need to override these 2 functions below
 - (id) cachedResultForKey:(NSString*)key;
 - (void) cacheObject:(id)obj forKey:(NSString*)key;
+
+// helper functin
++ (id) fromJsonString:(NSString*)str;
++ (NSString*) toJsonString:(NSDictionary*)dict prettyPrint:(BOOL)prettyPrint;
 
 @end

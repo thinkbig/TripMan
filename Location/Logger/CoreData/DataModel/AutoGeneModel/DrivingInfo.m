@@ -1,9 +1,9 @@
 //
 //  DrivingInfo.m
-//  Location
+//  TripMan
 //
-//  Created by taq on 11/7/14.
-//  Copyright (c) 2014 Location. All rights reserved.
+//  Created by taq on 4/28/15.
+//  Copyright (c) 2015 Location. All rights reserved.
 //
 
 #import "DrivingInfo.h"
@@ -13,7 +13,13 @@
 @implementation DrivingInfo
 
 @dynamic acce_cnt;
+@dynamic addi_data;
+@dynamic addi_info;
 @dynamic breaking_cnt;
+@dynamic during_0_30;
+@dynamic during_30_60;
+@dynamic during_60_100;
+@dynamic during_100_NA;
 @dynamic hard_acce_cnt;
 @dynamic hard_breaking_cnt;
 @dynamic is_analyzed;
@@ -25,5 +31,6 @@
 @dynamic shortest_60;
 @dynamic shortest_80;
 @dynamic trip_owner;
+@dynamic extend;
 
 @end

@@ -1,9 +1,9 @@
 //
 //  RegionGroup.m
-//  Location
+//  TripMan
 //
-//  Created by taq on 11/7/14.
-//  Copyright (c) 2014 Location. All rights reserved.
+//  Created by taq on 4/28/15.
+//  Copyright (c) 2015 Location. All rights reserved.
 //
 
 #import "RegionGroup.h"
@@ -13,6 +13,8 @@
 
 @implementation RegionGroup
 
+@dynamic addi_data;
+@dynamic addi_info;
 @dynamic best_dist;
 @dynamic best_during;
 @dynamic best_jam;
@@ -25,5 +27,6 @@
 @dynamic end_region;
 @dynamic start_region;
 @dynamic trips;
+@dynamic extend;
 
 @end

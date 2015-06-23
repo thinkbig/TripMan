@@ -8,16 +8,13 @@
 
 #import "GViewController.h"
 #import "iCarousel.h"
+#import "DRDynamicSlideShow.h"
 
-@interface CarTripViewController : GViewController
+@interface CarTripViewController : GViewController <iCarouselDataSource, iCarouselDelegate>
 
-@property (weak, nonatomic) IBOutlet iCarousel *carousel;
-@property (weak, nonatomic) IBOutlet UIView *noResultView;
+@property (weak, nonatomic) IBOutlet UICollectionView *detailCollection;
 
-@property (weak, nonatomic) IBOutlet UIView *todayView;
-@property (weak, nonatomic) IBOutlet UILabel *todayLabel;
-@property (weak, nonatomic) IBOutlet UILabel *todayDist;
-@property (weak, nonatomic) IBOutlet UILabel *todayDuring;
-@property (weak, nonatomic) IBOutlet UILabel *todayMaxSpeed;
+@property (strong, nonatomic) DRDynamicSlideShow *slideShow;
+@property (strong, nonatomic) iCarousel *carousel;
 
 @end

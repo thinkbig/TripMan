@@ -22,6 +22,12 @@ static NSDateFormatter *sDateFormatter = nil;
     return [sDateFormatter stringFromDate:date];
 }
 
+- (NSString *)getPath
+{
+    NSString * format = [super getPath];
+    return [NSString stringWithFormat:format, @"weather"];
+}
+
 - (NSDictionary*)requestParam {
     if (self.city.length > 0) {
         return @{@"location":self.city};
@@ -31,9 +37,9 @@ static NSDateFormatter *sDateFormatter = nil;
 
 - (NSArray*) processingOrigResult:(NSDictionary*)origResult error:(NSError **)err
 {
-    if ([origResult isKindOfClass:[NSDictionary class]] && (origResult[@"error"] == 0 || [@"success" isEqualToString:origResult[@"status"]])) {
+    if ([origResult isKindOfClass:[NSDictionary class]] && ([origResult[@"error"] integerValue] == 0 || [@"success" isEqualToString:origResult[@"status"]])) {
         return origResult[@"results"];
-    } else {
+    } else if (err) {
         *err = ERR_MAKE(eBussinessError, @"天气服务异常");
     }
     return nil;

@@ -6,9 +6,10 @@
 //  Copyright (c) 2014 Location. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "GViewController.h"
+#import <MessageUI/MFMailComposeViewController.h>
 
-@interface LogFileContentViewController : UIViewController
+@interface LogFileContentViewController : GViewController <UITextViewDelegate, MFMailComposeViewControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextView *logConentView;
 

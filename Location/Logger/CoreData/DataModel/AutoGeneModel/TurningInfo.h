@@ -1,9 +1,9 @@
 //
 //  TurningInfo.h
-//  Location
+//  TripMan
 //
-//  Created by taq on 11/7/14.
-//  Copyright (c) 2014 Location. All rights reserved.
+//  Created by taq on 4/28/15.
+//  Copyright (c) 2015 Location. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -13,6 +13,8 @@
 
 @interface TurningInfo : NSManagedObject
 
+@property (nonatomic, retain) NSData * addi_data;
+@property (nonatomic, retain) NSString * addi_info;
 @property (nonatomic, retain) NSNumber * is_analyzed;
 @property (nonatomic, retain) NSNumber * left_turn_avg_speed;
 @property (nonatomic, retain) NSNumber * left_turn_cnt;
@@ -24,5 +26,6 @@
 @property (nonatomic, retain) NSNumber * turn_round_cnt;
 @property (nonatomic, retain) NSNumber * turn_round_max_speed;
 @property (nonatomic, retain) TripSummary *trip_owner;
+@property (nonatomic, retain) NSManagedObject *extend;
 
 @end

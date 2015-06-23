@@ -26,4 +26,6 @@
 - (void)showTabBar:(TSTabShowHideFrom)showHideFrom animated:(BOOL)animated;
 - (void)hideTabBar:(TSTabShowHideFrom)showHideFrom animated:(BOOL)animated;
 
+- (void)showHintView:(UIView*)view;
+
 @end

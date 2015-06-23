@@ -7,6 +7,7 @@
 //
 
 #import "CarSettingViewController.h"
+#import "CarSettingCell.h"
 
 @interface CarSettingViewController ()
 
@@ -24,6 +25,17 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [self.navigationController setNavigationBarHidden:YES animated:animated];
+    [super viewWillAppear:animated];
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [self.navigationController setNavigationBarHidden:NO animated:animated];
+    [super viewWillDisappear:animated];
+}
+
 /*
 #pragma mark - Navigation
 
@@ -34,15 +46,80 @@
 }
 */
 
-- (IBAction)showDebug:(id)sender {
-    [self presentViewController:InstFirstVC(@"Debug") animated:YES completion:nil];
-//    static BOOL isShown = YES;
-//    if (isShown) {
-//        [ROOT_VIEW_CONTROLLER hideTabBar:TSTabShowHideFromBottom animated:YES];
-//    } else {
-//        [ROOT_VIEW_CONTROLLER showTabBar:TSTabShowHideFromBottom animated:YES];
-//    }
-//    isShown = !isShown;
+- (void) clickBtn:(UIButton*)btn
+{
+    if (btn.tag == 11) {
+        UIViewController * vc = [self.storyboard instantiateViewControllerWithIdentifier:@"FAQViewController"];
+        [self.navigationController pushViewController:vc animated:YES];
+    } else if (btn.tag == 12) {
+        UIViewController * vc = [self.storyboard instantiateViewControllerWithIdentifier:@"FeedbackViewController"];
+        [self.navigationController pushViewController:vc animated:YES];
+    } else if (btn.tag == 21) {
+        UIViewController * vc = [self.storyboard instantiateViewControllerWithIdentifier:@"HowToViewController"];
+        [self.navigationController pushViewController:vc animated:YES];
+    } else if (btn.tag == 22) {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:APP_STORE_URL]];
+    } else if (btn.tag == 31) {
+        UIViewController * vc = [self.storyboard instantiateViewControllerWithIdentifier:@"AboutViewController"];
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+}
+
+
+#pragma mark <UICollectionViewDataSource>
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
+    return 1;
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
+    return 1;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    CarSettingSixCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"CarSettingSixCellId" forIndexPath:indexPath];
+    
+    if (indexPath.row == 0)
+    {
+        cell.shadowImage.hidden = YES;
+        cell.backgroundColorView.backgroundColor = [UIColor clearColor];
+
+        cell.btn1.tag = 11;
+        [cell.btn1 addTarget:self action:@selector(clickBtn:) forControlEvents:UIControlEventTouchUpInside];
+        cell.btn2.tag = 12;
+        [cell.btn2 addTarget:self action:@selector(clickBtn:) forControlEvents:UIControlEventTouchUpInside];
+        cell.btn3.tag = 21;
+        [cell.btn3 addTarget:self action:@selector(clickBtn:) forControlEvents:UIControlEventTouchUpInside];
+        cell.btn4.tag = 22;
+        [cell.btn4 addTarget:self action:@selector(clickBtn:) forControlEvents:UIControlEventTouchUpInside];
+        cell.btn5.tag = 31;
+        [cell.btn5 addTarget:self action:@selector(clickBtn:) forControlEvents:UIControlEventTouchUpInside];
+        cell.btn6.tag = 32;
+        [cell.btn6 addTarget:self action:@selector(clickBtn:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    
+    return cell;
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+    return CGSizeMake(320, 332);
+}
+
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
+{
+    return 0.0f;
+}
+
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
+{
+    return UIEdgeInsetsMake((self.view.bounds.size.height - 332)/2.0f, 0, 0, 0);
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    
 }
 
 @end

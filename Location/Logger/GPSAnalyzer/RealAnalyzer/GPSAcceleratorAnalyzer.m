@@ -25,6 +25,10 @@
     self.shortest_40 = 0;
     self.shortest_60 = 0;
     self.shortest_80 = 0;
+    self.during_0_20 = 0;
+    self.during_20_40 = 0;
+    self.during_40_80 = 0;
+    self.during_80_NA = 0;
     
     if (gpsLogs.count < 2) {
         return;
@@ -36,10 +40,14 @@
     CGFloat maxBreakingWithinWindow = 0;
     GPSLogItem * last = [gpsLogs lastObject];
     GPSLogItem * lastStationary = nil;
+    GPSLogItem * prevLog = nil;
     for (NSInteger i = 0; i < gpsLogs.count; i++)
     {
         GPSLogItem * item = gpsLogs[i];
-        if ([item.horizontalAccuracy doubleValue] > 1000 || [GPSOffTimeFilter dist2FromGPSItem:last toItem:item] < 30 || [last.timestamp timeIntervalSinceDate:item.timestamp] < 10) {
+        if ([item.horizontalAccuracy doubleValue] > 1000 || [last distanceFrom:item] < 30 || [last.timestamp timeIntervalSinceDate:item.timestamp] < 10) {
+            continue;
+        }
+        if (prevLog && [item.timestamp timeIntervalSinceDate:prevLog.timestamp] < 3) {
             continue;
         }
         
@@ -93,6 +101,22 @@
                 }
             }
         }
+        
+        if (prevLog && [prevLog.speed floatValue] >= 0) {
+            CGFloat prevSpeed = [prevLog.speed floatValue];
+            CGFloat during = [item.timestamp timeIntervalSinceDate:prevLog.timestamp];
+            CGFloat dist = prevSpeed*during;
+            if (prevSpeed > 80.0/3.6) {
+                self.during_80_NA += dist;
+            } else if (prevSpeed > 40.0/3.6) {
+                self.during_40_80 += dist;
+            } else if (prevSpeed > 20.0/3.6) {
+                self.during_20_40 += dist;
+            } else {
+                self.during_0_20 += dist;
+            }
+        }
+        prevLog = item;
         
         if (i > 0) {
             // break or accelerate

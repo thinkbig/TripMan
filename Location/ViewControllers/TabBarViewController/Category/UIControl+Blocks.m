@@ -38,7 +38,7 @@ static const char *UIControlBlocks = "C573F3BB-5F2E-4192-B6B9-AB4E8ED8AC3A";
     UIControlActionBlockWrapper *target = [[UIControlActionBlockWrapper alloc] init];
     [target setActionBlock:actionCompletionBlock];
     
-    NSNumber *key = [NSNumber numberWithInt:controlEvents];
+    NSNumber *key = [NSNumber numberWithInt:(int)controlEvents];
     NSMutableArray *actionsForControlEvents = [blockActions objectForKey:key];
     if (!actionsForControlEvents) {
         actionsForControlEvents = [NSMutableArray arrayWithCapacity:1];
@@ -54,7 +54,7 @@ static const char *UIControlBlocks = "C573F3BB-5F2E-4192-B6B9-AB4E8ED8AC3A";
     
     NSMutableDictionary *blockActions = objc_getAssociatedObject(self, &UIControlBlocks);
     if (blockActions) {
-        NSMutableArray *actionsForControlEvents = [blockActions objectForKey:[NSNumber numberWithInt:controlEvents]];
+        NSMutableArray *actionsForControlEvents = [blockActions objectForKey:[NSNumber numberWithInt:(int)controlEvents]];
         if (actionsForControlEvents) {
             for (long i = actionsForControlEvents.count; i > 0; i--) {
                 UIControlActionBlockWrapper *target = (UIControlActionBlockWrapper *)[actionsForControlEvents objectAtIndex:i];

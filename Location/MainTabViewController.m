@@ -8,6 +8,8 @@
 
 #import "MainTabViewController.h"
 #import "TSTabBarItem.h"
+#import "NoGpsHintView.h"
+#import "OpenGpsViewController.h"
 
 @interface MainTabViewController ()
 
@@ -20,12 +22,12 @@
     UIViewController* homeVC = InstFirstVC(@"CarHome");
     UIViewController* tripVC = InstFirstVC(@"CarTrip");;
     UIViewController* assistorVC = InstFirstVC(@"CarAssistor");;
-    UIViewController* healthVC = InstFirstVC(@"CarHealth");
+    //UIViewController* healthVC = InstFirstVC(@"CarHealth");
     UIViewController* settingVC = InstFirstVC(@"CarSetting");
     
-    NSArray * itemIcons = @[@"navicon_activity_normal", @"navicon_connection_normal", @"navicon_find_normal", @"navicon_me_normal", @"navicon_me_normal"];
-    NSArray * highlightIcons = @[@"navicon_activity_active", @"navicon_connection_active", @"navicon_find_active", @"navicon_me_active", @"navicon_me_active"];
-    NSArray * itemTitles = @[@"首页", @"旅程", @"问路", @"健康", @"设置"];
+    NSArray * itemIcons = @[@"tab01", @"tab02", @"tab03", @"tab05"];
+    NSArray * highlightIcons = @[@"tab01_active", @"tab02_active", @"tab03_active", @"tab05_active"];
+    //NSArray * itemTitles = @[@"首页", @"旅程", @"问路", @"健康", @"设置"];
     
     NSMutableArray * itemModels = [NSMutableArray array];
     [itemIcons enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
@@ -33,11 +35,11 @@
         model.itemIndex = idx;
         model.itemImage = [UIImage imageNamed:obj];
         model.itemSelectedImage = [UIImage imageNamed:highlightIcons[idx]];
-        model.itemTitle = itemTitles[idx];
+        //model.itemTitle = itemTitles[idx];
         [itemModels addObject:model];
     }];
     
-    [self setViewControllers:@[homeVC, tripVC, assistorVC, healthVC, settingVC] withTabBarItemModels:itemModels];
+    [self setViewControllers:@[homeVC, tripVC, assistorVC, settingVC] withTabBarItemModels:itemModels];
     
     [super loadView];
 }
@@ -45,12 +47,44 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    [self setSelectedIndex:0 animed:YES];
+    
+    [self.tabBar setTabShadowImage:[UIImage imageNamed:@"shadowtab"]];
+    self.tabBar.backgroundImageView.image = [UIImage imageNamed:@"tabbar"];
+    [self setSelectedIndex:0 animed:NO];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationEnterForeground) name:@"kLocationAuthrizeStatChange" object:nil];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self applicationEnterForeground];
+}
+
+- (void)applicationEnterForeground
+{
+    // show hint view
+    CLAuthorizationStatus authorizationStatus= [CLLocationManager authorizationStatus];
+    if (kCLAuthorizationStatusAuthorizedAlways != authorizationStatus) {
+        NSArray *nibs = [[NSBundle mainBundle] loadNibNamed:@"NoGpsHintView" owner:self options:nil];
+        NoGpsHintView * hintView = (NoGpsHintView*)[nibs objectAtIndex:0];
+        [hintView.howToBtn addTarget:self action:@selector(showHowToOpenGps) forControlEvents:UIControlEventTouchUpInside];
+        [self showHintView:hintView];
+    } else {
+        [self showHintView:nil];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)showHowToOpenGps
+{
+    OpenGpsViewController * openGpsVC = InstFirstVC(@"OpenGps");
+    [self presentViewController:openGpsVC animated:YES completion:nil];
 }
 
 /*

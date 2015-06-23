@@ -3,6 +3,7 @@
 #import "FMDatabase.h"
 #import "DDContextFilterLogFormatter.h"
 #import "GPSLogItem.h"
+#import "NSDate+Utilities.h"
 
 @interface GPSFMDBLogger () {
     
@@ -48,19 +49,22 @@
 
 - (void)dealloc
 {
-    [database close];
+    [dbQueue close];
 }
 
 - (NSArray*)allTripsEvent
 {
     NSMutableArray * trips = [NSMutableArray array];
-    FMResultSet *rs = [database executeQuery:@"select * from gps_event where eventType between 1000 and 1001 order by timestamp asc"];
-    while ([rs next]) {
-        GPSEventItem * item = [[GPSEventItem alloc] initWithDBResultSet:rs];
-        [trips addObject:item];
-    }
-    [rs close];
     
+    [dbQueue inDatabase:^(FMDatabase *db) {
+        FMResultSet *rs = [db executeQuery:@"select * from gps_event where eventType in (1000, 1001, 1002, 300, 301, 302) order by timestamp asc"];
+        while ([rs next]) {
+            GPSEventItem * item = [[GPSEventItem alloc] initWithDBResultSet:rs];
+            [trips addObject:item];
+        }
+        [rs close];
+    }];
+
     return trips;
 }
 
@@ -70,13 +74,14 @@
     CGFloat from = fromDate ? [fromDate timeIntervalSince1970] : 0;
     CGFloat to = toDate ? [toDate timeIntervalSince1970] : MAXFLOAT;
     
-    //NSString * cmd = [NSString stringWithFormat:@"select table_name from logidx where (end_date > %f OR end_date = NULL) AND begin_date < %f order by id asc", from, to];
     NSString * cmd = [NSString stringWithFormat:@"select table_name from logidx where is_valid = 1 AND is_active = 1 order by id asc"];
-    FMResultSet *rs = [database executeQuery:cmd];
-    while ([rs next]) {
-        [tables addObject:[rs objectForColumnName:@"table_name"]];
-    }
-    [rs close];
+    [dbQueue inDatabase:^(FMDatabase *db) {
+        FMResultSet *rs = [db executeQuery:cmd];
+        while ([rs next]) {
+            [tables addObject:[rs objectForColumnName:@"table_name"]];
+        }
+        [rs close];
+    }];
     
     // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 这里为了方便起见，假设不分表 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     
@@ -90,12 +95,15 @@
     if (offset >= 0 && limit > 0) {
         [cmd1 appendFormat:@" limit %ld,%ld", (long)offset, (long)limit];
     }
-    FMResultSet *rs1 = [database executeQuery:cmd1];
-    while ([rs1 next]) {
-        GPSLogItem * item = [[GPSLogItem alloc] initWithDBResultSet:rs1];
-        [allData addObject:item];
-    }
-    [rs1 close];
+    
+    [dbQueue inDatabase:^(FMDatabase *db) {
+        FMResultSet *rs1 = [db executeQuery:cmd1];
+        while ([rs1 next]) {
+            GPSLogItem * item = [[GPSLogItem alloc] initWithDBResultSet:rs1];
+            [allData addObject:item];
+        }
+        [rs1 close];
+    }];
     
     return allData;
 }
@@ -105,14 +113,49 @@
     if (nil == beforeDate) {
         beforeDate = [NSDate distantFuture];
     }
-    GPSEventItem * item = nil;
-    NSMutableString * cmd = [NSMutableString stringWithFormat:@"select * from gps_event where timestamp <= %f and eventType = %d order by timestamp desc limit 1", [beforeDate timeIntervalSince1970], (int)eventType];
-    FMResultSet *rs1 = [database executeQuery:cmd];
-    while ([rs1 next]) {
-        item = [[GPSEventItem alloc] initWithDBResultSet:rs1];
-        break;
+    __block GPSEventItem * item = nil;
+    NSMutableString * cmd = nil;
+    if (eGPSEventMonitorRegion == eventType) {
+        cmd = [NSMutableString stringWithFormat:@"select * from gps_event where timestamp <= %f and eventType = %d and (groupName = '%@' or groupName = '%@') order by timestamp desc limit 1", [beforeDate timeIntervalSince1970], (int)eventType, REGION_GROUP_LAST_STILL, REGION_GROUP_LAST_PARKING];
+    } else {
+        cmd = [NSMutableString stringWithFormat:@"select * from gps_event where timestamp <= %f and eventType = %d order by timestamp desc limit 1", [beforeDate timeIntervalSince1970], (int)eventType];
     }
-    [rs1 close];
+    
+    [dbQueue inDatabase:^(FMDatabase *db) {
+        FMResultSet *rs1 = [db executeQuery:cmd];
+        while ([rs1 next]) {
+            item = [[GPSEventItem alloc] initWithDBResultSet:rs1];
+            break;
+        }
+        [rs1 close];
+    }];
+    
+    
+    return item;
+}
+
+- (GPSEventItem*)selectEvent:(eGPSEvent)eventType between:(NSDate*)fromDate andDate:(NSDate*)toDate
+{
+    if (nil == toDate || nil == fromDate || [toDate isEarlierThanDate:fromDate]) {
+        return nil;
+    }
+
+    __block GPSEventItem * item = nil;
+    NSMutableString * cmd = nil;
+    if (eGPSEventMonitorRegion == eventType) {
+        cmd = [NSMutableString stringWithFormat:@"select * from gps_event where timestamp >= %f and timestamp <= %f and eventType = %d and (groupName = '%@' or groupName = '%@') order by timestamp desc limit 1", [fromDate timeIntervalSince1970], [toDate timeIntervalSince1970], (int)eventType, REGION_GROUP_LAST_STILL, REGION_GROUP_LAST_PARKING];
+    } else {
+        cmd = [NSMutableString stringWithFormat:@"select * from gps_event where timestamp >= %f and timestamp <= %f and eventType = %d order by timestamp desc limit 1", [fromDate timeIntervalSince1970], [toDate timeIntervalSince1970], (int)eventType];
+    }
+    
+    [dbQueue inDatabase:^(FMDatabase *db) {
+        FMResultSet *rs1 = [db executeQuery:cmd];
+        while ([rs1 next]) {
+            item = [[GPSEventItem alloc] initWithDBResultSet:rs1];
+            break;
+        }
+        [rs1 close];
+    }];
     
     return item;
 }
@@ -122,14 +165,22 @@
     if (nil == afterDate) {
         afterDate = [NSDate date];
     }
-    GPSEventItem * item = nil;
-    NSMutableString * cmd = [NSMutableString stringWithFormat:@"select * from gps_event where timestamp >= %f and eventType = %d order by timestamp asc limit 1", [afterDate timeIntervalSince1970], (int)eventType];
-    FMResultSet *rs1 = [database executeQuery:cmd];
-    while ([rs1 next]) {
-        item = [[GPSEventItem alloc] initWithDBResultSet:rs1];
-        break;
+    __block GPSEventItem * item = nil;
+    NSMutableString * cmd = nil;
+    if (eGPSEventMonitorRegion == eventType) {
+        cmd = [NSMutableString stringWithFormat:@"select * from gps_event where timestamp >= %f and eventType = %d and (groupName = '%@' or groupName = '%@') order by timestamp asc limit 1", [afterDate timeIntervalSince1970], (int)eventType, REGION_GROUP_LAST_STILL, REGION_GROUP_LAST_PARKING];
+    } else {
+        cmd = [NSMutableString stringWithFormat:@"select * from gps_event where timestamp >= %f and eventType = %d order by timestamp asc limit 1", [afterDate timeIntervalSince1970], (int)eventType];
     }
-    [rs1 close];
+    
+    [dbQueue inDatabase:^(FMDatabase *db) {
+        FMResultSet *rs1 = [db executeQuery:cmd];
+        while ([rs1 next]) {
+            item = [[GPSEventItem alloc] initWithDBResultSet:rs1];
+            break;
+        }
+        [rs1 close];
+    }];
     
     return item;
 }
@@ -174,15 +225,8 @@
 	
 	NSString *path = [logDirectory stringByAppendingPathComponent:@"gps.sqlite"];
 	
-	database = [[FMDatabase alloc] initWithPath:path];
-	
-	if (![database open])
-	{
-		NSLog(@"%@: Failed opening database!", [self class]);
-		database = nil;
-		return;
-	}
-	
+	dbQueue = [FMDatabaseQueue databaseQueueWithPath:path];
+
     // create log index db
 	NSString *cmd1 = @"CREATE TABLE IF NOT EXISTS logidx \
                         (id INTEGER PRIMARY KEY AUTOINCREMENT, \
@@ -192,13 +236,9 @@
                         is_valid INTEGER NOT NULL DEFAULT 1, \
                         is_active INTEGER NOT NULL DEFAULT 0, \
                         desc TEXT)";
-	[database executeUpdate:cmd1];
-	if ([database hadError])
-	{
-		NSLog(@"%@: Error creating table logidx: code(%d): %@",
-			  [self class], [database lastErrorCode], [database lastErrorMessage]);
-		database = nil;
-	}
+    [dbQueue inDatabase:^(FMDatabase *db) {
+        [db executeUpdate:cmd1];
+    }];
 
     // create gps event db
     NSString *cmd2 = @"CREATE TABLE IF NOT EXISTS gps_event \
@@ -211,32 +251,30 @@
                         identifier TEXT, \
                         groupName TEXT, \
                         message TEXT)";
-	[database executeUpdate:cmd2];
-	if ([database hadError])
-	{
-		NSLog(@"%@: Error creating table gps_event: code(%d): %@",
-			  [self class], [database lastErrorCode], [database lastErrorMessage]);
-		database = nil;
-	}
-    
-	[database setShouldCacheStatements:YES];
+    [dbQueue inDatabase:^(FMDatabase *db) {
+        [db executeUpdate:cmd2];
+    }];    
 }
 
 - (void) updateCurrentTable
 {
     // update current table name
-    NSString * tableName = nil;
-    FMResultSet *rs = [database executeQuery:@"SELECT table_name from logidx where is_valid=1 and is_active=1"];
-    while ([rs next]) {
-        tableName = [rs objectForColumnName:@"table_name"];
-        break;
-    }
-    [rs close];
+    __block NSString * tableName = nil;
+    [dbQueue inDatabase:^(FMDatabase *db) {
+        FMResultSet *rs = [db executeQuery:@"SELECT table_name from logidx where is_valid=1 and is_active=1"];
+        while ([rs next]) {
+            tableName = [rs objectForColumnName:@"table_name"];
+            break;
+        }
+        [rs close];
+    }];
     
     if (nil == tableName) {
         tableName = [self nonreqeatTablename];
         NSString *cmd = @"INSERT INTO logidx (table_name, is_valid, is_active) values(?,1,1)";
-        [database executeUpdate:cmd, tableName];
+        [dbQueue inDatabase:^(FMDatabase *db) {
+            [db executeUpdate:cmd, tableName];
+        }];
     }
     
     // update current table
@@ -255,23 +293,14 @@
                       accelerationZ REAL)",
                       tableName];
     
-    [database executeUpdate:cmd1];
-    if ([database hadError])
-    {
-        NSLog(@"%@: Error creating table: %d: %@",
-              tableName, [database lastErrorCode], [database lastErrorMessage]);
-        return;
-    }
+    [dbQueue inDatabase:^(FMDatabase *db) {
+        [db executeUpdate:cmd1];
+    }];
     
     NSString *cmd2 = [NSString stringWithFormat:@"CREATE INDEX IF NOT EXISTS timestamp ON %@ (timestamp)", tableName];
-    
-    [database executeUpdate:cmd2];
-    if ([database hadError])
-    {
-        NSLog(@"%@: Error creating index: %d: %@",
-              tableName, [database lastErrorCode], [database lastErrorMessage]);
-        return;
-    }
+    [dbQueue inDatabase:^(FMDatabase *db) {
+        [db executeUpdate:cmd2];
+    }];
     
     _curTableName = tableName;
 }
@@ -354,42 +383,27 @@
 		// The superclass won't likely call us if this is the case, but we're being cautious.
 		return;
 	}
-	
-	BOOL saveOnlyTransaction = ![database inTransaction];
-	
-	if (saveOnlyTransaction)
-	{
-		[database beginTransaction];
-	}
     
-    for (id logEntry in pendingLogEntries)
-    {
-        if ([logEntry isKindOfClass:[GPSLogItem class]]) {
-            GPSLogItem * gpsItem = (GPSLogItem*)logEntry;
-            NSString * tableName = self.curTableName;
-            if (tableName) {
-                NSString *cmd = [NSString stringWithFormat:@"INSERT INTO %@ (timestamp, latitude, longitude, altitude, horizontalAccuracy, verticalAccuracy, course, speed, accelerationX, accelerationY, accelerationZ) VALUES (?,?,?,?,?,?,?,?,?,?,?)", tableName];
-                [database executeUpdate:cmd, gpsItem.timestamp, gpsItem.latitude, gpsItem.longitude, gpsItem.altitude, gpsItem.horizontalAccuracy, gpsItem.verticalAccuracy, gpsItem.course, gpsItem.speed, gpsItem.accelerationX, gpsItem.accelerationY, gpsItem.accelerationZ];
+    NSArray * tmpArr = [pendingLogEntries copy];
+    [pendingLogEntries removeAllObjects];
+    
+    [dbQueue inDatabase:^(FMDatabase *db) {
+        for (id logEntry in tmpArr)
+        {
+            if ([logEntry isKindOfClass:[GPSLogItem class]]) {
+                GPSLogItem * gpsItem = (GPSLogItem*)logEntry;
+                NSString * tableName = self.curTableName;
+                if (tableName) {
+                    NSString *cmd = [NSString stringWithFormat:@"INSERT INTO %@ (timestamp, latitude, longitude, altitude, horizontalAccuracy, verticalAccuracy, course, speed, accelerationX, accelerationY, accelerationZ) VALUES (?,?,?,?,?,?,?,?,?,?,?)", tableName];
+                    [db executeUpdate:cmd, gpsItem.timestamp, gpsItem.latitude, gpsItem.longitude, gpsItem.altitude, gpsItem.horizontalAccuracy, gpsItem.verticalAccuracy, gpsItem.course, gpsItem.speed, gpsItem.accelerationX, gpsItem.accelerationY, gpsItem.accelerationZ];
+                }
+            } else if ([logEntry isKindOfClass:[GPSEventItem class]]) {
+                GPSEventItem * eventItem = (GPSEventItem*)logEntry;
+                NSString *cmd = @"INSERT INTO gps_event (timestamp, eventType, latitude, longitude, radius, identifier, groupName, message) VALUES (?,?,?,?,?,?,?,?)";
+                [db executeUpdate:cmd, eventItem.timestamp, eventItem.eventType, eventItem.latitude, eventItem.longitude, eventItem.radius, eventItem.identifier, eventItem.groupName, eventItem.message];
             }
-        } else if ([logEntry isKindOfClass:[GPSEventItem class]]) {
-            GPSEventItem * eventItem = (GPSEventItem*)logEntry;
-            NSString *cmd = @"INSERT INTO gps_event (timestamp, eventType, latitude, longitude, radius, identifier, groupName, message) VALUES (?,?,?,?,?,?,?,?)";
-            [database executeUpdate:cmd, eventItem.timestamp, eventItem.eventType, eventItem.latitude, eventItem.longitude, eventItem.radius, eventItem.identifier, eventItem.groupName, eventItem.message];
         }
-    }
-	
-	[pendingLogEntries removeAllObjects];
-	
-	if (saveOnlyTransaction)
-	{
-		[database commit];
-		
-		if ([database hadError])
-		{
-			NSLog(@"%@: Error inserting log entries: code(%d): %@",
-				  [self class], [database lastErrorCode], [database lastErrorMessage]);
-		}
-	}
+    }];
 }
 
 - (void)db_delete
@@ -421,18 +435,9 @@
 
 - (void)db_saveAndDelete
 {
-	[database beginTransaction];
-	
 	[self db_delete];
 	[self db_save];
-	
-	[database commit];
-	
-	if ([database hadError])
-	{
-		NSLog(@"%@: Error: code(%d): %@",
-			  [self class], [database lastErrorCode], [database lastErrorMessage]);
-	}
+
 }
 
 @end

@@ -7,6 +7,18 @@
 //
 
 #import "TripTicketView.h"
+#import "ParkingRegion.h"
+#import "RegionGroup.h"
+#import "NSAttributedString+Style.h"
+#import "ParkingRegion+Fetcher.h"
+#import "TripSummary+Fetcher.h"
+#import "BaiduReverseGeocodingWrapper.h"
+
+@interface TripTicketView ()
+
+@property (nonatomic, strong) TripSummary * sum;
+
+@end
 
 @implementation TripTicketView
 
@@ -25,31 +37,68 @@
 
 - (void) updateWithTripSummary:(TripSummary*)sum
 {
-    static NSDateFormatter *sDateFormatter = nil;
-    if (nil == sDateFormatter) {
-        sDateFormatter = [[NSDateFormatter alloc] init];
-        [sDateFormatter setDateFormat: @"HH:mm"];
-        [sDateFormatter setTimeZone:[NSTimeZone localTimeZone]];
-    }
+    self.sum = sum;
     
-    self.fromPoi.text = [self safeText:sum.region_group.start_region.nearby_poi withDefault:@"未知地点"];
+    NSDateFormatter * formatter = [[BussinessDataProvider sharedInstance] dateFormatterForFormatStr:@"HH:mm"];
+    
+    self.fromPoi.text = [sum.region_group.start_region nameWithDefault:@"未知"];
     self.fromStreet.text = [self safeText:sum.region_group.start_region.street withDefault:@"未知街道"];
-    self.fromDate.text = sum.start_date ? [sDateFormatter stringFromDate:sum.start_date] : @"未知时间";
+    self.fromDate.text = sum.start_date ? [formatter stringFromDate:sum.start_date] : @"未知";
     
     if (sum.end_date) {
-        self.toPoi.text = [self safeText:sum.region_group.end_region.nearby_poi withDefault:@"未知地点"];
+        self.toPoi.text = [sum.region_group.end_region nameWithDefault:@"未知"];
         self.toStreet.text = [self safeText:sum.region_group.end_region.street withDefault:@"未知街道"];
-        self.toDate.text = [sDateFormatter stringFromDate:sum.end_date];
+        self.toDate.text = [formatter stringFromDate:sum.end_date];
+    } else if (sum) {
+        CLLocation * curLoc = [BussinessDataProvider lastGoodLocation];
+        ParkingRegionDetail * endLoc = [[AnaDbManager sharedInst] parkingDetailForCoordinate:curLoc.coordinate minDist:cRegionRadiusThreshold];
+        if ([endLoc.coreDataItem.is_analyzed boolValue]) {
+            self.toPoi.text = [endLoc.coreDataItem nameWithDefault:@"当前位置"];
+            self.toStreet.text = @"可能在行驶中";
+        } else {
+            self.toPoi.text = @"当前位置";
+            self.toStreet.text = @"可能在行驶中";
+            BaiduReverseGeocodingWrapper * wrapper = [BaiduReverseGeocodingWrapper new];
+            wrapper.coordinate = [GeoTransformer earth2Baidu:curLoc.coordinate];
+            [wrapper requestWithSuccess:^(BMKReverseGeoCodeResult* result) {
+                if (sum == self.sum) {
+                    self.toPoi.text = @"可能在行驶中";
+                    self.toStreet.text = result.addressDetail.streetName;
+                }
+            } failure:nil];
+        }
+        self.toDate.text = [formatter stringFromDate:[NSDate date]];
     } else {
-        self.toPoi.text = @"行驶中";
-        self.toStreet.text = @"......";
-        self.toDate.text = [sDateFormatter stringFromDate:[NSDate date]];
+        self.toPoi.text = @"未知";
+        self.toStreet.text = nil;
+        self.toDate.text = @"00:00";
     }
     
-    self.distLabel.text = [NSString stringWithFormat:@"里程: %@", sum.total_dist];
-    self.speedLabel.text = [NSString stringWithFormat:@"最高速度: %@", sum.max_speed];
-    self.duringLabel.text = [NSString stringWithFormat:@"耗时: %@", sum.total_during];
-    self.jamDuring.text = [NSString stringWithFormat:@"缓行时间: %@", sum.traffic_jam_during];
+    self.distLabel.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%.1f", [sum.total_dist floatValue]/1000.0f] font:[self.distLabel.font fontWithSize:17] color:self.distLabel.textColor andUnit:@"km" font:[self.distLabel.font fontWithSize:14] color:self.distLabel.textColor];
+    self.speedLabel.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%.1f", [sum.max_speed floatValue]*3.6] font:[self.speedLabel.font fontWithSize:17] color:self.speedLabel.textColor andUnit:@"km/h" font:[self.speedLabel.font fontWithSize:14] color:self.speedLabel.textColor];
+    self.duringLabel.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%.f", [sum.total_during floatValue]/60.0] font:[self.duringLabel.font fontWithSize:17] color:self.duringLabel.textColor andUnit:@"min" font:[self.duringLabel.font fontWithSize:14] color:self.duringLabel.textColor];
+    self.trafficLightLabel.attributedText = [NSAttributedString stringWithNumber:[NSString stringWithFormat:@"%ld", (long)[sum.traffic_light_jam_cnt integerValue]] font:[self.trafficLightLabel.font fontWithSize:17] color:self.trafficLightLabel.textColor andUnit:@"处" font:[self.trafficLightLabel.font fontWithSize:14] color:self.trafficLightLabel.textColor];
+    
+    UIColor * statusColor = nil;
+    eStepTraffic status = [[sum tripRoute] trafficStat];
+    if (eStepTrafficVerySlow == status) {
+        statusColor = COLOR_STAT_RED;
+        self.statusBackground.image = [UIImage imageNamed:@"ticketred"];
+        self.trafficStatLabel.text = @"拥堵";
+    } else if (eStepTrafficSlow == status) {
+        statusColor = COLOR_STAT_YELLOW;
+        self.statusBackground.image = [UIImage imageNamed:@"ticketyellow"];
+        self.trafficStatLabel.text = @"缓行";
+    } else {
+        statusColor = COLOR_STAT_GREEN;
+        self.statusBackground.image = [UIImage imageNamed:@"ticketgreen"];
+        self.trafficStatLabel.text = @"畅通";
+    }
+    
+    self.distTextLabel.textColor = statusColor;
+    self.timeTextLabel.textColor = statusColor;
+    self.trafficTextLabel.textColor = statusColor;
+    self.speedTextLabel.textColor = statusColor;
 }
 
 @end

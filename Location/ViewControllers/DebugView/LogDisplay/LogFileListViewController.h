@@ -12,4 +12,6 @@
 
 @property (weak, nonatomic) IBOutlet UITableView *fileListTable;
 
+- (IBAction)clearAll:(id)sender;
+
 @end

@@ -38,6 +38,11 @@
 {
     [super viewWillAppear:animated];
     
+    [self reloadData];
+}
+
+- (void)reloadData
+{
     NSMutableArray * fileNames = [NSMutableArray array];
     NSArray * fileArr = [[GPSLogger sharedLogger].fileLogger.logFileManager unsortedLogFileInfos];
     for (DDLogFileInfo * info in fileArr) {
@@ -93,6 +98,17 @@
     contentLabel.text = [fullFileName substringFromIndex:range.location+range.length];
     
     return cell;
+}
+
+- (IBAction)clearAll:(id)sender
+{
+    NSArray * fileArr = [[GPSLogger sharedLogger].fileLogger.logFileManager sortedLogFilePaths];
+    for (int i = 1; i < fileArr.count; i++) {
+        [[NSFileManager defaultManager] removeItemAtPath:fileArr[i] error:nil];
+    }
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self reloadData];
+    });
 }
 
 @end

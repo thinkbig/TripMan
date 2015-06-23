@@ -48,11 +48,17 @@
 #define COCOAPODS_VERSION_MINOR_AFNetworking_UIKit 4
 #define COCOAPODS_VERSION_PATCH_AFNetworking_UIKit 1
 
+// ActionSheetPicker-3.0
+#define COCOAPODS_POD_AVAILABLE_ActionSheetPicker_3_0
+#define COCOAPODS_VERSION_MAJOR_ActionSheetPicker_3_0 1
+#define COCOAPODS_VERSION_MINOR_ActionSheetPicker_3_0 6
+#define COCOAPODS_VERSION_PATCH_ActionSheetPicker_3_0 1
+
 // CacheKit
 #define COCOAPODS_POD_AVAILABLE_CacheKit
 #define COCOAPODS_VERSION_MAJOR_CacheKit 0
 #define COCOAPODS_VERSION_MINOR_CacheKit 1
-#define COCOAPODS_VERSION_PATCH_CacheKit 0
+#define COCOAPODS_VERSION_PATCH_CacheKit 1
 
 // CocoaLumberjack
 #define COCOAPODS_POD_AVAILABLE_CocoaLumberjack

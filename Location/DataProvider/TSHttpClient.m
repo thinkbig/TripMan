@@ -8,6 +8,7 @@
 
 #import "TSHttpClient.h"
 #import <objc/runtime.h>
+#import "AFgzipRequestSerializer.h"
 
 @implementation ClientConfig
 
@@ -139,15 +140,18 @@ static TSHttpClient * _sharedClient = nil;
         
         if (eSerializationJsonType == config.reqSerialType) {
             client.requestSerializer = [AFJSONRequestSerializer serializer];
+        } else if (eSerializationJsonGzipType == config.reqSerialType) {
+            client.requestSerializer = [AFgzipRequestSerializer serializerWithSerializer:[AFJSONRequestSerializer serializer]];
         } else {
             client.requestSerializer = [AFHTTPRequestSerializer serializer];
         }
         
-        if (eSerializationJsonType == config.respSerialType) {
+        if (eSerializationJsonType == config.respSerialType || eSerializationJsonGzipType == config.respSerialType) {
             client.responseSerializer = [AFJSONResponseSerializer serializer];
+            [client.responseSerializer.acceptableContentTypes setByAddingObject:@"text/html"];
         } else {
             client.responseSerializer = [AFHTTPResponseSerializer serializer];
-        }
+        }        
         
         [[TSHttpClient sharedClient] setNetworkManager:client forKey:[config clientKey]];
     }

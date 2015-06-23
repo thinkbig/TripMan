@@ -39,5 +39,4 @@
     return [NSString stringWithFormat:@"left:(cnd=%@, %@/%@), right:(cnd=%@, %@/%@), turn:(cnd=%@, %@/%@)", info.left_turn_cnt, info.left_turn_avg_speed, info.left_turn_max_speed, info.right_turn_cnt, info.right_turn_avg_speed, info.right_turn_max_speed, info.turn_round_cnt, info.turn_round_avg_speed, info.turn_round_max_speed];
 }
 
-
 @end

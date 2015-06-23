@@ -10,6 +10,6 @@
 
 @interface CarSettingViewController : GViewController
 
-- (IBAction)showDebug:(id)sender;
+@property (weak, nonatomic) IBOutlet UICollectionView *settingCollection;
 
 @end

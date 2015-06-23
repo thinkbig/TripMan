@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="Q8N-VF-YAJ" customClass="TripTodayView">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="210"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PfR-yc-c8o" userLabel="View One">
+                    <rect key="frame" x="30" y="12" width="260" height="73"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0 km" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TXH-uk-eZA">
+                            <rect key="frame" x="0.0" y="0.0" width="107" height="40"/>
+                            <fontDescription key="fontDescription" name="HelveticaNeue-CondensedBold" family="Helvetica Neue" pointSize="50"/>
+                            <color key="textColor" red="0.0" green="0.92156862745098034" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="总行驶距离" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pOa-yl-QRB">
+                            <rect key="frame" x="0.0" y="40" width="107" height="32"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="11"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="whiteball" translatesAutoresizingMaskIntoConstraints="NO" id="8M5-WH-Rpf">
+                            <rect key="frame" x="210" y="0.0" width="44" height="44"/>
+                        </imageView>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="3" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DrX-ad-0Qo">
+                            <rect key="frame" x="210" y="-1" width="44" height="44"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <fontDescription key="fontDescription" name="HelveticaNeue-CondensedBold" family="Helvetica Neue" pointSize="17"/>
+                            <color key="textColor" red="0.0" green="0.92156862745098034" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="行驶次数" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tyk-Xu-Tf4">
+                            <rect key="frame" x="202" y="40" width="60" height="32"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="11"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wc1-K5-6v9" userLabel="seperator">
+                            <rect key="frame" x="0.0" y="72" width="260" height="1"/>
+                            <color key="backgroundColor" white="1" alpha="0.20000000000000001" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="1" id="w5V-zh-owm"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="Wc1-K5-6v9" secondAttribute="trailing" id="EQF-sN-r2z"/>
+                        <constraint firstAttribute="height" constant="73" id="McR-cr-0Bj"/>
+                        <constraint firstItem="Wc1-K5-6v9" firstAttribute="leading" secondItem="PfR-yc-c8o" secondAttribute="leading" id="OUY-HO-Za1"/>
+                        <constraint firstAttribute="bottom" secondItem="Wc1-K5-6v9" secondAttribute="bottom" id="ZFw-DJ-4px"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="o5E-IV-S02" userLabel="View Two">
+                    <rect key="frame" x="30" y="85" width="260" height="66"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0 min" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hHV-h6-mjT">
+                            <rect key="frame" x="0.0" y="0.0" width="107" height="40"/>
+                            <fontDescription key="fontDescription" name="HelveticaNeue-CondensedBold" family="Helvetica Neue" pointSize="24"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="总行驶时间" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yvK-xc-K0Z">
+                            <rect key="frame" x="0.0" y="33" width="107" height="30"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="11"/>
+                            <color key="textColor" red="1" green="1" blue="1" alpha="0.54000000000000004" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0 km/s" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lfG-XK-hVd">
+                            <rect key="frame" x="144" y="0.0" width="116" height="40"/>
+                            <fontDescription key="fontDescription" name="HelveticaNeue-CondensedBold" family="Helvetica Neue" pointSize="24"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="最大速度" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nT6-a7-gs7">
+                            <rect key="frame" x="144" y="33" width="116" height="30"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="11"/>
+                            <color key="textColor" red="1" green="1" blue="1" alpha="0.54000000000000004" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="g1D-ZQ-HeK" userLabel="seperator">
+                            <rect key="frame" x="0.0" y="65" width="260" height="1"/>
+                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="1" id="NPx-mN-J0y"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="g1D-ZQ-HeK" secondAttribute="trailing" id="JS5-r0-UqH"/>
+                        <constraint firstItem="g1D-ZQ-HeK" firstAttribute="leading" secondItem="o5E-IV-S02" secondAttribute="leading" id="PYB-iA-UKI"/>
+                        <constraint firstAttribute="height" constant="66" id="Pnk-4o-lx8"/>
+                        <constraint firstAttribute="bottom" secondItem="g1D-ZQ-HeK" secondAttribute="bottom" id="SJL-qd-uIv"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3QY-8j-6XG" userLabel="View Three">
+                    <rect key="frame" x="30" y="151" width="260" height="54"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0km" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="8" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JDM-L3-EOa">
+                            <rect key="frame" x="0.0" y="7" width="50" height="21"/>
+                            <fontDescription key="fontDescription" name="HelveticaNeue-CondensedBold" family="Helvetica Neue" pointSize="17"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="拥堵距离" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nOZ-by-tsc">
+                            <rect key="frame" x="1" y="27" width="50" height="21"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="11"/>
+                            <color key="textColor" red="1" green="1" blue="1" alpha="0.54000000000000004" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="v2Y-Rz-ft2">
+                            <rect key="frame" x="57" y="12" width="1" height="30"/>
+                            <color key="backgroundColor" white="1" alpha="0.20000000000000001" colorSpace="calibratedWhite"/>
+                        </view>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0min" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="8" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2YP-os-PQ5">
+                            <rect key="frame" x="70" y="7" width="50" height="21"/>
+                            <fontDescription key="fontDescription" name="HelveticaNeue-CondensedBold" family="Helvetica Neue" pointSize="17"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="拥堵时间" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WCD-GE-LK1">
+                            <rect key="frame" x="70" y="27" width="50" height="21"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="11"/>
+                            <color key="textColor" red="1" green="1" blue="1" alpha="0.54000000000000004" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ose-gC-YPc">
+                            <rect key="frame" x="124" y="12" width="1" height="30"/>
+                            <color key="backgroundColor" white="1" alpha="0.20000000000000001" colorSpace="calibratedWhite"/>
+                        </view>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0处" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="8" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zi1-gK-FlQ">
+                            <rect key="frame" x="139" y="7" width="50" height="21"/>
+                            <fontDescription key="fontDescription" name="HelveticaNeue-CondensedBold" family="Helvetica Neue" pointSize="17"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="红绿灯" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Vr-eL-0ka">
+                            <rect key="frame" x="139" y="27" width="50" height="21"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="11"/>
+                            <color key="textColor" red="1" green="1" blue="1" alpha="0.54000000000000004" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Tq4-QH-VTY">
+                            <rect key="frame" x="185" y="12" width="1" height="30"/>
+                            <color key="backgroundColor" white="1" alpha="0.20000000000000001" colorSpace="calibratedWhite"/>
+                        </view>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0min" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="8" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9WM-2X-oPa">
+                            <rect key="frame" x="199" y="7" width="60" height="21"/>
+                            <fontDescription key="fontDescription" name="HelveticaNeue-CondensedBold" family="Helvetica Neue" pointSize="17"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="红绿灯等待" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rtr-0X-zYx">
+                            <rect key="frame" x="199" y="27" width="60" height="21"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="11"/>
+                            <color key="textColor" red="1" green="1" blue="1" alpha="0.54000000000000004" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="54" id="cPZ-LT-ylf"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="PfR-yc-c8o" firstAttribute="leading" secondItem="Q8N-VF-YAJ" secondAttribute="leading" constant="30" id="5jM-46-Jco"/>
+                <constraint firstItem="o5E-IV-S02" firstAttribute="top" secondItem="PfR-yc-c8o" secondAttribute="bottom" id="6u3-HI-jUx"/>
+                <constraint firstItem="PfR-yc-c8o" firstAttribute="top" secondItem="Q8N-VF-YAJ" secondAttribute="top" constant="12" id="F1B-0Q-0dx"/>
+                <constraint firstItem="3QY-8j-6XG" firstAttribute="leading" secondItem="Q8N-VF-YAJ" secondAttribute="leading" constant="30" id="LtH-aS-uar"/>
+                <constraint firstItem="o5E-IV-S02" firstAttribute="leading" secondItem="Q8N-VF-YAJ" secondAttribute="leading" constant="30" id="Ojg-Kj-qVj"/>
+                <constraint firstAttribute="trailing" secondItem="o5E-IV-S02" secondAttribute="trailing" constant="30" id="P9Y-q8-ab2"/>
+                <constraint firstAttribute="trailing" secondItem="3QY-8j-6XG" secondAttribute="trailing" constant="30" id="byH-M7-PCq"/>
+                <constraint firstAttribute="trailing" secondItem="PfR-yc-c8o" secondAttribute="trailing" constant="30" id="fnT-Ue-7ca"/>
+                <constraint firstItem="3QY-8j-6XG" firstAttribute="top" secondItem="o5E-IV-S02" secondAttribute="bottom" id="qe4-lz-UFs"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <nil key="simulatedTopBarMetrics"/>
+            <nil key="simulatedBottomBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="firstView" destination="PfR-yc-c8o" id="2KQ-Y8-lr7"/>
+                <outlet property="jamDist" destination="JDM-L3-EOa" id="xI1-UK-hcH"/>
+                <outlet property="jamDuring" destination="2YP-os-PQ5" id="hut-kc-HIm"/>
+                <outlet property="secondView" destination="o5E-IV-S02" id="K2g-Tl-5DW"/>
+                <outlet property="thirdView" destination="3QY-8j-6XG" id="ctj-bT-RDo"/>
+                <outlet property="todayDist" destination="TXH-uk-eZA" id="tdG-yF-2RU"/>
+                <outlet property="todayDuring" destination="hHV-h6-mjT" id="ILO-Bp-wjR"/>
+                <outlet property="todayMaxSpeed" destination="lfG-XK-hVd" id="Fak-aI-CqW"/>
+                <outlet property="trafficLightCnt" destination="zi1-gK-FlQ" id="5c9-qZ-aJX"/>
+                <outlet property="trafficLightWaiting" destination="9WM-2X-oPa" id="zjl-9u-9n1"/>
+                <outlet property="tripCount" destination="DrX-ad-0Qo" id="cpv-8K-3U2"/>
+            </connections>
+        </view>
+    </objects>
+    <resources>
+        <image name="whiteball" width="44" height="44"/>
+    </resources>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
+</document>

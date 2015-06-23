@@ -13,5 +13,10 @@
 
 @property (nonatomic, strong) ParkingRegion *       coreDataItem;
 @property (nonatomic, strong) CLCircularRegion *    region;
+@property (nonatomic) NSUInteger                    parkingCnt;
+
+- (void) copyInfoFromAnother:(ParkingRegionDetail*)detail;
+- (BOOL) matchString:(NSString*)str;
+- (void) calculatePinyin;
 
 @end

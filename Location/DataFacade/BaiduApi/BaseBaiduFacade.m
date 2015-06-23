@@ -19,7 +19,7 @@
 }
 
 - (NSString *)getPath{
-    return @"telematics/v3/weather?output=json&ak=7ZNN5imWdinViWWmBGA3Rlx5";
+    return @"telematics/v3/%@?output=json&ak=7ZNN5imWdinViWWmBGA3Rlx5";
 }
 
 @end

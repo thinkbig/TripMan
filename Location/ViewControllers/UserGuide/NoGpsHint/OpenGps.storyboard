@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="3q4-i1-WUl">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
+    </dependencies>
+    <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="o4S-9P-kkS">
+            <objects>
+                <navigationController id="3q4-i1-WUl" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="OLb-wK-34X">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="vyn-Yr-NFs" kind="relationship" relationship="rootViewController" id="Byd-fC-6D1"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="oN8-mG-s2C" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-277.86666666666667" y="103.18666666666667"/>
+        </scene>
+        <!--打开定位服务-->
+        <scene sceneID="yPb-JY-uwB">
+            <objects>
+                <viewController id="vyn-Yr-NFs" customClass="OpenGpsViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="L73-lX-awq"/>
+                        <viewControllerLayoutGuide type="bottom" id="NMB-LT-zLe"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="BJE-cO-c1S">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="main_bg" translatesAutoresizingMaskIntoConstraints="NO" id="KiO-GD-A6k">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PbC-xV-Jcq">
+                                <rect key="frame" x="84" y="349" width="153" height="38"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="38" id="9DC-1g-nXw"/>
+                                    <constraint firstAttribute="width" constant="153" id="sCD-9b-Eei"/>
+                                </constraints>
+                                <state key="normal" image="guide_opengps_btn">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="openSetting:" destination="vyn-Yr-NFs" eventType="touchUpInside" id="bdW-OS-3pf"/>
+                                </connections>
+                            </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="guide_opengps_ios8" translatesAutoresizingMaskIntoConstraints="NO" id="Yd9-dH-hmQ">
+                                <rect key="frame" x="0.0" y="75" width="320" height="257"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="320" id="Vn7-OG-Kbp"/>
+                                    <constraint firstAttribute="height" constant="257" id="bQT-Ll-Fao"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="车图需要使用您的位置来记录运动轨迹和优化您行程，并且需要运动记录来优化电量" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cOf-Yi-UX7">
+                                <rect key="frame" x="27" y="15" width="266" height="42"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="266" id="DR4-jN-Oot"/>
+                                    <constraint firstAttribute="height" constant="42" id="REF-XK-jzs"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="13"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Bw-in-Pzw">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="centerX" secondItem="Yd9-dH-hmQ" secondAttribute="centerX" id="3cF-Ch-3NN"/>
+                            <constraint firstItem="NMB-LT-zLe" firstAttribute="top" secondItem="3Bw-in-Pzw" secondAttribute="bottom" id="4BB-mO-ARi"/>
+                            <constraint firstAttribute="centerX" secondItem="PbC-xV-Jcq" secondAttribute="centerX" id="IJI-k3-i89"/>
+                            <constraint firstItem="cOf-Yi-UX7" firstAttribute="top" secondItem="L73-lX-awq" secondAttribute="bottom" constant="15" id="Sgp-kN-lRz"/>
+                            <constraint firstItem="PbC-xV-Jcq" firstAttribute="top" secondItem="Yd9-dH-hmQ" secondAttribute="bottom" constant="17" id="Vjc-CA-JCp"/>
+                            <constraint firstItem="3Bw-in-Pzw" firstAttribute="leading" secondItem="BJE-cO-c1S" secondAttribute="leading" id="jW8-Ew-dal"/>
+                            <constraint firstAttribute="centerX" secondItem="cOf-Yi-UX7" secondAttribute="centerX" id="n1y-Iv-tma"/>
+                            <constraint firstItem="3Bw-in-Pzw" firstAttribute="top" secondItem="L73-lX-awq" secondAttribute="bottom" id="onr-ze-IJH"/>
+                            <constraint firstItem="Yd9-dH-hmQ" firstAttribute="top" secondItem="cOf-Yi-UX7" secondAttribute="bottom" constant="18" id="tBg-Tu-0bP"/>
+                            <constraint firstAttribute="trailing" secondItem="3Bw-in-Pzw" secondAttribute="trailing" id="xRn-PX-3FZ"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="打开定位服务" id="y9s-3k-jDa">
+                        <barButtonItem key="leftBarButtonItem" systemItem="done" id="WXw-3F-C4A">
+                            <connections>
+                                <action selector="close:" destination="vyn-Yr-NFs" id="CNR-rB-5BF"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" translucent="NO" prompted="NO"/>
+                    <connections>
+                        <outlet property="hintLabel" destination="cOf-Yi-UX7" id="rMI-Es-pRF"/>
+                        <outlet property="ios7HintView" destination="3Bw-in-Pzw" id="u4H-gA-6Q9"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="DaA-yw-AhZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="134" y="103"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="guide_opengps_btn" width="153" height="38"/>
+        <image name="guide_opengps_ios8" width="320" height="276"/>
+        <image name="main_bg" width="320" height="568"/>
+    </resources>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
+</document>

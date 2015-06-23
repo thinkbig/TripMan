@@ -1,9 +1,9 @@
 //
 //  RegionGroup.h
-//  Location
+//  TripMan
 //
-//  Created by taq on 11/7/14.
-//  Copyright (c) 2014 Location. All rights reserved.
+//  Created by taq on 4/28/15.
+//  Copyright (c) 2015 Location. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -13,6 +13,8 @@
 
 @interface RegionGroup : NSManagedObject
 
+@property (nonatomic, retain) NSData * addi_data;
+@property (nonatomic, retain) NSString * addi_info;
 @property (nonatomic, retain) NSNumber * best_dist;
 @property (nonatomic, retain) NSNumber * best_during;
 @property (nonatomic, retain) NSNumber * best_jam;
@@ -25,6 +27,7 @@
 @property (nonatomic, retain) ParkingRegion *end_region;
 @property (nonatomic, retain) ParkingRegion *start_region;
 @property (nonatomic, retain) NSSet *trips;
+@property (nonatomic, retain) NSManagedObject *extend;
 @end
 
 @interface RegionGroup (CoreDataGeneratedAccessors)

@@ -9,7 +9,30 @@
 #import "CommonFacade.h"
 #import "NSDictionary+QueryString.h"
 
+@interface CommonFacade () {
+    NSUInteger _realRetryCnt;
+}
+
+@property (readwrite, nonatomic) NSHTTPURLResponse * response;
+@property (nonatomic) NSUInteger realRetryCnt;
+
+@end
+
 @implementation CommonFacade
+
+- (void)setRetryCnt:(NSUInteger)retryCnt
+{
+    _retryCnt = retryCnt;
+    _realRetryCnt = retryCnt;
+}
+
+- (NSUInteger)statusCode {
+    return [self.response statusCode];
+}
+
+- (NSDictionary *)responseHeaders {
+    return [self.response allHeaderFields];
+}
 
 - (void)requestWithSuccess:(successFacadeBlock)success failure:(failureFacadeBlock)failure
 {
@@ -32,14 +55,25 @@
 
 - (void)fetchDataWithPath:(NSString *)resPath requestType:(eRequestType)type param:(NSDictionary*)param constructBodyBlock:(void (^)(id <AFMultipartFormData> formData))block success:(successFacadeBlock)success failure:(failureFacadeBlock)failure
 {
+    if (!IS_REACHABLE) {
+        if (failure) {
+            failure(ERR_MAKE(eNetworkError, @"网络不可用"));
+        }
+        return;
+    }
     NSString * keyUrl = [self keyByUrl:[self baseUrl] resPath:resPath andParam:param];
-    if (eCacheStrategyNone != [self cacheStrategy]) {
+    eCallbackStrategy cbStrategy = [self callbackStrategy];
+    BOOL cacheCallBacked = NO;
+    if (eCacheStrategyNone != [self cacheStrategy] && (eCallBackCacheIfExist == cbStrategy || eCallBackCacheAndRequestNew == cbStrategy)) {
         id cachedResult = [self cachedResultForKey:keyUrl];
         if (cachedResult) {
+            cacheCallBacked = YES;
             if (success) {
                 success(cachedResult);
             }
-            return;
+            if (eCallBackCacheIfExist == cbStrategy) {
+                return;
+            }
         }
     }
     
@@ -64,7 +98,7 @@
     if (param && ![param isKindOfClass:[NSDictionary class]]) {
         realParam = param;
     } else {
-        NSDictionary * commomParam = [self requestParam];
+        id commomParam = [self requestParam];
         realParam = [NSMutableDictionary dictionary];
         if (commomParam && [commomParam isKindOfClass:[NSDictionary class]]) {
             [realParam addEntriesFromDictionary:commomParam];
@@ -72,7 +106,31 @@
         if (param && [param isKindOfClass:[NSDictionary class]]) {
             [realParam addEntriesFromDictionary:param];
         }
+        if (((NSDictionary*)realParam).count == 0) {
+            realParam = commomParam;
+        }
     }
+    
+    void (^failureBlock)(NSError *) = ^(NSError *error) {
+        if (eCallBackCacheIfRequestFail == cbStrategy) {
+            id cachedResult = [self cachedResultForKey:keyUrl];
+            if (cachedResult) {
+                if (success) {
+                    success(cachedResult);
+                }
+                return;
+            }
+        }
+        // strategy eCallBackCacheAndRequestNew have been callback once, do not need call back again
+        if (!(cacheCallBacked)) {
+            if (_realRetryCnt>0) {
+                _realRetryCnt--;
+                [self fetchDataWithPath:resPath requestType:type param:param constructBodyBlock:block success:success failure:failure];
+            } else if (failure) {
+                failure(error);
+            }
+        }
+    };
     
     void (^successBlock)(id) = ^(id orig) {
         if (success || failure || eCacheStrategyNone != [self cacheStrategy]) {
@@ -82,20 +140,14 @@
                 id returnObj = [self parseRespData:result error:&err];
                 if (nil == err) {
                     [self cacheObject:returnObj forKey:keyUrl];
-                    if (success) {
+                    if (success && !(cacheCallBacked)) {
                         success(returnObj);
                     }
                 }
             }
-            if (err && failure) {
-                failure(err);
+            if (err) {
+                failureBlock(err);
             }
-        }
-    };
-    
-    void (^failureBlock)(NSError *) = ^(NSError *error) {
-        if (failure) {
-            failure(error);
         }
     };
     
@@ -105,10 +157,10 @@
             [client GET:resPath
              parameters:realParam
                 success:^(NSURLSessionDataTask *task, id responseObject) {
-                    self.statusCode = [(NSHTTPURLResponse *)task.response statusCode];
+                    self.response = (NSHTTPURLResponse *)task.response;
                     successBlock(responseObject);
                 } failure:^(NSURLSessionDataTask *task, NSError *error) {
-                    self.statusCode = [(NSHTTPURLResponse *)task.response statusCode];
+                    self.response = (NSHTTPURLResponse *)task.response;
                     failureBlock(error);
                 }];
         }
@@ -116,18 +168,18 @@
         case eRequestTypePost:
             if (block) {
                 [client POST:resPath parameters:realParam constructingBodyWithBlock:block success:^(NSURLSessionDataTask *task, id responseObject) {
-                    self.statusCode = [(NSHTTPURLResponse *)task.response statusCode];
+                    self.response = (NSHTTPURLResponse *)task.response;
                     successBlock(responseObject);
                 } failure:^(NSURLSessionDataTask *task, NSError *error) {
-                    self.statusCode = [(NSHTTPURLResponse *)task.response statusCode];
+                    self.response = (NSHTTPURLResponse *)task.response;
                     failureBlock(error);
                 }];
             } else {
                 [client POST:resPath parameters:realParam success:^(NSURLSessionDataTask *task, id responseObject) {
-                    self.statusCode = [(NSHTTPURLResponse *)task.response statusCode];
+                    self.response = (NSHTTPURLResponse *)task.response;
                     successBlock(responseObject);
                 } failure:^(NSURLSessionDataTask *task, NSError *error) {
-                    self.statusCode = [(NSHTTPURLResponse *)task.response statusCode];
+                    self.response = (NSHTTPURLResponse *)task.response;
                     failureBlock(error);
                 }];
             }
@@ -135,10 +187,10 @@
         case eRequestTypePut:
         {
             [client PUT:resPath parameters:realParam success:^(NSURLSessionDataTask *task, id responseObject) {
-                self.statusCode = [(NSHTTPURLResponse *)task.response statusCode];
+                self.response = (NSHTTPURLResponse *)task.response;
                 successBlock(responseObject);
             } failure:^(NSURLSessionDataTask *task, NSError *error) {
-                self.statusCode = [(NSHTTPURLResponse *)task.response statusCode];
+                self.response = (NSHTTPURLResponse *)task.response;
                 failureBlock(error);
             }];
         }
@@ -146,22 +198,22 @@
         case eRequestTypeDelete:
         {
             [client DELETE:resPath parameters:realParam success:^(NSURLSessionDataTask *task, id responseObject) {
-                self.statusCode = [(NSHTTPURLResponse *)task.response statusCode];
+                self.response = (NSHTTPURLResponse *)task.response;
                 successBlock(responseObject);
             } failure:^(NSURLSessionDataTask *task, NSError *error) {
-                self.statusCode = [(NSHTTPURLResponse *)task.response statusCode];
+                self.response = (NSHTTPURLResponse *)task.response;
                 failureBlock(error);
             }];
         }
             break;
             
         default:
-            NSAssert(false, @"Unsupported request type=%u!!!", type);
+            NSAssert(false, @"Unsupported request type=%ld!!!", (long)type);
             break;
     }
 }
 
-- (NSDictionary *) processingOrigResult:(id)origResult error:(NSError **)err
+- (id) processingOrigResult:(id)origResult error:(NSError **)err
 {
     return origResult;
 }
@@ -195,7 +247,7 @@
     return nil;
 }
 
-- (NSDictionary*)requestParam {
+- (id)requestParam {
     return nil;
 }
 
@@ -226,7 +278,9 @@
             [key appendString:paramStr];
         }
     }
-    return key;
+    // for restful api, the url is always the same for different requestMethod
+    // so add the request type string before url as key
+    return [NSString stringWithFormat:@"%@-%@", RequestTypeStr(self.requestType), key];
 }
 
 - (eCacheStrategy) cacheStrategy {
@@ -235,6 +289,10 @@
 
 - (NSTimeInterval) expiredDuring {
     return MAXFLOAT;
+}
+
+- (eCallbackStrategy) callbackStrategy {
+    return eCallBackCacheIfExist;
 }
 
 - (id) cachedResultForKey:(NSString*)key
@@ -265,6 +323,34 @@
         [[TSCache sharedInst] setFileCache:obj forKey:key expiresIn:[self expiredDuring]];
     } else if (eCacheStrategySqlite == strategy) {
         [[TSCache sharedInst] setSqlitCache:obj forKey:key expiresIn:[self expiredDuring]];
+    }
+}
+
++ (id) fromJsonString:(NSString*)str
+{
+    id json = nil;
+    if (str) {
+        NSData *data = [str dataUsingEncoding:NSUTF8StringEncoding];
+        json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+    }
+    return json;
+}
+
++ (NSString*) toJsonString:(NSDictionary*)dict prettyPrint:(BOOL)prettyPrint
+{
+    if (nil == dict) {
+        return nil;
+    }
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict
+                                                       options:(NSJSONWritingOptions)(prettyPrint ? NSJSONWritingPrettyPrinted : 0)
+                                                         error:&error];
+    
+    if (!jsonData) {
+        NSLog(@"bv_jsonStringWithPrettyPrint: error: %@", error.localizedDescription);
+        return nil;
+    } else {
+        return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     }
 }
 

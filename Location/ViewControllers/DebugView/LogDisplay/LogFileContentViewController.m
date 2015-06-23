@@ -27,6 +27,7 @@
     // Do any additional setup after loading the view.
     
     self.title = @"LogContent";
+    self.logConentView.delegate = self;
     
     [self fileNotify];
 }
@@ -90,14 +91,65 @@
 }
 */
 
-- (IBAction)logSwitch:(id)sender {
-    UINavigationItem * item = sender;
-    if (self.autoAppend) {
-        item.title = @"Auto";
-    } else {
-        item.title = @"Stop";
+- (IBAction)logSwitch:(id)sender
+{
+    if (![MFMailComposeViewController canSendMail]) {
+        [self showToast:@"无法发送邮件，请确认正确设置了手机的邮件账号" onDismiss:nil];
+        return;
     }
-    self.autoAppend = !_autoAppend;
+    if ([[NSFileManager defaultManager] fileExistsAtPath:self.logFile])
+    {
+        MFMailComposeViewController *mailCompose = [[MFMailComposeViewController alloc] init];
+        mailCompose.mailComposeDelegate = self;
+        
+        NSArray *toAddress = [NSArray arrayWithObject:@"87149798@qq.com"];
+        NSString *emailBody = [NSString stringWithFormat:@"<H1>日志信息</H1> <p>%@</p>", [[GToolUtil sharedInstance] deviceId]];
+        
+        [mailCompose setToRecipients:toAddress];
+        [mailCompose setMessageBody:emailBody isHTML:YES];
+        
+        NSData* pData = [[NSData alloc]initWithContentsOfFile:self.logFile];
+        
+        [mailCompose setSubject:[NSString stringWithFormat:@"车图Log from: %@", [UIDevice currentDevice].name]];
+        //设置邮件附件{mimeType:文件格式|fileName:文件名}
+        NSString * fullFileName = [[self.logFile pathComponents] lastObject];
+        NSRange range = [fullFileName rangeOfString:@" "];
+        NSString * shortName = [fullFileName substringFromIndex:range.location+range.length];
+        [mailCompose addAttachmentData:pData mimeType:@"txt" fileName:shortName];
+        [self.navigationController presentViewController:mailCompose animated:YES completion:nil];
+    }
+}
+
+
+#pragma mark - delegate
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    self.autoAppend = NO;
+}
+
+- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
+{
+    NSString *msg = @"邮件发送";
+    switch (result)
+    {
+        case MFMailComposeResultCancelled:
+            msg = @"邮件发送取消";
+            break;
+        case MFMailComposeResultSaved:
+            msg = @"邮件保存成功";
+            break;
+        case MFMailComposeResultSent:
+            msg = @"邮件发送成功";
+            break;
+        case MFMailComposeResultFailed:
+            msg = @"邮件发送失败";
+            break;
+        default:
+            break;
+    }
+    [self showToast:msg onDismiss:nil];
+    [controller dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end
